@@ -2,7 +2,6 @@ package by.aurorasoft.nominatim.crud.model.dto;
 
 import by.nhorushko.crudgeneric.v2.domain.AbstractDto;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -42,7 +41,16 @@ public class City implements AbstractDto<Long> {
 
             final JsonNode featureNode = featuresNode.get(0);
             final JsonNode propertiesNode = featureNode.get("properties");
-            final String name = propertiesNode.get("name").asText();
+            final JsonNode addressNode = propertiesNode.get("address");
+
+            String name = null;
+            final JsonNode townNode = addressNode.get("town");
+            final JsonNode cityNode = addressNode.get("city");
+            if (townNode != null) {
+                name = townNode.asText();
+            } else if(cityNode != null) {
+                name = cityNode.asText();
+            }
 
             final JsonNode bboxNode = featureNode.get("bbox");
             final double leftBottomLatitude = bboxNode.get(0).asDouble();
