@@ -13,7 +13,6 @@ import lombok.Value;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.Polygon;
 
 import java.io.IOException;
 
@@ -37,7 +36,7 @@ public class City implements AbstractDto<Long> {
 
         @Override
         public City deserialize(JsonParser jsonParser, DeserializationContext context)
-                throws IOException, JsonProcessingException {
+                throws IOException {
             final JsonNode rootNode = jsonParser.getCodec().readTree(jsonParser);
             final JsonNode featuresNode = rootNode.get("features");
 

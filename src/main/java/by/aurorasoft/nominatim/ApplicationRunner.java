@@ -2,7 +2,7 @@ package by.aurorasoft.nominatim;
 
 import by.aurorasoft.nominatim.crud.model.dto.AreaCoordinate;
 import by.aurorasoft.nominatim.crud.model.dto.Coordinate;
-import by.aurorasoft.nominatim.service.searchcity.SearchCityService;
+import by.aurorasoft.nominatim.service.SearchCityService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -15,8 +15,8 @@ public class ApplicationRunner {
         final SearchCityService service = context.getBean(SearchCityService.class);
         System.out.println(service.findCitiesInArea(
                 new AreaCoordinate(
-                        new Coordinate(53.650630, 27.066252),
-                        new Coordinate(53.716469, 27.129561)),
+                        new Coordinate(53.665497, 27.037624),
+                        new Coordinate(53.729191, 27.098866)),
                 0.01));
     }
 }
