@@ -11,9 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class CityService extends AbsServiceCRUD<Long, CityEntity, City, CityRepository> {
-
     public CityService(CityMapper mapper, CityRepository repository) {
         super(mapper, repository);
     }
-
 }

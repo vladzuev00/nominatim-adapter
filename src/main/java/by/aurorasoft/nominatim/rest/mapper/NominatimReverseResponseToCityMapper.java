@@ -1,50 +1,35 @@
 package by.aurorasoft.nominatim.rest.mapper;
 
 import by.aurorasoft.nominatim.crud.model.dto.City;
-import by.aurorasoft.nominatim.crud.model.dto.NominatimBbox;
 import by.aurorasoft.nominatim.crud.model.dto.NominatimReverseResponse;
+import by.aurorasoft.nominatim.crud.model.dto.NominatimReverseResponse.ExtraTags;
+import by.aurorasoft.nominatim.crud.model.entity.CityEntity.Type;
 import lombok.RequiredArgsConstructor;
-import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
-import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.stereotype.Component;
+import org.wololo.jts2geojson.GeoJSONReader;
+
+import static by.aurorasoft.nominatim.crud.model.entity.CityEntity.Type.*;
 
 @Component
 @RequiredArgsConstructor
 public final class NominatimReverseResponseToCityMapper {
-    private final GeometryFactory geometryFactory;
+    private final GeoJSONReader geoJSONReader;
 
     public City map(NominatimReverseResponse source) {
         return City.builder()
-                .name(mapName(source))
-                .geometry(mapGeometry(source))
+                .name(source.getName())
+                .geometry(this.mapGeometry(source))
+                .type(identifyCityType(source))
                 .build();
     }
 
-    private static String mapName(NominatimReverseResponse source) {
-        return source.getNominatimFeatures()
-                .get(0)
-                .getProperties()
-                .getAddress()
-                .findName();
+    private Geometry mapGeometry(NominatimReverseResponse source) {
+        return this.geoJSONReader.read(source.getGeoJson());
     }
 
-    private Geometry mapGeometry(NominatimReverseResponse source) {
-        final NominatimBbox bbox = source.getNominatimFeatures().get(0).getBbox();
-        final Coordinate leftBottomCoordinate = new Coordinate(bbox.getLeftBottomLatitude(),
-                bbox.getLeftBottomLongitude());
-        final Coordinate leftUpperCoordinate = new Coordinate(bbox.getLeftBottomLatitude(),
-                bbox.getRightUpperLongitude());
-        final Coordinate rightUpperCoordinate = new Coordinate(bbox.getRightUpperLatitude(),
-                bbox.getRightUpperLongitude());
-        final Coordinate rightBottomCoordinate = new Coordinate(bbox.getRightUpperLatitude(),
-                bbox.getLeftBottomLongitude());
-        return this.geometryFactory.createPolygon(new Coordinate[]{
-                leftBottomCoordinate,
-                leftUpperCoordinate,
-                rightUpperCoordinate,
-                rightBottomCoordinate,
-                leftBottomCoordinate
-        });
+    private static Type identifyCityType(NominatimReverseResponse source) {
+        final ExtraTags extraTags = source.getExtraTags();
+        return extraTags != null ? findByCapitalJsonValue(extraTags.getCapital()) : null;
     }
 }

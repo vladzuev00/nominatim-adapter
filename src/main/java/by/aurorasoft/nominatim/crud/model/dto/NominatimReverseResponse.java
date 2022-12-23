@@ -2,16 +2,55 @@ package by.aurorasoft.nominatim.crud.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import lombok.Builder;
 import lombok.Value;
 
-import java.util.List;
+import java.io.IOException;
 
 @Value
+@Builder
 public class NominatimReverseResponse {
-    List<NominatimFeature> nominatimFeatures;
+    String name;
+    ExtraTags extraTags;
+    String geoJson;
 
     @JsonCreator
-    public NominatimReverseResponse(@JsonProperty("features") List<NominatimFeature> nominatimFeatures) {
-        this.nominatimFeatures = nominatimFeatures;
+    public NominatimReverseResponse(@JsonProperty("name") String name,
+                                    @JsonProperty("extratags") ExtraTags extraTags,
+                                    @JsonDeserialize(using = ToStringJsonDeserializer.class)
+                                    @JsonProperty("geojson") String geoJson) {
+        this.name = name;
+        this.extraTags = extraTags;
+        this.geoJson = geoJson;
+    }
+
+    @Value
+    @Builder
+    public static class ExtraTags {
+        String place;
+        String capital;
+
+        @JsonCreator
+        public ExtraTags(@JsonProperty("place") String place,
+                         @JsonProperty("capital") String capital) {
+            this.place = place;
+            this.capital = capital;
+        }
+    }
+
+    static final class ToStringJsonDeserializer extends JsonDeserializer<String> {
+        @Override
+        public String deserialize(JsonParser jsonParser, DeserializationContext context)
+                throws IOException {
+            final ObjectMapper mapper = (ObjectMapper) jsonParser.getCodec();
+            final JsonNode node = mapper.readTree(jsonParser);
+            return mapper.writeValueAsString(node);
+        }
     }
 }

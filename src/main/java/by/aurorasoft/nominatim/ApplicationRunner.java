@@ -13,10 +13,10 @@ public class ApplicationRunner {
     public static void main(String[] args) {
         try (final ConfigurableApplicationContext context = run(ApplicationRunner.class, args)) {
             final SearchCityService service = context.getBean(SearchCityService.class);
-            service.findInArea(
+            service.findInAreaAndSave(
                     new AreaCoordinate(
-                            new Coordinate(52.158160, 23.537081),
-                            new Coordinate(52.126338, 23.635885)),
+                            new Coordinate(53.211134, 26.375680),
+                            new Coordinate(53.220913, 26.418141)),
                     0.01);
         }
     }

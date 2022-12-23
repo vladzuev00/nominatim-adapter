@@ -15,6 +15,8 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import static java.lang.Double.NaN;
+import static java.lang.Double.isNaN;
 import static java.lang.Thread.currentThread;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -24,15 +26,6 @@ import static org.springframework.web.util.UriComponentsBuilder.fromUriString;
 
 @Service
 public final class NominatimService implements AutoCloseable {
-    private static final String URI_WITHOUT_PARAMETERS = "https://nominatim.openstreetmap.org/reverse";
-    private static final String PARAM_NAME_FORMAT = "format";
-    private static final String PARAM_NAME_LATITUDE = "lat";
-    private static final String PARAM_NAME_LONGITUDE = "lon";
-    private static final String PARAM_NAME_ZOOM = "zoom";
-
-    private static final String FORMAT = "geojson";
-    private static final int ZOOM = 10;
-
     private static final ParameterizedTypeReference<NominatimReverseResponse> PARAMETERIZED_TYPE_REFERENCE
             = new ParameterizedTypeReference<>() {
     };
@@ -64,13 +57,14 @@ public final class NominatimService implements AutoCloseable {
             while (!this.durationBetweenRequestsPassed) {
                 this.condition.await();
             }
-            final String uri = findUriToFindByCoordinate(coordinate);
-            System.out.println(uri);
+            final String uri = new NominatimReverseUriBuilder()
+                    .catalogLatitude(coordinate.getLatitude())
+                    .catalogLongitude(coordinate.getLongitude())
+                    .build();
             final ResponseEntity<NominatimReverseResponse> responseEntity = this.restTemplate
                     .exchange(uri, GET, EMPTY, PARAMETERIZED_TYPE_REFERENCE);
             this.durationBetweenRequestsPassed = false;
             this.condition.signalAll();
-            System.out.println(responseEntity.getBody());
             return responseEntity.getBody();
         } catch (final InterruptedException cause) {
             throw new NominatimClientException(cause);
@@ -105,13 +99,54 @@ public final class NominatimService implements AutoCloseable {
         this.executorService.shutdownNow();
     }
 
-    private static String findUriToFindByCoordinate(Coordinate coordinate) {
-        return fromUriString(URI_WITHOUT_PARAMETERS)
-                .queryParam(PARAM_NAME_FORMAT, FORMAT)
-                .queryParam(PARAM_NAME_LATITUDE, coordinate.getLatitude())
-                .queryParam(PARAM_NAME_LONGITUDE, coordinate.getLongitude())
-                .queryParam(PARAM_NAME_ZOOM, ZOOM)
-                .build()
-                .toUriString();
+    private static final class NominatimReverseUriBuilder {
+        private static final String EXCEPTION_DESCRIPTION_URI_BUILDING_BY_NOT_DEFINED_COORDINATE
+                = "Uri was build by not defined coordinates.";
+
+        private static final String URI_WITHOUT_PARAMETERS = "https://nominatim.openstreetmap.org/reverse";
+        private static final String PARAM_NAME_LATITUDE = "lat";
+        private static final String PARAM_NAME_LONGITUDE = "lon";
+        private static final String PARAM_NAME_ZOOM = "zoom";
+        private static final String PARAM_NAME_FORMAT = "format";
+        private static final String PARAM_NAME_POLYGON_GEOJSON = "polygon_geojson";
+        private static final String PARAM_NAME_EXTRATAGS = "extratags";
+
+        private static final int PARAM_VALUE_ZOOM = 10;
+        private static final String PARAM_VALUE_FORMAT = "jsonv2";
+        private static final int PARAM_VALUE_POLYGON_GEOJSON = 1;
+        private static final int PARAM_VALUE_EXTRATAGS = 1;
+
+        private double latitude;
+        private double longitude;
+
+        public NominatimReverseUriBuilder() {
+            this.latitude = NaN;
+            this.longitude = NaN;
+        }
+
+        public NominatimReverseUriBuilder catalogLatitude(double latitude) {
+            this.latitude = latitude;
+            return this;
+        }
+
+        public NominatimReverseUriBuilder catalogLongitude(double longitude) {
+            this.longitude = longitude;
+            return this;
+        }
+
+        public String build() {
+            if (isNaN(this.latitude) || isNaN(this.longitude)) {
+                throw new IllegalStateException(EXCEPTION_DESCRIPTION_URI_BUILDING_BY_NOT_DEFINED_COORDINATE);
+            }
+            return fromUriString(URI_WITHOUT_PARAMETERS)
+                    .queryParam(PARAM_NAME_LATITUDE, this.latitude)
+                    .queryParam(PARAM_NAME_LONGITUDE, this.longitude)
+                    .queryParam(PARAM_NAME_ZOOM, PARAM_VALUE_ZOOM)
+                    .queryParam(PARAM_NAME_FORMAT, PARAM_VALUE_FORMAT)
+                    .queryParam(PARAM_NAME_POLYGON_GEOJSON, PARAM_VALUE_POLYGON_GEOJSON)
+                    .queryParam(PARAM_NAME_EXTRATAGS, PARAM_VALUE_EXTRATAGS)
+                    .build()
+                    .toUriString();
+        }
     }
 }
