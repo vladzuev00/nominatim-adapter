@@ -20,6 +20,7 @@ public class RestTemplateConfig {
     public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
         final MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
         converter.setSupportedMediaTypes(singletonList(ALL));
+        converter.setObjectMapper(this.objectMapper());
         restTemplateBuilder.additionalMessageConverters(converter);
         return restTemplateBuilder.build();
     }

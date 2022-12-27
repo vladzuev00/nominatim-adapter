@@ -12,3 +12,6 @@ spring:
           batch_size: 500
         dialect: org.hibernate.spatial.dialect.postgis.PostgisDialect
     show-sql: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher

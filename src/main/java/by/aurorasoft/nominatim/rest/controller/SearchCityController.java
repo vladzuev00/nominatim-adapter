@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import javax.validation.constraints.DecimalMax;
@@ -35,19 +36,19 @@ public class SearchCityController {
 
     @PostMapping
     public ResponseEntity<SearchingCitiesProcess> start(
-            @Valid @RequestBody StartSearchingCitiesRequestBody requestBody,
-            Errors errors) {
-        validate(requestBody, errors);
+            @Valid @RequestBody SearchCityController.StartSearchingCitiesRequest request,
+            @ApiIgnore Errors errors) {
+        validate(request, errors);
         final SearchingCitiesProcess createdProcess = this.startingSearchingCitiesProcessService.start(
-                requestBody.getAreaCoordinate(), requestBody.getSearchStep());
+                request.getBbox(), request.getSearchStep());
         return ok(createdProcess);
     }
 
-    private static void validate(StartSearchingCitiesRequestBody requestBody, Errors errors) {
+    private static void validate(StartSearchingCitiesRequest requestBody, Errors errors) {
         if (errors.hasErrors()) {
             throw new ConstraintException(errors);
         }
-        if (!isValidAreaCoordinate(requestBody.getAreaCoordinate())) {
+        if (!isValidAreaCoordinate(requestBody.getBbox())) {
             throw new ConstraintException(EXCEPTION_MESSAGE_NOT_VALID_AREA_COORDINATE);
         }
     }
@@ -60,11 +61,11 @@ public class SearchCityController {
     }
 
     @Value
-    private static class StartSearchingCitiesRequestBody {
+    private static class StartSearchingCitiesRequest {
 
         @NotNull
         @Valid
-        AreaCoordinate areaCoordinate;
+        AreaCoordinate bbox;
 
         @NotNull
         @DecimalMin(value = "0.01")
@@ -72,9 +73,9 @@ public class SearchCityController {
         Double searchStep;
 
         @JsonCreator
-        public StartSearchingCitiesRequestBody(@JsonProperty("bbox") AreaCoordinate areaCoordinate,
-                                               @JsonProperty("searchStep") Double searchStep) {
-            this.areaCoordinate = areaCoordinate;
+        public StartSearchingCitiesRequest(@JsonProperty("bbox") AreaCoordinate bbox,
+                                           @JsonProperty("searchStep") Double searchStep) {
+            this.bbox = bbox;
             this.searchStep = searchStep;
         }
     }
