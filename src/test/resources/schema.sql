@@ -18,9 +18,10 @@ CREATE TYPE searching_cities_process_type AS ENUM('HANDLING', 'SUCCESS', 'ERROR'
 CREATE TABLE searching_cities_process
 (
     id             BIGSERIAL PRIMARY KEY,
+    bounds         GEOMETRY                      NOT NULL,
     search_step    DECIMAL                       NOT NULL,
-    total_points   INTEGER                       NOT NULL,
-    handled_points INTEGER                       NOT NULL,
+    total_points   BIGINT                        NOT NULL,
+    handled_points BIGINT                        NOT NULL,
     status         searching_cities_process_type NOT NULL,
     created_time   TIMESTAMP                     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_time   TIMESTAMP                     NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -33,7 +34,8 @@ OR REPLACE FUNCTION on_update_searching_cities_process()
 AS $$
 BEGIN
 
-NEW.updated_time = CURRENT_TIMESTAMP;
+NEW.updated_time
+= CURRENT_TIMESTAMP;
 
 RETURN NEW;
 

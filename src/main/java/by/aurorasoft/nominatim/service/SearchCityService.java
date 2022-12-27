@@ -5,7 +5,6 @@ import by.aurorasoft.nominatim.crud.model.dto.City;
 import by.aurorasoft.nominatim.crud.model.dto.Coordinate;
 import by.aurorasoft.nominatim.crud.model.dto.NominatimReverseResponse;
 import by.aurorasoft.nominatim.crud.model.dto.NominatimReverseResponse.ExtraTags;
-import by.aurorasoft.nominatim.crud.service.CityService;
 import by.aurorasoft.nominatim.rest.client.NominatimService;
 import by.aurorasoft.nominatim.rest.mapper.NominatimReverseResponseToCityMapper;
 import lombok.RequiredArgsConstructor;
@@ -15,40 +14,24 @@ import java.util.*;
 
 import static by.aurorasoft.nominatim.util.StreamUtil.asStream;
 import static java.lang.Double.compare;
-import static java.lang.String.format;
 import static java.util.stream.Collectors.toSet;
 
 @Service
 @RequiredArgsConstructor
 public final class SearchCityService {
-    private static final String TEMPLATE_EXCEPTION_DESCRIPTION_NOT_VALID_AREA_COORDINATE
-            = "Area's coordinate '%s' isn't valid.";
     private static final String REGEX_PLACE_VALUE_IN_JSON_OF_CITY = "(city)|(town)";
 
     private final NominatimService nominatimService;
     private final NominatimReverseResponseToCityMapper mapper;
-    private final CityService cityService;
 
-    public void findInAreaAndSave(AreaCoordinate areaCoordinate, double searchStep) {
-        if (!isValidAreaCoordinate(areaCoordinate)) {
-            throw new IllegalArgumentException(
-                    format(TEMPLATE_EXCEPTION_DESCRIPTION_NOT_VALID_AREA_COORDINATE, areaCoordinate));
-        }
+    public Collection<City> findInArea(AreaCoordinate areaCoordinate, double searchStep) {
         final Set<String> namesAlreadyFoundCities = new HashSet<>();
-        final Set<City> foundCities = asStream(new AreaIterator(areaCoordinate, searchStep))
+        return asStream(new AreaIterator(areaCoordinate, searchStep))
                 .map(this.nominatimService::reverse)
                 .filter(SearchCityService::isCity)
                 .map(this.mapper::map)
                 .filter(city -> namesAlreadyFoundCities.add(city.getName()))
                 .collect(toSet());
-        this.cityService.saveAll(foundCities);
-    }
-
-    private static boolean isValidAreaCoordinate(AreaCoordinate areaCoordinate) {
-        final Coordinate leftBottom = areaCoordinate.getLeftBottom();
-        final Coordinate rightUpper = areaCoordinate.getRightUpper();
-        return compare(leftBottom.getLatitude(), rightUpper.getLatitude()) < 0
-                && compare(leftBottom.getLongitude(), rightUpper.getLongitude()) < 0;
     }
 
     private static boolean isCity(NominatimReverseResponse response) {

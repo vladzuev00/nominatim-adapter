@@ -1,11 +1,11 @@
-package by.aurorasoft.nominatim.configuration;
+package by.aurorasoft.nominatim.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ModelMapperConfiguration {
+public class ModelMapperConfig {
 
     @Bean
     public ModelMapper modelMapper() {

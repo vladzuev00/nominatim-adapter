@@ -7,7 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CityMapper extends AbsMapperEntityDto<CityEntity, City> {
+public final class CityMapper extends AbsMapperEntityDto<CityEntity, City> {
 
     public CityMapper(ModelMapper modelMapper) {
         super(modelMapper, CityEntity.class, City.class);

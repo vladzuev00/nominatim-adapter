@@ -1,11 +1,11 @@
-package by.aurorasoft.nominatim.configuration;
+package by.aurorasoft.nominatim.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.wololo.jts2geojson.GeoJSONReader;
 
 @Configuration
-public class GeoJsonConfiguration {
+public class GeoJsonConfig {
 
     @Bean
     public GeoJSONReader geoJsonReader() {
