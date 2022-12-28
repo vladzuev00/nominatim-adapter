@@ -22,17 +22,17 @@ import static org.junit.Assert.assertEquals;
 @Transactional
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ContextConfiguration//(initializers = {AbstractContextTest.DBContainerInitializer.class})
+@ContextConfiguration(initializers = {AbstractContextTest.DBContainerInitializer.class})
 public abstract class AbstractContextTest {
     @SuppressWarnings("resource")
-//    public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:11.1")
-//            .withDatabaseName("integration-tests-db")
-//            .withUsername("sa")
-//            .withPassword("sa");
-//
-//    static {
-//        postgreSQLContainer.start();
-//    }
+    public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgis/postgis")
+            .withDatabaseName("integration-tests-db")
+            .withUsername("sa")
+            .withPassword("sa");
+
+    static {
+        postgreSQLContainer.start();
+    }
 
     @PersistenceContext
     protected EntityManager entityManager;
@@ -60,15 +60,15 @@ public abstract class AbstractContextTest {
         assertEquals("wrong count of queries", Long.valueOf(expected), this.getQueryCount());
     }
 
-//    static class DBContainerInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-//
-//        @Override
-//        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-//            TestPropertyValues.of(
-//                    "spring.datasource.url=" + postgreSQLContainer.getJdbcUrl(),
-//                    "spring.datasource.username=" + postgreSQLContainer.getUsername(),
-//                    "spring.datasource.password=" + postgreSQLContainer.getPassword()
-//            ).applyTo(configurableApplicationContext.getEnvironment());
-//        }
-//    }
+    static class DBContainerInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+
+        @Override
+        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
+            TestPropertyValues.of(
+                    "spring.datasource.url=" + postgreSQLContainer.getJdbcUrl(),
+                    "spring.datasource.username=" + postgreSQLContainer.getUsername(),
+                    "spring.datasource.password=" + postgreSQLContainer.getPassword()
+            ).applyTo(configurableApplicationContext.getEnvironment());
+        }
+    }
 }
