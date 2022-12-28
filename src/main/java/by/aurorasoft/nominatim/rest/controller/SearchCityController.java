@@ -3,12 +3,16 @@ package by.aurorasoft.nominatim.rest.controller;
 import by.aurorasoft.nominatim.crud.model.dto.AreaCoordinate;
 import by.aurorasoft.nominatim.crud.model.dto.Coordinate;
 import by.aurorasoft.nominatim.crud.model.dto.SearchingCitiesProcess;
+import by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity.Status;
 import by.aurorasoft.nominatim.rest.controller.exception.ConstraintException;
 import by.aurorasoft.nominatim.service.StartingSearchingCitiesProcessService;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
+import org.locationtech.jts.geom.Geometry;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +27,7 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 
 import static java.lang.Double.compare;
+import static java.util.Arrays.stream;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
@@ -35,13 +40,13 @@ public class SearchCityController {
     private final StartingSearchingCitiesProcessService startingSearchingCitiesProcessService;
 
     @PostMapping
-    public ResponseEntity<SearchingCitiesProcess> start(
-            @Valid @RequestBody SearchCityController.StartSearchingCitiesRequest request,
+    public ResponseEntity<SearchingCitiesProcessResponse> start(
+            @Valid @RequestBody StartSearchingCitiesRequest request,
             @ApiIgnore Errors errors) {
         validate(request, errors);
         final SearchingCitiesProcess createdProcess = this.startingSearchingCitiesProcessService.start(
                 request.getBbox(), request.getSearchStep());
-        return ok(createdProcess);
+        return ok(mapToResponse(createdProcess));
     }
 
     private static void validate(StartSearchingCitiesRequest requestBody, Errors errors) {
@@ -58,6 +63,27 @@ public class SearchCityController {
         final Coordinate rightUpper = research.getRightUpper();
         return compare(leftBottom.getLatitude(), rightUpper.getLatitude()) <= 0
                 && compare(leftBottom.getLongitude(), rightUpper.getLongitude()) <= 0;
+    }
+
+    private static SearchingCitiesProcessResponse mapToResponse(SearchingCitiesProcess mapped) {
+        return SearchingCitiesProcessResponse.builder()
+                .id(mapped.getId())
+                .coordinates(map(mapped.getGeometry()))
+                .searchStep(mapped.getSearchStep())
+                .totalPoints(mapped.getTotalPoints())
+                .handledPoints(mapped.getHandledPoints())
+                .status(mapped.getStatus())
+                .build();
+    }
+
+    private static Coordinate[] map(Geometry mapped) {
+        return stream(mapped.getCoordinates())
+                .map(SearchCityController::map)
+                .toArray(Coordinate[]::new);
+    }
+
+    private static Coordinate map(org.locationtech.jts.geom.Coordinate mapped) {
+        return new Coordinate(mapped.getX(), mapped.getY());
     }
 
     @Value
@@ -78,5 +104,17 @@ public class SearchCityController {
             this.bbox = bbox;
             this.searchStep = searchStep;
         }
+    }
+
+    @Value
+    @Builder
+    @AllArgsConstructor
+    private static class SearchingCitiesProcessResponse {
+        Long id;
+        Coordinate[] coordinates;
+        double searchStep;
+        long totalPoints;
+        long handledPoints;
+        Status status;
     }
 }
