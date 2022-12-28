@@ -15,11 +15,11 @@ import org.testcontainers.containers.PostgreSQLContainer;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.TimeZone;
 
 import static java.util.TimeZone.getTimeZone;
 import static java.util.TimeZone.setDefault;
 import static org.junit.Assert.assertEquals;
+import static org.testcontainers.utility.DockerImageName.parse;
 
 @Transactional
 @RunWith(SpringRunner.class)
@@ -27,7 +27,10 @@ import static org.junit.Assert.assertEquals;
 @ContextConfiguration(initializers = {AbstractContextTest.DBContainerInitializer.class})
 public abstract class AbstractContextTest {
     @SuppressWarnings("resource")
-    public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:11.1")
+    public static PostgreSQLContainer<?> postgreSQLContainer
+            = new PostgreSQLContainer<>(
+                    parse("mdillon/postgis:9.5")
+                            .asCompatibleSubstituteFor("postgres"))
             .withDatabaseName("integration-tests-db")
             .withUsername("sa")
             .withPassword("sa");

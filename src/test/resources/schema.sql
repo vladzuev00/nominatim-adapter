@@ -1,5 +1,3 @@
-CREATE EXTENSION postgis;
-
 CREATE TABLE city
 (
     id       SERIAL PRIMARY KEY,
@@ -27,10 +25,8 @@ CREATE TABLE searching_cities_process
 );
 
 CREATE
-OR REPLACE FUNCTION on_update_searching_cities_process()
-    RETURNS TRIGGER
-    LANGUAGE PLPGSQL
-AS $$
+OR REPLACE FUNCTION on_update_searching_cities_process() RETURNS TRIGGER AS
+    '
 BEGIN
 
 NEW.updated_time
@@ -39,10 +35,9 @@ NEW.updated_time
 RETURN NEW;
 
 END;
-$$;
+    ' LANGUAGE plpgsql;
 
-CREATE
-OR REPLACE TRIGGER tr_on_update_searching_cities_process
+CREATE TRIGGER tr_on_update_searching_cities_process
 AFTER
 UPDATE
     ON searching_cities_process

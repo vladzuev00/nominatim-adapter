@@ -22,13 +22,7 @@ public final class CityMapperTest extends AbstractContextTest {
 
     @Test
     public void dtoShouldBeMappedToEntity() {
-        final Coordinate[] givenGeometryCoordinates = new Coordinate[]{
-                new Coordinate(1, 2),
-                new Coordinate(2, 3),
-                new Coordinate(3, 4),
-                new Coordinate(4, 5),
-                new Coordinate(1, 2)
-        };
+        final Coordinate[] givenGeometryCoordinates = createCoordinates();
         final City givenDto = City.builder()
                 .id(255L)
                 .name("city")
@@ -44,6 +38,36 @@ public final class CityMapperTest extends AbstractContextTest {
                 .type(CAPITAL)
                 .build();
         checkEquals(expected, actual);
+    }
+
+    @Test
+    public void entityShouldBeMappedToDto() {
+        final Coordinate[] givenGeometryCoordinates = createCoordinates();
+        final CityEntity givenEntity = CityEntity.builder()
+                .id(255L)
+                .name("city")
+                .geometry(this.geometryFactory.createPolygon(givenGeometryCoordinates))
+                .type(CAPITAL)
+                .build();
+
+        final City actual = this.cityMapper.toDto(givenEntity);
+        final City expected = City.builder()
+                .id(255L)
+                .name("city")
+                .geometry(this.geometryFactory.createPolygon(givenGeometryCoordinates))
+                .type(CAPITAL)
+                .build();
+        assertEquals(expected, actual);
+    }
+
+    private static Coordinate[] createCoordinates() {
+        return new Coordinate[]{
+                new Coordinate(1, 2),
+                new Coordinate(2, 3),
+                new Coordinate(3, 4),
+                new Coordinate(4, 5),
+                new Coordinate(1, 2)
+        };
     }
 
     private static void checkEquals(CityEntity expected, CityEntity actual) {
