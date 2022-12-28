@@ -17,6 +17,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.TimeZone;
 
+import static java.util.TimeZone.getTimeZone;
+import static java.util.TimeZone.setDefault;
 import static org.junit.Assert.assertEquals;
 
 @Transactional
@@ -25,7 +27,7 @@ import static org.junit.Assert.assertEquals;
 @ContextConfiguration(initializers = {AbstractContextTest.DBContainerInitializer.class})
 public abstract class AbstractContextTest {
     @SuppressWarnings("resource")
-    public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgis/postgis")
+    public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:11.1")
             .withDatabaseName("integration-tests-db")
             .withUsername("sa")
             .withPassword("sa");
@@ -42,7 +44,7 @@ public abstract class AbstractContextTest {
 
     @BeforeClass
     public static void setDefaultTimeZone() {
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+        setDefault(getTimeZone("UTC"));
     }
 
     protected final void startQueryCount() {
