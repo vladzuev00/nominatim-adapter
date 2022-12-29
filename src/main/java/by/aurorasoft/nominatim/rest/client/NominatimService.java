@@ -61,6 +61,7 @@ public final class NominatimService implements AutoCloseable {
                     .catalogLatitude(coordinate.getLatitude())
                     .catalogLongitude(coordinate.getLongitude())
                     .build();
+            System.out.println(uri);
             final ResponseEntity<NominatimReverseResponse> responseEntity = this.restTemplate
                     .exchange(uri, GET, EMPTY, PARAMETERIZED_TYPE_REFERENCE);
             this.durationBetweenRequestsPassed = false;

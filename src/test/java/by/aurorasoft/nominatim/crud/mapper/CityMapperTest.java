@@ -22,7 +22,7 @@ public final class CityMapperTest extends AbstractContextTest {
 
     @Test
     public void dtoShouldBeMappedToEntity() {
-        final Coordinate[] givenGeometryCoordinates = createCoordinates();
+        final Coordinate[] givenGeometryCoordinates = createGeometryCoordinates();
         final City givenDto = City.builder()
                 .id(255L)
                 .name("city")
@@ -42,7 +42,7 @@ public final class CityMapperTest extends AbstractContextTest {
 
     @Test
     public void entityShouldBeMappedToDto() {
-        final Coordinate[] givenGeometryCoordinates = createCoordinates();
+        final Coordinate[] givenGeometryCoordinates = createGeometryCoordinates();
         final CityEntity givenEntity = CityEntity.builder()
                 .id(255L)
                 .name("city")
@@ -60,12 +60,14 @@ public final class CityMapperTest extends AbstractContextTest {
         assertEquals(expected, actual);
     }
 
-    private static Coordinate[] createCoordinates() {
+    private static Coordinate[] createGeometryCoordinates() {
         return new Coordinate[]{
                 new Coordinate(1, 2),
                 new Coordinate(2, 3),
                 new Coordinate(3, 4),
                 new Coordinate(4, 5),
+                new Coordinate(5, 6),
+                new Coordinate(6, 7),
                 new Coordinate(1, 2)
         };
     }

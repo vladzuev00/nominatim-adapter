@@ -23,7 +23,7 @@ public class SearchingCitiesProcessService
         super.repository.updateStatus(process.getId(), newStatus);
     }
 
-    public void updateHandledPointsAndStatus(SearchingCitiesProcess process, long newHandledPoints, Status newStatus) {
-        super.repository.updateHandledPointsAndStatus(process.getId(), newHandledPoints, newStatus);
+    public void increaseHandledPoints(SearchingCitiesProcess process, long delta) {
+        super.repository.increaseHandledPoints(process.getId(), delta);
     }
 }

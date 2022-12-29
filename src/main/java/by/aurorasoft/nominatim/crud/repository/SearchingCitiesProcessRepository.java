@@ -14,7 +14,7 @@ public interface SearchingCitiesProcessRepository extends JpaRepository<Searchin
 
     @Modifying
     @Query("UPDATE SearchingCitiesProcessEntity e "
-            + "SET e.handledPoints = :newHandledPoints, e.status = :newStatus "
+            + "SET e.handledPoints = e.handledPoints + :delta "
             + "WHERE e.id = :id")
-    void updateHandledPointsAndStatus(Long id, long newHandledPoints, Status newStatus);
+    void increaseHandledPoints(Long id, long delta);
 }

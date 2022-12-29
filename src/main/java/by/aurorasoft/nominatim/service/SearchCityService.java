@@ -1,6 +1,5 @@
 package by.aurorasoft.nominatim.service;
 
-import by.aurorasoft.nominatim.crud.model.dto.AreaCoordinate;
 import by.aurorasoft.nominatim.crud.model.dto.City;
 import by.aurorasoft.nominatim.crud.model.dto.Coordinate;
 import by.aurorasoft.nominatim.crud.model.dto.NominatimReverseResponse;
@@ -12,9 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-import static by.aurorasoft.nominatim.util.StreamUtil.asStream;
-import static java.lang.Double.compare;
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -24,14 +21,12 @@ public final class SearchCityService {
     private final NominatimService nominatimService;
     private final NominatimReverseResponseToCityMapper mapper;
 
-    public Collection<City> findInArea(AreaCoordinate areaCoordinate, double searchStep) {
-        final Set<String> namesAlreadyFoundCities = new HashSet<>();
-        return asStream(new AreaIterator(areaCoordinate, searchStep))
+    public Collection<City> findByCoordinates(List<Coordinate> coordinates) {
+        return coordinates.stream()
                 .map(this.nominatimService::reverse)
                 .filter(SearchCityService::isCity)
                 .map(this.mapper::map)
-                .filter(city -> namesAlreadyFoundCities.add(city.getName()))
-                .collect(toSet());
+                .collect(toList());
     }
 
     private static boolean isCity(NominatimReverseResponse response) {
@@ -39,61 +34,5 @@ public final class SearchCityService {
         return extraTags != null
                 && extraTags.getPlace() != null
                 && extraTags.getPlace().matches(REGEX_PLACE_VALUE_IN_JSON_OF_CITY);
-    }
-
-    private static final class AreaIterator implements Iterator<Coordinate> {
-        private final AreaCoordinate areaCoordinate;
-        private final double searchStep;
-        private Coordinate current;
-
-        public AreaIterator(AreaCoordinate areaCoordinate, double searchStep) {
-            this.areaCoordinate = areaCoordinate;
-            this.searchStep = searchStep;
-            this.current = new Coordinate(
-                    areaCoordinate.getLeftBottom().getLatitude() - searchStep,
-                    areaCoordinate.getLeftBottom().getLongitude()
-            );
-        }
-
-        @Override
-        public boolean hasNext() {
-            return this.hasNextLatitude() || this.hasNextLongitude();
-        }
-
-        @Override
-        public Coordinate next() {
-            if (this.hasNextLatitude()) {
-                return this.nextLatitude();
-            } else if (this.hasNextLongitude()) {
-                return this.nextLongitude();
-            }
-            throw new NoSuchElementException();
-        }
-
-        private boolean hasNextLatitude() {
-            return compare(
-                    this.current.getLatitude() + this.searchStep,
-                    this.areaCoordinate.getRightUpper().getLatitude()) <= 0;
-        }
-
-        private boolean hasNextLongitude() {
-            return compare(
-                    this.current.getLongitude() + this.searchStep,
-                    this.areaCoordinate.getRightUpper().getLongitude()) <= 0;
-        }
-
-        private Coordinate nextLatitude() {
-            this.current = new Coordinate(
-                    this.current.getLatitude() + this.searchStep,
-                    this.current.getLongitude());
-            return this.current;
-        }
-
-        private Coordinate nextLongitude() {
-            this.current = new Coordinate(
-                    this.areaCoordinate.getLeftBottom().getLatitude(),
-                    this.current.getLongitude() + this.searchStep);
-            return this.current;
-        }
     }
 }
