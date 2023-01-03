@@ -4,6 +4,7 @@ import by.aurorasoft.nominatim.crud.model.dto.AreaCoordinate;
 import by.aurorasoft.nominatim.crud.model.dto.Coordinate;
 import by.aurorasoft.nominatim.crud.model.dto.SearchingCitiesProcess;
 import by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity.Status;
+import by.aurorasoft.nominatim.crud.service.SearchingCitiesProcessService;
 import by.aurorasoft.nominatim.rest.controller.exception.ConstraintException;
 import by.aurorasoft.nominatim.service.StartingSearchingCitiesProcessService;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -14,10 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.wololo.geojson.Geometry;
 import org.wololo.jts2geojson.GeoJSONWriter;
 import springfox.documentation.annotations.ApiIgnore;
@@ -27,18 +25,36 @@ import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 
+import java.util.List;
+
 import static java.lang.Double.compare;
+import static java.util.stream.Collectors.toList;
+import static org.springframework.http.ResponseEntity.of;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
-@RequestMapping("/searchCity")
+@RequestMapping("/searchCityTask")
 @RequiredArgsConstructor
 public class SearchCityController {
     private static final String EXCEPTION_MESSAGE_NOT_VALID_AREA_COORDINATE
             = "Left bottom point's coordinates should be less than right upper point's coordinates.";
 
     private final StartingSearchingCitiesProcessService startingSearchingCitiesProcessService;
+    private final SearchingCitiesProcessService searchingCitiesProcessService;
     private final GeoJSONWriter geoJSONWriter;
+
+    @GetMapping("/{id}")
+    public ResponseEntity<SearchingCitiesProcess> findById(@PathVariable Long id) {
+        return of(this.searchingCitiesProcessService.getByIdOptional(id));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<SearchingCitiesProcessResponse>> findByStatus(
+            @RequestParam(name = "status") Status status) {
+        final List<SearchingCitiesProcess> foundProcesses = this.searchingCitiesProcessService
+                .findByStatus(status);
+        return ok(this.mapToResponses(foundProcesses));
+    }
 
     @PostMapping
     public ResponseEntity<SearchingCitiesProcessResponse> start(
@@ -64,6 +80,12 @@ public class SearchCityController {
         final Coordinate rightUpper = research.getRightUpper();
         return compare(leftBottom.getLatitude(), rightUpper.getLatitude()) <= 0
                 && compare(leftBottom.getLongitude(), rightUpper.getLongitude()) <= 0;
+    }
+
+    private List<SearchingCitiesProcessResponse> mapToResponses(List<SearchingCitiesProcess> mapped) {
+        return mapped.stream()
+                .map(this::mapToResponse)
+                .collect(toList());
     }
 
     private SearchingCitiesProcessResponse mapToResponse(SearchingCitiesProcess mapped) {

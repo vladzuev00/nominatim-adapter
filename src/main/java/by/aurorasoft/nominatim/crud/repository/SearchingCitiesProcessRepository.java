@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface SearchingCitiesProcessRepository extends JpaRepository<SearchingCitiesProcessEntity, Long> {
 
     @Modifying
@@ -17,4 +19,7 @@ public interface SearchingCitiesProcessRepository extends JpaRepository<Searchin
             + "SET e.handledPoints = e.handledPoints + :delta "
             + "WHERE e.id = :id")
     void increaseHandledPoints(Long id, long delta);
+
+    @Query("SELECT e FROM SearchingCitiesProcessEntity e WHERE e.status = :status")
+    List<SearchingCitiesProcessEntity> findByStatus(Status status);
 }

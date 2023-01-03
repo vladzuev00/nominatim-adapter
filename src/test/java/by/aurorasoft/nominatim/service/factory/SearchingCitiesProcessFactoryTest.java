@@ -1,10 +1,9 @@
-package by.aurorasoft.nominatim.service;
+package by.aurorasoft.nominatim.service.factory;
 
 import by.aurorasoft.nominatim.base.AbstractContextTest;
 import by.aurorasoft.nominatim.crud.model.dto.AreaCoordinate;
 import by.aurorasoft.nominatim.crud.model.dto.Coordinate;
 import by.aurorasoft.nominatim.crud.model.dto.SearchingCitiesProcess;
-import by.aurorasoft.nominatim.service.factory.SearchingCitiesProcessFactory;
 import org.junit.Test;
 import org.locationtech.jts.geom.CoordinateXY;
 import org.locationtech.jts.geom.GeometryFactory;

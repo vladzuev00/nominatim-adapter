@@ -9,6 +9,8 @@ import by.nhorushko.crudgeneric.v2.service.AbsServiceCRUD;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 public class SearchingCitiesProcessService
@@ -25,5 +27,10 @@ public class SearchingCitiesProcessService
 
     public void increaseHandledPoints(SearchingCitiesProcess process, long delta) {
         super.repository.increaseHandledPoints(process.getId(), delta);
+    }
+
+    public List<SearchingCitiesProcess> findByStatus(Status status) {
+        final List<SearchingCitiesProcessEntity> foundEntities = super.repository.findByStatus(status);
+        return super.mapper.toDtos(foundEntities);
     }
 }

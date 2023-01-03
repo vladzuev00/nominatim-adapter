@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: cities-searcher
   datasource:
     url: jdbc:postgresql://localhost:5432/nominatim
     username: postgres
@@ -18,3 +20,7 @@ spring:
 
 search-cities:
   amount-handled-points-to-save-state: 10
+
+server:
+  servlet:
+    context-path: /cities-searcher
