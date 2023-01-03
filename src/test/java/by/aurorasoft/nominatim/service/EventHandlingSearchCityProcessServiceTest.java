@@ -1,8 +1,11 @@
 package by.aurorasoft.nominatim.service;
 
+import by.aurorasoft.nominatim.base.AbstractContextTest;
 import by.aurorasoft.nominatim.crud.model.dto.AreaCoordinate;
+import by.aurorasoft.nominatim.crud.model.dto.City;
 import by.aurorasoft.nominatim.crud.model.dto.Coordinate;
 import by.aurorasoft.nominatim.crud.model.dto.SearchingCitiesProcess;
+import by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity.Status;
 import by.aurorasoft.nominatim.crud.service.CityService;
 import by.aurorasoft.nominatim.crud.service.SearchingCitiesProcessService;
 import by.aurorasoft.nominatim.service.factory.SearchingCitiesProcessFactory;
@@ -14,6 +17,11 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Collection;
+import java.util.List;
+
+import static by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity.Status.ERROR;
+import static by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity.Status.SUCCESS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.mockito.ArgumentMatchers.any;
@@ -21,7 +29,7 @@ import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public final class EventHandlingSearchCityProcessServiceTest {
+public final class EventHandlingSearchCityProcessServiceTest extends AbstractContextTest {
 
     @Mock
     private SearchingCitiesProcessService mockedSearchingCitiesProcessService;
@@ -46,6 +54,12 @@ public final class EventHandlingSearchCityProcessServiceTest {
     @Captor
     private ArgumentCaptor<Long> longArgumentCaptor;
 
+    @Captor
+    private ArgumentCaptor<Status> statusArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<Collection<City>> citiesArgumentCaptor;
+
     @Before
     public void initializeEventHandlingSearchCityProcessService() {
         this.eventHandlingSearchCityProcessService = new EventHandlingSearchCityProcessService(
@@ -61,13 +75,11 @@ public final class EventHandlingSearchCityProcessServiceTest {
                 new Coordinate(52.998760, 25.992997));
         final double givenSearchStep = 0.01;
 
-        final SearchingCitiesProcess givenProcessToBeSaved = SearchingCitiesProcess.builder().build();
+        final SearchingCitiesProcess givenProcessToBeSaved = createProcess(null);
         when(this.mockedSearchingCitiesProcessFactory.create(any(AreaCoordinate.class), anyDouble()))
                 .thenReturn(givenProcessToBeSaved);
 
-        final SearchingCitiesProcess givenSavedProcess = SearchingCitiesProcess.builder()
-                .id(255L)
-                .build();
+        final SearchingCitiesProcess givenSavedProcess = createProcess(255L);
         when(this.mockedSearchingCitiesProcessService.save(any(SearchingCitiesProcess.class)))
                 .thenReturn(givenSavedProcess);
 
@@ -87,9 +99,7 @@ public final class EventHandlingSearchCityProcessServiceTest {
 
     @Test
     public void eventOfSuccessFindingCitiesBySubtaskShouldBeHandled() {
-        final SearchingCitiesProcess givenProcess = SearchingCitiesProcess.builder()
-                .id(255L)
-                .build();
+        final SearchingCitiesProcess givenProcess = createProcess(255L);
         final long givenAmountHandledPoints = 100;
 
         this.eventHandlingSearchCityProcessService.onSuccessFindCitiesBySubtask(givenProcess,
@@ -103,6 +113,62 @@ public final class EventHandlingSearchCityProcessServiceTest {
 
     @Test
     public void eventOfFailedFindingCitiesBySubtaskShouldBeHandled() {
-        throw new RuntimeException();
+        final Exception givenException = mock(Exception.class);
+
+        final String givenMessage = "message";
+        when(givenException.getMessage()).thenReturn(givenMessage);
+
+        this.eventHandlingSearchCityProcessService.onFailedFindCitiesBySubtask(givenException);
+
+        verify(givenException, times(1)).getMessage();
+        verify(givenException, times(1)).printStackTrace();
+    }
+
+    @Test
+    public void eventOnSuccessFindingAllCitiesShouldBeHandledSuccessfully() {
+        final SearchingCitiesProcess givenProcess = createProcess(255L);
+        final Collection<City> givenFoundCities = List.of(createCity(1L), createCity(2L), createCity(3L));
+
+        this.eventHandlingSearchCityProcessService.onSuccessFindAllCities(givenProcess, givenFoundCities);
+
+        verify(this.mockedSearchingCitiesProcessService, times(1))
+                .updateStatus(this.processArgumentCaptor.capture(), this.statusArgumentCaptor.capture());
+        verify(this.mockedCityService, times(1))
+                .saveAll(this.citiesArgumentCaptor.capture());
+
+        assertSame(givenProcess, this.processArgumentCaptor.getValue());
+        assertSame(SUCCESS, this.statusArgumentCaptor.getValue());
+        assertEquals(givenFoundCities, this.citiesArgumentCaptor.getValue());
+    }
+
+    @Test
+    public void eventOnFailedFindingAllCitiesShouldBeHandled() {
+        final SearchingCitiesProcess givenProcess = createProcess(255L);
+
+        final String givenExceptionMessage = "message";
+        final Exception givenException = mock(Exception.class);
+        when(givenException.getMessage()).thenReturn(givenExceptionMessage);
+
+        this.eventHandlingSearchCityProcessService.onFailedFindAllCities(givenProcess, givenException);
+
+        verify(this.mockedSearchingCitiesProcessService, times(1))
+                .updateStatus(this.processArgumentCaptor.capture(), this.statusArgumentCaptor.capture());
+        verify(givenException, times(1)).getMessage();
+        verify(givenException, times(1)).printStackTrace();
+
+        assertSame(givenProcess, this.processArgumentCaptor.getValue());
+        assertSame(ERROR, this.statusArgumentCaptor.getValue());
+    }
+
+    private static SearchingCitiesProcess createProcess(Long id) {
+        return SearchingCitiesProcess.builder()
+                .id(id)
+                .build();
+    }
+
+    private static City createCity(Long id) {
+        return City.builder()
+                .id(id)
+                .build();
     }
 }
