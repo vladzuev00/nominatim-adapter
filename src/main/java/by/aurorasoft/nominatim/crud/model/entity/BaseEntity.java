@@ -32,7 +32,7 @@ public abstract class BaseEntity<IdType> implements AbstractEntity<IdType> {
     }
 
     @Override
-    public final String toString() {
+    public String toString() {
         return this.getClass().getName() + "[id = " + this.getId() + "]";
     }
 }

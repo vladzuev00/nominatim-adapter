@@ -23,6 +23,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @AllArgsConstructor
 @Setter
 @Getter
+@ToString(callSuper = true)
 @Builder
 public class CityEntity extends BaseEntity<Long> {
 

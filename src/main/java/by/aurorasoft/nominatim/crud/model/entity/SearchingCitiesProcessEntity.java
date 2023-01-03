@@ -20,6 +20,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @AllArgsConstructor
 @Setter
 @Getter
+@ToString(callSuper = true)
 @Builder
 public class SearchingCitiesProcessEntity extends BaseEntity<Long> {
 
@@ -28,7 +29,7 @@ public class SearchingCitiesProcessEntity extends BaseEntity<Long> {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "geometry")
+    @Column(name = "bounds")
     private Geometry geometry;
 
     @Column(name = "search_step")

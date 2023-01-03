@@ -1,14 +1,12 @@
+CREATE TYPE city_type AS ENUM ('CAPITAL', 'REGIONAL', 'NOT_DEFINED');
+
 CREATE TABLE city
 (
     id       SERIAL PRIMARY KEY,
     name     VARCHAR(256) NOT NULL,
-    geometry GEOMETRY     NOT NULL
+    geometry GEOMETRY     NOT NULL,
+    type     city_type    NOT NULL
 );
-
-CREATE TYPE city_type AS ENUM ('CAPITAL', 'REGIONAL', 'NOT_DEFINED');
-
-ALTER TABLE city
-    ADD COLUMN type city_type NOT NULL;
 
 CREATE TYPE searching_cities_process_type AS ENUM('HANDLING', 'SUCCESS', 'ERROR');
 
@@ -38,8 +36,8 @@ END;
     ' LANGUAGE plpgsql;
 
 CREATE TRIGGER tr_on_update_searching_cities_process
-AFTER
-UPDATE
+    AFTER
+        UPDATE
     ON searching_cities_process
     FOR EACH ROW
     EXECUTE PROCEDURE on_update_searching_cities_process();
