@@ -12,13 +12,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
-import org.locationtech.jts.geom.Geometry;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.wololo.geojson.Geometry;
+import org.wololo.jts2geojson.GeoJSONWriter;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
@@ -37,6 +38,7 @@ public class SearchCityController {
             = "Left bottom point's coordinates should be less than right upper point's coordinates.";
 
     private final StartingSearchingCitiesProcessService startingSearchingCitiesProcessService;
+    private final GeoJSONWriter geoJSONWriter;
 
     @PostMapping
     public ResponseEntity<SearchingCitiesProcessResponse> start(
@@ -45,7 +47,7 @@ public class SearchCityController {
         validate(request, errors);
         final SearchingCitiesProcess createdProcess = this.startingSearchingCitiesProcessService.start(
                 request.getBbox(), request.getSearchStep());
-        return ok(mapToResponse(createdProcess));
+        return ok(this.mapToResponse(createdProcess));
     }
 
     private static void validate(StartSearchingCitiesRequest requestBody, Errors errors) {
@@ -64,10 +66,10 @@ public class SearchCityController {
                 && compare(leftBottom.getLongitude(), rightUpper.getLongitude()) <= 0;
     }
 
-    private static SearchingCitiesProcessResponse mapToResponse(SearchingCitiesProcess mapped) {
+    private SearchingCitiesProcessResponse mapToResponse(SearchingCitiesProcess mapped) {
         return SearchingCitiesProcessResponse.builder()
                 .id(mapped.getId())
-                .geometry(mapped.getGeometry())
+                .geometry(this.geoJSONWriter.write(mapped.getGeometry()))
                 .searchStep(mapped.getSearchStep())
                 .totalPoints(mapped.getTotalPoints())
                 .handledPoints(mapped.getHandledPoints())
