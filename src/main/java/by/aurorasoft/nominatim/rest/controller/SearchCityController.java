@@ -27,7 +27,6 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 
 import static java.lang.Double.compare;
-import static java.util.Arrays.stream;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
@@ -68,22 +67,12 @@ public class SearchCityController {
     private static SearchingCitiesProcessResponse mapToResponse(SearchingCitiesProcess mapped) {
         return SearchingCitiesProcessResponse.builder()
                 .id(mapped.getId())
-                .coordinates(map(mapped.getGeometry()))
+                .geometry(mapped.getGeometry())
                 .searchStep(mapped.getSearchStep())
                 .totalPoints(mapped.getTotalPoints())
                 .handledPoints(mapped.getHandledPoints())
                 .status(mapped.getStatus())
                 .build();
-    }
-
-    private static Coordinate[] map(Geometry mapped) {
-        return stream(mapped.getCoordinates())
-                .map(SearchCityController::map)
-                .toArray(Coordinate[]::new);
-    }
-
-    private static Coordinate map(org.locationtech.jts.geom.Coordinate mapped) {
-        return new Coordinate(mapped.getX(), mapped.getY());
     }
 
     @Value
@@ -111,7 +100,7 @@ public class SearchCityController {
     @AllArgsConstructor
     private static class SearchingCitiesProcessResponse {
         Long id;
-        Coordinate[] coordinates;
+        Geometry geometry;
         double searchStep;
         long totalPoints;
         long handledPoints;
