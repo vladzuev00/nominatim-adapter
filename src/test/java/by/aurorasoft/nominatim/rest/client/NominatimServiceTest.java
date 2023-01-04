@@ -125,18 +125,21 @@ public class NominatimServiceTest {
     }
 
     private final class TimeSendingRequestControllingInterceptor implements ClientHttpRequestInterceptor {
+        private static final long INITIAL_TIME_MILLIS_PREVIOUS_REQUEST = 0;
+        private static final boolean INITIAL_IS_DURATION_BETWEEN_REQUESTS_RESPECTED = true;
+
         private long timeMillisPreviousRequest;
         private boolean isDurationBetweenRequestsRespected;
 
         public TimeSendingRequestControllingInterceptor() {
-            this.timeMillisPreviousRequest = 0;
-            this.isDurationBetweenRequestsRespected = true;
+            this.timeMillisPreviousRequest = INITIAL_TIME_MILLIS_PREVIOUS_REQUEST;
+            this.isDurationBetweenRequestsRespected = INITIAL_IS_DURATION_BETWEEN_REQUESTS_RESPECTED;
         }
 
         @Override
-        public @NotNull ClientHttpResponse intercept(@NotNull HttpRequest request,
-                                                     byte @NotNull [] body,
-                                                     @NotNull ClientHttpRequestExecution execution)
+        public synchronized @NotNull ClientHttpResponse intercept(@NotNull HttpRequest request,
+                                                                  byte @NotNull [] body,
+                                                                  @NotNull ClientHttpRequestExecution execution)
                 throws IOException {
             final long currentTimeMillis = currentTimeMillis();
             if (this.isDurationBetweenRequestsRespected

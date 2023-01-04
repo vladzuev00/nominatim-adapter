@@ -4,6 +4,7 @@ import by.aurorasoft.nominatim.crud.model.dto.City;
 import by.aurorasoft.nominatim.crud.model.entity.CityEntity.Type;
 import by.aurorasoft.nominatim.crud.service.CityService;
 import by.aurorasoft.nominatim.rest.controller.exception.ConstraintException;
+import by.aurorasoft.nominatim.rest.model.CityRequest;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,8 @@ import org.wololo.jts2geojson.GeoJSONWriter;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.List;
 import java.util.Optional;
 
@@ -114,21 +117,5 @@ public class CityController {
         String name;
         Geometry geometry;
         Type type;
-    }
-
-    @Value
-    private static class CityRequest {
-        String name;
-        Geometry geometry;
-        Type type;
-
-        @JsonCreator
-        public CityRequest(@JsonProperty("name") String name,
-                           @JsonProperty("geometry") Geometry geometry,
-                           @JsonProperty("type") Type type) {
-            this.name = name;
-            this.geometry = geometry;
-            this.type = type;
-        }
     }
 }
