@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpRequest;
@@ -52,6 +53,9 @@ public class NominatimServiceTest {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Value("${nominatim.millis-between-requests}")
+    private long millisBetweenRequests;
 
     @Test
     public void reverseOperationShouldBeSuccess()
@@ -120,9 +124,7 @@ public class NominatimServiceTest {
         return format(TEMPLATE_REVERSE_URI, coordinate.getLatitude(), coordinate.getLongitude());
     }
 
-    private static final class TimeSendingRequestControllingInterceptor implements ClientHttpRequestInterceptor {
-        private static final int REQUIRED_DURATION_IN_MILLIS_BETWEEN_REQUESTS = 1000;
-
+    private final class TimeSendingRequestControllingInterceptor implements ClientHttpRequestInterceptor {
         private long timeMillisPreviousRequest;
         private boolean isDurationBetweenRequestsRespected;
 
@@ -138,7 +140,7 @@ public class NominatimServiceTest {
                 throws IOException {
             final long currentTimeMillis = currentTimeMillis();
             if (this.isDurationBetweenRequestsRespected
-                    && currentTimeMillis - this.timeMillisPreviousRequest < REQUIRED_DURATION_IN_MILLIS_BETWEEN_REQUESTS) {
+                    && currentTimeMillis - this.timeMillisPreviousRequest < NominatimServiceTest.this.millisBetweenRequests) {
                 this.isDurationBetweenRequestsRespected = false;
             } else if (this.isDurationBetweenRequestsRespected) {
                 this.timeMillisPreviousRequest = currentTimeMillis;

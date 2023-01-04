@@ -3,6 +3,7 @@ package by.aurorasoft.nominatim.rest.client;
 import by.aurorasoft.nominatim.crud.model.dto.Coordinate;
 import by.aurorasoft.nominatim.crud.model.dto.NominatimReverseResponse;
 import by.aurorasoft.nominatim.rest.client.exception.NominatimClientException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ import static java.lang.Double.NaN;
 import static java.lang.Double.isNaN;
 import static java.lang.Thread.currentThread;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
-import static java.util.concurrent.TimeUnit.SECONDS;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.springframework.http.HttpEntity.EMPTY;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.web.util.UriComponentsBuilder.fromUriString;
@@ -30,16 +31,17 @@ public final class NominatimService implements AutoCloseable {
             = new ParameterizedTypeReference<>() {
     };
 
-    private static final int DURATION_IN_SECONDS_BETWEEN_REQUESTS = 1;
-
     private final RestTemplate restTemplate;
+    private final long millisBetweenRequests;
     private final ExecutorService executorService;
     private final Lock lock;
     private final Condition condition;
     private boolean durationBetweenRequestsPassed;
 
-    public NominatimService(RestTemplate restTemplate) {
+    public NominatimService(RestTemplate restTemplate,
+                            @Value("${nominatim.millis-between-requests}") final long millisBetweenRequests) {
         this.restTemplate = restTemplate;
+        this.millisBetweenRequests = millisBetweenRequests;
         this.executorService = newSingleThreadExecutor();
         this.lock = new ReentrantLock();
         this.condition = this.lock.newCondition();
@@ -81,7 +83,7 @@ public final class NominatimService implements AutoCloseable {
                     while (this.durationBetweenRequestsPassed) {
                         this.condition.await();
                     }
-                    SECONDS.sleep(DURATION_IN_SECONDS_BETWEEN_REQUESTS);
+                    MILLISECONDS.sleep(this.millisBetweenRequests);
                     this.durationBetweenRequestsPassed = true;
                     this.condition.signalAll();
                 }

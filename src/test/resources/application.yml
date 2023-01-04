@@ -21,3 +21,6 @@ spring:
 
 search-cities:
   amount-handled-points-to-save-state: 10
+
+nominatim:
+  millis-between-requests: 1000
