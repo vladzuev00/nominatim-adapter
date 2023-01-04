@@ -6,9 +6,8 @@ import by.aurorasoft.nominatim.crud.model.dto.SearchingCitiesProcess;
 import by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity.Status;
 import by.aurorasoft.nominatim.crud.service.SearchingCitiesProcessService;
 import by.aurorasoft.nominatim.rest.controller.exception.ConstraintException;
+import by.aurorasoft.nominatim.rest.model.StartSearchingCitiesRequest;
 import by.aurorasoft.nominatim.service.StartingSearchingCitiesProcessService;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +20,6 @@ import org.wololo.jts2geojson.GeoJSONWriter;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotNull;
 
 import java.util.List;
 
@@ -97,26 +93,6 @@ public class SearchCityController {
                 .handledPoints(mapped.getHandledPoints())
                 .status(mapped.getStatus())
                 .build();
-    }
-
-    @Value
-    private static class StartSearchingCitiesRequest {
-
-        @NotNull
-        @Valid
-        AreaCoordinate bbox;
-
-        @NotNull
-        @DecimalMin(value = "0.01")
-        @DecimalMax(value = "5")
-        Double searchStep;
-
-        @JsonCreator
-        public StartSearchingCitiesRequest(@JsonProperty("bbox") AreaCoordinate bbox,
-                                           @JsonProperty("searchStep") Double searchStep) {
-            this.bbox = bbox;
-            this.searchStep = searchStep;
-        }
     }
 
     @Value
