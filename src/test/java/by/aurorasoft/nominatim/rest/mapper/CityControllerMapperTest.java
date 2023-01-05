@@ -153,10 +153,12 @@ public final class CityControllerMapperTest extends AbstractContextTest {
     private static void checkEquals(CityResponse expected, CityResponse actual) {
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getName(), actual.getName());
-
-        assertArrayEquals(((Polygon) expected.getGeometry()).getBbox(), ((Polygon) actual.getGeometry()).getBbox(), 0.);
-        assertTrue(deepEquals(((Polygon) expected.getGeometry()).getCoordinates(), ((Polygon) actual.getGeometry()).getCoordinates()));
-
+        checkEquals(expected.getGeometry(), actual.getGeometry());
         assertSame(expected.getType(), actual.getType());
+    }
+
+    private static void checkEquals(org.wololo.geojson.Geometry expected, org.wololo.geojson.Geometry actual) {
+        assertArrayEquals(((Polygon) expected).getBbox(), ((Polygon) actual).getBbox(), 0.);
+        assertTrue(deepEquals(((Polygon) expected).getCoordinates(), ((Polygon) actual).getCoordinates()));
     }
 }

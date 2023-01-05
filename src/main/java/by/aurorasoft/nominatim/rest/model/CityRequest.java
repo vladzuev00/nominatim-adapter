@@ -10,6 +10,9 @@ import org.wololo.geojson.Geometry;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+/**
+ * equals and hashcode doesn't work correctly because of geometry doesn't override them
+ */
 @Value
 @Builder
 public class CityRequest {
