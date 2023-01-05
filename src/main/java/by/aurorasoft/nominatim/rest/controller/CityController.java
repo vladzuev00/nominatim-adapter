@@ -2,10 +2,10 @@ package by.aurorasoft.nominatim.rest.controller;
 
 import by.aurorasoft.nominatim.crud.model.dto.City;
 import by.aurorasoft.nominatim.crud.service.CityService;
-import by.aurorasoft.nominatim.rest.controller.exception.ConstraintException;
 import by.aurorasoft.nominatim.rest.mapper.CityControllerMapper;
 import by.aurorasoft.nominatim.rest.model.CityRequest;
 import by.aurorasoft.nominatim.rest.model.CityResponse;
+import by.aurorasoft.nominatim.rest.validator.CityRequestValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -25,6 +25,7 @@ import static org.springframework.http.ResponseEntity.ok;
 public class CityController {
     private final CityService service;
     private final CityControllerMapper mapper;
+    private final CityRequestValidator validator;
 
     @GetMapping
     public ResponseEntity<List<CityResponse>> findAll() {
@@ -36,7 +37,7 @@ public class CityController {
     public ResponseEntity<CityResponse> save(
             @Valid @RequestBody CityRequest request,
             @ApiIgnore Errors errors) {
-        validate(errors);
+        this.validator.validate(errors);
         final City cityToBeSaved = this.mapper.mapToCity(request);
         final City savedCity = this.service.save(cityToBeSaved);
         return ok(this.mapper.mapToResponse(savedCity));
@@ -47,7 +48,7 @@ public class CityController {
             @PathVariable Long id,
             @Valid @RequestBody CityRequest request,
             @ApiIgnore Errors errors) {
-        validate(errors);
+        this.validator.validate(errors);
         final City cityToBeUpdated = this.mapper.mapToCity(id, request);
         final City updatedCity = this.service.update(cityToBeUpdated);
         return ok(this.mapper.mapToResponse(updatedCity));
@@ -58,11 +59,5 @@ public class CityController {
         final Optional<City> optionalRemovedCity = this.service.getByIdOptional(id);
         optionalRemovedCity.ifPresent(removedCity -> this.service.delete(removedCity.getId()));
         return of(optionalRemovedCity.map(this.mapper::mapToResponse));
-    }
-
-    private static void validate(Errors errors) {
-        if (errors.hasErrors()) {
-            throw new ConstraintException(errors);
-        }
     }
 }
