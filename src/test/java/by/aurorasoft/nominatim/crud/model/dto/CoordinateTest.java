@@ -1,7 +1,6 @@
-package by.aurorasoft.nominatim.crud.model;
+package by.aurorasoft.nominatim.crud.model.dto;
 
 import by.aurorasoft.nominatim.base.AbstractContextTest;
-import by.aurorasoft.nominatim.crud.model.dto.Coordinate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
