@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Value;
 import org.wololo.geojson.Geometry;
 
+/**
+ * equals and hashcode doesn't work correctly because of geometry doesn't override them
+ */
 @Value
 @Builder
 @AllArgsConstructor

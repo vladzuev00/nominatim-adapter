@@ -23,12 +23,12 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequestMapping("/city")
 @RequiredArgsConstructor
 public class CityController {
-    private final CityService cityService;
+    private final CityService service;
     private final CityControllerMapper mapper;
 
     @GetMapping
     public ResponseEntity<List<CityResponse>> findAll() {
-        final List<City> foundCities = this.cityService.findAll();
+        final List<City> foundCities = this.service.findAll();
         return ok(this.mapper.mapToResponses(foundCities));
     }
 
@@ -38,7 +38,7 @@ public class CityController {
             @ApiIgnore Errors errors) {
         validate(errors);
         final City cityToBeSaved = this.mapper.mapToCity(request);
-        final City savedCity = this.cityService.save(cityToBeSaved);
+        final City savedCity = this.service.save(cityToBeSaved);
         return ok(this.mapper.mapToResponse(savedCity));
     }
 
@@ -49,14 +49,14 @@ public class CityController {
             @ApiIgnore Errors errors) {
         validate(errors);
         final City cityToBeUpdated = this.mapper.mapToCity(id, request);
-        final City updatedCity = this.cityService.update(cityToBeUpdated);
+        final City updatedCity = this.service.update(cityToBeUpdated);
         return ok(this.mapper.mapToResponse(updatedCity));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<CityResponse> remove(@PathVariable Long id) {
-        final Optional<City> optionalRemovedCity = this.cityService.getByIdOptional(id);
-        optionalRemovedCity.ifPresent(removedCity -> this.cityService.delete(removedCity.getId()));
+        final Optional<City> optionalRemovedCity = this.service.getByIdOptional(id);
+        optionalRemovedCity.ifPresent(removedCity -> this.service.delete(removedCity.getId()));
         return of(optionalRemovedCity.map(this.mapper::mapToResponse));
     }
 
