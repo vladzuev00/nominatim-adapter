@@ -1,7 +1,6 @@
-package by.aurorasoft.nominatim.rest.model;
+package by.aurorasoft.nominatim.rest.validator;
 
 import by.aurorasoft.nominatim.rest.controller.exception.ConstraintException;
-import by.aurorasoft.nominatim.rest.validator.CityRequestValidator;
 import org.junit.Test;
 import org.springframework.validation.Errors;
 
