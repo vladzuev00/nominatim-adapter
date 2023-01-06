@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.List;
 
 import static by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity.Status.*;
+import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @Service
@@ -62,7 +64,10 @@ public class EventHandlingSearchCityProcessService {
     @Transactional
     public void onSuccessFindAllCities(SearchingCitiesProcess process, Collection<City> foundCities) {
         this.searchingCitiesProcessService.updateStatus(process, SUCCESS);
-        this.cityService.saveAll(foundCities);
+        final List<City> cityWithNotExistsGeometry = foundCities.stream()
+                .filter(city -> !this.cityService.isExistByGeometry(city.getGeometry()))
+                .collect(toList());
+        this.cityService.saveAll(cityWithNotExistsGeometry);
         log.info(LOG_SUCCESS_PROCESS_SEARCHING_CITIES);
     }
 

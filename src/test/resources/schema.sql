@@ -44,15 +44,6 @@ CREATE TRIGGER tr_on_update_searching_cities_process
 
 CREATE INDEX ON city using GIST(geometry);
 
-CREATE FUNCTION is_city_with_same_geometry_already_exist(IN in_geometry GEOMETRY)
-RETURNS BOOLEAN AS
-$$
-	SELECT EXISTS (SELECT 1 FROM city WHERE ST_Equals(city.geometry, in_geometry));
-$$ LANGUAGE sql;
-
-ALTER TABLE city
-ADD CONSTRAINT geometry_should_be_unique CHECK (NOT is_city_with_same_geometry_already_exist(geometry));
-
 
 
 
