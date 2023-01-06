@@ -30,8 +30,8 @@ public final class CityServiceTest extends AbstractContextTest {
             + "ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326), 'CAPITAL')")
     @Sql(statements = "INSERT INTO city(id, name, geometry, type) VALUES(257, 'Minsk', "
             + "ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326), 'CAPITAL')")
-    public void allCitiesShouldBeFound() {
-        final List<City> foundCities = this.service.findAll();
+    public void pageOfAllCitiesShouldBeFound() {
+        final List<City> foundCities = this.service.findAll(0, 3);
         final List<Long> actualIds = foundCities.stream()
                 .map(City::getId)
                 .collect(toList());
@@ -40,8 +40,14 @@ public final class CityServiceTest extends AbstractContextTest {
     }
 
     @Test
-    public void allCitiesShouldNotBeFound() {
-        final List<City> foundCities = this.service.findAll();
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type) VALUES(255, 'Minsk', "
+            + "ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326), 'CAPITAL')")
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type) VALUES(256, 'Minsk', "
+            + "ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326), 'CAPITAL')")
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type) VALUES(257, 'Minsk', "
+            + "ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326), 'CAPITAL')")
+    public void pageOfAllCitiesShouldNotBeFound() {
+        final List<City> foundCities = this.service.findAll(1, 3);
         assertTrue(foundCities.isEmpty());
     }
 
