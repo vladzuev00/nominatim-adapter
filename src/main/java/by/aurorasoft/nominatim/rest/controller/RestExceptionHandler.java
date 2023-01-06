@@ -8,6 +8,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.validation.ConstraintViolationException;
 import java.util.Optional;
 
 import static java.time.LocalDateTime.now;
@@ -26,6 +27,14 @@ public final class RestExceptionHandler {
         final String message = optionalErrors
                 .map(this::findMessage)
                 .orElse(exception.getMessage());
+        final RestErrorResponse restErrorResponse = new RestErrorResponse(httpStatus, message, now());
+        return new ResponseEntity<>(restErrorResponse, httpStatus);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<RestErrorResponse> handleException(ConstraintViolationException exception) {
+        final HttpStatus httpStatus = NOT_ACCEPTABLE;
+        final String message = exception.getMessage();
         final RestErrorResponse restErrorResponse = new RestErrorResponse(httpStatus, message, now());
         return new ResponseEntity<>(restErrorResponse, httpStatus);
     }

@@ -1,6 +1,7 @@
 package by.aurorasoft.nominatim.rest.mapper;
 
 import by.aurorasoft.nominatim.crud.model.dto.City;
+import by.aurorasoft.nominatim.rest.model.CityPageResponse;
 import by.aurorasoft.nominatim.rest.model.CityRequest;
 import by.aurorasoft.nominatim.rest.model.CityResponse;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +48,14 @@ public final class CityControllerMapper {
                 .name(mapped.getName())
                 .geometry(this.geoJSONReader.read(mapped.getGeometry()))
                 .type(mapped.getType())
+                .build();
+    }
+
+    public CityPageResponse mapToResponse(int pageNumber, int pageSize, List<City> cities) {
+        return CityPageResponse.builder()
+                .pageNumber(pageNumber)
+                .pageSize(pageSize)
+                .cities(this.mapToResponses(cities))
                 .build();
     }
 }

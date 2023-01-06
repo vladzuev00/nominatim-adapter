@@ -10,10 +10,13 @@ import by.aurorasoft.nominatim.rest.validator.CityRequestValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +26,7 @@ import static org.springframework.http.ResponseEntity.ok;
 @RestController
 @RequestMapping("/city")
 @RequiredArgsConstructor
+@Validated
 public class CityController {
     private final CityService service;
     private final CityControllerMapper mapper;
@@ -30,16 +34,10 @@ public class CityController {
 
     @GetMapping
     public ResponseEntity<CityPageResponse> findAll(
-            @RequestParam(name = "pageNumber") int pageNumber,
-            @RequestParam(name = "pageSize") int pageSize) {
+            @RequestParam(name = "pageNumber") @Min(0) @Max(3000000) int pageNumber,
+            @RequestParam(name = "pageSize") @Min(1) @Max(3000000) int pageSize) {
         final List<City> foundCities = this.service.findAll(pageNumber, pageSize);
-        return ok(
-                CityPageResponse.builder()
-                        .pageNumber(pageNumber)
-                        .pageSize(pageSize)
-                        .cities(this.mapper.mapToResponses(foundCities))
-                        .build()
-        );
+        return ok(this.mapper.mapToResponse(pageNumber, pageSize, foundCities));
     }
 
     @PostMapping
