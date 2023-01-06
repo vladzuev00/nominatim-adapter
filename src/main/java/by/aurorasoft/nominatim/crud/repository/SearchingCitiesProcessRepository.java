@@ -2,6 +2,7 @@ package by.aurorasoft.nominatim.crud.repository;
 
 import by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity;
 import by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity.Status;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -21,5 +22,5 @@ public interface SearchingCitiesProcessRepository extends JpaRepository<Searchin
     void increaseHandledPoints(Long id, long delta);
 
     @Query("SELECT e FROM SearchingCitiesProcessEntity e WHERE e.status = :status")
-    List<SearchingCitiesProcessEntity> findByStatus(Status status);
+    List<SearchingCitiesProcessEntity> findByStatus(Status status, Pageable pageable);
 }

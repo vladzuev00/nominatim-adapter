@@ -4,6 +4,7 @@ import by.aurorasoft.nominatim.crud.model.dto.SearchingCitiesProcess;
 import by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity.Status;
 import by.aurorasoft.nominatim.crud.service.SearchingCitiesProcessService;
 import by.aurorasoft.nominatim.rest.mapper.SearchingCitiesProcessControllerMapper;
+import by.aurorasoft.nominatim.rest.model.SearchingCitiesProcessPageResponse;
 import by.aurorasoft.nominatim.rest.model.SearchingCitiesProcessResponse;
 import by.aurorasoft.nominatim.rest.model.StartSearchingCitiesRequest;
 import by.aurorasoft.nominatim.rest.validator.StartSearchingCitiesRequestValidator;
@@ -11,10 +12,12 @@ import by.aurorasoft.nominatim.service.StartingSearchingCitiesProcessService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +28,7 @@ import static org.springframework.http.ResponseEntity.ok;
 @RestController
 @RequestMapping("/searchCityTask")
 @RequiredArgsConstructor
+@Validated
 public class SearchCityProcessController {
     private final StartSearchingCitiesRequestValidator validator;
     private final StartingSearchingCitiesProcessService startingProcessService;
@@ -39,11 +43,13 @@ public class SearchCityProcessController {
     }
 
     @GetMapping
-    public ResponseEntity<List<SearchingCitiesProcessResponse>> findByStatus(
-            @RequestParam(name = "status") Status status) {
-        final List<SearchingCitiesProcess> foundProcesses = this.processService
-                .findByStatus(status);
-        return ok(this.mapper.mapToResponses(foundProcesses));
+    public ResponseEntity<SearchingCitiesProcessPageResponse> findByStatus(
+            @RequestParam(name = "status") Status status,
+            @RequestParam(name = "pageNumber") @Min(0) int pageNumber,
+            @RequestParam(name = "pageSize") @Min(1) int pageSize) {
+        final List<SearchingCitiesProcess> foundProcesses = this.processService.findByStatus(
+                status, pageNumber, pageSize);
+        return ok(this.mapper.mapToResponse(pageNumber, pageSize, foundProcesses));
     }
 
     @PostMapping

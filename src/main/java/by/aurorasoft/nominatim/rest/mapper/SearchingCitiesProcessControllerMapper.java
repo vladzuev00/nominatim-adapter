@@ -1,6 +1,7 @@
 package by.aurorasoft.nominatim.rest.mapper;
 
 import by.aurorasoft.nominatim.crud.model.dto.SearchingCitiesProcess;
+import by.aurorasoft.nominatim.rest.model.SearchingCitiesProcessPageResponse;
 import by.aurorasoft.nominatim.rest.model.SearchingCitiesProcessResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -30,5 +31,14 @@ public final class SearchingCitiesProcessControllerMapper {
         return mapped.stream()
                 .map(this::mapToResponse)
                 .collect(toList());
+    }
+
+    public SearchingCitiesProcessPageResponse mapToResponse(int pageNumber, int pageSize,
+                                                            List<SearchingCitiesProcess> processes) {
+        return SearchingCitiesProcessPageResponse.builder()
+                .pageNumber(pageNumber)
+                .pageSize(pageSize)
+                .processes(this.mapToResponses(processes))
+                .build();
     }
 }

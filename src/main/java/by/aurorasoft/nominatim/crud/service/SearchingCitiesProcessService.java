@@ -6,6 +6,8 @@ import by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity;
 import by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity.Status;
 import by.aurorasoft.nominatim.crud.repository.SearchingCitiesProcessRepository;
 import by.nhorushko.crudgeneric.v2.service.AbsServiceCRUD;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,8 +31,9 @@ public class SearchingCitiesProcessService
         super.repository.increaseHandledPoints(process.getId(), delta);
     }
 
-    public List<SearchingCitiesProcess> findByStatus(Status status) {
-        final List<SearchingCitiesProcessEntity> foundEntities = super.repository.findByStatus(status);
+    public List<SearchingCitiesProcess> findByStatus(Status status, int pageNumber, int pageSize) {
+        final Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        final List<SearchingCitiesProcessEntity> foundEntities = super.repository.findByStatus(status, pageable);
         return super.mapper.toDtos(foundEntities);
     }
 }
