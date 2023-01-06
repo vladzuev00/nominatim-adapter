@@ -7,6 +7,7 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.CoordinateXY;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
@@ -143,7 +144,8 @@ public final class SearchingCitiesProcessRepositoryTest extends AbstractContextT
             + "VALUES(257, ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))'), 0.01, 10000, 1000, 'ERROR')")
     public void processesShouldBeFoundByStatus() {
         super.startQueryCount();
-        final List<SearchingCitiesProcessEntity> foundProcesses = this.repository.findByStatus(HANDLING);
+        final List<SearchingCitiesProcessEntity> foundProcesses
+                = this.repository.findByStatus(HANDLING, PageRequest.of(0, 3));
         super.checkQueryCount(1);
 
         final List<Long> actualIds = foundProcesses.stream()
@@ -156,7 +158,8 @@ public final class SearchingCitiesProcessRepositoryTest extends AbstractContextT
     @Test
     public void processesShouldNotBeFoundByStatus() {
         super.startQueryCount();
-        final List<SearchingCitiesProcessEntity> foundProcesses = this.repository.findByStatus(HANDLING);
+        final List<SearchingCitiesProcessEntity> foundProcesses = this.repository.findByStatus(HANDLING,
+                PageRequest.of(0, 3));
         super.checkQueryCount(1);
         assertTrue(foundProcesses.isEmpty());
     }

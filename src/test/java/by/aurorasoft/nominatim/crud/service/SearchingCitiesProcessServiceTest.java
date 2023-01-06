@@ -96,7 +96,7 @@ public final class SearchingCitiesProcessServiceTest extends AbstractContextTest
             + "(id, bounds, search_step, total_points, handled_points, status) "
             + "VALUES(257, ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))'), 0.01, 10000, 1000, 'ERROR')")
     public void processesShouldBeFoundByStatus() {
-        final List<SearchingCitiesProcess> foundProcesses = this.service.findByStatus(HANDLING);
+        final List<SearchingCitiesProcess> foundProcesses = this.service.findByStatus(HANDLING, 0, 3);
         final List<Long> actualIds = foundProcesses.stream()
                 .map(SearchingCitiesProcess::getId)
                 .collect(toList());
@@ -106,7 +106,7 @@ public final class SearchingCitiesProcessServiceTest extends AbstractContextTest
 
     @Test
     public void processesShouldNotBeFoundByStatus() {
-        final List<SearchingCitiesProcess> foundProcesses = this.service.findByStatus(HANDLING);
+        final List<SearchingCitiesProcess> foundProcesses = this.service.findByStatus(HANDLING, 0, 3);
         assertTrue(foundProcesses.isEmpty());
     }
 }
