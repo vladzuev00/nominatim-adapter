@@ -3,6 +3,7 @@ package by.aurorasoft.nominatim.rest.controller;
 import by.aurorasoft.nominatim.crud.model.dto.City;
 import by.aurorasoft.nominatim.crud.service.CityService;
 import by.aurorasoft.nominatim.rest.mapper.CityControllerMapper;
+import by.aurorasoft.nominatim.rest.model.CityPageResponse;
 import by.aurorasoft.nominatim.rest.model.CityRequest;
 import by.aurorasoft.nominatim.rest.model.CityResponse;
 import by.aurorasoft.nominatim.rest.validator.CityRequestValidator;
@@ -28,9 +29,17 @@ public class CityController {
     private final CityRequestValidator validator;
 
     @GetMapping
-    public ResponseEntity<List<CityResponse>> findAll() {
-        final List<City> foundCities = this.service.findAll();
-        return ok(this.mapper.mapToResponses(foundCities));
+    public ResponseEntity<CityPageResponse> findAll(
+            @RequestParam(name = "pageNumber") int pageNumber,
+            @RequestParam(name = "pageSize") int pageSize) {
+        final List<City> foundCities = this.service.findAll(pageNumber, pageSize);
+        return ok(
+                CityPageResponse.builder()
+                        .pageNumber(pageNumber)
+                        .pageSize(pageSize)
+                        .cities(this.mapper.mapToResponses(foundCities))
+                        .build()
+        );
     }
 
     @PostMapping

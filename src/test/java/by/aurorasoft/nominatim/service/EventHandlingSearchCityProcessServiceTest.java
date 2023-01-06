@@ -166,7 +166,7 @@ public final class EventHandlingSearchCityProcessServiceTest extends AbstractCon
                 .build();
     }
 
-    private static City createCity(Long id) {
+    private City createCity(Long id) {
         return City.builder()
                 .id(id)
                 .build();
