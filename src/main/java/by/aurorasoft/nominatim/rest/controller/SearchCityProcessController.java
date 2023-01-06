@@ -11,10 +11,7 @@ import by.aurorasoft.nominatim.rest.validator.StartSearchingCitiesRequestValidat
 import by.aurorasoft.nominatim.service.StartingSearchingCitiesProcessService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.Errors;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -28,7 +25,6 @@ import static org.springframework.http.ResponseEntity.ok;
 @RestController
 @RequestMapping("/searchCityTask")
 @RequiredArgsConstructor
-@Validated
 public class SearchCityProcessController {
     private final StartSearchingCitiesRequestValidator validator;
     private final StartingSearchingCitiesProcessService startingProcessService;
@@ -37,8 +33,7 @@ public class SearchCityProcessController {
 
     @GetMapping("/{id}")
     public ResponseEntity<SearchingCitiesProcessResponse> findById(@PathVariable Long id) {
-        final Optional<SearchingCitiesProcess> optionalFoundProcess = this.processService
-                .getByIdOptional(id);
+        final Optional<SearchingCitiesProcess> optionalFoundProcess = this.processService.getByIdOptional(id);
         return of(optionalFoundProcess.map(this.mapper::mapToResponse));
     }
 
@@ -54,9 +49,8 @@ public class SearchCityProcessController {
 
     @PostMapping
     public ResponseEntity<SearchingCitiesProcessResponse> start(
-            @Valid @RequestBody StartSearchingCitiesRequest request,
-            @ApiIgnore Errors errors) {
-        this.validator.validate(request, errors);
+            @Valid @RequestBody StartSearchingCitiesRequest request) {
+        this.validator.validate(request);
         final SearchingCitiesProcess createdProcess = this.startingProcessService.start(
                 request.getBbox(), request.getSearchStep());
         return ok(this.mapper.mapToResponse(createdProcess));

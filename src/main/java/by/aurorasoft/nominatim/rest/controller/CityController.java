@@ -6,13 +6,9 @@ import by.aurorasoft.nominatim.rest.mapper.CityControllerMapper;
 import by.aurorasoft.nominatim.rest.model.CityPageResponse;
 import by.aurorasoft.nominatim.rest.model.CityRequest;
 import by.aurorasoft.nominatim.rest.model.CityResponse;
-import by.aurorasoft.nominatim.rest.validator.CityRequestValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.Errors;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
@@ -26,11 +22,9 @@ import static org.springframework.http.ResponseEntity.ok;
 @RestController
 @RequestMapping("/city")
 @RequiredArgsConstructor
-@Validated
 public class CityController {
     private final CityService service;
     private final CityControllerMapper mapper;
-    private final CityRequestValidator validator;
 
     @GetMapping
     public ResponseEntity<CityPageResponse> findAll(
@@ -42,9 +36,7 @@ public class CityController {
 
     @PostMapping
     public ResponseEntity<CityResponse> save(
-            @Valid @RequestBody CityRequest request,
-            @ApiIgnore Errors errors) {
-        this.validator.validate(errors);
+            @Valid @RequestBody CityRequest request) {
         final City cityToBeSaved = this.mapper.mapToCity(request);
         final City savedCity = this.service.save(cityToBeSaved);
         return ok(this.mapper.mapToResponse(savedCity));
@@ -53,9 +45,7 @@ public class CityController {
     @PutMapping("/{id}")
     public ResponseEntity<CityResponse> update(
             @PathVariable Long id,
-            @Valid @RequestBody CityRequest request,
-            @ApiIgnore Errors errors) {
-        this.validator.validate(errors);
+            @Valid @RequestBody CityRequest request) {
         final City cityToBeUpdated = this.mapper.mapToCity(id, request);
         final City updatedCity = this.service.update(cityToBeUpdated);
         return ok(this.mapper.mapToResponse(updatedCity));
