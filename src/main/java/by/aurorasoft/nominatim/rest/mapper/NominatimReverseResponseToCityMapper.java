@@ -25,11 +25,11 @@ public final class NominatimReverseResponseToCityMapper {
     }
 
     private Geometry mapGeometry(NominatimReverseResponse source) {
-        return this.geoJSONReader.read(source.getGeoJson());
+        return this.geoJSONReader.read(source.getGeojson());
     }
 
     private static Type identifyCityType(NominatimReverseResponse source) {
-        final ExtraTags extraTags = source.getExtraTags();
+        final ExtraTags extraTags = source.getExtratags();
         return extraTags != null ? findByCapitalJsonValue(extraTags.getCapital()) : null;
     }
 }

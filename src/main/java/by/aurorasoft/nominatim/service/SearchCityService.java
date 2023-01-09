@@ -30,7 +30,7 @@ public final class SearchCityService {
     }
 
     private static boolean isCity(NominatimReverseResponse response) {
-        final ExtraTags extraTags = response.getExtraTags();
+        final ExtraTags extraTags = response.getExtratags();
         return extraTags != null
                 && extraTags.getPlace() != null
                 && extraTags.getPlace().matches(REGEX_PLACE_VALUE_IN_JSON_OF_CITY);

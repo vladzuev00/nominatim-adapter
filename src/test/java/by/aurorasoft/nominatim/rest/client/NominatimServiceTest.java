@@ -64,11 +64,11 @@ public class NominatimServiceTest {
 
         final NominatimReverseResponse expected = NominatimReverseResponse.builder()
                 .name("Minsk")
-                .extraTags(ExtraTags.builder()
+                .extratags(ExtraTags.builder()
                         .place("city")
                         .capital("yes")
                         .build())
-                .geoJson("geojson")
+                .geojson("geojson")
                 .build();
         final String expectedJsonResponse = this.objectMapper.writeValueAsString(expected);
 
@@ -92,11 +92,11 @@ public class NominatimServiceTest {
 
         final NominatimReverseResponse expectedResponse = NominatimReverseResponse.builder()
                 .name("Minsk")
-                .extraTags(ExtraTags.builder()
+                .extratags(ExtraTags.builder()
                         .place("city")
                         .capital("yes")
                         .build())
-                .geoJson("geojson")
+                .geojson("geojson")
                 .build();
         final List<NominatimReverseResponse> expected = List.of(expectedResponse, expectedResponse, expectedResponse);
 

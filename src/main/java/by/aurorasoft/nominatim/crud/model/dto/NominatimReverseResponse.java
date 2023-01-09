@@ -16,18 +16,21 @@ import java.io.IOException;
 @Value
 @Builder
 public class NominatimReverseResponse {
+
     String name;
-    ExtraTags extraTags;
-    String geoJson;
+
+    ExtraTags extratags;
+
+    String geojson;
 
     @JsonCreator
     public NominatimReverseResponse(@JsonProperty("name") String name,
-                                    @JsonProperty("extratags") ExtraTags extraTags,
+                                    @JsonProperty("extratags") ExtraTags extratags,
                                     @JsonDeserialize(using = ToStringJsonDeserializer.class)
-                                    @JsonProperty("geojson") String geoJson) {
+                                    @JsonProperty("geojson") String geojson) {
         this.name = name;
-        this.extraTags = extraTags;
-        this.geoJson = geoJson;
+        this.extratags = extratags;
+        this.geojson = geojson;
     }
 
     @Value

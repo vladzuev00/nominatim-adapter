@@ -23,11 +23,11 @@ public final class NominatimReverseResponseToCityMapperTest extends AbstractCont
     public void responseShouldBeMappedToCapitalCity() {
         final NominatimReverseResponse givenResponse = NominatimReverseResponse.builder()
                 .name("Minsk")
-                .extraTags(ExtraTags.builder()
+                .extratags(ExtraTags.builder()
                         .place("city")
                         .capital("yes")
                         .build())
-                .geoJson(findGeoJson())
+                .geojson(findGeoJson())
                 .build();
 
         final City actual = this.mapper.map(givenResponse);
@@ -43,11 +43,11 @@ public final class NominatimReverseResponseToCityMapperTest extends AbstractCont
     public void responseShouldBeMappedToRegionalCity() {
         final NominatimReverseResponse givenResponse = NominatimReverseResponse.builder()
                 .name("Mogilev")
-                .extraTags(ExtraTags.builder()
+                .extratags(ExtraTags.builder()
                         .place("city")
                         .capital("4")
                         .build())
-                .geoJson(findGeoJson())
+                .geojson(findGeoJson())
                 .build();
 
         final City actual = this.mapper.map(givenResponse);
@@ -63,11 +63,11 @@ public final class NominatimReverseResponseToCityMapperTest extends AbstractCont
     public void responseShouldBeMappedToCityWithNotDefinedType() {
         final NominatimReverseResponse givenResponse = NominatimReverseResponse.builder()
                 .name("Vileyka")
-                .extraTags(ExtraTags.builder()
+                .extratags(ExtraTags.builder()
                         .place("city")
                         .capital("any text")
                         .build())
-                .geoJson(findGeoJson())
+                .geojson(findGeoJson())
                 .build();
 
         final City actual = this.mapper.map(givenResponse);
