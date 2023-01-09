@@ -83,6 +83,7 @@ public final class SearchCityServiceTest {
                 this.responseArgumentCaptor.getAllValues());
     }
 
+    @SuppressWarnings("all")
     private static NominatimReverseResponse createResponseByExtraTags(ExtraTags extraTags) {
         return NominatimReverseResponse.builder()
                 .extratags(extraTags)
