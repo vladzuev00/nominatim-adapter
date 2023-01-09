@@ -1,6 +1,5 @@
 package by.aurorasoft.nominatim.service;
 
-import by.aurorasoft.nominatim.base.AbstractContextTest;
 import by.aurorasoft.nominatim.crud.model.dto.AreaCoordinate;
 import by.aurorasoft.nominatim.crud.model.dto.City;
 import by.aurorasoft.nominatim.crud.model.dto.Coordinate;
@@ -12,6 +11,7 @@ import by.aurorasoft.nominatim.service.factory.SearchingCitiesProcessFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.locationtech.jts.geom.Geometry;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -22,6 +22,7 @@ import java.util.List;
 
 import static by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity.Status.ERROR;
 import static by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity.Status.SUCCESS;
+import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.mockito.ArgumentMatchers.any;
@@ -29,7 +30,7 @@ import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public final class EventHandlingSearchCityProcessServiceTest extends AbstractContextTest {
+public final class EventHandlingSearchCityProcessServiceTest {
 
     @Mock
     private SearchingCitiesProcessService mockedSearchingCitiesProcessService;
@@ -59,6 +60,9 @@ public final class EventHandlingSearchCityProcessServiceTest extends AbstractCon
 
     @Captor
     private ArgumentCaptor<Collection<City>> citiesArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<Geometry> geometryArgumentCaptor;
 
     @Before
     public void initializeEventHandlingSearchCityProcessService() {
@@ -125,20 +129,37 @@ public final class EventHandlingSearchCityProcessServiceTest extends AbstractCon
     }
 
     @Test
-    public void eventOnSuccessFindingAllCitiesShouldBeHandledSuccessfully() {
+    public void eventOnSuccessFindingAllCitiesShouldBeHandled() {
         final SearchingCitiesProcess givenProcess = createProcess(255L);
-        final Collection<City> givenFoundCities = List.of(createCity(1L), createCity(2L), createCity(3L));
+        final List<City> givenFoundCities = List.of(
+                createCityWithGeometry(1L, mock(Geometry.class)),
+                createCityWithGeometry(2L, mock(Geometry.class)),
+                createCityWithGeometry(3L, mock(Geometry.class))
+        );
+
+        when(this.mockedCityService.isExistByGeometry(any(Geometry.class)))
+                .thenReturn(false)
+                .thenReturn(true)
+                .thenReturn(false);
 
         this.eventHandlingSearchCityProcessService.onSuccessFindAllCities(givenProcess, givenFoundCities);
 
         verify(this.mockedSearchingCitiesProcessService, times(1))
                 .updateStatus(this.processArgumentCaptor.capture(), this.statusArgumentCaptor.capture());
+        verify(this.mockedCityService, times(3))
+                .isExistByGeometry(this.geometryArgumentCaptor.capture());
         verify(this.mockedCityService, times(1))
                 .saveAll(this.citiesArgumentCaptor.capture());
 
         assertSame(givenProcess, this.processArgumentCaptor.getValue());
         assertSame(SUCCESS, this.statusArgumentCaptor.getValue());
-        assertEquals(givenFoundCities, this.citiesArgumentCaptor.getValue());
+        assertEquals(
+                givenFoundCities.stream()
+                        .map(City::getGeometry)
+                        .collect(toList()),
+                this.geometryArgumentCaptor.getAllValues());
+        assertEquals(List.of(givenFoundCities.get(0), givenFoundCities.get(2)),
+                this.citiesArgumentCaptor.getValue());
     }
 
     @Test
@@ -166,9 +187,10 @@ public final class EventHandlingSearchCityProcessServiceTest extends AbstractCon
                 .build();
     }
 
-    private City createCity(Long id) {
+    private City createCityWithGeometry(Long id, Geometry geometry) {
         return City.builder()
                 .id(id)
+                .geometry(geometry)
                 .build();
     }
 }
