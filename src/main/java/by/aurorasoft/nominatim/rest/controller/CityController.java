@@ -33,8 +33,8 @@ public class CityController {
 
     @GetMapping
     public ResponseEntity<CityPageResponse> findAll(
-            @RequestParam(name = "pageNumber") @Min(0) @Max(3000000) int pageNumber,
-            @RequestParam(name = "pageSize") @Min(1) @Max(3000000) int pageSize) {
+            @RequestParam(name = "pageNumber") @Min(0) @Max(10000) int pageNumber,
+            @RequestParam(name = "pageSize") @Min(1) @Max(10000) int pageSize) {
         final List<City> foundCities = this.service.findAll(pageNumber, pageSize);
         return ok(this.mapper.mapToResponse(pageNumber, pageSize, foundCities));
     }

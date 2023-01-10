@@ -115,14 +115,84 @@ public class SearchCityProcessControllerIT extends AbstractContextTest {
     }
 
     @Test
-    public void processesShouldNotBeFoundBecauseOfPageNumberIsLessThanAllowableMinimal() {
+    public void processesShouldNotBeFoundBecauseOfPageNumberIsLessThanMinimalAllowable() {
+        final int givenPageNumber = -1;
+        final int givenPageSize = 3;
 
+        final String url = createUrlToFindProcessesByStatus(HANDLING, givenPageNumber, givenPageSize);
+        final ResponseEntity<String> responseEntity = this.restTemplate.getForEntity(url, String.class);
+
+        assertSame(NOT_ACCEPTABLE, responseEntity.getStatusCode());
+
+        final String actual = responseEntity.getBody();
+        final String expectedRegex = "\\{\"httpStatus\":\"NOT_ACCEPTABLE\","
+                + "\"message\":\"findByStatus.pageNumber: must be greater than or equal to 0\","
+                + "\"dateTime\":\"\\d{4}-\\d{2}-\\d{2} \\d{2}-\\d{2}-\\d{2}\"}";
+        assertNotNull(actual);
+        assertTrue(actual.matches(expectedRegex));
+    }
+
+    @Test
+    public void processesShouldNotBeFoundBecauseOfPageNumberIsMoreThanMaximalAllowable() {
+        final int givenPageNumber = 10001;
+        final int givenPageSize = 3;
+
+        final String url = createUrlToFindProcessesByStatus(HANDLING, givenPageNumber, givenPageSize);
+        final ResponseEntity<String> responseEntity = this.restTemplate.getForEntity(url, String.class);
+
+        assertSame(NOT_ACCEPTABLE, responseEntity.getStatusCode());
+
+        final String actual = responseEntity.getBody();
+        final String expectedRegex = "\\{\"httpStatus\":\"NOT_ACCEPTABLE\","
+                + "\"message\":\"findByStatus.pageNumber: must be less than or equal to 10000\","
+                + "\"dateTime\":\"\\d{4}-\\d{2}-\\d{2} \\d{2}-\\d{2}-\\d{2}\"}";
+        assertNotNull(actual);
+        assertTrue(actual.matches(expectedRegex));
+    }
+
+    @Test
+    public void processesShouldNotBeFoundBecauseOfPageSizeIsLessThanMinimalAllowable() {
+        final int givenPageNumber = 0;
+        final int givenPageSize = 0;
+
+        final String url = createUrlToFindProcessesByStatus(HANDLING, givenPageNumber, givenPageSize);
+
+        final ResponseEntity<String> responseEntity = this.restTemplate.getForEntity(url, String.class);
+
+        assertSame(NOT_ACCEPTABLE, responseEntity.getStatusCode());
+
+        final String actual = responseEntity.getBody();
+        final String expectedRegex = "\\{\"httpStatus\":\"NOT_ACCEPTABLE\","
+                + "\"message\":\"findByStatus.pageSize: must be greater than or equal to 1\","
+                + "\"dateTime\":\"\\d{4}-\\d{2}-\\d{2} \\d{2}-\\d{2}-\\d{2}\"}";
+        assertNotNull(actual);
+        assertTrue(actual.matches(expectedRegex));
+    }
+
+    @Test
+    public void processesShouldNotBeFoundBecauseOfPageSizeIsMoreThanMaximalAllowable() {
+        final int givenPageNumber = 0;
+        final int givenPageSize = 10001;
+
+        final String url = createUrlToFindProcessesByStatus(HANDLING, givenPageNumber, givenPageSize);
+
+        final ResponseEntity<String> responseEntity = this.restTemplate.getForEntity(url, String.class);
+
+        assertSame(NOT_ACCEPTABLE, responseEntity.getStatusCode());
+
+        final String actual = responseEntity.getBody();
+        final String expectedRegex = "\\{\"httpStatus\":\"NOT_ACCEPTABLE\","
+                + "\"message\":\"findByStatus.pageSize: must be less than or equal to 10000\","
+                + "\"dateTime\":\"\\d{4}-\\d{2}-\\d{2} \\d{2}-\\d{2}-\\d{2}\"}";
+        assertNotNull(actual);
+        assertTrue(actual.matches(expectedRegex));
     }
 
     private static String createUrlToFindProcessById(Long id) {
         return CONTROLLER_URL + SLASH + id;
     }
 
+    @SuppressWarnings("all")
     private static String createUrlToFindProcessesByStatus(Status status, int pageNumber, int pageSize) {
         return new UrlToFindProcessesByStatusBuilder()
                 .catalogStatus(status)

@@ -12,9 +12,11 @@ import by.aurorasoft.nominatim.rest.validator.StartSearchingCitiesRequestValidat
 import by.aurorasoft.nominatim.service.StartingSearchingCitiesProcessService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 import java.util.List;
@@ -26,6 +28,7 @@ import static org.springframework.http.ResponseEntity.ok;
 @RestController
 @RequestMapping("/searchCityTask")
 @RequiredArgsConstructor
+@Validated
 public class SearchCityProcessController {
     private static final String MESSAGE_EXCEPTION_OF_NO_SUCH_PROCESS = "Process with id '%d' doesn't exist.";
 
@@ -45,8 +48,8 @@ public class SearchCityProcessController {
     @GetMapping
     public ResponseEntity<SearchingCitiesProcessPageResponse> findByStatus(
             @RequestParam(name = "status") Status status,
-            @RequestParam(name = "pageNumber") @Min(0) int pageNumber,
-            @RequestParam(name = "pageSize") @Min(1) int pageSize) {
+            @RequestParam(name = "pageNumber") @Min(0) @Max(10000) int pageNumber,
+            @RequestParam(name = "pageSize") @Min(1) @Max(10000) int pageSize) {
         final List<SearchingCitiesProcess> foundProcesses = this.processService.findByStatus(
                 status, pageNumber, pageSize);
         return ok(this.mapper.mapToResponse(pageNumber, pageSize, foundProcesses));
