@@ -1,3 +1,11 @@
+DROP TABLE IF EXISTS city;
+DROP TYPE IF EXISTS city_type;
+
+DROP TABLE IF EXISTS searching_cities_process;
+DROP TYPE IF EXISTS searching_cities_process_type;
+
+DROP FUNCTION IF EXISTS on_update_searching_cities_process();
+
 CREATE TYPE city_type AS ENUM ('CAPITAL', 'REGIONAL', 'NOT_DEFINED');
 
 CREATE TABLE city
