@@ -2,6 +2,7 @@ package by.aurorasoft.nominatim.rest.controller;
 
 import by.aurorasoft.nominatim.crud.model.dto.City;
 import by.aurorasoft.nominatim.crud.service.CityService;
+import by.aurorasoft.nominatim.rest.controller.exception.NoSuchEntityException;
 import by.aurorasoft.nominatim.rest.mapper.CityControllerMapper;
 import by.aurorasoft.nominatim.rest.model.CityPageResponse;
 import by.aurorasoft.nominatim.rest.model.CityRequest;
@@ -17,6 +18,7 @@ import javax.validation.constraints.Min;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.String.format;
 import static org.springframework.http.ResponseEntity.of;
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -25,6 +27,8 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequiredArgsConstructor
 @Validated
 public class CityController {
+    private static final String MESSAGE_EXCEPTION_OF_NO_SUCH_CITY = "City with id '%d' doesn't exist.";
+
     private final CityService service;
     private final CityControllerMapper mapper;
 
@@ -47,9 +51,13 @@ public class CityController {
     public ResponseEntity<CityResponse> update(
             @PathVariable Long id,
             @Valid @RequestBody CityRequest request) {
-        final City cityToBeUpdated = this.mapper.mapToCity(id, request);
-        final City updatedCity = this.service.update(cityToBeUpdated);
-        return ok(this.mapper.mapToResponse(updatedCity));
+        if (this.service.isExist(id)) {
+            final City cityToBeUpdated = this.mapper.mapToCity(id, request);
+            final City updatedCity = this.service.update(cityToBeUpdated);
+            return ok(this.mapper.mapToResponse(updatedCity));
+        } else {
+            throw new NoSuchEntityException(format(MESSAGE_EXCEPTION_OF_NO_SUCH_CITY, id));
+        }
     }
 
     @DeleteMapping("/{id}")

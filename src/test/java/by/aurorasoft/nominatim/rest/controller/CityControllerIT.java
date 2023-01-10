@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static java.lang.Integer.MIN_VALUE;
 import static org.junit.Assert.*;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -24,6 +25,7 @@ import static org.springframework.web.util.UriComponentsBuilder.fromUriString;
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 public final class CityControllerIT extends AbstractContextTest {
     private static final String CONTROLLER_URL = "/city";
+    private static final String SLASH = "/";
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -173,8 +175,76 @@ public final class CityControllerIT extends AbstractContextTest {
     }
 
     @Test
+    @Transactional(propagation = NOT_SUPPORTED)
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type) VALUES(255, 'Minsk', "
+            + "ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326), 'NOT_DEFINED')")
+    @Sql(statements = "DELETE FROM city", executionPhase = AFTER_TEST_METHOD)
     public void cityShouldBeUpdated() {
+        final String givenJson = "{\"name\":\"Minsk\",\"geometry\":{\"type\":\"Polygon\",\"coordinates\""
+                + ":[[[1.0,2.0],[3.0,4.0],[5.0,6.0],[6.0,7.0],[1.0,2.0]]]},\"type\":\"CAPITAL\"}";
+        final Long givenId = 255L;
 
+        final HttpHeaders givenHeaders = new HttpHeaders();
+        givenHeaders.setContentType(APPLICATION_JSON);
+
+        final HttpEntity<String> givenHttpEntity = new HttpEntity<>(givenJson, givenHeaders);
+
+        final String url = createUrlToUpdateCity(givenId);
+        final ResponseEntity<String> responseEntity
+                = this.restTemplate.exchange(url, PUT, givenHttpEntity, String.class);
+
+        final String actual = responseEntity.getBody();
+        final String expected = "{\"id\":255,\"name\":\"Minsk\",\"geometry\":{\"type\":\"Polygon\",\"coordinates\""
+                + ":[[[1.0,2.0],[3.0,4.0],[5.0,6.0],[6.0,7.0],[1.0,2.0]]]},\"type\":\"CAPITAL\"}";
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void cityShouldNotBeUpdatedByNotExistingId() {
+        final String givenJson = "{\"name\":\"Minsk\",\"geometry\":{\"type\":\"Polygon\",\"coordinates\""
+                + ":[[[1.0,2.0],[3.0,4.0],[5.0,6.0],[6.0,7.0],[1.0,2.0]]]},\"type\":\"CAPITAL\"}";
+        final Long givenId = 255L;
+
+        final HttpHeaders givenHeaders = new HttpHeaders();
+        givenHeaders.setContentType(APPLICATION_JSON);
+
+        final HttpEntity<String> givenHttpEntity = new HttpEntity<>(givenJson, givenHeaders);
+
+        final String url = createUrlToUpdateCity(givenId);
+        final ResponseEntity<String> responseEntity
+                = this.restTemplate.exchange(url, PUT, givenHttpEntity, String.class);
+
+        final String actual = responseEntity.getBody();
+        final String expectedRegex = "\\{\"httpStatus\":\"NOT_FOUND\",\"message\":\"City with id '255' doesn't exist.\","
+                + "\"dateTime\":\"\\d{4}-\\d{2}-\\d{2} \\d{2}-\\d{2}-\\d{2}\"}";
+        assertNotNull(actual);
+        assertTrue(actual.matches(expectedRegex));
+    }
+
+    @Test
+    @Transactional(propagation = NOT_SUPPORTED)
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type) VALUES(255, 'Minsk', "
+            + "ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326), 'NOT_DEFINED')")
+    @Sql(statements = "DELETE FROM city", executionPhase = AFTER_TEST_METHOD)
+    public void cityShouldNotBeUpdatedByNotValidRequest() {
+        final String givenJson = "{\"geometry\":{\"type\":\"Polygon\",\"coordinates\""
+                + ":[[[1.0,2.0],[3.0,4.0],[5.0,6.0],[6.0,7.0],[1.0,2.0]]]},\"type\":\"CAPITAL\"}";
+        final Long givenId = 255L;
+
+        final HttpHeaders givenHeaders = new HttpHeaders();
+        givenHeaders.setContentType(APPLICATION_JSON);
+
+        final HttpEntity<String> givenHttpEntity = new HttpEntity<>(givenJson, givenHeaders);
+
+        final String url = createUrlToUpdateCity(givenId);
+        final ResponseEntity<String> responseEntity
+                = this.restTemplate.exchange(url, PUT, givenHttpEntity, String.class);
+
+        final String actual = responseEntity.getBody();
+        final String expectedRegex = "\\{\"httpStatus\":\"NOT_ACCEPTABLE\",\"message\":\"name : must not be null\","
+                + "\"dateTime\":\"\\d{4}-\\d{2}-\\d{2} \\d{2}-\\d{2}-\\d{2}\"}";
+        assertNotNull(actual);
+        assertTrue(actual.matches(expectedRegex));
     }
 
     private static String createUrlToFindAllCities(int pageNumber, int pageSize) {
@@ -186,6 +256,12 @@ public final class CityControllerIT extends AbstractContextTest {
 
     private static String createUrlToSaveCity() {
         return fromUriString(CONTROLLER_URL)
+                .build()
+                .toUriString();
+    }
+
+    private static String createUrlToUpdateCity(Long id) {
+        return fromUriString(CONTROLLER_URL + SLASH + id)
                 .build()
                 .toUriString();
     }

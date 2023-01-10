@@ -1,6 +1,7 @@
 package by.aurorasoft.nominatim.rest.controller;
 
 import by.aurorasoft.nominatim.rest.controller.exception.CustomValidationException;
+import by.aurorasoft.nominatim.rest.controller.exception.NoSuchEntityException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -12,6 +13,7 @@ import javax.validation.ConstraintViolationException;
 
 import static java.time.LocalDateTime.now;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @ControllerAdvice
 public final class RestExceptionHandler {
@@ -33,9 +35,20 @@ public final class RestExceptionHandler {
         return handleValidationException(exception.getMessage());
     }
 
-    @SuppressWarnings("all")
+    @ExceptionHandler
+    public ResponseEntity<RestErrorResponse> handleException(NoSuchEntityException exception) {
+        return handleNotFoundException(exception.getMessage());
+    }
+
+    private static ResponseEntity<RestErrorResponse> handleNotFoundException(String message) {
+        return handleException(NOT_FOUND, message);
+    }
+
     private static ResponseEntity<RestErrorResponse> handleValidationException(String message) {
-        final HttpStatus httpStatus = NOT_ACCEPTABLE;
+        return handleException(NOT_ACCEPTABLE, message);
+    }
+
+    private static ResponseEntity<RestErrorResponse> handleException(HttpStatus httpStatus, String message) {
         final RestErrorResponse restErrorResponse = new RestErrorResponse(httpStatus, message, now());
         return new ResponseEntity<>(restErrorResponse, httpStatus);
     }
