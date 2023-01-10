@@ -5,6 +5,8 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,12 +16,14 @@ import static org.junit.Assert.*;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 import static org.springframework.transaction.annotation.Propagation.NOT_SUPPORTED;
 import static org.springframework.web.util.UriComponentsBuilder.fromUriString;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 public final class CityControllerIT extends AbstractContextTest {
+    private static final String CONTROLLER_URL = "/city";
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -30,7 +34,7 @@ public final class CityControllerIT extends AbstractContextTest {
             + "ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326), 'CAPITAL')")
     @Sql(statements = "INSERT INTO city(id, name, geometry, type) VALUES(256, 'Mogilev', "
             + "ST_GeomFromText('POLYGON((1 2, 3 5, 5 6, 6 7, 1 2))', 4326), 'REGIONAL')")
-    @Sql(statements = "DELETE FROM city WHERE city.id IN (255, 256)", executionPhase = AFTER_TEST_METHOD)
+    @Sql(statements = "DELETE FROM city", executionPhase = AFTER_TEST_METHOD)
     public void allCitiesShouldBeFound() {
         final int givenPageNumber = 0;
         final int givenPageSize = 3;
@@ -129,6 +133,50 @@ public final class CityControllerIT extends AbstractContextTest {
         assertTrue(actual.matches(expectedRegex));
     }
 
+    @Test
+    @Transactional(propagation = NOT_SUPPORTED)
+    @Sql(statements = "DELETE FROM city", executionPhase = AFTER_TEST_METHOD)
+    public void cityShouldBeSaved() {
+        final String givenJson = "{\"name\":\"Minsk\",\"geometry\":{\"type\":\"Polygon\",\"coordinates\""
+                + ":[[[1.0,2.0],[3.0,4.0],[5.0,6.0],[6.0,7.0],[1.0,2.0]]]},\"type\":\"CAPITAL\"}";
+
+        final HttpHeaders givenHeaders = new HttpHeaders();
+        givenHeaders.setContentType(APPLICATION_JSON);
+
+        final HttpEntity<String> givenHttpEntity = new HttpEntity<>(givenJson, givenHeaders);
+        final String url = createUrlToSaveCity();
+
+        final String actual = this.restTemplate.postForObject(url, givenHttpEntity, String.class);
+        final String expectedRegex = "\\{\"id\":\\d+,\"name\":\"Minsk\",\"geometry\":\\{\"type\":\"Polygon\",\"coordinates\""
+                + ":\\[\\[\\[1.0,2.0],\\[3.0,4.0],\\[5.0,6.0],\\[6.0,7.0],\\[1.0,2.0]]]},\"type\":\"CAPITAL\"}";
+        assertTrue(actual.matches(expectedRegex));
+    }
+
+    @Test
+    public void cityShouldNotBeSavedBecauseOfRequestIsNotValid() {
+        final String givenJson = "{\"geometry\":{\"type\":\"Polygon\",\"coordinates\""
+                + ":[[[1.0,2.0],[3.0,4.0],[5.0,6.0],[6.0,7.0],[1.0,2.0]]]},\"type\":\"CAPITAL\"}";
+
+        final HttpHeaders givenHeaders = new HttpHeaders();
+        givenHeaders.setContentType(APPLICATION_JSON);
+
+        final HttpEntity<String> givenHttpEntity = new HttpEntity<>(givenJson, givenHeaders);
+        final String url = createUrlToSaveCity();
+
+        final String actual = this.restTemplate.postForObject(url, givenHttpEntity, String.class);
+        final String expectedRegex = "\\{"
+                + "\"httpStatus\":\"NOT_ACCEPTABLE\","
+                + "\"message\":\"name : must not be null\","
+                + "\"dateTime\":\"\\d{4}-\\d{2}-\\d{2} \\d{2}-\\d{2}-\\d{2}\""
+                + "}";
+        assertTrue(actual.matches(expectedRegex));
+    }
+
+    @Test
+    public void cityShouldBeUpdated() {
+
+    }
+
     private static String createUrlToFindAllCities(int pageNumber, int pageSize) {
         return new UrlToFindAllCitiesBuilder()
                 .catalogPageNumber(pageNumber)
@@ -136,11 +184,15 @@ public final class CityControllerIT extends AbstractContextTest {
                 .build();
     }
 
+    private static String createUrlToSaveCity() {
+        return fromUriString(CONTROLLER_URL)
+                .build()
+                .toUriString();
+    }
+
     private static final class UrlToFindAllCitiesBuilder {
         private static final String EXCEPTION_DESCRIPTION_URI_BUILDING_BY_NOT_DEFINED_PARAMETERS
                 = "Uri was build by not defined parameters.";
-        private static final String URL_WITHOUT_PARAMETERS = "/city";
-
         private static final String PARAM_NAME_PAGE_NUMBER = "pageNumber";
         private static final String PARAM_NAME_PAGE_SIZE = "pageSize";
 
@@ -166,7 +218,7 @@ public final class CityControllerIT extends AbstractContextTest {
             if (this.pageNumber == MIN_VALUE || this.pageSize == MIN_VALUE) {
                 throw new IllegalStateException(EXCEPTION_DESCRIPTION_URI_BUILDING_BY_NOT_DEFINED_PARAMETERS);
             }
-            return fromUriString(URL_WITHOUT_PARAMETERS)
+            return fromUriString(CONTROLLER_URL)
                     .queryParam(PARAM_NAME_PAGE_NUMBER, this.pageNumber)
                     .queryParam(PARAM_NAME_PAGE_SIZE, this.pageSize)
                     .build()
