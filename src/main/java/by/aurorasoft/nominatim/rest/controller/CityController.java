@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.lang.String.format;
-import static org.springframework.http.ResponseEntity.of;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
@@ -64,6 +63,8 @@ public class CityController {
     public ResponseEntity<CityResponse> remove(@PathVariable Long id) {
         final Optional<City> optionalRemovedCity = this.service.getByIdOptional(id);
         optionalRemovedCity.ifPresent(removedCity -> this.service.delete(removedCity.getId()));
-        return of(optionalRemovedCity.map(this.mapper::mapToResponse));
+        return optionalRemovedCity.map(this.mapper::mapToResponse)
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> new NoSuchEntityException(format(MESSAGE_EXCEPTION_OF_NO_SUCH_CITY, id)));
     }
 }
