@@ -8,6 +8,7 @@ import by.aurorasoft.nominatim.rest.model.CityRequest;
 import by.aurorasoft.nominatim.rest.model.CityResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -22,6 +23,7 @@ import static org.springframework.http.ResponseEntity.ok;
 @RestController
 @RequestMapping("/city")
 @RequiredArgsConstructor
+@Validated
 public class CityController {
     private final CityService service;
     private final CityControllerMapper mapper;
@@ -35,8 +37,7 @@ public class CityController {
     }
 
     @PostMapping
-    public ResponseEntity<CityResponse> save(
-            @Valid @RequestBody CityRequest request) {
+    public ResponseEntity<CityResponse> save(@Valid @RequestBody CityRequest request) {
         final City cityToBeSaved = this.mapper.mapToCity(request);
         final City savedCity = this.service.save(cityToBeSaved);
         return ok(this.mapper.mapToResponse(savedCity));

@@ -22,5 +22,9 @@ spring:
 search-cities:
   amount-handled-points-to-save-state: 10
 
+server:
+  servlet:
+    context-path: /cities-searcher
+
 nominatim:
   millis-between-requests: 1000
