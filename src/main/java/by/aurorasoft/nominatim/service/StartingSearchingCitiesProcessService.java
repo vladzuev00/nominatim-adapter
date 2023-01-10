@@ -60,6 +60,7 @@ public class StartingSearchingCitiesProcessService {
         public void run() {
             try {
                 final Set<String> namesAlreadyFoundCities = new HashSet<>();
+                //TODO: replace by splititerator
                 final Collection<City> foundUniqueCities = split(
                         asStream(new AreaIterator(this.areaCoordinate, this.searchStep)),
                         StartingSearchingCitiesProcessService.this.amountHandledPointsToSaveState)

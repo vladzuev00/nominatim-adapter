@@ -2,6 +2,8 @@ package by.aurorasoft.nominatim.rest.controller;
 
 import by.aurorasoft.nominatim.rest.controller.exception.CustomValidationException;
 import by.aurorasoft.nominatim.rest.controller.exception.NoSuchEntityException;
+import org.springframework.core.convert.ConversionFailedException;
+import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -11,7 +13,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.validation.ConstraintViolationException;
 
+import static java.lang.String.format;
 import static java.time.LocalDateTime.now;
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.joining;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -19,6 +24,13 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public final class RestExceptionHandler {
     private static final String SEPARATOR_FIELD_NAME_AND_MESSAGE_IN_ERROR = " : ";
     private static final String MESSAGE_UNKNOWN_ERROR = "unknown error";
+
+    /**
+     * first %s - inbound param
+     * second %s - list of allowable param's values
+     */
+    private static final String MESSAGE_TEMPLATE_NOT_VALID_ENUM_PARAM = "'%s' should be replaced by one of: %s.";
+    private static final String DELIMITER_ENUM_PARAM_ALLOWABLE_VALUE = ", ";
 
     @ExceptionHandler
     public ResponseEntity<RestErrorResponse> handleException(ConstraintViolationException exception) {
@@ -40,6 +52,11 @@ public final class RestExceptionHandler {
         return handleNotFoundException(exception.getMessage());
     }
 
+    @ExceptionHandler
+    public ResponseEntity<RestErrorResponse> handleException(ConversionFailedException exception) {
+        return handleValidationException(findMessage(exception));
+    }
+
     private static ResponseEntity<RestErrorResponse> handleNotFoundException(String message) {
         return handleException(NOT_FOUND, message);
     }
@@ -57,5 +74,26 @@ public final class RestExceptionHandler {
         return fieldError != null
                 ? fieldError.getField() + SEPARATOR_FIELD_NAME_AND_MESSAGE_IN_ERROR + fieldError.getDefaultMessage()
                 : MESSAGE_UNKNOWN_ERROR;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static String findMessage(ConversionFailedException exception) {
+        final TypeDescriptor targetTypeDescriptor = exception.getTargetType();
+        final Class<?> targetType = targetTypeDescriptor.getType();
+        return targetType.isEnum()
+                ? findMessageOfEnumParamConversionFailedException(
+                        exception.getValue(), (Class<? extends Enum<?>>) targetType)
+                : exception.getMessage();
+    }
+
+    private static String findMessageOfEnumParamConversionFailedException(Object inboundValue,
+                                                                          Class<? extends Enum<?>> enumType) {
+        return format(MESSAGE_TEMPLATE_NOT_VALID_ENUM_PARAM, inboundValue, findSeparatedAllowableValues(enumType));
+    }
+
+    private static String findSeparatedAllowableValues(Class<? extends Enum<?>> enumType) {
+        return stream(enumType.getEnumConstants())
+                .map(Enum::name)
+                .collect(joining(DELIMITER_ENUM_PARAM_ALLOWABLE_VALUE));
     }
 }

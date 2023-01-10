@@ -299,15 +299,11 @@ public final class CityControllerIT extends AbstractContextTest {
     }
 
     private static String createUrlToSaveCity() {
-        return fromUriString(CONTROLLER_URL)
-                .build()
-                .toUriString();
+        return CONTROLLER_URL;
     }
 
     private static String createUrlWithIdVariable(Long id) {
-        return fromUriString(CONTROLLER_URL + SLASH + id)
-                .build()
-                .toUriString();
+        return CONTROLLER_URL + SLASH + id;
     }
 
     private static final class UrlToFindAllCitiesBuilder {

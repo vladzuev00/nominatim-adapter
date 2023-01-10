@@ -3,6 +3,7 @@ package by.aurorasoft.nominatim.rest.controller;
 import by.aurorasoft.nominatim.crud.model.dto.SearchingCitiesProcess;
 import by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity.Status;
 import by.aurorasoft.nominatim.crud.service.SearchingCitiesProcessService;
+import by.aurorasoft.nominatim.rest.controller.exception.NoSuchEntityException;
 import by.aurorasoft.nominatim.rest.mapper.SearchingCitiesProcessControllerMapper;
 import by.aurorasoft.nominatim.rest.model.SearchingCitiesProcessPageResponse;
 import by.aurorasoft.nominatim.rest.model.SearchingCitiesProcessResponse;
@@ -19,13 +20,15 @@ import javax.validation.constraints.Min;
 import java.util.List;
 import java.util.Optional;
 
-import static org.springframework.http.ResponseEntity.of;
+import static java.lang.String.format;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @RequestMapping("/searchCityTask")
 @RequiredArgsConstructor
 public class SearchCityProcessController {
+    private static final String MESSAGE_EXCEPTION_OF_NO_SUCH_PROCESS = "Process with id '%d' doesn't exist.";
+
     private final StartSearchingCitiesRequestValidator validator;
     private final StartingSearchingCitiesProcessService startingProcessService;
     private final SearchingCitiesProcessService processService;
@@ -34,7 +37,9 @@ public class SearchCityProcessController {
     @GetMapping("/{id}")
     public ResponseEntity<SearchingCitiesProcessResponse> findById(@PathVariable Long id) {
         final Optional<SearchingCitiesProcess> optionalFoundProcess = this.processService.getByIdOptional(id);
-        return of(optionalFoundProcess.map(this.mapper::mapToResponse));
+        return optionalFoundProcess.map(this.mapper::mapToResponse)
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> new NoSuchEntityException(format(MESSAGE_EXCEPTION_OF_NO_SUCH_PROCESS, id)));
     }
 
     @GetMapping
