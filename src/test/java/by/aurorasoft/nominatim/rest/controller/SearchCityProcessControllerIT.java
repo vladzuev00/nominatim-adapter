@@ -2,9 +2,13 @@ package by.aurorasoft.nominatim.rest.controller;
 
 import by.aurorasoft.nominatim.base.AbstractContextTest;
 import by.aurorasoft.nominatim.crud.model.dto.City;
+import by.aurorasoft.nominatim.crud.model.dto.SearchingCitiesProcess;
 import by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity.Status;
 import by.aurorasoft.nominatim.crud.service.CityService;
+import by.aurorasoft.nominatim.crud.service.SearchingCitiesProcessService;
 import org.junit.Test;
+import org.locationtech.jts.geom.CoordinateXY;
+import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -16,11 +20,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.wololo.jts2geojson.GeoJSONReader;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static by.aurorasoft.nominatim.crud.model.entity.CityEntity.Type.NOT_DEFINED;
 import static by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity.Status.HANDLING;
 import static java.lang.Integer.MIN_VALUE;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static java.util.regex.Pattern.compile;
 import static org.junit.Assert.*;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.HttpStatus.*;
@@ -43,6 +50,12 @@ public class SearchCityProcessControllerIT extends AbstractContextTest {
 
     @Autowired
     private GeoJSONReader geoJSONReader;
+
+    @Autowired
+    private SearchingCitiesProcessService processService;
+
+    @Autowired
+    private GeometryFactory geometryFactory;
 
     @Test
     @Transactional(propagation = NOT_SUPPORTED)
@@ -204,6 +217,7 @@ public class SearchCityProcessControllerIT extends AbstractContextTest {
         assertTrue(actual.matches(expectedRegex));
     }
 
+    //TODO: correct this test and add checking process during searching
     @Test
     public void processShouldBeStartedAndFindCities() throws InterruptedException {
         final String givenJson = "{"
@@ -227,13 +241,16 @@ public class SearchCityProcessControllerIT extends AbstractContextTest {
 
         final String url = createUrlToStartProcess();
 
-        final String actual = this.restTemplate.postForObject(url, givenHttpEntity, String.class);
-        final String expectedRegex = "\\{\"id\":\\d+,\"geometry\":\\{\"type\":\"Polygon\","
+        final String actualResponse = this.restTemplate.postForObject(url, givenHttpEntity, String.class);
+        final String expectedResponseRegex = "\\{\"id\":(\\d+),\"geometry\":\\{\"type\":\"Polygon\","
                 + "\"coordinates\":\\[\\[\\[53.669375,27.053689],\\[53.669375,27.443176],\\[53.896085,27.443176],"
                 + "\\[53.896085,27.053689],\\[53.669375,27.053689]]]},\"searchStep\":0.04,\"totalPoints\":60,"
                 + "\"handledPoints\":0,\"status\":\"HANDLING\"}";
-        assertNotNull(actual);
-        assertTrue(actual.matches(expectedRegex));
+        assertNotNull(actualResponse);
+
+        final Pattern pattern = compile(expectedResponseRegex);
+        final Matcher matcher = pattern.matcher(actualResponse);
+        assertTrue(matcher.matches());
 
         SECONDS.sleep(70);
 
@@ -249,10 +266,20 @@ public class SearchCityProcessControllerIT extends AbstractContextTest {
         assertEquals(1, actualFoundCities.size());
         checkEqualsWithoutId(expectedFoundCities.get(0), actualFoundCities.get(0));
 
-        //TODO: проверить процесс в базе
+        final Long createdProcessId = Long.valueOf(matcher.group(1));
+
+        final SearchingCitiesProcess actualProcess = this.processService.getById(createdProcessId);
+        final SearchingCitiesProcess expectedProcess = SearchingCitiesProcess.builder()
+                .id(createdProcessId)
+                .geometry(this.geometryFactory.createPolygon(new CoordinateXY[]{
+                        new CoordinateXY(53.669375, 27.053689),
+                        new CoordinateXY(53.896085, 27.443176),
+                        new CoordinateXY(53.669375, 27.053689)
+                }))
+                .searchStep(0.04)
+                .build();
+        assertEquals(expectedProcess, actualProcess);
     }
-
-
 
     private static String createUrlToFindProcessById(Long id) {
         return CONTROLLER_URL + SLASH + id;
