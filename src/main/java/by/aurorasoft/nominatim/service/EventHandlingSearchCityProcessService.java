@@ -63,11 +63,11 @@ public class EventHandlingSearchCityProcessService {
 
     @Transactional
     public void onSuccessFindAllCities(SearchingCitiesProcess process, Collection<City> foundCities) {
-        this.searchingCitiesProcessService.updateStatus(process, SUCCESS);
         final List<City> cityWithNotExistsGeometry = foundCities.stream()
                 .filter(city -> !this.cityService.isExistByGeometry(city.getGeometry()))
                 .collect(toList());
         this.cityService.saveAll(cityWithNotExistsGeometry);
+        this.searchingCitiesProcessService.updateStatus(process, SUCCESS);
         log.info(LOG_SUCCESS_PROCESS_SEARCHING_CITIES);
     }
 
