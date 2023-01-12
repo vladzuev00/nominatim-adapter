@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 
 import static by.aurorasoft.nominatim.crud.model.entity.CityEntity.Type.NOT_DEFINED;
 import static by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity.Status.HANDLING;
+import static by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity.Status.SUCCESS;
 import static java.lang.Integer.MIN_VALUE;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static java.util.regex.Pattern.compile;
@@ -219,6 +220,9 @@ public class SearchCityProcessControllerIT extends AbstractContextTest {
 
     //TODO: correct this test and add checking process during searching
     @Test
+    @Transactional(propagation = NOT_SUPPORTED)
+    @Sql(statements = "DELETE FROM city", executionPhase = AFTER_TEST_METHOD)
+    @Sql(statements = "DELETE FROM searching_cities_process", executionPhase = AFTER_TEST_METHOD)
     public void processShouldBeStartedAndFindCities() throws InterruptedException {
         final String givenJson = "{"
                 + "\"bbox\" : {"
@@ -273,12 +277,152 @@ public class SearchCityProcessControllerIT extends AbstractContextTest {
                 .id(createdProcessId)
                 .geometry(this.geometryFactory.createPolygon(new CoordinateXY[]{
                         new CoordinateXY(53.669375, 27.053689),
+                        new CoordinateXY(53.669375, 27.443176),
                         new CoordinateXY(53.896085, 27.443176),
+                        new CoordinateXY(53.896085, 27.053689),
                         new CoordinateXY(53.669375, 27.053689)
                 }))
                 .searchStep(0.04)
+                .totalPoints(60)
+                .handledPoints(60)
+                .status(SUCCESS)
                 .build();
         assertEquals(expectedProcess, actualProcess);
+    }
+
+    @Test
+    public void processSearchingCitiesShouldNotBeStartBecauseOfAreaCoordinateIsNull() {
+        final String givenJson = "{"
+                + "\"bbox\" : {"
+                + "\"leftBottom\" : {"
+                + "\"latitude\" : 53.669375,"
+                + "\"longitude\" : 27.053689"
+                + "},"
+                + "\"rightUpper\" : {"
+                + "\"latitude\" : 53.646085,"
+                + "\"longitude\" : 27.443176"
+                + "}"
+                + "},"
+                + "\"searchStep\": 0.04"
+                + "}";
+
+        final HttpHeaders givenHeaders = new HttpHeaders();
+        givenHeaders.setContentType(APPLICATION_JSON);
+
+        final HttpEntity<String> givenHttpEntity = new HttpEntity<>(givenJson, givenHeaders);
+
+        final String url = createUrlToStartProcess();
+
+        final String actual = this.restTemplate.postForObject(url, givenHttpEntity, String.class);
+        final String expectedRegex = "\\{"
+                + "\"httpStatus\":\"NOT_ACCEPTABLE\","
+                + "\"message\":\"Left bottom point's coordinates should be less than right upper point's coordinates.\","
+                + "\"dateTime\":\"\\d{4}-\\d{2}-\\d{2} \\d{2}-\\d{2}-\\d{2}\""
+                + "}";
+
+        assertNotNull(actual);
+        assertTrue(actual.matches(expectedRegex));
+    }
+
+    @Test
+    public void processSearchingCitiesShouldNotBeStartBecauseOfSearchStepIsNull() {
+        final String givenJson = "{"
+                + "\"bbox\" : {"
+                + "\"leftBottom\" : {"
+                + "\"latitude\" : 53.669375,"
+                + "\"longitude\" : 27.053689"
+                + "},"
+                + "\"rightUpper\" : {"
+                + "\"latitude\" : 53.646085,"
+                + "\"longitude\" : 27.443176"
+                + "}"
+                + "}"
+                + "}";
+
+        final HttpHeaders givenHeaders = new HttpHeaders();
+        givenHeaders.setContentType(APPLICATION_JSON);
+
+        final HttpEntity<String> givenHttpEntity = new HttpEntity<>(givenJson, givenHeaders);
+
+        final String url = createUrlToStartProcess();
+
+        final String actual = this.restTemplate.postForObject(url, givenHttpEntity, String.class);
+        final String expectedRegex = "\\{"
+                + "\"httpStatus\":\"NOT_ACCEPTABLE\","
+                + "\"message\":\"searchStep : must not be null\","
+                + "\"dateTime\":\"\\d{4}-\\d{2}-\\d{2} \\d{2}-\\d{2}-\\d{2}\""
+                + "}";
+
+        assertNotNull(actual);
+        assertTrue(actual.matches(expectedRegex));
+    }
+
+    @Test
+    public void processSearchingCitiesShouldNotBeStartBecauseOfSearchStepIsLessThanMinimalAllowable() {
+        final String givenJson = "{"
+                + "\"bbox\" : {"
+                + "\"leftBottom\" : {"
+                + "\"latitude\" : 53.669375,"
+                + "\"longitude\" : 27.053689"
+                + "},"
+                + "\"rightUpper\" : {"
+                + "\"latitude\" : 53.896085,"
+                + "\"longitude\" : 27.443176"
+                + "}"
+                + "},"
+                + "\"searchStep\": 0.001"
+                + "}";
+
+        final HttpHeaders givenHeaders = new HttpHeaders();
+        givenHeaders.setContentType(APPLICATION_JSON);
+
+        final HttpEntity<String> givenHttpEntity = new HttpEntity<>(givenJson, givenHeaders);
+
+        final String url = createUrlToStartProcess();
+
+        final String actual = this.restTemplate.postForObject(url, givenHttpEntity, String.class);
+        final String expectedRegex = "\\{"
+                + "\"httpStatus\":\"NOT_ACCEPTABLE\","
+                + "\"message\":\"searchStep : must be greater than or equal to 0.01\","
+                + "\"dateTime\":\"\\d{4}-\\d{2}-\\d{2} \\d{2}-\\d{2}-\\d{2}\""
+                + "}";
+
+        assertNotNull(actual);
+        assertTrue(actual.matches(expectedRegex));
+    }
+
+    @Test
+    public void processSearchingCitiesShouldNotBeStartBecauseOfSearchStepIsGreaterThanMaximalAllowable() {
+        final String givenJson = "{"
+                + "\"bbox\" : {"
+                + "\"leftBottom\" : {"
+                + "\"latitude\" : 53.669375,"
+                + "\"longitude\" : 27.053689"
+                + "},"
+                + "\"rightUpper\" : {"
+                + "\"latitude\" : 53.896085,"
+                + "\"longitude\" : 27.443176"
+                + "}"
+                + "},"
+                + "\"searchStep\": 5.1"
+                + "}";
+
+        final HttpHeaders givenHeaders = new HttpHeaders();
+        givenHeaders.setContentType(APPLICATION_JSON);
+
+        final HttpEntity<String> givenHttpEntity = new HttpEntity<>(givenJson, givenHeaders);
+
+        final String url = createUrlToStartProcess();
+
+        final String actual = this.restTemplate.postForObject(url, givenHttpEntity, String.class);
+        final String expectedRegex = "\\{"
+                + "\"httpStatus\":\"NOT_ACCEPTABLE\","
+                + "\"message\":\"searchStep : must be less than or equal to 5\","
+                + "\"dateTime\":\"\\d{4}-\\d{2}-\\d{2} \\d{2}-\\d{2}-\\d{2}\""
+                + "}";
+
+        assertNotNull(actual);
+        assertTrue(actual.matches(expectedRegex));
     }
 
     private static String createUrlToFindProcessById(Long id) {

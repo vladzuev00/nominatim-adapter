@@ -89,7 +89,7 @@ public final class CityControllerIT extends AbstractContextTest {
         final String actual = responseEntity.getBody();
         final String expectedRegex = "\\{"
                 + "\"httpStatus\":\"NOT_ACCEPTABLE\","
-                + "\"message\":\"findAll.pageNumber: must be less than or equal to 3000000\","
+                + "\"message\":\"findAll.pageNumber: must be less than or equal to 10000\","
                 + "\"dateTime\":\"\\d{4}-\\d{2}-\\d{2} \\d{2}-\\d{2}-\\d{2}\""
                 + "}";
         assertNotNull(actual);
@@ -129,7 +129,7 @@ public final class CityControllerIT extends AbstractContextTest {
         final String actual = responseEntity.getBody();
         final String expectedRegex = "\\{"
                 + "\"httpStatus\":\"NOT_ACCEPTABLE\","
-                + "\"message\":\"findAll.pageSize: must be less than or equal to 3000000\","
+                + "\"message\":\"findAll.pageSize: must be less than or equal to 10000\","
                 + "\"dateTime\":\"\\d{4}-\\d{2}-\\d{2} \\d{2}-\\d{2}-\\d{2}\""
                 + "}";
         assertNotNull(actual);
