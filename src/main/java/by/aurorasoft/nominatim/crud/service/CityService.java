@@ -32,4 +32,8 @@ public class CityService extends AbsServiceCRUD<Long, CityEntity, City, CityRepo
     public boolean isExistByGeometry(Geometry geometry) {
         return super.repository.isExistByGeometry(geometry);
     }
+
+    public List<City> findCitiesIntersectedByLineString() {
+        return null;
+    }
 }

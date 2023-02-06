@@ -27,25 +27,19 @@ CREATE TABLE searching_cities_process
     handled_points BIGINT                        NOT NULL,
     status         searching_cities_process_type NOT NULL,
     created_time   TIMESTAMP                     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_time   TIMESTAMP                     NOT NULL DEFAULT CURRENT_TIMESTAMP
+    updated_time   TIMESTAMP
 );
 
-CREATE
-OR REPLACE FUNCTION on_update_searching_cities_process() RETURNS TRIGGER AS
-    '
-BEGIN
-
-NEW.updated_time
-= CURRENT_TIMESTAMP;
-
-RETURN NEW;
-
-END;
-    ' LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION on_update_searching_cities_process() RETURNS TRIGGER AS
+'
+    BEGIN
+        NEW.updated_time = CURRENT_TIMESTAMP;
+        RETURN NEW;
+    END;
+' LANGUAGE plpgsql;
 
 CREATE TRIGGER tr_on_update_searching_cities_process
-    AFTER
-        UPDATE
+    BEFORE UPDATE
     ON searching_cities_process
     FOR EACH ROW
     EXECUTE PROCEDURE on_update_searching_cities_process();

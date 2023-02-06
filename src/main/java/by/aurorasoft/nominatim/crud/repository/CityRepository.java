@@ -2,8 +2,11 @@ package by.aurorasoft.nominatim.crud.repository;
 
 import by.aurorasoft.nominatim.crud.model.entity.CityEntity;
 import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.LineString;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
 
 public interface CityRepository extends JpaRepository<CityEntity, Long> {
 
