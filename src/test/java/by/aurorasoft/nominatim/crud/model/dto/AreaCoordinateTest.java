@@ -39,7 +39,7 @@ public final class AreaCoordinateTest extends AbstractContextTest {
         final Set<ConstraintViolation<AreaCoordinate>> constraintViolations
                 = this.validator.validate(givenAreaCoordinate);
         assertEquals(1, constraintViolations.size());
-        assertEquals("must not be null", constraintViolations.iterator().next().getMessage());
+        assertEquals("не должно равняться null", constraintViolations.iterator().next().getMessage());
     }
 
     @Test
@@ -50,7 +50,7 @@ public final class AreaCoordinateTest extends AbstractContextTest {
         final Set<ConstraintViolation<AreaCoordinate>> constraintViolations
                 = this.validator.validate(givenAreaCoordinate);
         assertEquals(1, constraintViolations.size());
-        assertEquals("must not be null", constraintViolations.iterator().next().getMessage());
+        assertEquals("не должно равняться null", constraintViolations.iterator().next().getMessage());
     }
 
     @Test
@@ -61,7 +61,7 @@ public final class AreaCoordinateTest extends AbstractContextTest {
         final Set<ConstraintViolation<AreaCoordinate>> constraintViolations
                 = this.validator.validate(givenAreaCoordinate);
         assertEquals(1, constraintViolations.size());
-        assertEquals("must not be null", constraintViolations.iterator().next().getMessage());
+        assertEquals("не должно равняться null", constraintViolations.iterator().next().getMessage());
     }
 
     @Test
@@ -72,7 +72,7 @@ public final class AreaCoordinateTest extends AbstractContextTest {
         final Set<ConstraintViolation<AreaCoordinate>> constraintViolations
                 = this.validator.validate(givenAreaCoordinate);
         assertEquals(1, constraintViolations.size());
-        assertEquals("must not be null", constraintViolations.iterator().next().getMessage());
+        assertEquals("не должно равняться null", constraintViolations.iterator().next().getMessage());
     }
 
     @Test

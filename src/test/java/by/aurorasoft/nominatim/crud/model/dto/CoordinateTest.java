@@ -35,7 +35,7 @@ public final class CoordinateTest extends AbstractContextTest {
         final Coordinate givenCoordinate = new Coordinate(null, 180.);
         final Set<ConstraintViolation<Coordinate>> constraintViolations = this.validator.validate(givenCoordinate);
         assertEquals(1, constraintViolations.size());
-        assertEquals("must not be null", constraintViolations.iterator().next().getMessage());
+        assertEquals("не должно равняться null", constraintViolations.iterator().next().getMessage());
     }
 
     @Test
@@ -44,7 +44,7 @@ public final class CoordinateTest extends AbstractContextTest {
         final Set<ConstraintViolation<Coordinate>> constraintViolations = this.validator.validate(givenCoordinate);
         assertEquals(1, constraintViolations.size());
         assertEquals(
-                "must be less than or equal to 90",
+                "должно быть меньше, чем или равно 90",
                 constraintViolations.iterator().next().getMessage());
     }
 
@@ -54,7 +54,7 @@ public final class CoordinateTest extends AbstractContextTest {
         final Set<ConstraintViolation<Coordinate>> constraintViolations = this.validator.validate(givenCoordinate);
         assertEquals(1, constraintViolations.size());
         assertEquals(
-                "must be greater than or equal to -90",
+                "должно быть больше, чем или равно -90",
                 constraintViolations.iterator().next().getMessage());
     }
 
@@ -63,7 +63,7 @@ public final class CoordinateTest extends AbstractContextTest {
         final Coordinate givenCoordinate = new Coordinate(90., null);
         final Set<ConstraintViolation<Coordinate>> constraintViolations = this.validator.validate(givenCoordinate);
         assertEquals(1, constraintViolations.size());
-        assertEquals("must not be null", constraintViolations.iterator().next().getMessage());
+        assertEquals("не должно равняться null", constraintViolations.iterator().next().getMessage());
     }
 
     @Test
@@ -72,7 +72,7 @@ public final class CoordinateTest extends AbstractContextTest {
         final Set<ConstraintViolation<Coordinate>> constraintViolations = this.validator.validate(givenCoordinate);
         assertEquals(1, constraintViolations.size());
         assertEquals(
-                "must be less than or equal to 180",
+                "должно быть меньше, чем или равно 180",
                 constraintViolations.iterator().next().getMessage());
     }
 
@@ -82,7 +82,7 @@ public final class CoordinateTest extends AbstractContextTest {
         final Set<ConstraintViolation<Coordinate>> constraintViolations = this.validator.validate(givenCoordinate);
         assertEquals(1, constraintViolations.size());
         assertEquals(
-                "must be greater than or equal to -180",
+                "должно быть больше, чем или равно -180",
                 constraintViolations.iterator().next().getMessage());
     }
 

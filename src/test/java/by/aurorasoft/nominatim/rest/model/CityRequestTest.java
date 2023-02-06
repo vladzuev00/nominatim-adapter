@@ -45,7 +45,7 @@ public final class CityRequestTest extends AbstractContextTest {
                 .build();
         final Set<ConstraintViolation<CityRequest>> constraintViolations = this.validator.validate(givenRequest);
         assertEquals(1, constraintViolations.size());
-        assertEquals("must not be null", constraintViolations.iterator().next().getMessage());
+        assertEquals("не должно равняться null", constraintViolations.iterator().next().getMessage());
     }
 
     @Test
@@ -59,7 +59,7 @@ public final class CityRequestTest extends AbstractContextTest {
         final Set<ConstraintViolation<CityRequest>> constraintViolations = this.validator.validate(givenRequest);
         assertEquals(1, constraintViolations.size());
         assertEquals(
-                "must match \"^[a-zA-Z]+(?:[\\s-][a-zA-Z]+)*$\"",
+                "должно соответствовать \"^[a-zA-Z]+(?:[\\s-][a-zA-Z]+)*$\"",
                 constraintViolations.iterator().next().getMessage());
     }
 
@@ -71,7 +71,7 @@ public final class CityRequestTest extends AbstractContextTest {
                 .build();
         final Set<ConstraintViolation<CityRequest>> constraintViolations = this.validator.validate(givenRequest);
         assertEquals(1, constraintViolations.size());
-        assertEquals("must not be null", constraintViolations.iterator().next().getMessage());
+        assertEquals("не должно равняться null", constraintViolations.iterator().next().getMessage());
     }
 
     @Test
@@ -83,7 +83,7 @@ public final class CityRequestTest extends AbstractContextTest {
                 .build();
         final Set<ConstraintViolation<CityRequest>> constraintViolations = this.validator.validate(givenRequest);
         assertEquals(1, constraintViolations.size());
-        assertEquals("must not be null", constraintViolations.iterator().next().getMessage());
+        assertEquals("не должно равняться null", constraintViolations.iterator().next().getMessage());
     }
 
     @Test

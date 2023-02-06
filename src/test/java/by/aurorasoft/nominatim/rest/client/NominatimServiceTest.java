@@ -26,6 +26,7 @@ import java.util.*;
 
 import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
+import static java.util.Locale.ROOT;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.Matchers.oneOf;
 import static org.junit.Assert.assertEquals;
@@ -121,7 +122,7 @@ public class NominatimServiceTest {
     }
 
     private static String createReverseUriByCoordinate(Coordinate coordinate) {
-        return format(TEMPLATE_REVERSE_URI, coordinate.getLatitude(), coordinate.getLongitude());
+        return format(ROOT, TEMPLATE_REVERSE_URI, coordinate.getLatitude(), coordinate.getLongitude());
     }
 
     private final class TimeSendingRequestControllingInterceptor implements ClientHttpRequestInterceptor {

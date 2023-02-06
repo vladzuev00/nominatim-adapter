@@ -156,7 +156,7 @@ public class SearchCityProcessControllerIT extends AbstractContextTest {
 
         final String actual = responseEntity.getBody();
         final String expectedRegex = "\\{\"httpStatus\":\"NOT_ACCEPTABLE\","
-                + "\"message\":\"findByStatus.pageNumber: must be greater than or equal to 0\","
+                + "\"message\":\"findByStatus.pageNumber: должно быть не меньше 0\","
                 + "\"dateTime\":\"\\d{4}-\\d{2}-\\d{2} \\d{2}-\\d{2}-\\d{2}\"}";
         assertNotNull(actual);
         assertTrue(actual.matches(expectedRegex));
@@ -174,7 +174,7 @@ public class SearchCityProcessControllerIT extends AbstractContextTest {
 
         final String actual = responseEntity.getBody();
         final String expectedRegex = "\\{\"httpStatus\":\"NOT_ACCEPTABLE\","
-                + "\"message\":\"findByStatus.pageNumber: must be less than or equal to 10000\","
+                + "\"message\":\"findByStatus.pageNumber: должно быть не больше 10000\","
                 + "\"dateTime\":\"\\d{4}-\\d{2}-\\d{2} \\d{2}-\\d{2}-\\d{2}\"}";
         assertNotNull(actual);
         assertTrue(actual.matches(expectedRegex));
@@ -193,7 +193,7 @@ public class SearchCityProcessControllerIT extends AbstractContextTest {
 
         final String actual = responseEntity.getBody();
         final String expectedRegex = "\\{\"httpStatus\":\"NOT_ACCEPTABLE\","
-                + "\"message\":\"findByStatus.pageSize: must be greater than or equal to 1\","
+                + "\"message\":\"findByStatus.pageSize: должно быть не меньше 1\","
                 + "\"dateTime\":\"\\d{4}-\\d{2}-\\d{2} \\d{2}-\\d{2}-\\d{2}\"}";
         assertNotNull(actual);
         assertTrue(actual.matches(expectedRegex));
@@ -212,7 +212,7 @@ public class SearchCityProcessControllerIT extends AbstractContextTest {
 
         final String actual = responseEntity.getBody();
         final String expectedRegex = "\\{\"httpStatus\":\"NOT_ACCEPTABLE\","
-                + "\"message\":\"findByStatus.pageSize: must be less than or equal to 10000\","
+                + "\"message\":\"findByStatus.pageSize: должно быть не больше 10000\","
                 + "\"dateTime\":\"\\d{4}-\\d{2}-\\d{2} \\d{2}-\\d{2}-\\d{2}\"}";
         assertNotNull(actual);
         assertTrue(actual.matches(expectedRegex));
@@ -349,7 +349,7 @@ public class SearchCityProcessControllerIT extends AbstractContextTest {
         final String actual = this.restTemplate.postForObject(url, givenHttpEntity, String.class);
         final String expectedRegex = "\\{"
                 + "\"httpStatus\":\"NOT_ACCEPTABLE\","
-                + "\"message\":\"searchStep : must not be null\","
+                + "\"message\":\"searchStep : не должно равняться null\","
                 + "\"dateTime\":\"\\d{4}-\\d{2}-\\d{2} \\d{2}-\\d{2}-\\d{2}\""
                 + "}";
 
@@ -383,7 +383,7 @@ public class SearchCityProcessControllerIT extends AbstractContextTest {
         final String actual = this.restTemplate.postForObject(url, givenHttpEntity, String.class);
         final String expectedRegex = "\\{"
                 + "\"httpStatus\":\"NOT_ACCEPTABLE\","
-                + "\"message\":\"searchStep : must be greater than or equal to 0.01\","
+                + "\"message\":\"searchStep : должно быть больше, чем или равно 0.01\","
                 + "\"dateTime\":\"\\d{4}-\\d{2}-\\d{2} \\d{2}-\\d{2}-\\d{2}\""
                 + "}";
 
@@ -417,7 +417,7 @@ public class SearchCityProcessControllerIT extends AbstractContextTest {
         final String actual = this.restTemplate.postForObject(url, givenHttpEntity, String.class);
         final String expectedRegex = "\\{"
                 + "\"httpStatus\":\"NOT_ACCEPTABLE\","
-                + "\"message\":\"searchStep : must be less than or equal to 5\","
+                + "\"message\":\"searchStep : должно быть меньше, чем или равно 5\","
                 + "\"dateTime\":\"\\d{4}-\\d{2}-\\d{2} \\d{2}-\\d{2}-\\d{2}\""
                 + "}";
 

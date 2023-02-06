@@ -24,7 +24,7 @@ import static org.springframework.transaction.annotation.Propagation.NOT_SUPPORT
 import static org.springframework.web.util.UriComponentsBuilder.fromUriString;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-public final class CityControllerIT extends AbstractContextTest {
+public class CityControllerIT extends AbstractContextTest {
     private static final String CONTROLLER_URL = "/city";
     private static final String SLASH = "/";
 
@@ -69,7 +69,7 @@ public final class CityControllerIT extends AbstractContextTest {
         final String actual = responseEntity.getBody();
         final String expectedRegex = "\\{"
                 + "\"httpStatus\":\"NOT_ACCEPTABLE\","
-                + "\"message\":\"findAll.pageNumber: must be greater than or equal to 0\","
+                + "\"message\":\"findAll.pageNumber: должно быть не меньше 0\","
                 + "\"dateTime\":\"\\d{4}-\\d{2}-\\d{2} \\d{2}-\\d{2}-\\d{2}\""
                 + "}";
         assertNotNull(actual);
@@ -89,7 +89,7 @@ public final class CityControllerIT extends AbstractContextTest {
         final String actual = responseEntity.getBody();
         final String expectedRegex = "\\{"
                 + "\"httpStatus\":\"NOT_ACCEPTABLE\","
-                + "\"message\":\"findAll.pageNumber: must be less than or equal to 10000\","
+                + "\"message\":\"findAll.pageNumber: должно быть не больше 10000\","
                 + "\"dateTime\":\"\\d{4}-\\d{2}-\\d{2} \\d{2}-\\d{2}-\\d{2}\""
                 + "}";
         assertNotNull(actual);
@@ -109,7 +109,7 @@ public final class CityControllerIT extends AbstractContextTest {
         final String actual = responseEntity.getBody();
         final String expectedRegex = "\\{"
                 + "\"httpStatus\":\"NOT_ACCEPTABLE\","
-                + "\"message\":\"findAll.pageSize: must be greater than or equal to 1\","
+                + "\"message\":\"findAll.pageSize: должно быть не меньше 1\","
                 + "\"dateTime\":\"\\d{4}-\\d{2}-\\d{2} \\d{2}-\\d{2}-\\d{2}\""
                 + "}";
         assertNotNull(actual);
@@ -129,7 +129,7 @@ public final class CityControllerIT extends AbstractContextTest {
         final String actual = responseEntity.getBody();
         final String expectedRegex = "\\{"
                 + "\"httpStatus\":\"NOT_ACCEPTABLE\","
-                + "\"message\":\"findAll.pageSize: must be less than or equal to 10000\","
+                + "\"message\":\"findAll.pageSize: должно быть не больше 10000\","
                 + "\"dateTime\":\"\\d{4}-\\d{2}-\\d{2} \\d{2}-\\d{2}-\\d{2}\""
                 + "}";
         assertNotNull(actual);
@@ -169,7 +169,7 @@ public final class CityControllerIT extends AbstractContextTest {
         final String actual = this.restTemplate.postForObject(url, givenHttpEntity, String.class);
         final String expectedRegex = "\\{"
                 + "\"httpStatus\":\"NOT_ACCEPTABLE\","
-                + "\"message\":\"name : must not be null\","
+                + "\"message\":\"name : не должно равняться null\","
                 + "\"dateTime\":\"\\d{4}-\\d{2}-\\d{2} \\d{2}-\\d{2}-\\d{2}\""
                 + "}";
         assertTrue(actual.matches(expectedRegex));
@@ -242,7 +242,7 @@ public final class CityControllerIT extends AbstractContextTest {
                 = this.restTemplate.exchange(url, PUT, givenHttpEntity, String.class);
 
         final String actual = responseEntity.getBody();
-        final String expectedRegex = "\\{\"httpStatus\":\"NOT_ACCEPTABLE\",\"message\":\"name : must not be null\","
+        final String expectedRegex = "\\{\"httpStatus\":\"NOT_ACCEPTABLE\",\"message\":\"name : не должно равняться null\","
                 + "\"dateTime\":\"\\d{4}-\\d{2}-\\d{2} \\d{2}-\\d{2}-\\d{2}\"}";
         assertNotNull(actual);
         assertTrue(actual.matches(expectedRegex));

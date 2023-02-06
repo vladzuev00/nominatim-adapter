@@ -42,7 +42,7 @@ public final class StartSearchingCitiesRequestTest extends AbstractContextTest {
         final Set<ConstraintViolation<StartSearchingCitiesRequest>> constraintViolations
                 = this.validator.validate(givenRequest);
         assertEquals(1, constraintViolations.size());
-        assertEquals("must not be null", constraintViolations.iterator().next().getMessage());
+        assertEquals("не должно равняться null", constraintViolations.iterator().next().getMessage());
     }
 
     @Test
@@ -54,7 +54,7 @@ public final class StartSearchingCitiesRequestTest extends AbstractContextTest {
         final Set<ConstraintViolation<StartSearchingCitiesRequest>> constraintViolations
                 = this.validator.validate(givenRequest);
         assertEquals(1, constraintViolations.size());
-        assertEquals("must not be null", constraintViolations.iterator().next().getMessage());
+        assertEquals("не должно равняться null", constraintViolations.iterator().next().getMessage());
     }
 
     @Test
@@ -65,7 +65,7 @@ public final class StartSearchingCitiesRequestTest extends AbstractContextTest {
         final Set<ConstraintViolation<StartSearchingCitiesRequest>> constraintViolations
                 = this.validator.validate(givenRequest);
         assertEquals(1, constraintViolations.size());
-        assertEquals("must not be null", constraintViolations.iterator().next().getMessage());
+        assertEquals("не должно равняться null", constraintViolations.iterator().next().getMessage());
     }
 
     @Test
@@ -78,7 +78,7 @@ public final class StartSearchingCitiesRequestTest extends AbstractContextTest {
                 = this.validator.validate(givenRequest);
         assertEquals(1, constraintViolations.size());
         assertEquals(
-                "must be greater than or equal to 0.01",
+                "должно быть больше, чем или равно 0.01",
                 constraintViolations.iterator().next().getMessage());
     }
 
@@ -92,7 +92,7 @@ public final class StartSearchingCitiesRequestTest extends AbstractContextTest {
                 = this.validator.validate(givenRequest);
         assertEquals(1, constraintViolations.size());
         assertEquals(
-                "must be less than or equal to 5",
+                "должно быть меньше, чем или равно 5",
                 constraintViolations.iterator().next().getMessage());
     }
 
