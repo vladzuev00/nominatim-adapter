@@ -34,12 +34,11 @@ public final class TriggerSearchingCitiesProcessTest extends AbstractContextTest
 
         final LocalDateTime updatedDateTimeBeforeUpdating = this.findUpdatedDateTimeOfProcessByProcessId(
                 givenProcessId);
-        assertNull(updatedDateTimeBeforeUpdating);
-
         this.increaseHandledPoints(givenDeltaToIncreaseHandledPoints, givenProcessId);
         final LocalDateTime updatedDateTimeAfterUpdating = this.findUpdatedDateTimeOfProcessByProcessId(
                 givenProcessId);
-        assertNotNull(updatedDateTimeAfterUpdating);
+
+        assertTrue(updatedDateTimeAfterUpdating.isAfter(updatedDateTimeBeforeUpdating));
     }
 
     private LocalDateTime findUpdatedDateTimeOfProcessByProcessId(Long processId) {

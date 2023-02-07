@@ -27,7 +27,7 @@ CREATE TABLE searching_cities_process
     handled_points BIGINT                        NOT NULL,
     status         searching_cities_process_type NOT NULL,
     created_time   TIMESTAMP                     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_time   TIMESTAMP
+    updated_time   TIMESTAMP                     NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE OR REPLACE FUNCTION on_update_searching_cities_process() RETURNS TRIGGER AS

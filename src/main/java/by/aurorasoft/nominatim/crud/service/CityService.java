@@ -6,6 +6,7 @@ import by.aurorasoft.nominatim.crud.model.entity.CityEntity;
 import by.aurorasoft.nominatim.crud.repository.CityRepository;
 import by.nhorushko.crudgeneric.v2.service.AbsServiceCRUD;
 import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.LineString;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +34,8 @@ public class CityService extends AbsServiceCRUD<Long, CityEntity, City, CityRepo
         return super.repository.isExistByGeometry(geometry);
     }
 
-    public List<City> findCitiesIntersectedByLineString() {
-        return null;
+    public List<City> findCitiesIntersectedByLineString(LineString lineString) {
+        final List<CityEntity> foundEntities = super.repository.findCitiesIntersectedByLineString(lineString);
+        return super.mapper.toDtos(foundEntities);
     }
 }

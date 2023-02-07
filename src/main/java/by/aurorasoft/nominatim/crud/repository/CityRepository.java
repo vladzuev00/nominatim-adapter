@@ -13,4 +13,8 @@ public interface CityRepository extends JpaRepository<CityEntity, Long> {
     @Query(value = "SELECT EXISTS(SELECT 1 FROM city WHERE ST_Equals(city.geometry, :geometry))",
             nativeQuery = true)
     boolean isExistByGeometry(Geometry geometry);
+
+    @Query(value = "SELECT id, name, geometry, type FROM city WHERE st_intersects(geometry, :lineString)",
+            nativeQuery = true)
+    List<CityEntity> findCitiesIntersectedByLineString(LineString lineString);
 }
