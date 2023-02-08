@@ -10,7 +10,6 @@ import by.nhorushko.trackfilter.TrackFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import org.locationtech.jts.geom.*;
-import org.locationtech.jts.geom.impl.CoordinateArraySequence;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +32,7 @@ public final class MileageService {
     public MileageResponse findMileage(MileageRequest request) {
         final DistanceCalculatorSettings distanceCalculatorSettings = new DistanceCalculatorSettingsImpl(
                 request.getMinDetectionSpeed(), request.getMaxMessageTimeout());
-        final List<? extends LatLngAlt> significantTrackPoints = this.trackFilter.filter(request.getTrackPoints(),
-                EPSILON_TO_FILTER_TRACK_POINTS);
-        final List<TrackSlice> trackSlices = this.findTrackSlices(significantTrackPoints);
+        final List<TrackSlice> trackSlices = this.findTrackSlices(request.getTrackPoints());
         final Map<Boolean, Double> mileagesByLocatedInCity = this.findMileagesByLocatedInCity(trackSlices,
                 distanceCalculatorSettings);
         return new MileageResponse(
@@ -63,11 +60,11 @@ public final class MileageService {
                 distanceCalculatorSettings);
     }
 
-    private List<TrackSlice> findTrackSlices(List<? extends LatLngAlt> points) {
-        final List<City> cities = this.findCitiesByPoints(points);
-        final int indexPenultimatePoint = points.size() - 2;
+    private List<TrackSlice> findTrackSlices(List<? extends LatLngAlt> trackPoints) {
+        final List<City> cities = this.findCitiesByPoints(trackPoints);
+        final int indexPenultimatePoint = trackPoints.size() - 2;
         return rangeClosed(0, indexPenultimatePoint)
-                .mapToObj(i -> Pair.of(points.get(i), points.get(i + 1)))
+                .mapToObj(i -> Pair.of(trackPoints.get(i), trackPoints.get(i + 1)))
                 .map(slicePoints -> new TrackSlice(
                         slicePoints.getFirst(),
                         slicePoints.getSecond(),
@@ -77,8 +74,11 @@ public final class MileageService {
                 .collect(toList());
     }
 
-    private List<City> findCitiesByPoints(List<? extends LatLngAlt> points) {
-        final LineString lineString = this.geometryByLatLngAltFactory.createLineString(points);
+    private List<City> findCitiesByPoints(List<? extends LatLngAlt> trackPoints) {
+        final List<? extends LatLngAlt> significantTrackPointsToCreateLineString = this.trackFilter.filter(
+                trackPoints, EPSILON_TO_FILTER_TRACK_POINTS);
+        final LineString lineString = this.geometryByLatLngAltFactory.createLineString(
+                significantTrackPointsToCreateLineString);
         return this.cityService.findCitiesIntersectedByLineStringButNotTouches(lineString);
     }
 

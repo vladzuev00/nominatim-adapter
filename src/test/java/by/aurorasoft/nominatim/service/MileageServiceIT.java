@@ -286,7 +286,8 @@ public final class MileageServiceIT extends AbstractContextTest {
                 .build();
 
         final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(0, 2.223896412016262);
+        final MileageResponse expected = new MileageResponse(1.111948206008131,
+                1.111948206008131);
         assertEquals(expected, actual);
     }
 
@@ -369,7 +370,8 @@ public final class MileageServiceIT extends AbstractContextTest {
                 .build();
 
         final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(0, 1.3343351961161156);
+        final MileageResponse expected = new MileageResponse(0.44477398021596953,
+                0.8895612159001461);
         assertEquals(expected, actual);
     }
 
@@ -418,7 +420,8 @@ public final class MileageServiceIT extends AbstractContextTest {
                 .build();
 
         final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(0, 2.223896412016262);
+        final MileageResponse expected = new MileageResponse(1.3343351961161156,
+                0.8895612159001461);
         assertEquals(expected, actual);
     }
 
@@ -512,7 +515,8 @@ public final class MileageServiceIT extends AbstractContextTest {
                 .build();
 
         final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(0, 2.223896412016262);
+        final MileageResponse expected = new MileageResponse(1.111948206008131,
+                1.111948206008131);
         assertEquals(expected, actual);
     }
 
