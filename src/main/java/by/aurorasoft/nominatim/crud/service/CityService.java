@@ -34,8 +34,8 @@ public class CityService extends AbsServiceCRUD<Long, CityEntity, City, CityRepo
         return super.repository.isExistByGeometry(geometry);
     }
 
-    public List<City> findCitiesIntersectedByLineString(LineString lineString) {
-        final List<CityEntity> foundEntities = super.repository.findCitiesIntersectedByLineString(lineString);
+    public List<City> findCitiesIntersectedByLineStringButNotTouches(LineString lineString) {
+        final List<CityEntity> foundEntities = super.repository.findCitiesIntersectedByLineStringButNotTouches(lineString);
         return super.mapper.toDtos(foundEntities);
     }
 }
