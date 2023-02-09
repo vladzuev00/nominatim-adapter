@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.ExecutorService;
+import java.util.stream.Collectors;
 
 import static by.aurorasoft.nominatim.util.StreamUtil.asStream;
 import static by.aurorasoft.nominatim.util.StreamUtil.split;

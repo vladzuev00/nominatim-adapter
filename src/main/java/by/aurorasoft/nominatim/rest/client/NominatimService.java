@@ -39,7 +39,7 @@ public final class NominatimService implements AutoCloseable {
     private boolean durationBetweenRequestsPassed;
 
     public NominatimService(RestTemplate restTemplate,
-                            @Value("${nominatim.millis-between-requests}") final long millisBetweenRequests) {
+                            @Value("${nominatim.millis-between-requests}") long millisBetweenRequests) {
         this.restTemplate = restTemplate;
         this.millisBetweenRequests = millisBetweenRequests;
         this.executorService = newSingleThreadExecutor();
@@ -69,6 +69,7 @@ public final class NominatimService implements AutoCloseable {
             this.condition.signalAll();
             return responseEntity.getBody();
         } catch (final InterruptedException cause) {
+            currentThread().interrupt();
             throw new NominatimClientException(cause);
         } finally {
             this.lock.unlock();
@@ -88,7 +89,7 @@ public final class NominatimService implements AutoCloseable {
                     this.condition.signalAll();
                 }
             } catch (final InterruptedException cause) {
-                throw new NominatimClientException(cause);
+                currentThread().interrupt();
             } finally {
                 this.lock.unlock();
             }
@@ -105,7 +106,7 @@ public final class NominatimService implements AutoCloseable {
         private static final String EXCEPTION_DESCRIPTION_URI_BUILDING_BY_NOT_DEFINED_COORDINATE
                 = "Uri was build by not defined coordinates.";
 
-        private static final String URI_WITHOUT_PARAMETERS = "https://nominatim.openstreetmap.org/reverse";
+        private static final String URI_WITHOUT_PARAMETERS = "http://geo.aurora-soft.by:8081/reverse";
         private static final String PARAM_NAME_LATITUDE = "lat";
         private static final String PARAM_NAME_LONGITUDE = "lon";
         private static final String PARAM_NAME_ZOOM = "zoom";

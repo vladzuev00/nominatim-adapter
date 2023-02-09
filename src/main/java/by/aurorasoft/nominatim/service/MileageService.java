@@ -4,7 +4,6 @@ import by.aurorasoft.nominatim.crud.model.dto.City;
 import by.aurorasoft.nominatim.crud.service.CityService;
 import by.aurorasoft.nominatim.rest.model.MileageRequest;
 import by.aurorasoft.nominatim.rest.model.MileageResponse;
-import by.aurorasoft.nominatim.service.factory.GeometryByLatLngAltFactory;
 import by.nhorushko.distancecalculator.*;
 import by.nhorushko.trackfilter.TrackFilter;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +14,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static java.lang.System.currentTimeMillis;
+import static java.lang.System.out;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.stream.Collectors.*;
 import static java.util.stream.IntStream.rangeClosed;
 
@@ -27,7 +29,7 @@ public final class MileageService {
     private final TrackFilter trackFilter;
     private final DistanceCalculator distanceCalculator;
     private final CityService cityService;
-    private final GeometryByLatLngAltFactory geometryByLatLngAltFactory;
+    private final GeometryCreatingService geometryCreatingService;
 
     public MileageResponse findMileage(MileageRequest request) {
         final DistanceCalculatorSettings distanceCalculatorSettings = new DistanceCalculatorSettingsImpl(
@@ -77,15 +79,15 @@ public final class MileageService {
     private List<City> findCitiesByPoints(List<? extends LatLngAlt> trackPoints) {
         final List<? extends LatLngAlt> significantTrackPointsToCreateLineString = this.trackFilter.filter(
                 trackPoints, EPSILON_TO_FILTER_TRACK_POINTS);
-        final LineString lineString = this.geometryByLatLngAltFactory.createLineString(
+        final LineString lineString = this.geometryCreatingService.createLineString(
                 significantTrackPointsToCreateLineString);
         return this.cityService.findCitiesIntersectedByLineStringButNotTouches(lineString);
     }
 
     private boolean isAnyCityContainPoint(LatLngAlt latLngAlt, List<City> cities) {
-        final Point point = this.geometryByLatLngAltFactory.createPoint(latLngAlt);
-        return cities.stream()
-                .anyMatch(city -> isPointInsideCity(point, city));
+        final Point point = this.geometryCreatingService.createPoint(latLngAlt);
+        final GeometryCollection geometryCollection = this.geometryCreatingService.createByCities(cities);
+        return geometryCollection.contains(point);
     }
 
     private static boolean isPointInsideCity(Point point, City city) {
@@ -94,14 +96,21 @@ public final class MileageService {
 
     private double calculateDistance(List<TrackSlice> trackSlices,
                                      DistanceCalculatorSettings distanceCalculatorSettings) {
-        return trackSlices.stream()
-                .parallel()
-                .reduce(
-                        DISTANCE_IN_CASE_NO_TRACK_SLICES,
-                        (partialDistance, nextSlice) ->
-                                partialDistance + this.calculateDistance(nextSlice, distanceCalculatorSettings),
-                        Double::sum
-                );
+        final long before = currentTimeMillis();
+        try {
+            return trackSlices.stream()
+                    .parallel()
+                    .reduce(
+                            DISTANCE_IN_CASE_NO_TRACK_SLICES,
+                            (partialDistance, nextSlice) ->
+                                    partialDistance + this.calculateDistance(nextSlice, distanceCalculatorSettings),
+                            Double::sum
+                    );
+        }
+        finally {
+            final long after = currentTimeMillis();
+            out.println("Calculation distance by reducing: " + MILLISECONDS.toSeconds(after - before));
+        }
     }
 
     @Value

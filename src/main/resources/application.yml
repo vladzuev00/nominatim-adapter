@@ -26,4 +26,4 @@ server:
     context-path: /cities-searcher
 
 nominatim:
-  millis-between-requests: 1000
+  millis-between-requests: 10

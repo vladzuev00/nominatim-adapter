@@ -12,6 +12,7 @@ import java.util.Objects;
 import static java.util.Arrays.stream;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.IDENTITY;
+import static javax.persistence.GenerationType.SEQUENCE;
 
 @Entity
 @Table(name = "city")
@@ -19,16 +20,17 @@ import static javax.persistence.GenerationType.IDENTITY;
         name = "pgsql_enum",
         typeClass = PostgreSQLEnumType.class
 )
+@SequenceGenerator(name = "city_id_seq", sequenceName = "city_id_seq", allocationSize = 1)
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
 @Getter
-@ToString(callSuper = true)
+@ToString
 @Builder
 public class CityEntity extends BaseEntity<Long> {
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = SEQUENCE, generator = "city_id_seq")
     @Column(name = "id")
     private Long id;
 

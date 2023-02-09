@@ -35,7 +35,7 @@ public class CityService extends AbsServiceCRUD<Long, CityEntity, City, CityRepo
     }
 
     public List<City> findCitiesIntersectedByLineStringButNotTouches(LineString lineString) {
-        final List<CityEntity> foundEntities = super.repository.findCitiesIntersectedByLineStringButNotTouches(lineString);
+        final List<CityEntity> foundEntities = super.repository.findCitiesIntersectedByLineString(lineString);
         return super.mapper.toDtos(foundEntities);
     }
 }
