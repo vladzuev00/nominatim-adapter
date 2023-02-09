@@ -29,7 +29,7 @@ public final class MileageService {
     private final TrackFilter trackFilter;
     private final DistanceCalculator distanceCalculator;
     private final CityService cityService;
-    private final GeometryCreatingService geometryCreatingService;
+    private final GeometryCreatingService geometryByLatLngAltFactory;
 
     public MileageResponse findMileage(MileageRequest request) {
         final DistanceCalculatorSettings distanceCalculatorSettings = new DistanceCalculatorSettingsImpl(
@@ -63,31 +63,44 @@ public final class MileageService {
     }
 
     private List<TrackSlice> findTrackSlices(List<? extends LatLngAlt> trackPoints) {
-        final List<City> cities = this.findCitiesByPoints(trackPoints);
-        final int indexPenultimatePoint = trackPoints.size() - 2;
-        return rangeClosed(0, indexPenultimatePoint)
-                .mapToObj(i -> Pair.of(trackPoints.get(i), trackPoints.get(i + 1)))
-                .map(slicePoints -> new TrackSlice(
-                        slicePoints.getFirst(),
-                        slicePoints.getSecond(),
-                        //slices, which is located in city, must have second point, which is located in city
-                        this.isAnyCityContainPoint(slicePoints.getSecond(), cities)
-                ))
-                .collect(toList());
+        long before = currentTimeMillis();
+        try {
+            final List<City> cities = this.findCitiesByPoints(trackPoints);
+            final int indexPenultimatePoint = trackPoints.size() - 2;
+            return rangeClosed(0, indexPenultimatePoint)
+                    .parallel()
+                    .mapToObj(i -> Pair.of(trackPoints.get(i), trackPoints.get(i + 1)))
+                    .map(slicePoints -> new TrackSlice(
+                            slicePoints.getFirst(),
+                            slicePoints.getSecond(),
+                            //slices, which is located in city, must have second point, which is located in city
+                            this.isAnyCityContainPoint(slicePoints.getSecond(), cities)
+                    ))
+                    .collect(toList());
+        }
+        finally {
+            long after = currentTimeMillis();
+            out.println("Finding track slices: " + MILLISECONDS.toSeconds(after - before));
+        }
     }
 
     private List<City> findCitiesByPoints(List<? extends LatLngAlt> trackPoints) {
         final List<? extends LatLngAlt> significantTrackPointsToCreateLineString = this.trackFilter.filter(
                 trackPoints, EPSILON_TO_FILTER_TRACK_POINTS);
-        final LineString lineString = this.geometryCreatingService.createLineString(
+        final LineString lineString = this.geometryByLatLngAltFactory.createLineString(
                 significantTrackPointsToCreateLineString);
         return this.cityService.findCitiesIntersectedByLineStringButNotTouches(lineString);
     }
 
     private boolean isAnyCityContainPoint(LatLngAlt latLngAlt, List<City> cities) {
+        /*
         final Point point = this.geometryCreatingService.createPoint(latLngAlt);
         final GeometryCollection geometryCollection = this.geometryCreatingService.createByCities(cities);
         return geometryCollection.contains(point);
+         */
+        final Point point = this.geometryByLatLngAltFactory.createPoint(latLngAlt);
+        return cities.stream()
+                .anyMatch(city -> isPointInsideCity(point, city));
     }
 
     private static boolean isPointInsideCity(Point point, City city) {
@@ -99,15 +112,13 @@ public final class MileageService {
         final long before = currentTimeMillis();
         try {
             return trackSlices.stream()
-                    .parallel()
                     .reduce(
                             DISTANCE_IN_CASE_NO_TRACK_SLICES,
                             (partialDistance, nextSlice) ->
                                     partialDistance + this.calculateDistance(nextSlice, distanceCalculatorSettings),
                             Double::sum
                     );
-        }
-        finally {
+        } finally {
             final long after = currentTimeMillis();
             out.println("Calculation distance by reducing: " + MILLISECONDS.toSeconds(after - before));
         }
