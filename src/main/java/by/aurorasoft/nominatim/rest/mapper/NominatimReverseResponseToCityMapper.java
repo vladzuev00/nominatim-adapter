@@ -19,10 +19,12 @@ public final class NominatimReverseResponseToCityMapper {
     private final GeometryFactory geometryFactory;
 
     public City map(NominatimReverseResponse source) {
+        final Geometry geometry = this.mapGeometry(source);
         return City.builder()
                 .name(source.getName())
-                .geometry(this.mapGeometry(source))
+                .geometry(geometry)
                 .type(identifyCityType(source))
+                .boundingBox(geometry.getEnvelopeInternal())
                 .build();
     }
 

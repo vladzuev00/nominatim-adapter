@@ -5,6 +5,7 @@ import by.nhorushko.crudgeneric.v2.domain.AbstractDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
+import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.Geometry;
 
 @Value
@@ -15,4 +16,5 @@ public class City implements AbstractDto<Long> {
     String name;
     Geometry geometry;
     Type type;
+    Envelope boundingBox;
 }

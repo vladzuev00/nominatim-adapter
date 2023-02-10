@@ -3,6 +3,7 @@ package by.aurorasoft.nominatim.crud.model.entity;
 import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType;
 import lombok.*;
 import org.hibernate.annotations.TypeDef;
+import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.Geometry;
 
 import javax.persistence.*;
@@ -11,7 +12,6 @@ import java.util.Objects;
 
 import static java.util.Arrays.stream;
 import static javax.persistence.EnumType.STRING;
-import static javax.persistence.GenerationType.IDENTITY;
 import static javax.persistence.GenerationType.SEQUENCE;
 
 @Entity
@@ -44,6 +44,9 @@ public class CityEntity extends BaseEntity<Long> {
     @Column(name = "type")
     @org.hibernate.annotations.Type(type = "pgsql_enum")
     private Type type;
+
+    @Column(name = "bounding_box")
+    private Envelope boundingBox;
 
     public enum Type {
         CAPITAL("yes"), REGIONAL("4"), NOT_DEFINED(null);

@@ -13,7 +13,8 @@ CREATE TABLE city
     id       SERIAL PRIMARY KEY,
     name     VARCHAR(256) NOT NULL,
     geometry GEOMETRY     NOT NULL,
-    type     city_type    NOT NULL
+    type     city_type    NOT NULL,
+    bounding_
 );
 
 CREATE TYPE searching_cities_process_type AS ENUM('HANDLING', 'SUCCESS', 'ERROR');

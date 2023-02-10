@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CityRepository extends JpaRepository<CityEntity, Long> {
 
@@ -14,7 +15,7 @@ public interface CityRepository extends JpaRepository<CityEntity, Long> {
             nativeQuery = true)
     boolean isExistByGeometry(Geometry geometry);
 
-    @Query(value = "SELECT id, name, geometry, type FROM city WHERE ST_Intersects(geometry, :lineString)",
+    @Query(value = "SELECT id, name, geometry, type FROM city WHERE ST_Intersects(bounding_box, :lineString)",
             nativeQuery = true)
     List<CityEntity> findCitiesIntersectedByLineString(LineString lineString);
 }

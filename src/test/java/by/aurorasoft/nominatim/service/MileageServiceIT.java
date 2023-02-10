@@ -609,7 +609,7 @@ public final class MileageServiceIT extends AbstractContextTest {
     public void mileageShouldBeCalculatedForFirstTrackPoints()
             throws Exception {
         final List<TrackPoint> givenTrackPoints = this.readTrackPoints(FOLDER_PATH_WITH_TRACK_POINTS + SLASH
-                + FILE_NAME_WITH_FIRST_TRACK_POINTS);
+                + "unit_460_13000.csv");
 
         final int givenMinDetectionSpeed = 0;
         final int givenMaxMessageTimeout = 10;
