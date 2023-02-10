@@ -45,9 +45,6 @@ public class CityEntity extends BaseEntity<Long> {
     @org.hibernate.annotations.Type(type = "pgsql_enum")
     private Type type;
 
-    @Column(name = "bounding_box")
-    private Envelope boundingBox;
-
     public enum Type {
         CAPITAL("yes"), REGIONAL("4"), NOT_DEFINED(null);
 

@@ -14,7 +14,7 @@ CREATE TABLE city
     name     VARCHAR(256) NOT NULL,
     geometry GEOMETRY     NOT NULL,
     type     city_type    NOT NULL,
-    bounding_
+    bounding_box GEOMETRY NOT NULL
 );
 
 CREATE TYPE searching_cities_process_type AS ENUM('HANDLING', 'SUCCESS', 'ERROR');
@@ -46,6 +46,7 @@ CREATE TRIGGER tr_on_update_searching_cities_process
     EXECUTE PROCEDURE on_update_searching_cities_process();
 
 CREATE INDEX ON city using GIST(geometry);
+CREATE INDEX ON city using GIST(bounding_box);
 
 
 

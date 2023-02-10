@@ -16,5 +16,4 @@ public class City implements AbstractDto<Long> {
     String name;
     Geometry geometry;
     Type type;
-    Envelope boundingBox;
 }

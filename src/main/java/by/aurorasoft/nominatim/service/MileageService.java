@@ -75,7 +75,7 @@ public final class MileageService {
         long before = currentTimeMillis();
         try {
             final List<City> cities = this.findCitiesByPoints(trackPoints);
-            final Map<Envelope, PreparedGeometry> citiesByEnvelopes = cities.stream()
+            final Map<Envelope, PreparedGeometry> citiesGeometryByBoundingBoxes = cities.stream()
                     .collect(
                             toMap(
                                     city -> city.getGeometry().getEnvelopeInternal(),
@@ -92,7 +92,7 @@ public final class MileageService {
                                 trackPoints.get(i),
                                 trackPoints.get(i + 1),
                                 //slices, which is located in city, must have second point, which is located in city
-                                this.isAnyCityContainPoint(trackPoints.get(i + 1), citiesByEnvelopes)
+                                this.isAnyCityContainPoint(trackPoints.get(i + 1), citiesGeometryByBoundingBoxes)
                         ))
                         .collect(toList());
             } finally {
