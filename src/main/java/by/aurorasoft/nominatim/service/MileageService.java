@@ -6,20 +6,17 @@ import by.aurorasoft.nominatim.rest.model.MileageRequest;
 import by.aurorasoft.nominatim.rest.model.MileageResponse;
 import by.nhorushko.distancecalculator.*;
 import by.nhorushko.trackfilter.TrackFilter;
-import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import org.locationtech.jts.geom.*;
 import org.locationtech.jts.geom.prep.PreparedGeometry;
-import org.locationtech.jts.geom.prep.PreparedGeometryFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static java.lang.System.currentTimeMillis;
 import static java.lang.System.out;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 import static java.util.stream.IntStream.rangeClosed;
 
@@ -32,27 +29,36 @@ public final class MileageService {
     private final DistanceCalculator distanceCalculator;
     private final CityService cityService;
     private final GeometryCreatingService geometryCreatingService;
-    private final PreparedGeometryFactory preparedGeometryFactory;
+    private final AtomicReference<Map<PreparedGeometry, PreparedGeometry>> cityGeometriesByBoundingBoxAtomicReference;
 
-    public MileageService(TrackFilter trackFilter, DistanceCalculator distanceCalculator, CityService cityService,
-                          GeometryCreatingService geometryCreatingService) {
+    public MileageService(TrackFilter trackFilter, DistanceCalculator distanceCalculator,
+                          CityService cityService, GeometryCreatingService geometryCreatingService) {
         this.trackFilter = trackFilter;
         this.distanceCalculator = distanceCalculator;
         this.cityService = cityService;
         this.geometryCreatingService = geometryCreatingService;
-        this.preparedGeometryFactory = new PreparedGeometryFactory();
+        this.cityGeometriesByBoundingBoxAtomicReference = new AtomicReference<>();
     }
 
     public MileageResponse findMileage(MileageRequest request) {
-        final DistanceCalculatorSettings distanceCalculatorSettings = new DistanceCalculatorSettingsImpl(
-                request.getMinDetectionSpeed(), request.getMaxMessageTimeout());
-        final List<TrackSlice> trackSlices = this.findTrackSlices(request.getTrackPoints());
-        final Map<Boolean, Double> mileagesByLocatedInCity = this.findMileagesByLocatedInCity(trackSlices,
-                distanceCalculatorSettings);
-        return new MileageResponse(
-                mileagesByLocatedInCity.get(true),
-                mileagesByLocatedInCity.get(false)
-        );
+        this.cityGeometriesByBoundingBoxAtomicReference.compareAndSet(
+                null, this.cityService.findPreparedGeometriesByPreparedBoundingBoxes());
+        long beforeWithoutDBQuery = currentTimeMillis();
+        try {
+            final DistanceCalculatorSettings distanceCalculatorSettings = new DistanceCalculatorSettingsImpl(
+                    request.getMinDetectionSpeed(), request.getMaxMessageTimeout());
+            final List<TrackSlice> trackSlices = this.findTrackSlices(request.getTrackPoints());
+            final Map<Boolean, Double> mileagesByLocatedInCity = this.findMileagesByLocatedInCity(trackSlices,
+                    distanceCalculatorSettings);
+            return new MileageResponse(
+                    mileagesByLocatedInCity.get(true),
+                    mileagesByLocatedInCity.get(false)
+            );
+        }
+        finally {
+            long afterWithoutDBQuery = currentTimeMillis();
+            out.println("Without db query: " + (afterWithoutDBQuery - beforeWithoutDBQuery));
+        }
     }
 
     private Map<Boolean, Double> findMileagesByLocatedInCity(List<TrackSlice> trackSlices,
@@ -74,16 +80,8 @@ public final class MileageService {
     private List<TrackSlice> findTrackSlices(List<? extends LatLngAlt> trackPoints) {
         long before = currentTimeMillis();
         try {
-            final List<City> cities = this.findCitiesByPoints(trackPoints);
-            final Map<Envelope, PreparedGeometry> citiesGeometryByBoundingBoxes = cities.stream()
-                    .collect(
-                            toMap(
-                                    city -> city.getGeometry().getEnvelopeInternal(),
-                                    city -> PreparedGeometryFactory.prepare(city.getGeometry())
-                            )
-                    );
+            final List<PreparedGeometry> intersectedCitiesGeometries = this.findGeometriesIntersectedByLineStringOfPoints(trackPoints);
             final int indexPenultimatePoint = trackPoints.size() - 2;
-
             long beforeStreamOperation = currentTimeMillis();
             try {
                 return rangeClosed(0, indexPenultimatePoint)
@@ -92,7 +90,7 @@ public final class MileageService {
                                 trackPoints.get(i),
                                 trackPoints.get(i + 1),
                                 //slices, which is located in city, must have second point, which is located in city
-                                this.isAnyCityContainPoint(trackPoints.get(i + 1), citiesGeometryByBoundingBoxes)
+                                this.isAnyGeometryContainPoint(trackPoints.get(i + 1), intersectedCitiesGeometries)
                         ))
                         .collect(toList());
             } finally {
@@ -105,27 +103,31 @@ public final class MileageService {
         }
     }
 
-    private List<City> findCitiesByPoints(List<? extends LatLngAlt> trackPoints) {
+    private List<PreparedGeometry> findGeometriesIntersectedByLineStringOfPoints(
+            List<? extends LatLngAlt> trackPoints) {
         long before = currentTimeMillis();
         try {
             final List<? extends LatLngAlt> significantTrackPointsToCreateLineString = this.trackFilter.filter(
                     trackPoints, EPSILON_TO_FILTER_TRACK_POINTS);
             final LineString lineString = this.geometryCreatingService.createLineString(
                     significantTrackPointsToCreateLineString);
-            return this.cityService.findCitiesIntersectedByLineString(lineString);
+            return this.cityGeometriesByBoundingBoxAtomicReference.get()
+                    .entrySet()
+                    .stream()
+                    .filter(geometryByBoundingBox -> geometryByBoundingBox.getKey().intersects(lineString))
+                    .map(Map.Entry::getValue)
+                    .collect(toList());
         } finally {
             long after = currentTimeMillis();
             out.println("Finding cities intersected by line string: " + MILLISECONDS.toSeconds(after - before));
         }
     }
 
-    private boolean isAnyCityContainPoint(LatLngAlt latLngAlt, Map<Envelope, PreparedGeometry> citiesByBoundingBoxes) {
+    private boolean isAnyGeometryContainPoint(LatLngAlt latLngAlt, List<PreparedGeometry> geometries) {
         final Point point = this.geometryCreatingService.createPoint(latLngAlt);
-        return citiesByBoundingBoxes.entrySet()
+        return geometries
                 .stream()
-                .anyMatch(cityByBoundingBox ->
-                        cityByBoundingBox.getKey().contains(point.getCoordinate())
-                                && cityByBoundingBox.getValue().contains(point));
+                .anyMatch(geometry -> geometry.contains(point));
     }
 
     private static boolean isPointInsideCity(Point point, City city) {

@@ -7,13 +7,20 @@ import by.aurorasoft.nominatim.crud.repository.CityRepository;
 import by.nhorushko.crudgeneric.v2.service.AbsServiceCRUD;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.prep.PreparedGeometry;
+import org.locationtech.jts.geom.prep.PreparedGeometryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+
+import static java.util.stream.Collectors.toMap;
+import static org.locationtech.jts.geom.prep.PreparedGeometryFactory.prepare;
 
 @Service
 @Transactional
@@ -37,5 +44,17 @@ public class CityService extends AbsServiceCRUD<Long, CityEntity, City, CityRepo
     public List<City> findCitiesIntersectedByLineString(LineString lineString) {
         final List<CityEntity> foundEntities = super.repository.findCitiesIntersectedByLineString(lineString);
         return super.mapper.toDtos(foundEntities);
+    }
+
+    public Map<PreparedGeometry, PreparedGeometry> findPreparedGeometriesByPreparedBoundingBoxes() {
+        final List<Geometry> allCitiesGeometries = this.repository.findAllCitiesGeometries();
+        return allCitiesGeometries
+                .stream()
+                .collect(
+                        toMap(
+                                geometry -> prepare(geometry.getEnvelope()),
+                                PreparedGeometryFactory::prepare
+                        )
+                );
     }
 }
