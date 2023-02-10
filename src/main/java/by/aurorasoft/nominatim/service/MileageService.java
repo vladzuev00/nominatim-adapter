@@ -9,7 +9,6 @@ import by.nhorushko.trackfilter.TrackFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import org.locationtech.jts.geom.*;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -29,7 +28,7 @@ public final class MileageService {
     private final TrackFilter trackFilter;
     private final DistanceCalculator distanceCalculator;
     private final CityService cityService;
-    private final GeometryCreatingService geometryByLatLngAltFactory;
+    private final GeometryCreatingService geometryCreatingService;
 
     public MileageResponse findMileage(MileageRequest request) {
         final DistanceCalculatorSettings distanceCalculatorSettings = new DistanceCalculatorSettingsImpl(
@@ -69,36 +68,35 @@ public final class MileageService {
             final int indexPenultimatePoint = trackPoints.size() - 2;
             return rangeClosed(0, indexPenultimatePoint)
                     .parallel()
-                    .mapToObj(i -> Pair.of(trackPoints.get(i), trackPoints.get(i + 1)))
-                    .map(slicePoints -> new TrackSlice(
-                            slicePoints.getFirst(),
-                            slicePoints.getSecond(),
+                    .mapToObj(i -> new TrackSlice(
+                            trackPoints.get(i),
+                            trackPoints.get(i + 1),
                             //slices, which is located in city, must have second point, which is located in city
-                            this.isAnyCityContainPoint(slicePoints.getSecond(), cities)
+                            this.isAnyCityContainPoint(trackPoints.get(i + 1), cities)
                     ))
                     .collect(toList());
-        }
-        finally {
+        } finally {
             long after = currentTimeMillis();
             out.println("Finding track slices: " + MILLISECONDS.toSeconds(after - before));
         }
     }
 
     private List<City> findCitiesByPoints(List<? extends LatLngAlt> trackPoints) {
-        final List<? extends LatLngAlt> significantTrackPointsToCreateLineString = this.trackFilter.filter(
-                trackPoints, EPSILON_TO_FILTER_TRACK_POINTS);
-        final LineString lineString = this.geometryByLatLngAltFactory.createLineString(
-                significantTrackPointsToCreateLineString);
-        return this.cityService.findCitiesIntersectedByLineStringButNotTouches(lineString);
+        long before = currentTimeMillis();
+        try {
+            final List<? extends LatLngAlt> significantTrackPointsToCreateLineString = this.trackFilter.filter(
+                    trackPoints, EPSILON_TO_FILTER_TRACK_POINTS);
+            final LineString lineString = this.geometryCreatingService.createLineString(
+                    significantTrackPointsToCreateLineString);
+            return this.cityService.findCitiesIntersectedByLineString(lineString);
+        } finally {
+            long after = currentTimeMillis();
+            out.println("Finding cities intersected by line string: " + MILLISECONDS.toSeconds(after - before));
+        }
     }
 
     private boolean isAnyCityContainPoint(LatLngAlt latLngAlt, List<City> cities) {
-        /*
         final Point point = this.geometryCreatingService.createPoint(latLngAlt);
-        final GeometryCollection geometryCollection = this.geometryCreatingService.createByCities(cities);
-        return geometryCollection.contains(point);
-         */
-        final Point point = this.geometryByLatLngAltFactory.createPoint(latLngAlt);
         return cities.stream()
                 .anyMatch(city -> isPointInsideCity(point, city));
     }
@@ -112,12 +110,8 @@ public final class MileageService {
         final long before = currentTimeMillis();
         try {
             return trackSlices.stream()
-                    .reduce(
-                            DISTANCE_IN_CASE_NO_TRACK_SLICES,
-                            (partialDistance, nextSlice) ->
-                                    partialDistance + this.calculateDistance(nextSlice, distanceCalculatorSettings),
-                            Double::sum
-                    );
+                    .map(slice -> this.calculateDistance(slice, distanceCalculatorSettings))
+                    .reduce(DISTANCE_IN_CASE_NO_TRACK_SLICES, Double::sum);
         } finally {
             final long after = currentTimeMillis();
             out.println("Calculation distance by reducing: " + MILLISECONDS.toSeconds(after - before));
