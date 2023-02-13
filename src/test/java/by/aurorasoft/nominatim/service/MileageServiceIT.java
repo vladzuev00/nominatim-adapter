@@ -12,30 +12,31 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.io.FileReader;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static java.lang.Float.parseFloat;
 import static java.lang.Integer.parseInt;
-import static java.lang.System.currentTimeMillis;
-import static java.lang.System.out;
-import static java.time.Instant.from;
-import static java.time.Instant.parse;
 import static java.time.LocalDateTime.parse;
 import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.ofPattern;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 
 public final class MileageServiceIT extends AbstractContextTest {
     private static final String FOLDER_PATH_WITH_TRACK_POINTS = "./src/test/resources/tracks";
     private static final String SLASH = "/";
+
     private static final String FILE_NAME_WITH_FIRST_TRACK_POINTS = "track_460_40000.csv";
-    private static final double ALLOWABLE_INACCURACY = 0.00001;
+    private static final String FILE_NAME_WITH_SECOND_TRACK_POINTS = "track_460_64000.csv";
+    private static final String FILE_NAME_WITH_THIRD_TRACK_POINTS = "track_460_131000.csv";
+    private static final String FILE_NAME_WITH_FOURTH_TRACK_POINTS = "unit_460_13000.csv";
+
+    private static final int MIN_DETECTION_SPEED = 0;
+    private static final int MAX_MESSAGE_TIMEOUT = 10;
+
+
+    private static final double ALLOWABLE_INACCURACY_OF_DISTANCE = 0.00001;
 
     @Autowired
     private MileageService mileageService;
@@ -608,46 +609,96 @@ public final class MileageServiceIT extends AbstractContextTest {
     @Sql("classpath:sql/insert-belarus-city.sql")
     public void mileageShouldBeCalculatedForFirstTrackPoints()
             throws Exception {
-        final List<TrackPoint> givenTrackPoints = this.readTrackPoints(FOLDER_PATH_WITH_TRACK_POINTS + SLASH
-                + "track_460_131000.csv");
+        final List<TrackPoint> givenTrackPoints = this.readTrackPoints(FILE_NAME_WITH_FIRST_TRACK_POINTS);
+        final MileageRequest givenMileageRequest = createMileageRequest(givenTrackPoints);
 
-        final int givenMinDetectionSpeed = 0;
-        final int givenMaxMessageTimeout = 10;
-        final MileageRequest givenMileageRequest = MileageRequest.builder()
-                .trackPoints(givenTrackPoints)
-                .minDetectionSpeed(givenMinDetectionSpeed)
-                .maxMessageTimeout(givenMaxMessageTimeout)
-                .build();
-
-        final long beforeTimeMillis = currentTimeMillis();
         final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final long afterTimeMillis = currentTimeMillis();
-        out.println("All process: " + MILLISECONDS.toSeconds(afterTimeMillis - beforeTimeMillis));
-
-        final MileageResponse expected = new MileageResponse(332.8931552817687,
-                380.564741248708);
+        final MileageResponse expected = new MileageResponse(355.72511991398096,
+                357.73277661649564);
         assertEquals(expected, actual);
 
         final double actualAllDistance = actual.getCityMileage() + actual.getCountryMileage();
-
-        final List<LatLngAlt> givenLatLngAlts = givenTrackPoints.stream()
-                .map(MileageServiceIT::mapToLatLngAlt)
-                .collect(toList());
-        final DistanceCalculatorSettings distanceCalculatorSettings = new DistanceCalculatorSettingsImpl(
-                givenMinDetectionSpeed, givenMaxMessageTimeout);
-        final double expectedAllDistance = this.distanceCalculator.calculateDistance(givenLatLngAlts,
-                distanceCalculatorSettings);
-
-        assertEquals(expectedAllDistance, actualAllDistance, ALLOWABLE_INACCURACY);
+        final double expectedAllDistance = this.findExpectedAllDistance(givenTrackPoints);
+        assertEquals(expectedAllDistance, actualAllDistance, ALLOWABLE_INACCURACY_OF_DISTANCE);
     }
 
-    private List<TrackPoint> readTrackPoints(String fileName) throws Exception {
-        try (final CSVReader csvReader = new CSVReader(new FileReader(fileName))) {
+    @Test
+    @Sql("classpath:sql/insert-belarus-city.sql")
+    public void mileageShouldBeCalculatedForSecondTrackPoints()
+            throws Exception {
+        final List<TrackPoint> givenTrackPoints = this.readTrackPoints(FILE_NAME_WITH_SECOND_TRACK_POINTS);
+        final MileageRequest givenMileageRequest = createMileageRequest(givenTrackPoints);
+
+        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
+        final MileageResponse expected = new MileageResponse(562.8989367618942,
+                518.031547816519);
+        assertEquals(expected, actual);
+
+        final double actualAllDistance = actual.getCityMileage() + actual.getCountryMileage();
+        final double expectedAllDistance = this.findExpectedAllDistance(givenTrackPoints);
+        assertEquals(expectedAllDistance, actualAllDistance, ALLOWABLE_INACCURACY_OF_DISTANCE);
+    }
+
+    @Test
+    @Sql("classpath:sql/insert-belarus-city.sql")
+    public void mileageShouldBeCalculatedForThirdTrackPoints()
+            throws Exception {
+        final List<TrackPoint> givenTrackPoints = this.readTrackPoints(FILE_NAME_WITH_THIRD_TRACK_POINTS);
+        final MileageRequest givenMileageRequest = createMileageRequest(givenTrackPoints);
+
+        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
+        final MileageResponse expected = new MileageResponse(1207.6871617415154,
+                1241.2063545061649);
+        assertEquals(expected, actual);
+
+        final double actualAllDistance = actual.getCityMileage() + actual.getCountryMileage();
+        final double expectedAllDistance = this.findExpectedAllDistance(givenTrackPoints);
+        assertEquals(expectedAllDistance, actualAllDistance, ALLOWABLE_INACCURACY_OF_DISTANCE);
+    }
+
+    @Test
+    @Sql("classpath:sql/insert-belarus-city.sql")
+    public void mileageShouldBeCalculatedByForFourthTrackPoints()
+            throws Exception {
+        final List<TrackPoint> givenTrackPoints = this.readTrackPoints(FILE_NAME_WITH_FOURTH_TRACK_POINTS);
+        final MileageRequest givenMileageRequest = createMileageRequest(givenTrackPoints);
+
+        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
+        final MileageResponse expected = new MileageResponse(125.27265649913504,
+                117.8709566688135);
+        assertEquals(expected, actual);
+
+        final double actualAllDistance = actual.getCityMileage() + actual.getCountryMileage();
+        final double expectedAllDistance = this.findExpectedAllDistance(givenTrackPoints);
+        assertEquals(expectedAllDistance, actualAllDistance, ALLOWABLE_INACCURACY_OF_DISTANCE);
+    }
+
+    private List<TrackPoint> readTrackPoints(String fileName)
+            throws Exception {
+        final String filePath = FOLDER_PATH_WITH_TRACK_POINTS + SLASH + fileName;
+        try (final CSVReader csvReader = new CSVReader(new FileReader(filePath))) {
             final List<String[]> readTrackPointsProperties = csvReader.readAll();
             return readTrackPointsProperties.stream()
                     .map(this.trackPointFactory::create)
                     .collect(toList());
         }
+    }
+
+    private static MileageRequest createMileageRequest(List<TrackPoint> trackPoints) {
+        return MileageRequest.builder()
+                .trackPoints(trackPoints)
+                .minDetectionSpeed(MIN_DETECTION_SPEED)
+                .maxMessageTimeout(MAX_MESSAGE_TIMEOUT)
+                .build();
+    }
+
+    private double findExpectedAllDistance(List<TrackPoint> trackPoints) {
+        final List<LatLngAlt> latLngAlts = trackPoints.stream()
+                .map(MileageServiceIT::mapToLatLngAlt)
+                .collect(toList());
+        final DistanceCalculatorSettings distanceCalculatorSettings = new DistanceCalculatorSettingsImpl(
+                MIN_DETECTION_SPEED, MAX_MESSAGE_TIMEOUT);
+        return this.distanceCalculator.calculateDistance(latLngAlts, distanceCalculatorSettings);
     }
 
     private static LatLngAlt mapToLatLngAlt(TrackPoint trackPoint) {
