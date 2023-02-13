@@ -37,7 +37,7 @@ public final class MileageService {
 
     public MileageResponse findMileage(MileageRequest request) {
         this.cityGeometriesByBoundingBoxAtomicReference.compareAndSet(
-                null, this.cityService.findPreparedGeometriesByPreparedBoundingBoxes());
+                null, this.cityService.findPreparedGeometriesByBoundingBoxes());
         final DistanceCalculatorSettings distanceCalculatorSettings = new DistanceCalculatorSettingsImpl(
                 request.getMinDetectionSpeed(), request.getMaxMessageTimeout());
         final List<TrackSlice> trackSlices = this.findTrackSlices(request.getTrackPoints());
