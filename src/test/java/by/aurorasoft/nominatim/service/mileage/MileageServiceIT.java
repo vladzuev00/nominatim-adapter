@@ -20,6 +20,7 @@ import java.util.Map;
 
 import static java.lang.Float.parseFloat;
 import static java.lang.Integer.parseInt;
+import static java.time.Instant.now;
 import static java.time.LocalDateTime.parse;
 import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.ofPattern;
@@ -37,6 +38,10 @@ public final class MileageServiceIT extends AbstractContextTest {
 
     private static final int MIN_DETECTION_SPEED = 0;
     private static final int MAX_MESSAGE_TIMEOUT = 10;
+
+    private static final int TRACK_POINT_ALTITUDE = 15;
+    private static final int TRACK_POINT_SPEED = 15;
+    private static final boolean TRACK_POINT_VALID = true;
 
 
     private static final double ALLOWABLE_INACCURACY_OF_DISTANCE = 0.00001;
@@ -65,28 +70,12 @@ public final class MileageServiceIT extends AbstractContextTest {
     public void case1() {
         this.loadCitiesBoundingBoxesAndGeometries();
 
-        final MileageRequest givenMileageRequest = MileageRequest.builder()
-                .trackPoints(List.of(
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:30Z"))
-                                .latitude(1.015F)
-                                .longitude(2.025F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build(),
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:31Z"))
-                                .latitude(1.025F)
-                                .longitude(2.025F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build()
-                ))
-                .minDetectionSpeed(1)
-                .maxMessageTimeout(15)
-                .build();
+        final MileageRequest givenMileageRequest = createMileageRequest(
+                List.of(
+                        createTrackPoint(1.015F, 2.025F),
+                        createTrackPoint(1.025F, 2.025F)
+                )
+        );
 
         final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
         final MileageResponse expected = new MileageResponse(0, 1.111948206008131);
@@ -102,28 +91,12 @@ public final class MileageServiceIT extends AbstractContextTest {
     public void case2() {
         this.loadCitiesBoundingBoxesAndGeometries();
 
-        final MileageRequest givenMileageRequest = MileageRequest.builder()
-                .trackPoints(List.of(
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:30Z"))
-                                .latitude(1.005F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build(),
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:31Z"))
-                                .latitude(1.015F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build()
-                ))
-                .minDetectionSpeed(1)
-                .maxMessageTimeout(15)
-                .build();
+        final MileageRequest givenMileageRequest = createMileageRequest(
+                List.of(
+                        createTrackPoint(1.005F, 2.015F),
+                        createTrackPoint(1.015F, 2.015F)
+                )
+        );
 
         final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
         final MileageResponse expected = new MileageResponse(1.111948206008131, 0);
@@ -139,28 +112,12 @@ public final class MileageServiceIT extends AbstractContextTest {
     public void case3() {
         this.loadCitiesBoundingBoxesAndGeometries();
 
-        final MileageRequest givenMileageRequest = MileageRequest.builder()
-                .trackPoints(List.of(
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:30Z"))
-                                .latitude(1.005F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build(),
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:31Z"))
-                                .latitude(1.025F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build()
-                ))
-                .minDetectionSpeed(1)
-                .maxMessageTimeout(15)
-                .build();
+        final MileageRequest givenMileageRequest = createMileageRequest(
+                List.of(
+                        createTrackPoint(1.005F, 2.015F),
+                        createTrackPoint(1.025F, 2.015F)
+                )
+        );
 
         final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
         final MileageResponse expected = new MileageResponse(0, 2.223896412016262);
@@ -176,28 +133,12 @@ public final class MileageServiceIT extends AbstractContextTest {
     public void case4() {
         this.loadCitiesBoundingBoxesAndGeometries();
 
-        final MileageRequest givenMileageRequest = MileageRequest.builder()
-                .trackPoints(List.of(
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:30Z"))
-                                .latitude(1.015F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build(),
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:31Z"))
-                                .latitude(1.025F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build()
-                ))
-                .minDetectionSpeed(1)
-                .maxMessageTimeout(15)
-                .build();
+        final MileageRequest givenMileageRequest = createMileageRequest(
+                List.of(
+                        createTrackPoint(1.015F, 2.015F),
+                        createTrackPoint(1.025F, 2.015F)
+                )
+        );
 
         final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
         final MileageResponse expected = new MileageResponse(0., 1.111948206008131);
@@ -213,28 +154,12 @@ public final class MileageServiceIT extends AbstractContextTest {
     public void case5() {
         this.loadCitiesBoundingBoxesAndGeometries();
 
-        final MileageRequest givenMileageRequest = MileageRequest.builder()
-                .trackPoints(List.of(
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:30Z"))
-                                .latitude(1.013F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build(),
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:31Z"))
-                                .latitude(1.016F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build()
-                ))
-                .minDetectionSpeed(1)
-                .maxMessageTimeout(15)
-                .build();
+        final MileageRequest givenMileageRequest = createMileageRequest(
+                List.of(
+                        createTrackPoint(1.013F, 2.015F),
+                        createTrackPoint(1.016F, 2.015F)
+                )
+        );
 
         final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
         final MileageResponse expected = new MileageResponse(0.3335871128960806, 0.);
@@ -250,28 +175,12 @@ public final class MileageServiceIT extends AbstractContextTest {
     public void case6() {
         this.loadCitiesBoundingBoxesAndGeometries();
 
-        final MileageRequest givenMileageRequest = MileageRequest.builder()
-                .trackPoints(List.of(
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:30Z"))
-                                .latitude(1.02F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build(),
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:31Z"))
-                                .latitude(1.03F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build()
-                ))
-                .minDetectionSpeed(1)
-                .maxMessageTimeout(15)
-                .build();
+        final MileageRequest givenMileageRequest = createMileageRequest(
+                List.of(
+                        createTrackPoint(1.02F, 2.015F),
+                        createTrackPoint(1.03F, 2.015F)
+                )
+        );
 
         final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
         final MileageResponse expected = new MileageResponse(0, 1.111948206008131);
@@ -285,28 +194,14 @@ public final class MileageServiceIT extends AbstractContextTest {
             + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326)"
             + ")")
     public void case7() {
-        final MileageRequest givenMileageRequest = MileageRequest.builder()
-                .trackPoints(List.of(
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:30Z"))
-                                .latitude(1.005F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build(),
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:31Z"))
-                                .latitude(1.01F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build()
-                ))
-                .minDetectionSpeed(1)
-                .maxMessageTimeout(15)
-                .build();
+        this.loadCitiesBoundingBoxesAndGeometries();
+
+        final MileageRequest givenMileageRequest = createMileageRequest(
+                List.of(
+                        createTrackPoint(1.005F, 2.015F),
+                        createTrackPoint(1.01F, 2.015F)
+                )
+        );
 
         final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
         final MileageResponse expected = new MileageResponse(0, 0.5559741030040655);
@@ -322,36 +217,13 @@ public final class MileageServiceIT extends AbstractContextTest {
     public void case8() {
         this.loadCitiesBoundingBoxesAndGeometries();
 
-        final MileageRequest givenMileageRequest = MileageRequest.builder()
-                .trackPoints(List.of(
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:30Z"))
-                                .latitude(1.005F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build(),
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:31Z"))
-                                .latitude(1.015F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build(),
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:32Z"))
-                                .latitude(1.025F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build()
-                ))
-                .minDetectionSpeed(1)
-                .maxMessageTimeout(15)
-                .build();
+        final MileageRequest givenMileageRequest = createMileageRequest(
+                List.of(
+                        createTrackPoint(1.005F, 2.015F),
+                        createTrackPoint(1.015F, 2.015F),
+                        createTrackPoint(1.025F, 2.015F)
+                )
+        );
 
         final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
         final MileageResponse expected = new MileageResponse(1.111948206008131,
@@ -368,36 +240,13 @@ public final class MileageServiceIT extends AbstractContextTest {
     public void case9() {
         this.loadCitiesBoundingBoxesAndGeometries();
 
-        final MileageRequest givenMileageRequest = MileageRequest.builder()
-                .trackPoints(List.of(
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:30Z"))
-                                .latitude(1.005F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build(),
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:31Z"))
-                                .latitude(1.015F)
-                                .longitude(2.018F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build(),
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:32Z"))
-                                .latitude(1.025F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build()
-                ))
-                .minDetectionSpeed(1)
-                .maxMessageTimeout(15)
-                .build();
+        final MileageRequest givenMileageRequest = createMileageRequest(
+                List.of(
+                        createTrackPoint(1.005F, 2.015F),
+                        createTrackPoint(1.015F, 2.018F),
+                        createTrackPoint(1.025F, 2.015F)
+                )
+        );
 
         final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
         final MileageResponse expected = new MileageResponse(1.1608862638235358,
@@ -414,36 +263,13 @@ public final class MileageServiceIT extends AbstractContextTest {
     public void case10() {
         this.loadCitiesBoundingBoxesAndGeometries();
 
-        final MileageRequest givenMileageRequest = MileageRequest.builder()
-                .trackPoints(List.of(
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:30Z"))
-                                .latitude(1.013F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build(),
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:31Z"))
-                                .latitude(1.017F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build(),
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:32Z"))
-                                .latitude(1.025F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build()
-                ))
-                .minDetectionSpeed(1)
-                .maxMessageTimeout(15)
-                .build();
+        final MileageRequest givenMileageRequest = createMileageRequest(
+                List.of(
+                        createTrackPoint(1.013F, 2.015F),
+                        createTrackPoint(1.017F, 2.015F),
+                        createTrackPoint(1.025F, 2.015F)
+                )
+        );
 
         final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
         final MileageResponse expected = new MileageResponse(0.44477398021596953,
@@ -460,44 +286,14 @@ public final class MileageServiceIT extends AbstractContextTest {
     public void case11() {
         this.loadCitiesBoundingBoxesAndGeometries();
 
-        final MileageRequest givenMileageRequest = MileageRequest.builder()
-                .trackPoints(List.of(
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:30Z"))
-                                .latitude(1.005F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build(),
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:31Z"))
-                                .latitude(1.013F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build(),
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:32Z"))
-                                .latitude(1.017F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build(),
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:33Z"))
-                                .latitude(1.025F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build()
-                ))
-                .minDetectionSpeed(1)
-                .maxMessageTimeout(15)
-                .build();
+        final MileageRequest givenMileageRequest = createMileageRequest(
+                List.of(
+                        createTrackPoint(1.005F, 2.015F),
+                        createTrackPoint(1.013F, 2.015F),
+                        createTrackPoint(1.017F, 2.015F),
+                        createTrackPoint(1.025F, 2.015F)
+                )
+        );
 
         final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
         final MileageResponse expected = new MileageResponse(1.3343351961161156,
@@ -514,44 +310,14 @@ public final class MileageServiceIT extends AbstractContextTest {
     public void case12() {
         this.loadCitiesBoundingBoxesAndGeometries();
 
-        final MileageRequest givenMileageRequest = MileageRequest.builder()
-                .trackPoints(List.of(
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:30Z"))
-                                .latitude(1.005F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build(),
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:31Z"))
-                                .latitude(1.013F)
-                                .longitude(2.013F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build(),
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:32Z"))
-                                .latitude(1.017F)
-                                .longitude(2.017F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build(),
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:33Z"))
-                                .latitude(1.025F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build()
-                ))
-                .minDetectionSpeed(1)
-                .maxMessageTimeout(15)
-                .build();
+        final MileageRequest givenMileageRequest = createMileageRequest(
+                List.of(
+                        createTrackPoint(1.005F, 2.015F),
+                        createTrackPoint(1.013F, 2.013F),
+                        createTrackPoint(1.017F, 2.017F),
+                        createTrackPoint(1.025F, 2.015F)
+                )
+        );
 
         final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
         final MileageResponse expected = new MileageResponse(1.545888809855105,
@@ -572,36 +338,13 @@ public final class MileageServiceIT extends AbstractContextTest {
     public void case13() {
         this.loadCitiesBoundingBoxesAndGeometries();
 
-        final MileageRequest givenMileageRequest = MileageRequest.builder()
-                .trackPoints(List.of(
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:30Z"))
-                                .latitude(1.005F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build(),
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:31Z"))
-                                .latitude(1.015F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build(),
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:32Z"))
-                                .latitude(1.025F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build()
-                ))
-                .minDetectionSpeed(1)
-                .maxMessageTimeout(15)
-                .build();
+        final MileageRequest givenMileageRequest = createMileageRequest(
+                List.of(
+                        createTrackPoint(1.005F, 2.015F),
+                        createTrackPoint(1.015F, 2.015F),
+                        createTrackPoint(1.025F, 2.015F)
+                )
+        );
 
         final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
         final MileageResponse expected = new MileageResponse(1.111948206008131,
@@ -622,50 +365,42 @@ public final class MileageServiceIT extends AbstractContextTest {
     public void case14() {
         this.loadCitiesBoundingBoxesAndGeometries();
 
-        final MileageRequest givenMileageRequest = MileageRequest.builder()
-                .trackPoints(List.of(
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:30Z"))
-                                .latitude(1.005F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build(),
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:31Z"))
-                                .latitude(1.012F)
-                                .longitude(2.018F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build(),
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:32Z"))
-                                .latitude(1.015F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build(),
-                        TrackPoint.builder()
-                                .datetime(Instant.parse("2023-02-07T10:15:33Z"))
-                                .latitude(1.025F)
-                                .longitude(2.015F)
-                                .altitude(15)
-                                .speed(15)
-                                .valid(true)
-                                .build()
-                ))
-                .minDetectionSpeed(1)
-                .maxMessageTimeout(15)
-                .build();
+        final MileageRequest givenMileageRequest = createMileageRequest(
+                List.of(
+                        createTrackPoint(1.005F, 2.015F),
+                        createTrackPoint(1.012F, 2.018F),
+                        createTrackPoint(1.015F, 2.015F),
+                        createTrackPoint(1.025F, 2.015F)
+                )
+        );
 
         final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
         final MileageResponse expected = new MileageResponse(1.3185101144130753,
                 1.111948206008131);
         assertEquals(expected, actual);
     }
+
+    @Test
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'First', "
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.01 1.01))', 4326), "
+            + "'NOT_DEFINED', "
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326))")
+    public void case15() {
+        this.loadCitiesBoundingBoxesAndGeometries();
+
+        final MileageRequest givenMileageRequest = createMileageRequest(
+                List.of(
+                        createTrackPoint(1.005F, 2.015F),
+                        createTrackPoint(1.015F, 2.015F),
+                        createTrackPoint(1.025F, 2.015F)
+                )
+        );
+
+        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
+        final MileageResponse expected = new MileageResponse(0, 2.223896412016262);
+        assertEquals(expected, actual);
+    }
+
 
     @Test
     @Sql("classpath:sql/insert-belarus-city.sql")
@@ -749,6 +484,25 @@ public final class MileageServiceIT extends AbstractContextTest {
         this.mileageService.setCitiesGeometriesByBoundingBoxes(geometriesByBoundingBoxes);
     }
 
+    private static TrackPoint createTrackPoint(float latitude, float longitude) {
+        return TrackPoint.builder()
+                .datetime(now())
+                .latitude(latitude)
+                .longitude(longitude)
+                .altitude(TRACK_POINT_ALTITUDE)
+                .speed(TRACK_POINT_SPEED)
+                .valid(TRACK_POINT_VALID)
+                .build();
+    }
+
+    private static MileageRequest createMileageRequest(List<TrackPoint> trackPoints) {
+        return MileageRequest.builder()
+                .trackPoints(trackPoints)
+                .minDetectionSpeed(MIN_DETECTION_SPEED)
+                .maxMessageTimeout(MAX_MESSAGE_TIMEOUT)
+                .build();
+    }
+
     private List<TrackPoint> readTrackPoints(String fileName)
             throws Exception {
         final String filePath = FOLDER_PATH_WITH_TRACK_POINTS + SLASH + fileName;
@@ -758,14 +512,6 @@ public final class MileageServiceIT extends AbstractContextTest {
                     .map(this.trackPointFactory::create)
                     .collect(toList());
         }
-    }
-
-    private static MileageRequest createMileageRequest(List<TrackPoint> trackPoints) {
-        return MileageRequest.builder()
-                .trackPoints(trackPoints)
-                .minDetectionSpeed(MIN_DETECTION_SPEED)
-                .maxMessageTimeout(MAX_MESSAGE_TIMEOUT)
-                .build();
     }
 
     private double findExpectedAllDistance(List<TrackPoint> trackPoints) {
