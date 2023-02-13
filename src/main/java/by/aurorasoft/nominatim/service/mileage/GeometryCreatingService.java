@@ -1,6 +1,5 @@
-package by.aurorasoft.nominatim.service;
+package by.aurorasoft.nominatim.service.mileage;
 
-import by.aurorasoft.nominatim.crud.model.dto.City;
 import by.nhorushko.distancecalculator.LatLngAlt;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.*;
@@ -22,13 +21,6 @@ public final class GeometryCreatingService {
     public Point createPoint(LatLngAlt latLngAlt) {
         final Coordinate coordinate = mapToCoordinate(latLngAlt);
         return this.geometryFactory.createPoint(coordinate);
-    }
-
-    public GeometryCollection createByCities(List<City> cities) {
-        final Geometry[] geometries = cities.stream()
-                .map(City::getGeometry)
-                .toArray(Geometry[]::new);
-        return new GeometryCollection(geometries, this.geometryFactory);
     }
 
     private static CoordinateXY[] mapToCoordinates(List<? extends LatLngAlt> points) {
