@@ -1,6 +1,9 @@
 package by.aurorasoft.nominatim.rest.model;
 
 import by.nhorushko.distancecalculator.LatLngAlt;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
@@ -18,12 +21,12 @@ public class MileageRequest {
     int maxMessageTimeout;
 
     @Value
-    @AllArgsConstructor
     @Builder
     public static class TrackPoint implements LatLngAlt {
 
         @NotNull
         @PastOrPresent
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC")
         Instant datetime;
 
         @NotNull
@@ -46,6 +49,21 @@ public class MileageRequest {
 
         @NotNull
         Boolean valid;
+
+        @JsonCreator
+        public TrackPoint(@JsonProperty("datetime") Instant datetime,
+                          @JsonProperty("latitude") Float latitude,
+                          @JsonProperty("longitude") Float longitude,
+                          @JsonProperty("altitude") Integer altitude,
+                          @JsonProperty("speed") Integer speed,
+                          @JsonProperty("valid") Boolean valid) {
+            this.datetime = datetime;
+            this.latitude = latitude;
+            this.longitude = longitude;
+            this.altitude = altitude;
+            this.speed = speed;
+            this.valid = valid;
+        }
 
         @Override
         public float getLatitude() {

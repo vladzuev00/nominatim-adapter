@@ -10,6 +10,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.client.RestTemplate;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
+import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS;
 import static java.util.Collections.singletonList;
 import static org.springframework.http.MediaType.ALL;
 
@@ -30,6 +31,7 @@ public class RestTemplateConfig {
         final ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JtsModule());
         objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.configure(WRITE_DATES_AS_TIMESTAMPS, false);
         objectMapper.configure(FAIL_ON_UNKNOWN_PROPERTIES, false);
         return objectMapper;
     }

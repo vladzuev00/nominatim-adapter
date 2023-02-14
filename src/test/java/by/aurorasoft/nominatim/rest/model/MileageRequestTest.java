@@ -12,6 +12,7 @@ import javax.validation.Validator;
 import java.util.Set;
 
 import static java.time.Instant.now;
+import static java.time.Instant.parse;
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -245,5 +246,49 @@ public final class MileageRequestTest extends AbstractContextTest {
         final Set<ConstraintViolation<TrackPoint>> constraintViolations = this.validator.validate(givenTrackPoint);
         assertEquals(1, constraintViolations.size());
         assertEquals("не должно равняться null", constraintViolations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void trackPointShouldBeConvertedToJson()
+            throws Exception {
+        final TrackPoint givenTrackPoint = TrackPoint.builder()
+                .datetime(now())
+                .latitude(45F)
+                .longitude(46F)
+                .altitude(15)
+                .speed(500)
+                .valid(true)
+                .build();
+
+        final String actual = this.objectMapper.writeValueAsString(givenTrackPoint);
+        final String expectedRegex = "\\{\"datetime\":\"\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\","
+                + "\"latitude\":45\\.0,"
+                + "\"longitude\":46\\.0,"
+                + "\"altitude\":15,"
+                + "\"speed\":500,"
+                + "\"valid\":true}";
+        assertTrue(actual.matches(expectedRegex));
+    }
+
+    @Test
+    public void jsonShouldBeConvertedToTrackPoint()
+            throws Exception {
+        final String givenJson = "{\"datetime\":\"2023-02-14 12:28:04\","
+                + "\"latitude\":45.0,"
+                + "\"longitude\":46.0,"
+                + "\"altitude\":15,"
+                + "\"speed\":500,"
+                + "\"valid\":true}";
+
+        final TrackPoint actual = this.objectMapper.readValue(givenJson, TrackPoint.class);
+        final TrackPoint expected = TrackPoint.builder()
+                .datetime(parse("2023-02-14T12:28:04Z"))
+                .latitude(45F)
+                .longitude(46F)
+                .altitude(15)
+                .speed(500)
+                .valid(true)
+                .build();
+        assertEquals(expected, actual);
     }
 }
