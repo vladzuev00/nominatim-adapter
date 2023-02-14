@@ -29,4 +29,7 @@ server:
 nominatim:
   millis-between-requests: 1000
 
+search-mileage:
+  load-city-geometries-on-start-application: false
+
 

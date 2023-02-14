@@ -3,10 +3,7 @@ package by.aurorasoft.nominatim.crud.repository;
 import by.aurorasoft.nominatim.base.AbstractContextTest;
 import by.aurorasoft.nominatim.crud.model.entity.CityEntity;
 import org.junit.Test;
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.CoordinateXY;
-import org.locationtech.jts.geom.Geometry;
-import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -15,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import static by.aurorasoft.nominatim.crud.model.entity.CityEntity.Type.CAPITAL;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.junit.Assert.*;
 
@@ -223,6 +221,72 @@ public final class CityRepositoryTest extends AbstractContextTest {
         super.checkQueryCount(1);
 
         assertTrue(tuplesOfBoundingBoxesWithGeometries.isEmpty());
+    }
+
+    @Test
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'First', "
+            + "ST_GeomFromText('POLYGON((1 1, 1 2, 2 2, 2 1, 1 1))', 4326), "
+            + "'CAPITAL',"
+            + "ST_GeomFromText('POLYGON((1 1, 1 2, 2 2, 2 1, 1 1))', 4326)"
+            + ")")
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(256, 'Second', "
+            + "ST_GeomFromText('POLYGON((3 3, 4 3, 4 4, 3 3))', 4326), "
+            + "'REGIONAL', "
+            + "ST_GeomFromText('POLYGON((3 3, 3 4, 4 4, 4 3, 3 3))', 4326)"
+            + ")")
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(257, 'Third', "
+            + "ST_GeomFromText('POLYGON((3 1, 3 2, 4 2, 4 1, 3 1))', 4326), "
+            + "'NOT_DEFINED', "
+            + "ST_GeomFromText('POLYGON((3 1, 3 2, 4 2, 4 1, 3 1))', 4326)"
+            + ")")
+    public void citiesWhoseBoundingBoxIntersectedByLineStringShouldBeFound() {
+        final LineString givenLineString = this.geometryFactory.createLineString(new Coordinate[]{
+                new CoordinateXY(1.5, 1.5),
+                new CoordinateXY(3.5, 3.5),
+                new CoordinateXY(4.5, 4.5)
+        });
+
+        super.startQueryCount();
+        final List<CityEntity> foundCities = this.repository.findCitiesWhoseBoundingBoxIntersectedByLineString(
+                givenLineString);
+        super.checkQueryCount(1);
+
+        final List<Long> actual = foundCities.stream()
+                .map(CityEntity::getId)
+                .collect(toList());
+        final List<Long> expected = List.of(255L, 256L);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'First', "
+            + "ST_GeomFromText('POLYGON((1 1, 1 2, 2 2, 2 1, 1 1))', 4326), "
+            + "'CAPITAL',"
+            + "ST_GeomFromText('POLYGON((1 1, 1 2, 2 2, 2 1, 1 1))', 4326)"
+            + ")")
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(256, 'Second', "
+            + "ST_GeomFromText('POLYGON((3 3, 4 3, 4 4, 3 3))', 4326), "
+            + "'REGIONAL', "
+            + "ST_GeomFromText('POLYGON((3 3, 3 4, 4 4, 4 3, 3 3))', 4326)"
+            + ")")
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(257, 'Third', "
+            + "ST_GeomFromText('POLYGON((3 1, 3 2, 4 2, 4 1, 3 1))', 4326), "
+            + "'NOT_DEFINED', "
+            + "ST_GeomFromText('POLYGON((3 1, 3 2, 4 2, 4 1, 3 1))', 4326)"
+            + ")")
+    public void citiesWhoseBoundingBoxIntersectedByLineStringShouldNotBeFound() {
+        final LineString givenLineString = this.geometryFactory.createLineString(new Coordinate[]{
+                new CoordinateXY(5.5, 5.5),
+                new CoordinateXY(6.5, 6.5),
+                new CoordinateXY(7.5, 7.5)
+        });
+
+        super.startQueryCount();
+        final List<CityEntity> foundCities = this.repository.findCitiesWhoseBoundingBoxIntersectedByLineString(
+                givenLineString);
+        super.checkQueryCount(1);
+
+        assertTrue(foundCities.isEmpty());
     }
 
     private static void checkEquals(CityEntity expected, CityEntity actual) {
