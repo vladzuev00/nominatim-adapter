@@ -6,6 +6,9 @@ import lombok.Value;
 
 import java.util.List;
 
+/**
+ * equals and hashcode doesn't work correctly because of geometry in CityResponse doesn't override them
+ */
 @Value
 @AllArgsConstructor
 @Builder

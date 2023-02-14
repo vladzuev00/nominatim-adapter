@@ -1,10 +1,12 @@
 package by.aurorasoft.nominatim.rest.mapper;
 
 import by.aurorasoft.nominatim.crud.model.dto.City;
+import by.aurorasoft.nominatim.crud.model.dto.City.CityBuilder;
 import by.aurorasoft.nominatim.rest.model.CityPageResponse;
 import by.aurorasoft.nominatim.rest.model.CityRequest;
 import by.aurorasoft.nominatim.rest.model.CityResponse;
 import lombok.RequiredArgsConstructor;
+import org.locationtech.jts.geom.Geometry;
 import org.springframework.stereotype.Component;
 import org.wololo.jts2geojson.GeoJSONReader;
 import org.wololo.jts2geojson.GeoJSONWriter;
@@ -35,19 +37,12 @@ public final class CityControllerMapper {
     }
 
     public City mapToCity(CityRequest mapped) {
-        return City.builder()
-                .name(mapped.getName())
-                .geometry(this.geoJSONReader.read(mapped.getGeometry()))
-                .type(mapped.getType())
-                .build();
+        return this.startBuildCityWithoutId(mapped).build();
     }
 
     public City mapToCity(Long id, CityRequest mapped) {
-        return City.builder()
+        return this.startBuildCityWithoutId(mapped)
                 .id(id)
-                .name(mapped.getName())
-                .geometry(this.geoJSONReader.read(mapped.getGeometry()))
-                .type(mapped.getType())
                 .build();
     }
 
@@ -57,5 +52,14 @@ public final class CityControllerMapper {
                 .pageSize(pageSize)
                 .cities(this.mapToResponses(cities))
                 .build();
+    }
+
+    private CityBuilder startBuildCityWithoutId(CityRequest request) {
+        final Geometry geometry = this.geoJSONReader.read(request.getGeometry());
+        return City.builder()
+                .name(request.getName())
+                .geometry(geometry)
+                .type(request.getType())
+                .boundingBox(geometry.getEnvelope());
     }
 }
