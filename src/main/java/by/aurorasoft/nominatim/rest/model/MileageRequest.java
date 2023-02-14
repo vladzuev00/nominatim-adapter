@@ -4,7 +4,6 @@ import by.nhorushko.distancecalculator.LatLngAlt;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
 
@@ -13,12 +12,30 @@ import java.time.Instant;
 import java.util.List;
 
 @Value
-@AllArgsConstructor
 @Builder
 public class MileageRequest {
+
+    @NotNull
     List<TrackPoint> trackPoints;
-    int minDetectionSpeed;
-    int maxMessageTimeout;
+
+    @NotNull
+    @Min(0)
+    @Max(1000)
+    Integer minDetectionSpeed;
+
+    @NotNull
+    @Min(0)
+    @Max(1000)
+    Integer maxMessageTimeout;
+
+    @JsonCreator
+    public MileageRequest(@JsonProperty("trackPoints") List<TrackPoint> trackPoints,
+                          @JsonProperty("minDetectionSpeed") Integer minDetectionSpeed,
+                          @JsonProperty("maxMessageTimeout") Integer maxMessageTimeout) {
+        this.trackPoints = trackPoints;
+        this.minDetectionSpeed = minDetectionSpeed;
+        this.maxMessageTimeout = maxMessageTimeout;
+    }
 
     @Value
     @Builder

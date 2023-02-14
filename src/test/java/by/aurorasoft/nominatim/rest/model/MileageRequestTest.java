@@ -9,11 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
+import java.util.List;
 import java.util.Set;
 
 import static java.time.Instant.now;
 import static java.time.Instant.parse;
 import static java.time.temporal.ChronoUnit.SECONDS;
+import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -288,6 +290,184 @@ public final class MileageRequestTest extends AbstractContextTest {
                 .altitude(15)
                 .speed(500)
                 .valid(true)
+                .build();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void mileageRequestShouldBeValid() {
+        final MileageRequest givenMileageRequest = MileageRequest.builder()
+                .trackPoints(emptyList())
+                .minDetectionSpeed(10)
+                .maxMessageTimeout(11)
+                .build();
+
+        final Set<ConstraintViolation<MileageRequest>> constraintViolations = this.validator.validate(
+                givenMileageRequest);
+        assertTrue(constraintViolations.isEmpty());
+    }
+
+    @Test
+    public void mileageRequestShouldNotBeValidBecauseOfTrackPointsIsNull() {
+        final MileageRequest givenMileageRequest = MileageRequest.builder()
+                .minDetectionSpeed(10)
+                .maxMessageTimeout(11)
+                .build();
+
+        final Set<ConstraintViolation<MileageRequest>> constraintViolations = this.validator.validate(
+                givenMileageRequest);
+        assertEquals(1, constraintViolations.size());
+        assertEquals("не должно равняться null", constraintViolations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void mileageRequestShouldNotBeValidBecauseOfMinDetectionSpeedIsNull() {
+        final MileageRequest givenMileageRequest = MileageRequest.builder()
+                .trackPoints(emptyList())
+                .maxMessageTimeout(11)
+                .build();
+
+        final Set<ConstraintViolation<MileageRequest>> constraintViolations = this.validator.validate(
+                givenMileageRequest);
+        assertEquals(1, constraintViolations.size());
+        assertEquals("не должно равняться null", constraintViolations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void mileageRequestShouldNotBeValidBecauseOfMinDetectionSpeedIsLessThanMinimalAllowable() {
+        final MileageRequest givenMileageRequest = MileageRequest.builder()
+                .trackPoints(emptyList())
+                .minDetectionSpeed(-1)
+                .maxMessageTimeout(11)
+                .build();
+
+        final Set<ConstraintViolation<MileageRequest>> constraintViolations = this.validator.validate(
+                givenMileageRequest);
+        assertEquals(1, constraintViolations.size());
+        assertEquals("должно быть не меньше 0", constraintViolations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void mileageRequestShouldNotBeValidBecauseOfMinDetectionSpeedIsBiggerThanMaximalAllowable() {
+        final MileageRequest givenMileageRequest = MileageRequest.builder()
+                .trackPoints(emptyList())
+                .minDetectionSpeed(1001)
+                .maxMessageTimeout(11)
+                .build();
+
+        final Set<ConstraintViolation<MileageRequest>> constraintViolations = this.validator.validate(
+                givenMileageRequest);
+        assertEquals(1, constraintViolations.size());
+        assertEquals("должно быть не больше 1000", constraintViolations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void mileageRequestShouldNotBeValidBecauseOfMaxMessageTimeoutIsNull() {
+        final MileageRequest givenMileageRequest = MileageRequest.builder()
+                .trackPoints(emptyList())
+                .minDetectionSpeed(10)
+                .build();
+
+        final Set<ConstraintViolation<MileageRequest>> constraintViolations = this.validator.validate(
+                givenMileageRequest);
+        assertEquals(1, constraintViolations.size());
+        assertEquals("не должно равняться null", constraintViolations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void mileageRequestShouldNotBeValidBecauseOfMaxMessageTimeoutIsLessThanMinimalAllowable() {
+        final MileageRequest givenMileageRequest = MileageRequest.builder()
+                .trackPoints(emptyList())
+                .minDetectionSpeed(10)
+                .maxMessageTimeout(-1)
+                .build();
+
+        final Set<ConstraintViolation<MileageRequest>> constraintViolations = this.validator.validate(
+                givenMileageRequest);
+        assertEquals(1, constraintViolations.size());
+        assertEquals("должно быть не меньше 0", constraintViolations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void mileageRequestShouldNotBeValidBecauseOfMaxMessageTimeoutIsBiggerThanMaximalAllowable() {
+        final MileageRequest givenMileageRequest = MileageRequest.builder()
+                .trackPoints(emptyList())
+                .minDetectionSpeed(10)
+                .maxMessageTimeout(1001)
+                .build();
+
+        final Set<ConstraintViolation<MileageRequest>> constraintViolations = this.validator.validate(
+                givenMileageRequest);
+        assertEquals(1, constraintViolations.size());
+        assertEquals("должно быть не больше 1000", constraintViolations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void mileageRequestShouldBeConvertedToJson()
+            throws Exception {
+        final MileageRequest givenMileageRequest = MileageRequest.builder()
+                .trackPoints(List.of(
+                        TrackPoint.builder()
+                                .datetime(parse("2007-12-03T10:15:30Z"))
+                                .latitude(53F)
+                                .longitude(20F)
+                                .altitude(10)
+                                .speed(15)
+                                .valid(true)
+                                .build(),
+                        TrackPoint.builder()
+                                .datetime(parse("2007-12-03T10:15:31Z"))
+                                .latitude(53.001F)
+                                .longitude(20.001F)
+                                .altitude(10)
+                                .speed(15)
+                                .valid(true)
+                                .build()
+                ))
+                .minDetectionSpeed(10)
+                .maxMessageTimeout(11)
+                .build();
+
+        final String actual = this.objectMapper.writeValueAsString(givenMileageRequest);
+        final String expected = "{\"trackPoints\":[{\"datetime\":\"2007-12-03 10:15:30\",\"latitude\":53.0,"
+                + "\"longitude\":20.0,\"altitude\":10,\"speed\":15,\"valid\":true},"
+                + "{\"datetime\":\"2007-12-03 10:15:31\",\"latitude\":53.001,\"longitude\":20.001,\"altitude\":10,"
+                + "\"speed\":15,\"valid\":true}],"
+                + "\"minDetectionSpeed\":10,\"maxMessageTimeout\":11}";
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void jsonShouldBeConvertedToMileageRequest()
+            throws Exception {
+        final String givenJson = "{\"trackPoints\":[{\"datetime\":\"2007-12-03 10:15:30\",\"latitude\":53.0,"
+                + "\"longitude\":20.0,\"altitude\":10,\"speed\":15,\"valid\":true},"
+                + "{\"datetime\":\"2007-12-03 10:15:31\",\"latitude\":53.001,\"longitude\":20.001,\"altitude\":10,"
+                + "\"speed\":15,\"valid\":true}],"
+                + "\"minDetectionSpeed\":10,\"maxMessageTimeout\":11}";
+
+        final MileageRequest actual = this.objectMapper.readValue(givenJson, MileageRequest.class);
+        final MileageRequest expected = MileageRequest.builder()
+                .trackPoints(List.of(
+                        TrackPoint.builder()
+                                .datetime(parse("2007-12-03T10:15:30Z"))
+                                .latitude(53F)
+                                .longitude(20F)
+                                .altitude(10)
+                                .speed(15)
+                                .valid(true)
+                                .build(),
+                        TrackPoint.builder()
+                                .datetime(parse("2007-12-03T10:15:31Z"))
+                                .latitude(53.001F)
+                                .longitude(20.001F)
+                                .altitude(10)
+                                .speed(15)
+                                .valid(true)
+                                .build()
+                ))
+                .minDetectionSpeed(10)
+                .maxMessageTimeout(11)
                 .build();
         assertEquals(expected, actual);
     }
