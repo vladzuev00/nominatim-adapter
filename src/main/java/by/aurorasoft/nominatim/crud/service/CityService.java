@@ -42,7 +42,7 @@ public class CityService extends AbsServiceCRUD<Long, CityEntity, City, CityRepo
     }
 
     public Map<PreparedGeometry, PreparedGeometry> findPreparedGeometriesByPreparedBoundingBoxes() {
-        final List<Tuple> geometriesWithBoundingBoxes = super.repository.findGeometriesWithBoundingBoxes();
+        final List<Tuple> geometriesWithBoundingBoxes = super.repository.findBoundingBoxesWithGeometries();
         return geometriesWithBoundingBoxes
                 .stream()
                 .collect(

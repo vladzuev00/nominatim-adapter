@@ -15,5 +15,5 @@ public interface CityRepository extends JpaRepository<CityEntity, Long> {
     boolean isExistByGeometry(Geometry geometry);
 
     @Query("SELECT ce.boundingBox AS boundingBox, ce.geometry AS geometry FROM CityEntity ce")
-    List<Tuple> findGeometriesWithBoundingBoxes();
+    List<Tuple> findBoundingBoxesWithGeometries();
 }
