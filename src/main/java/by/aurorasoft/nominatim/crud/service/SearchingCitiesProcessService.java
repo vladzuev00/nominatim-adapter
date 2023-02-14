@@ -31,6 +31,7 @@ public class SearchingCitiesProcessService
         super.repository.increaseHandledPoints(process.getId(), delta);
     }
 
+    @Transactional(readOnly = true)
     public List<SearchingCitiesProcess> findByStatus(Status status, int pageNumber, int pageSize) {
         final Pageable pageable = PageRequest.of(pageNumber, pageSize);
         final List<SearchingCitiesProcessEntity> foundEntities = super.repository.findByStatus(status, pageable);

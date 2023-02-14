@@ -1,5 +1,6 @@
 package by.aurorasoft.nominatim.service.mileage;
 
+import by.aurorasoft.nominatim.crud.service.CityService;
 import by.aurorasoft.nominatim.rest.model.MileageRequest;
 import by.aurorasoft.nominatim.rest.model.MileageResponse;
 import by.nhorushko.distancecalculator.*;
@@ -21,13 +22,15 @@ public final class MileageService {
     private final TrackFilter trackFilter;
     private final DistanceCalculator distanceCalculator;
     private final GeometryCreatingService geometryCreatingService;
+    private final CityService cityService;
     private Map<PreparedGeometry, PreparedGeometry> citiesGeometriesByBoundingBoxes;
 
     public MileageService(TrackFilter trackFilter, DistanceCalculator distanceCalculator,
-                          GeometryCreatingService geometryCreatingService) {
+                          GeometryCreatingService geometryCreatingService, CityService cityService) {
         this.trackFilter = trackFilter;
         this.distanceCalculator = distanceCalculator;
         this.geometryCreatingService = geometryCreatingService;
+        this.cityService = cityService;
         this.citiesGeometriesByBoundingBoxes = null;
     }
 
@@ -73,10 +76,19 @@ public final class MileageService {
 
     private List<PreparedGeometry> findGeometriesIntersectedByLineStringOfPoints(
             List<? extends LatLngAlt> trackPoints) {
+        final LineString lineString = this.createLineStringByFilteredPoints(trackPoints);
+        return this.citiesGeometriesByBoundingBoxes != null
+                ? this.findGeometriesIntersectedByLineStringByLoadedPreparedGeometries(lineString)
+                : this.cityService.findPreparedGeometriesWhoseBoundingBoxIntersectedByLineString(lineString);
+    }
+
+    private LineString createLineStringByFilteredPoints(List<? extends LatLngAlt> notFilteredPoints) {
         final List<? extends LatLngAlt> significantTrackPointsToCreateLineString = this.trackFilter.filter(
-                trackPoints, EPSILON_TO_FILTER_TRACK_POINTS);
-        final LineString lineString = this.geometryCreatingService.createLineString(
-                significantTrackPointsToCreateLineString);
+                notFilteredPoints, EPSILON_TO_FILTER_TRACK_POINTS);
+        return this.geometryCreatingService.createLineString(significantTrackPointsToCreateLineString);
+    }
+
+    private List<PreparedGeometry> findGeometriesIntersectedByLineStringByLoadedPreparedGeometries(LineString lineString) {
         return this.citiesGeometriesByBoundingBoxes
                 .entrySet()
                 .stream()

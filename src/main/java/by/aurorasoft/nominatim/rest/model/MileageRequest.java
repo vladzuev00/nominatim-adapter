@@ -2,7 +2,6 @@ package by.aurorasoft.nominatim.rest.model;
 
 import by.nhorushko.distancecalculator.LatLngAlt;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Value;
@@ -43,7 +42,6 @@ public class MileageRequest {
 
         @NotNull
         @PastOrPresent
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC")
         Instant datetime;
 
         @NotNull

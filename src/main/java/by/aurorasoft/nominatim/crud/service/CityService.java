@@ -6,7 +6,9 @@ import by.aurorasoft.nominatim.crud.model.entity.CityEntity;
 import by.aurorasoft.nominatim.crud.repository.CityRepository;
 import by.nhorushko.crudgeneric.v2.service.AbsServiceCRUD;
 import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.prep.PreparedGeometry;
+import org.locationtech.jts.geom.prep.PreparedGeometryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +19,7 @@ import javax.persistence.Tuple;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.locationtech.jts.geom.prep.PreparedGeometryFactory.prepare;
 
@@ -30,6 +33,7 @@ public class CityService extends AbsServiceCRUD<Long, CityEntity, City, CityRepo
         super(mapper, repository);
     }
 
+    @Transactional(readOnly = true)
     public List<City> findAll(int pageNumber, int pageSize) {
         final Pageable pageable = PageRequest.of(pageNumber, pageSize);
         final Page<CityEntity> page = super.repository.findAll(pageable);
@@ -37,10 +41,12 @@ public class CityService extends AbsServiceCRUD<Long, CityEntity, City, CityRepo
         return super.mapper.toDtos(foundEntities);
     }
 
+    @Transactional(readOnly = true)
     public boolean isExistByGeometry(Geometry geometry) {
         return super.repository.isExistByGeometry(geometry);
     }
 
+    @Transactional(readOnly = true)
     public Map<PreparedGeometry, PreparedGeometry> findPreparedGeometriesByPreparedBoundingBoxes() {
         final List<Tuple> geometriesWithBoundingBoxes = super.repository.findBoundingBoxesWithGeometries();
         return geometriesWithBoundingBoxes
@@ -55,5 +61,16 @@ public class CityService extends AbsServiceCRUD<Long, CityEntity, City, CityRepo
                                 )
                         )
                 );
+    }
+
+    @Transactional(readOnly = true)
+    public List<PreparedGeometry> findPreparedGeometriesWhoseBoundingBoxIntersectedByLineString(
+            LineString lineString) {
+        final List<CityEntity> cityEntities = super.repository.findCitiesWhoseBoundingBoxIntersectedByLineString(
+                lineString);
+        return cityEntities.stream()
+                .map(CityEntity::getGeometry)
+                .map(PreparedGeometryFactory::prepare)
+                .collect(toList());
     }
 }
