@@ -23,7 +23,7 @@ public class MileageRequest {
     public static class TrackPoint implements LatLngAlt {
 
         @NotNull
-        @Past
+        @PastOrPresent
         Instant datetime;
 
         @NotNull
@@ -46,6 +46,26 @@ public class MileageRequest {
 
         @NotNull
         Boolean valid;
+
+        @Override
+        public float getLatitude() {
+            return this.latitude;
+        }
+
+        @Override
+        public float getLongitude() {
+            return this.longitude;
+        }
+
+        @Override
+        public int getAltitude() {
+            return this.altitude;
+        }
+
+        @Override
+        public int getSpeed() {
+            return this.speed;
+        }
 
         @Override
         public boolean isValid() {
