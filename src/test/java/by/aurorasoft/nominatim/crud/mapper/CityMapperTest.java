@@ -5,6 +5,7 @@ import by.aurorasoft.nominatim.crud.model.dto.City;
 import by.aurorasoft.nominatim.crud.model.entity.CityEntity;
 import org.junit.Test;
 import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.CoordinateXY;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -23,11 +24,14 @@ public final class CityMapperTest extends AbstractContextTest {
     @Test
     public void dtoShouldBeMappedToEntity() {
         final Coordinate[] givenGeometryCoordinates = createGeometryCoordinates();
+        final Coordinate[] givenBoundingBoxCoordinates = createBoundingBoxCoordinates();
+
         final City givenDto = City.builder()
                 .id(255L)
                 .name("city")
                 .geometry(this.geometryFactory.createPolygon(givenGeometryCoordinates))
                 .type(CAPITAL)
+                .boundingBox(this.geometryFactory.createPolygon(givenBoundingBoxCoordinates))
                 .build();
 
         final CityEntity actual = this.cityMapper.toEntity(givenDto);
@@ -36,6 +40,7 @@ public final class CityMapperTest extends AbstractContextTest {
                 .name("city")
                 .geometry(this.geometryFactory.createPolygon(givenGeometryCoordinates))
                 .type(CAPITAL)
+                .boundingBox(this.geometryFactory.createPolygon(givenBoundingBoxCoordinates))
                 .build();
         checkEquals(expected, actual);
     }
@@ -43,11 +48,14 @@ public final class CityMapperTest extends AbstractContextTest {
     @Test
     public void entityShouldBeMappedToDto() {
         final Coordinate[] givenGeometryCoordinates = createGeometryCoordinates();
+        final Coordinate[] givenBoundingBoxCoordinates = createBoundingBoxCoordinates();
+
         final CityEntity givenEntity = CityEntity.builder()
                 .id(255L)
                 .name("city")
                 .geometry(this.geometryFactory.createPolygon(givenGeometryCoordinates))
                 .type(CAPITAL)
+                .boundingBox(this.geometryFactory.createPolygon(givenBoundingBoxCoordinates))
                 .build();
 
         final City actual = this.cityMapper.toDto(givenEntity);
@@ -56,19 +64,27 @@ public final class CityMapperTest extends AbstractContextTest {
                 .name("city")
                 .geometry(this.geometryFactory.createPolygon(givenGeometryCoordinates))
                 .type(CAPITAL)
+                .boundingBox(this.geometryFactory.createPolygon(givenBoundingBoxCoordinates))
                 .build();
         assertEquals(expected, actual);
     }
 
     private static Coordinate[] createGeometryCoordinates() {
         return new Coordinate[]{
-                new Coordinate(1, 2),
-                new Coordinate(2, 3),
-                new Coordinate(3, 4),
-                new Coordinate(4, 5),
-                new Coordinate(5, 6),
-                new Coordinate(6, 7),
-                new Coordinate(1, 2)
+                new Coordinate(1, 1),
+                new Coordinate(2, 1),
+                new Coordinate(2, 2),
+                new Coordinate(1, 1)
+        };
+    }
+
+    private static Coordinate[] createBoundingBoxCoordinates() {
+        return new Coordinate[]{
+                new Coordinate(1, 1),
+                new Coordinate(2, 1),
+                new Coordinate(2, 2),
+                new CoordinateXY(1, 2),
+                new Coordinate(1, 1)
         };
     }
 
@@ -77,5 +93,6 @@ public final class CityMapperTest extends AbstractContextTest {
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getGeometry(), actual.getGeometry());
         assertSame(expected.getType(), actual.getType());
+        assertEquals(expected.getBoundingBox(), actual.getBoundingBox());
     }
 }

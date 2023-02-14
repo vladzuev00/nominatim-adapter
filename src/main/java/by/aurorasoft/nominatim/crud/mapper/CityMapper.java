@@ -19,7 +19,8 @@ public final class CityMapper extends AbsMapperEntityDto<CityEntity, City> {
                 entity.getId(),
                 entity.getName(),
                 entity.getGeometry(),
-                entity.getType()
+                entity.getType(),
+                entity.getBoundingBox()
         );
     }
 }
