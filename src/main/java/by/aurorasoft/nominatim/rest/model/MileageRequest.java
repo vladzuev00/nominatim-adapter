@@ -6,25 +6,28 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Value;
 
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.time.Instant;
 import java.util.List;
+
+import static java.lang.Float.NaN;
+import static java.lang.Integer.MIN_VALUE;
 
 @Value
 @Builder
 public class MileageRequest {
 
     @NotNull
-    List<TrackPoint> trackPoints;
+    @Size(min = 2)
+    List<@Valid TrackPoint> trackPoints;
 
     @NotNull
     @Min(0)
-    @Max(1000)
     Integer minDetectionSpeed;
 
     @NotNull
     @Min(0)
-    @Max(1000)
     Integer maxMessageTimeout;
 
     @JsonCreator
@@ -39,6 +42,11 @@ public class MileageRequest {
     @Value
     @Builder
     public static class TrackPoint implements LatLngAlt {
+        private static final float NOT_DEFINED_LATITUDE_VALUE = NaN;
+        private static final float NOT_DEFINED_LONGITUDE_VALUE = NaN;
+        private static final int NOT_DEFINED_ALTITUDE_VALUE = MIN_VALUE;
+        private static final int NOT_DEFINED_SPEED_VALUE = MIN_VALUE;
+        private static final boolean NOT_DEFINED_VALID_VALUE = false;
 
         @NotNull
         @PastOrPresent
@@ -82,27 +90,27 @@ public class MileageRequest {
 
         @Override
         public float getLatitude() {
-            return this.latitude;
+            return this.latitude != null ? this.latitude : NOT_DEFINED_LATITUDE_VALUE;
         }
 
         @Override
         public float getLongitude() {
-            return this.longitude;
+            return this.longitude != null ? this.longitude : NOT_DEFINED_LONGITUDE_VALUE;
         }
 
         @Override
         public int getAltitude() {
-            return this.altitude;
+            return this.altitude != null ? this.altitude : NOT_DEFINED_ALTITUDE_VALUE;
         }
 
         @Override
         public int getSpeed() {
-            return this.speed;
+            return this.speed != null ? this.speed : NOT_DEFINED_SPEED_VALUE;
         }
 
         @Override
         public boolean isValid() {
-            return this.valid;
+            return this.valid != null ? this.valid : NOT_DEFINED_VALID_VALUE;
         }
     }
 }

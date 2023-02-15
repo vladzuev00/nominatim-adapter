@@ -321,6 +321,11 @@ public final class MileageRequestTest extends AbstractContextTest {
     }
 
     @Test
+    public void mileageRequestShouldNotBeValidBecauseOfAmountOfTrackPointsIsLessThanMinimalAllowable() {
+        throw new RuntimeException();
+    }
+
+    @Test
     public void mileageRequestShouldNotBeValidBecauseOfMinDetectionSpeedIsNull() {
         final MileageRequest givenMileageRequest = MileageRequest.builder()
                 .trackPoints(emptyList())
