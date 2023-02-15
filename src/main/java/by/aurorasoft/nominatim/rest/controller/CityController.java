@@ -22,7 +22,7 @@ import static java.lang.String.format;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
-@RequestMapping("/city")
+@RequestMapping("/api/v1/city")
 @RequiredArgsConstructor
 @Validated
 public class CityController {

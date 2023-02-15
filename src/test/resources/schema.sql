@@ -11,9 +11,9 @@ CREATE TYPE city_type AS ENUM ('CAPITAL', 'REGIONAL', 'NOT_DEFINED');
 CREATE TABLE city
 (
     id       SERIAL PRIMARY KEY,
+    type     city_type    NOT NULL,
     name     VARCHAR(256) NOT NULL,
     geometry GEOMETRY     NOT NULL,
-    type     city_type    NOT NULL,
     bounding_box GEOMETRY NOT NULL
 );
 
@@ -21,14 +21,14 @@ CREATE TYPE searching_cities_process_type AS ENUM('HANDLING', 'SUCCESS', 'ERROR'
 
 CREATE TABLE searching_cities_process
 (
-    id             BIGSERIAL PRIMARY KEY,
-    bounds         GEOMETRY                      NOT NULL,
+    id             SERIAL PRIMARY KEY,
+    status         searching_cities_process_type NOT NULL,
     search_step    DECIMAL                       NOT NULL,
     total_points   BIGINT                        NOT NULL,
     handled_points BIGINT                        NOT NULL,
-    status         searching_cities_process_type NOT NULL,
-    created_time   TIMESTAMP                     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_time   TIMESTAMP                     NOT NULL DEFAULT CURRENT_TIMESTAMP
+    bounds         GEOMETRY                      NOT NULL,
+    updated_time   TIMESTAMP                     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_time   TIMESTAMP                     NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE OR REPLACE FUNCTION on_update_searching_cities_process() RETURNS TRIGGER AS

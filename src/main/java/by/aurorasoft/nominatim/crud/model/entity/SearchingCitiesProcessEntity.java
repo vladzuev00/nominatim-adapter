@@ -2,6 +2,7 @@ package by.aurorasoft.nominatim.crud.model.entity;
 
 import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType;
 import lombok.*;
+import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.locationtech.jts.geom.Geometry;
 
@@ -20,7 +21,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @AllArgsConstructor
 @Setter
 @Getter
-@ToString(callSuper = true)
+@ToString
 @Builder
 public class SearchingCitiesProcessEntity extends BaseEntity<Long> {
 
@@ -43,7 +44,7 @@ public class SearchingCitiesProcessEntity extends BaseEntity<Long> {
 
     @Enumerated(STRING)
     @Column(name = "status")
-    @org.hibernate.annotations.Type(type = "pgsql_enum")
+    @Type(type = "pgsql_enum")
     private Status status;
 
     public enum Status {
