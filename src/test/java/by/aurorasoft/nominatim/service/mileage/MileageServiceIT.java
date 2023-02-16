@@ -416,7 +416,7 @@ public final class MileageServiceIT extends AbstractContextTest {
                 357.73277661649564);
         assertEquals(expected, actual);
 
-        final double actualAllDistance = actual.getCityMileage() + actual.getCountryMileage();
+        final double actualAllDistance = actual.getUrban() + actual.getCountry();
         final double expectedAllDistance = this.findExpectedAllDistance(givenTrackPoints);
         assertEquals(expectedAllDistance, actualAllDistance, ALLOWABLE_INACCURACY_OF_DISTANCE);
     }
@@ -435,7 +435,7 @@ public final class MileageServiceIT extends AbstractContextTest {
                 518.031547816519);
         assertEquals(expected, actual);
 
-        final double actualAllDistance = actual.getCityMileage() + actual.getCountryMileage();
+        final double actualAllDistance = actual.getUrban() + actual.getCountry();
         final double expectedAllDistance = this.findExpectedAllDistance(givenTrackPoints);
         assertEquals(expectedAllDistance, actualAllDistance, ALLOWABLE_INACCURACY_OF_DISTANCE);
     }
@@ -454,7 +454,7 @@ public final class MileageServiceIT extends AbstractContextTest {
                 1241.2063545061649);
         assertEquals(expected, actual);
 
-        final double actualAllDistance = actual.getCityMileage() + actual.getCountryMileage();
+        final double actualAllDistance = actual.getUrban() + actual.getCountry();
         final double expectedAllDistance = this.findExpectedAllDistance(givenTrackPoints);
         assertEquals(expectedAllDistance, actualAllDistance, ALLOWABLE_INACCURACY_OF_DISTANCE);
     }
@@ -473,7 +473,7 @@ public final class MileageServiceIT extends AbstractContextTest {
                 117.8709566688135);
         assertEquals(expected, actual);
 
-        final double actualAllDistance = actual.getCityMileage() + actual.getCountryMileage();
+        final double actualAllDistance = actual.getUrban() + actual.getCountry();
         final double expectedAllDistance = this.findExpectedAllDistance(givenTrackPoints);
         assertEquals(expectedAllDistance, actualAllDistance, ALLOWABLE_INACCURACY_OF_DISTANCE);
     }

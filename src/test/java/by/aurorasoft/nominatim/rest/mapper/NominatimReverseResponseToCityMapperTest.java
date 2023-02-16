@@ -5,6 +5,7 @@ import by.aurorasoft.nominatim.crud.model.dto.City;
 import by.aurorasoft.nominatim.crud.model.dto.NominatimReverseResponse;
 import by.aurorasoft.nominatim.crud.model.dto.NominatimReverseResponse.ExtraTags;
 import org.junit.Test;
+import org.locationtech.jts.geom.Geometry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.wololo.jts2geojson.GeoJSONReader;
 
@@ -31,11 +32,15 @@ public final class NominatimReverseResponseToCityMapperTest extends AbstractCont
                 .build();
 
         final City actual = this.mapper.map(givenResponse);
+
+        final Geometry expectedGeometry = this.geoJSONReader.read(findGeoJson());
         final City expected = City.builder()
                 .name("Minsk")
-                .geometry(this.geoJSONReader.read(findGeoJson()))
+                .geometry(expectedGeometry)
                 .type(CAPITAL)
+                .boundingBox(expectedGeometry.getEnvelope())
                 .build();
+
         assertEquals(expected, actual);
     }
 
@@ -51,11 +56,15 @@ public final class NominatimReverseResponseToCityMapperTest extends AbstractCont
                 .build();
 
         final City actual = this.mapper.map(givenResponse);
+
+        final Geometry expectedGeometry = this.geoJSONReader.read(findGeoJson());
         final City expected = City.builder()
                 .name("Mogilev")
-                .geometry(this.geoJSONReader.read(findGeoJson()))
+                .geometry(expectedGeometry)
                 .type(REGIONAL)
+                .boundingBox(expectedGeometry.getEnvelope())
                 .build();
+
         assertEquals(expected, actual);
     }
 
@@ -71,11 +80,15 @@ public final class NominatimReverseResponseToCityMapperTest extends AbstractCont
                 .build();
 
         final City actual = this.mapper.map(givenResponse);
+
+        final Geometry expectedGeometry = this.geoJSONReader.read(findGeoJson());
         final City expected = City.builder()
                 .name("Vileyka")
-                .geometry(this.geoJSONReader.read(findGeoJson()))
+                .geometry(expectedGeometry)
                 .type(NOT_DEFINED)
+                .boundingBox(expectedGeometry.getEnvelope())
                 .build();
+
         assertEquals(expected, actual);
     }
 

@@ -13,7 +13,7 @@ import javax.validation.Valid;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
-@RequestMapping("/mileage")
+@RequestMapping("/api/v1/mileage")
 @Validated
 @RequiredArgsConstructor
 public class MileageController {

@@ -1,4 +1,4 @@
-package by.aurorasoft.nominatim.rest.client.exception;
+package by.aurorasoft.nominatim.service.nominatim.exception;
 
 public final class NominatimClientException extends RuntimeException {
     public NominatimClientException() {

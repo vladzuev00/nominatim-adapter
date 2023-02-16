@@ -24,7 +24,7 @@ search-cities:
 
 server:
   servlet:
-    context-path: /cities-searcher
+    context-path: /nominatim
 
 nominatim:
   millis-between-requests: 1000

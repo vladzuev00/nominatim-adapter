@@ -26,7 +26,7 @@ import static java.lang.String.format;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
-@RequestMapping("/searchCityTask")
+@RequestMapping("/api/v1/searchCity")
 @RequiredArgsConstructor
 @Validated
 public class SearchCityProcessController {

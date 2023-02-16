@@ -25,7 +25,7 @@ import static org.springframework.web.util.UriComponentsBuilder.fromUriString;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 public class CityControllerIT extends AbstractContextTest {
-    private static final String CONTROLLER_URL = "/city";
+    private static final String CONTROLLER_URL = "/api/v1/city";
     private static final String SLASH = "/";
 
     @Autowired
@@ -33,10 +33,16 @@ public class CityControllerIT extends AbstractContextTest {
 
     @Test
     @Transactional(propagation = NOT_SUPPORTED)
-    @Sql(statements = "INSERT INTO city(id, name, geometry, type) VALUES(255, 'Minsk', "
-            + "ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326), 'CAPITAL')")
-    @Sql(statements = "INSERT INTO city(id, name, geometry, type) VALUES(256, 'Mogilev', "
-            + "ST_GeomFromText('POLYGON((1 2, 3 5, 5 6, 6 7, 1 2))', 4326), 'REGIONAL')")
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'Minsk', "
+            + "ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326), "
+            + "'CAPITAL', "
+            + "ST_Envelope(ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326))"
+            + ")")
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(256, 'Mogilev', "
+            + "ST_GeomFromText('POLYGON((1 2, 3 5, 5 6, 6 7, 1 2))', 4326), "
+            + "'REGIONAL', "
+            + "ST_Envelope(ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326))"
+            + ")")
     @Sql(statements = "DELETE FROM city", executionPhase = AFTER_TEST_METHOD)
     public void allCitiesShouldBeFound() {
         final int givenPageNumber = 0;
@@ -177,8 +183,11 @@ public class CityControllerIT extends AbstractContextTest {
 
     @Test
     @Transactional(propagation = NOT_SUPPORTED)
-    @Sql(statements = "INSERT INTO city(id, name, geometry, type) VALUES(255, 'Minsk', "
-            + "ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326), 'NOT_DEFINED')")
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'Minsk', "
+            + "ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326), "
+            + "'NOT_DEFINED', "
+            + "ST_Envelope(ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326))"
+            + ")")
     @Sql(statements = "DELETE FROM city", executionPhase = AFTER_TEST_METHOD)
     public void cityShouldBeUpdated() {
         final String givenJson = "{\"name\":\"Minsk\",\"geometry\":{\"type\":\"Polygon\",\"coordinates\""
@@ -224,8 +233,11 @@ public class CityControllerIT extends AbstractContextTest {
 
     @Test
     @Transactional(propagation = NOT_SUPPORTED)
-    @Sql(statements = "INSERT INTO city(id, name, geometry, type) VALUES(255, 'Minsk', "
-            + "ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326), 'NOT_DEFINED')")
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'Minsk', "
+            + "ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326), "
+            + "'NOT_DEFINED', "
+            + "ST_Envelope(ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326))"
+            + ")")
     @Sql(statements = "DELETE FROM city", executionPhase = AFTER_TEST_METHOD)
     public void cityShouldNotBeUpdatedByNotValidRequest() {
         final String givenJson = "{\"geometry\":{\"type\":\"Polygon\",\"coordinates\""
@@ -250,8 +262,11 @@ public class CityControllerIT extends AbstractContextTest {
 
     @Test
     @Transactional(propagation = NOT_SUPPORTED)
-    @Sql(statements = "INSERT INTO city(id, name, geometry, type) VALUES(255, 'Minsk', "
-            + "ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326), 'CAPITAL')")
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'Minsk', "
+            + "ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326), "
+            + "'CAPITAL', "
+            + "ST_Envelope(ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326))"
+            + ")")
     @Sql(statements = "DELETE FROM city", executionPhase = AFTER_TEST_METHOD)
     public void cityShouldBeRemoved() {
         final Long givenId = 255L;

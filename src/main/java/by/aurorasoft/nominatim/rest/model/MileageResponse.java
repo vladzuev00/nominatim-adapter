@@ -4,6 +4,6 @@ import lombok.Value;
 
 @Value
 public class MileageResponse {
-    double cityMileage;
-    double countryMileage;
+    double urban;
+    double country;
 }

@@ -2,6 +2,8 @@ package by.aurorasoft.nominatim.rest.controller;
 
 import by.aurorasoft.nominatim.rest.controller.exception.CustomValidationException;
 import by.aurorasoft.nominatim.rest.controller.exception.NoSuchEntityException;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Value;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.validation.ConstraintViolationException;
 
+import java.time.LocalDateTime;
+
+import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
 import static java.lang.String.format;
 import static java.time.LocalDateTime.now;
 import static java.util.Arrays.stream;
@@ -82,7 +87,7 @@ public final class RestExceptionHandler {
         final Class<?> targetType = targetTypeDescriptor.getType();
         return targetType.isEnum()
                 ? findMessageOfEnumParamConversionFailedException(
-                        exception.getValue(), (Class<? extends Enum<?>>) targetType)
+                exception.getValue(), (Class<? extends Enum<?>>) targetType)
                 : exception.getMessage();
     }
 
@@ -95,5 +100,14 @@ public final class RestExceptionHandler {
         return stream(enumType.getEnumConstants())
                 .map(Enum::name)
                 .collect(joining(DELIMITER_ENUM_PARAM_ALLOWABLE_VALUE));
+    }
+
+    @Value
+    private static class RestErrorResponse {
+        HttpStatus httpStatus;
+        String message;
+
+        @JsonFormat(shape = STRING, pattern = "yyyy-MM-dd HH-mm-ss")
+        LocalDateTime dateTime;
     }
 }

@@ -19,7 +19,7 @@ import static org.springframework.transaction.annotation.Propagation.NOT_SUPPORT
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 public class MileageControllerIT extends AbstractContextTest {
-    private static final String CONTROLLER_URL = "/mileage";
+    private static final String CONTROLLER_URL = "/api/v1/mileage";
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -56,7 +56,7 @@ public class MileageControllerIT extends AbstractContextTest {
         final HttpEntity<String> givenHttpEntity = new HttpEntity<>(givenJson, givenHeaders);
 
         final String actual = this.restTemplate.postForObject(CONTROLLER_URL, givenHttpEntity, String.class);
-        final String expected = "{\"cityMileage\":0.0,\"countryMileage\":471.41002413306734}";
+        final String expected = "{\"urban\":0.0,\"country\":471.41002413306734}";
         assertEquals(expected, actual);
     }
 

@@ -1,4 +1,4 @@
-package by.aurorasoft.nominatim.rest.client;
+package by.aurorasoft.nominatim.service.nominatim;
 
 import by.aurorasoft.nominatim.config.RestTemplateConfig;
 import by.aurorasoft.nominatim.crud.model.dto.Coordinate;
@@ -41,7 +41,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 @RestClientTest(NominatimService.class)
 public class NominatimServiceTest {
     private static final String TEMPLATE_REVERSE_URI
-            = "https://nominatim.openstreetmap.org/reverse?lat=%f&lon=%f&zoom=10&format=jsonv2&polygon_geojson=1&extratags=1";
+            = "http://geo.aurora-soft.by:8081/reverse?lat=%f&lon=%f&zoom=10&format=jsonv2&polygon_geojson=1&extratags=1";
 
     @Autowired
     private NominatimService service;

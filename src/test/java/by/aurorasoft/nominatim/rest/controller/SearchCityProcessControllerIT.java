@@ -8,6 +8,7 @@ import by.aurorasoft.nominatim.crud.service.CityService;
 import by.aurorasoft.nominatim.crud.service.SearchingCitiesProcessService;
 import org.junit.Test;
 import org.locationtech.jts.geom.CoordinateXY;
+import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,7 +41,7 @@ import static org.springframework.web.util.UriComponentsBuilder.fromUriString;
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 public class SearchCityProcessControllerIT extends AbstractContextTest {
 
-    private static final String CONTROLLER_URL = "/searchCityTask";
+    private static final String CONTROLLER_URL = "/api/v1/searchCity";
     private static final String SLASH = "/";
 
     @Autowired
@@ -130,7 +131,7 @@ public class SearchCityProcessControllerIT extends AbstractContextTest {
 
     @Test
     public void processesShouldNotBeFoundByNotValidStatus() {
-        final String url = "/searchCityTask?status=NOTVALID&pageNumber=0&pageSize=3";
+        final String url = CONTROLLER_URL + "?status=NOTVALID&pageNumber=0&pageSize=3";
 
         final ResponseEntity<String> responseEntity = this.restTemplate.getForEntity(url, String.class);
 
@@ -223,7 +224,8 @@ public class SearchCityProcessControllerIT extends AbstractContextTest {
     @Transactional(propagation = NOT_SUPPORTED)
     @Sql(statements = "DELETE FROM city", executionPhase = AFTER_TEST_METHOD)
     @Sql(statements = "DELETE FROM searching_cities_process", executionPhase = AFTER_TEST_METHOD)
-    public void processShouldBeStartedAndFindCities() throws InterruptedException {
+    public void processShouldBeStartedAndFindCities()
+            throws InterruptedException {
         final String givenJson = "{"
                 + "\"bbox\" : {"
                 + "\"leftBottom\" : {"
@@ -259,11 +261,14 @@ public class SearchCityProcessControllerIT extends AbstractContextTest {
         SECONDS.sleep(70);
 
         final List<City> actualFoundCities = this.cityService.findAll(0, 10);
+
+        final Geometry expectedGeometryFoundCity = this.geoJSONReader.read(findFanipolGeoJson());
         final List<City> expectedFoundCities = List.of(
                 City.builder()
-                        .name("Фаніпаль")
-                        .geometry(this.geoJSONReader.read(findFanipolGeoJson()))
+                        .name("Фаниполь")
+                        .geometry(expectedGeometryFoundCity)
                         .type(NOT_DEFINED)
+                        .boundingBox(expectedGeometryFoundCity.getEnvelope())
                         .build()
         );
 
@@ -446,6 +451,7 @@ public class SearchCityProcessControllerIT extends AbstractContextTest {
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getGeometry(), actual.getGeometry());
         assertSame(expected.getType(), actual.getType());
+        assertEquals(expected.getGeometry(), actual.getGeometry());
     }
 
     private static String findFanipolGeoJson() {
@@ -622,24 +628,20 @@ public class SearchCityProcessControllerIT extends AbstractContextTest {
                 "                    53.7656445\n" +
                 "                ],\n" +
                 "                [\n" +
-                "                    27.3411694,\n" +
-                "                    53.760477\n" +
+                "                    27.338056,\n" +
+                "                    53.7588182\n" +
                 "                ],\n" +
                 "                [\n" +
-                "                    27.3396505,\n" +
-                "                    53.7612125\n" +
+                "                    27.3324682,\n" +
+                "                    53.753294\n" +
                 "                ],\n" +
                 "                [\n" +
-                "                    27.3387025,\n" +
-                "                    53.7606233\n" +
+                "                    27.3314644,\n" +
+                "                    53.7538488\n" +
                 "                ],\n" +
                 "                [\n" +
-                "                    27.3381527,\n" +
-                "                    53.7608508\n" +
-                "                ],\n" +
-                "                [\n" +
-                "                    27.336655,\n" +
-                "                    53.759721\n" +
+                "                    27.330268,\n" +
+                "                    53.7542742\n" +
                 "                ],\n" +
                 "                [\n" +
                 "                    27.3297308,\n" +

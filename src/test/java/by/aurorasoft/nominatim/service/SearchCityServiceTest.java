@@ -4,7 +4,7 @@ import by.aurorasoft.nominatim.crud.model.dto.City;
 import by.aurorasoft.nominatim.crud.model.dto.Coordinate;
 import by.aurorasoft.nominatim.crud.model.dto.NominatimReverseResponse;
 import by.aurorasoft.nominatim.crud.model.dto.NominatimReverseResponse.ExtraTags;
-import by.aurorasoft.nominatim.rest.client.NominatimService;
+import by.aurorasoft.nominatim.service.nominatim.NominatimService;
 import by.aurorasoft.nominatim.rest.mapper.NominatimReverseResponseToCityMapper;
 import org.junit.Before;
 import org.junit.Test;

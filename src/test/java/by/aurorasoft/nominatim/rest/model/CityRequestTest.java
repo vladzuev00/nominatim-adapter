@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.wololo.geojson.Geometry;
+import org.wololo.geojson.Polygon;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
@@ -13,6 +14,7 @@ import javax.validation.Validator;
 import java.util.Set;
 
 import static by.aurorasoft.nominatim.crud.model.entity.CityEntity.Type.CAPITAL;
+import static java.util.Arrays.deepEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -91,26 +93,54 @@ public final class CityRequestTest extends AbstractContextTest {
             throws JsonProcessingException {
         final CityRequest givenRequest = CityRequest.builder()
                 .name("Minsk-Minsk")
-                .geometry(new Geometry() {
-                })
+                .geometry(new Polygon(new double[][][]{
+                        {
+                                {1, 2, 3},
+                                {4, 5, 6},
+                                {7, 8, 9},
+                                {1, 2, 3}
+                        }
+                }))
                 .type(CAPITAL)
                 .build();
         final String actual = this.objectMapper.writeValueAsString(givenRequest);
-        final String expected = "{\"name\":\"Minsk-Minsk\",\"geometry\":{\"type\":\"\"},\"type\":\"CAPITAL\"}";
+        final String expected = "{\"name\":\"Minsk-Minsk\","
+                + "\"geometry\":{\"type\":\"Polygon\","
+                + "\"coordinates\":[[[1.0,2.0,3.0],[4.0,5.0,6.0],[7.0,8.0,9.0],[1.0,2.0,3.0]]]},"
+                + "\"type\":\"CAPITAL\"}";
         assertEquals(expected, actual);
     }
 
     @Test
     public void jsonShouldBeConvertedToRequest()
             throws JsonProcessingException {
-        final String givenJson = "{\"name\":\"Minsk-Minsk\",\"geometry\":{\"type\":\"\"},\"type\":\"CAPITAL\"}";
+        final String givenJson = "{\"name\":\"Minsk-Minsk\","
+                + "\"geometry\":{\"type\":\"Polygon\","
+                + "\"coordinates\":[[[1.0,2.0,3.0],[4.0,5.0,6.0],[7.0,8.0,9.0],[1.0,2.0,3.0]]]},"
+                + "\"type\":\"CAPITAL\"}";
         final CityRequest actual = this.objectMapper.readValue(givenJson, CityRequest.class);
         final CityRequest expected = CityRequest.builder()
                 .name("Minsk-Minsk")
-                .geometry(new Geometry() {
-                })
+                .geometry(new Polygon(new double[][][]{
+                        {
+                                {1, 2, 3},
+                                {4, 5, 6},
+                                {7, 8, 9},
+                                {1, 2, 3}
+                        }
+                }))
                 .type(CAPITAL)
                 .build();
-        assertEquals(expected, actual);
+        checkEquals(expected, actual);
+    }
+
+    private static void checkEquals(CityRequest expected, CityRequest actual) {
+        assertEquals(expected.getName(), actual.getName());
+        checkEquals((Polygon) expected.getGeometry(), (Polygon) actual.getGeometry());
+        assertEquals(expected.getType(), actual.getType());
+    }
+
+    private static void checkEquals(Polygon expected, Polygon actual) {
+        assertTrue(deepEquals(expected.getCoordinates(), actual.getCoordinates()));
     }
 }

@@ -1,8 +1,8 @@
-package by.aurorasoft.nominatim.rest.client;
+package by.aurorasoft.nominatim.service.nominatim;
 
 import by.aurorasoft.nominatim.crud.model.dto.Coordinate;
 import by.aurorasoft.nominatim.crud.model.dto.NominatimReverseResponse;
-import by.aurorasoft.nominatim.rest.client.exception.NominatimClientException;
+import by.aurorasoft.nominatim.service.nominatim.exception.NominatimClientException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
