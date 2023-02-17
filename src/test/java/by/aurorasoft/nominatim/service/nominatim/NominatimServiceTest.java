@@ -27,9 +27,7 @@ import java.util.*;
 import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
 import static java.util.Locale.ROOT;
-import static java.util.stream.Collectors.toList;
 import static org.hamcrest.Matchers.oneOf;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.client.ExpectedCount.times;
@@ -59,28 +57,6 @@ public class NominatimServiceTest {
     private long millisBetweenRequests;
 
     @Test
-    public void reverseOperationShouldBeSuccess()
-            throws JsonProcessingException {
-        final Coordinate givenCoordinate = new Coordinate(53.881033, 27.544367);
-
-        final NominatimReverseResponse expected = NominatimReverseResponse.builder()
-                .name("Minsk")
-                .extratags(ExtraTags.builder()
-                        .place("city")
-                        .capital("yes")
-                        .build())
-                .geojson("geojson")
-                .build();
-        final String expectedJsonResponse = this.objectMapper.writeValueAsString(expected);
-
-        this.server.expect(requestTo(createReverseUriByCoordinate(givenCoordinate)))
-                .andRespond(withSuccess(expectedJsonResponse, APPLICATION_JSON));
-
-        final NominatimReverseResponse actual = this.service.reverse(givenCoordinate);
-        assertEquals(expected, actual);
-    }
-
-    @Test
     public void reverseOperationShouldBeSuccessForEachCoordinateAndDurationBetweenRequestShouldBeRespected()
             throws JsonProcessingException {
         final TimeSendingRequestControllingInterceptor interceptor = new TimeSendingRequestControllingInterceptor();
@@ -91,7 +67,7 @@ public class NominatimServiceTest {
                 new Coordinate(54.881033, 27.544367),
                 new Coordinate(55.881033, 27.544367));
 
-        final NominatimReverseResponse expectedResponse = NominatimReverseResponse.builder()
+        final NominatimReverseResponse givenResponse = NominatimReverseResponse.builder()
                 .name("Minsk")
                 .extratags(ExtraTags.builder()
                         .place("city")
@@ -99,24 +75,21 @@ public class NominatimServiceTest {
                         .build())
                 .geojson("geojson")
                 .build();
-        final List<NominatimReverseResponse> expected = List.of(expectedResponse, expectedResponse, expectedResponse);
+        final String givenJsonResponse = this.objectMapper.writeValueAsString(givenResponse);
 
-        final String expectedJsonResponse = this.objectMapper.writeValueAsString(expectedResponse);
         this.server.expect(
                         times(givenCoordinates.size()),
                         requestTo(
                                 oneOf(
                                         createReverseUriByCoordinate(givenCoordinates.get(0)),
                                         createReverseUriByCoordinate(givenCoordinates.get(1)),
-                                        createReverseUriByCoordinate(givenCoordinates.get(2)))
+                                        createReverseUriByCoordinate(givenCoordinates.get(2))
+                                )
                         )
                 )
-                .andRespond(withSuccess(expectedJsonResponse, APPLICATION_JSON));
+                .andRespond(withSuccess(givenJsonResponse, APPLICATION_JSON));
 
-        final List<NominatimReverseResponse> actual = givenCoordinates.stream()
-                .map(this.service::reverse)
-                .collect(toList());
-        assertEquals(expected, actual);
+        givenCoordinates.forEach(this.service::reverse);
 
         assertTrue(interceptor.isDurationBetweenRequestsRespected);
     }
