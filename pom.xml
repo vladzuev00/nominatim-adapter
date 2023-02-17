@@ -33,7 +33,7 @@
     <org.wololo.version>0.18.1</org.wololo.version>
     <javax.validation.version>2.0.1.Final</javax.validation.version>
     <org.hibernate.validator.version>6.2.0.Final</org.hibernate.validator.version>
-    <org.orbisgis.version>1.5.0</org.orbisgis.version>
+    <org.orbisgis.version>2.2.0</org.orbisgis.version>
     <distance-calculator-lib.version>5.7</distance-calculator-lib.version>
     <opencsv.version>5.7.1</opencsv.version>
     <org.testcontainers.version>1.17.6</org.testcontainers.version>
