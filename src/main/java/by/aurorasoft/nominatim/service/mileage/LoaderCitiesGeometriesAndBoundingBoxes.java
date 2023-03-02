@@ -24,7 +24,7 @@ public class LoaderCitiesGeometriesAndBoundingBoxes {
     }
 
     @EventListener(classes = ApplicationReadyEvent.class)
-    public void onApplicationReady() {
+    public void injectCitiesGeometriesAndBoundingBoxes() {
         if (this.cityGeometriesShouldBeLoaded) {
             final Map<PreparedGeometry, PreparedGeometry> citiesGeometriesByBoundingBoxes = this.cityService
                     .findPreparedGeometriesByPreparedBoundingBoxes();

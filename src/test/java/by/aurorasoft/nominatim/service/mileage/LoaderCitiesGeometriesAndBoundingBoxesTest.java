@@ -35,7 +35,7 @@ public final class LoaderCitiesGeometriesAndBoundingBoxesTest {
         when(this.mockedCityService.findPreparedGeometriesByPreparedBoundingBoxes())
                 .thenReturn(givenGeometriesByBoundingBoxes);
 
-        givenLoader.onApplicationReady();
+        givenLoader.injectCitiesGeometriesAndBoundingBoxes();
 
         verify(this.mockedCityService, times(1))
                 .findPreparedGeometriesByPreparedBoundingBoxes();
@@ -50,7 +50,7 @@ public final class LoaderCitiesGeometriesAndBoundingBoxesTest {
     public void cityGeometriesShouldNotBeLoaded() {
         final LoaderCitiesGeometriesAndBoundingBoxes givenLoader = this.createLoader(false);
 
-        givenLoader.onApplicationReady();
+        givenLoader.injectCitiesGeometriesAndBoundingBoxes();
 
         verify(this.mockedCityService, times(0))
                 .findPreparedGeometriesByPreparedBoundingBoxes();
