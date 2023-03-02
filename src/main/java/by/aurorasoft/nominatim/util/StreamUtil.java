@@ -17,18 +17,4 @@ public class StreamUtil {
         final Iterable<T> iterable = () -> source;
         return stream(iterable.spliterator(), parallel);
     }
-
-    public static <T> Stream<Stream<T>> split(Stream<T> stream, int amountOfElementsInPart) {
-        final Iterator<T> iterator = stream.iterator();
-        final Stream.Builder<Stream<T>> resultStreamBuilder = Stream.builder();
-        Stream.Builder<T> subStreamBuilder;
-        while (iterator.hasNext()) {
-            subStreamBuilder = Stream.builder();
-            for (int i = 0; i < amountOfElementsInPart && iterator.hasNext(); i++) {
-                subStreamBuilder.accept(iterator.next());
-            }
-            resultStreamBuilder.accept(subStreamBuilder.build());
-        }
-        return resultStreamBuilder.build();
-    }
 }

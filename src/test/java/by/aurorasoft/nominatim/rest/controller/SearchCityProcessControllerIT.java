@@ -219,7 +219,6 @@ public class SearchCityProcessControllerIT extends AbstractContextTest {
         assertTrue(actual.matches(expectedRegex));
     }
 
-    //TODO: correct this test and add checking process during searching
     @Test
     @Transactional(propagation = NOT_SUPPORTED)
     @Sql(statements = "DELETE FROM city", executionPhase = AFTER_TEST_METHOD)

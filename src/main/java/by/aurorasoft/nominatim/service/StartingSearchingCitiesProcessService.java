@@ -5,6 +5,7 @@ import by.aurorasoft.nominatim.crud.model.dto.City;
 import by.aurorasoft.nominatim.crud.model.dto.Coordinate;
 import by.aurorasoft.nominatim.crud.model.dto.SearchingCitiesProcess;
 import by.aurorasoft.nominatim.service.exception.FindingCitiesException;
+import by.aurorasoft.nominatim.util.StreamUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,11 +14,11 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 
-import static by.aurorasoft.nominatim.util.StreamUtil.asStream;
-import static by.aurorasoft.nominatim.util.StreamUtil.split;
 import static java.lang.Double.compare;
+import static java.lang.Math.ceil;
 import static java.util.concurrent.CompletableFuture.runAsync;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.LongStream.range;
 
 @Slf4j
 @Service
@@ -60,21 +61,25 @@ public class StartingSearchingCitiesProcessService {
         public void run() {
             try {
                 final Set<String> namesAlreadyFoundCities = new HashSet<>();
-                final Collection<City> foundUniqueCities = split(
-                        asStream(new AreaIterator(this.areaCoordinate, this.searchStep)),
-                        StartingSearchingCitiesProcessService.this.amountHandledPointsToSaveState)
-                        .map(coordinateStream -> coordinateStream.collect(toList()))
-                        .map(coordinates -> new SubtaskSearchingCities(coordinates, this.process))
+                final AreaIterator areaIterator = new AreaIterator(this.areaCoordinate, this.searchStep);
+                final long amountOfSubAreas = this.findAmountOfSubAreas();
+                final Collection<City> foundUniqueCities = range(0, amountOfSubAreas)
+                        .mapToObj(i -> new SubAreaIterator(areaIterator))
+                        .map(StreamUtil::asStream)
+                        .map(subAreaCoordinateStream -> subAreaCoordinateStream.collect(toList()))
+                        .map(subAreaCoordinates -> new SubtaskSearchingCities(subAreaCoordinates, this.process))
                         .map(SubtaskSearchingCities::execute)
                         .flatMap(Collection::stream)
                         .filter(city -> namesAlreadyFoundCities.add(city.getName()))
                         .collect(toList());
-                StartingSearchingCitiesProcessService.this.eventHandlingSearchCityProcessService
-                        .onSuccessFindAllCities(this.process, foundUniqueCities);
+                eventHandlingSearchCityProcessService.onSuccessFindAllCities(this.process, foundUniqueCities);
             } catch (final Exception exception) {
-                StartingSearchingCitiesProcessService.this.eventHandlingSearchCityProcessService
-                        .onFailedFindAllCities(this.process, exception);
+                eventHandlingSearchCityProcessService.onFailedFindAllCities(this.process, exception);
             }
+        }
+
+        private long findAmountOfSubAreas() {
+            return (long) ceil(((double) this.process.getTotalPoints()) / amountHandledPointsToSaveState);
         }
     }
 
@@ -134,6 +139,27 @@ public class StartingSearchingCitiesProcessService {
         }
     }
 
+    private final class SubAreaIterator implements Iterator<Coordinate> {
+        private final AreaIterator areaIterator;
+        private int amountOfPassedPoints;
+
+        public SubAreaIterator(AreaIterator areaIterator) {
+            this.areaIterator = areaIterator;
+            this.amountOfPassedPoints = 0;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return this.amountOfPassedPoints < amountHandledPointsToSaveState && this.areaIterator.hasNext();
+        }
+
+        @Override
+        public Coordinate next() {
+            this.amountOfPassedPoints++;
+            return this.areaIterator.next();
+        }
+    }
+
     private final class SubtaskSearchingCities {
         private final List<Coordinate> coordinates;
         private final SearchingCitiesProcess process;
@@ -147,12 +173,11 @@ public class StartingSearchingCitiesProcessService {
             try {
                 final Collection<City> foundCities = StartingSearchingCitiesProcessService
                         .this.searchCityService.findByCoordinates(this.coordinates);
-                StartingSearchingCitiesProcessService.this.eventHandlingSearchCityProcessService
-                        .onSuccessFindCitiesBySubtask(this.process, this.coordinates.size());
+                eventHandlingSearchCityProcessService.onSuccessFindCitiesBySubtask(
+                        this.process, this.coordinates.size());
                 return foundCities;
             } catch (final Exception exception) {
-                StartingSearchingCitiesProcessService.this.eventHandlingSearchCityProcessService
-                        .onFailedFindCitiesBySubtask(exception);
+                eventHandlingSearchCityProcessService.onFailedFindCitiesBySubtask(exception);
                 throw new FindingCitiesException(exception);
             }
         }
