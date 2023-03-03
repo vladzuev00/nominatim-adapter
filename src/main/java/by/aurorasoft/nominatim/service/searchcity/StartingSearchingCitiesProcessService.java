@@ -50,8 +50,7 @@ public class StartingSearchingCitiesProcessService {
         private final double searchStep;
         private final SearchingCitiesProcess process;
 
-        public TaskSearchingCities(AreaCoordinate areaCoordinate, double searchStep,
-                                   SearchingCitiesProcess process) {
+        public TaskSearchingCities(AreaCoordinate areaCoordinate, double searchStep, SearchingCitiesProcess process) {
             this.areaCoordinate = areaCoordinate;
             this.searchStep = searchStep;
             this.process = process;

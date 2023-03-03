@@ -462,6 +462,11 @@ public final class StartingSearchingCitiesProcessServiceIT extends AbstractConte
         checkEquals(expectedProcessAfterTaskFinished, actualProcessAfterTaskFinished);
     }
 
+    @Test
+    public void processShouldBeStartedAndFinishedSuccessfully() {
+        throw new RuntimeException();
+    }
+
     private static Iterator<Coordinate> createAreaIterator(AreaCoordinate areaCoordinate, double searchStep)
             throws Exception {
         return createObject(

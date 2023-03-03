@@ -59,12 +59,10 @@ public final class NominatimService implements AutoCloseable {
             while (!this.durationBetweenRequestsPassed) {
                 this.condition.await();
             }
-            final String uri = createUri(coordinate);
-            final ResponseEntity<NominatimReverseResponse> responseEntity = this.restTemplate
-                    .exchange(uri, GET, EMPTY, PARAMETERIZED_TYPE_REFERENCE);
+            final NominatimReverseResponse response = this.doRequest(coordinate);
             this.durationBetweenRequestsPassed = false;
             this.condition.signalAll();
-            return responseEntity.getBody();
+            return response;
         } catch (final InterruptedException cause) {
             currentThread().interrupt();
             throw new NominatimClientException(cause);
@@ -97,6 +95,13 @@ public final class NominatimService implements AutoCloseable {
                 this.lock.unlock();
             }
         };
+    }
+
+    private NominatimReverseResponse doRequest(Coordinate coordinate) {
+        final String uri = createUri(coordinate);
+        final ResponseEntity<NominatimReverseResponse> responseEntity = this.restTemplate.exchange(
+                uri, GET, EMPTY, PARAMETERIZED_TYPE_REFERENCE);
+        return responseEntity.getBody();
     }
 
     private static String createUri(Coordinate coordinate) {
