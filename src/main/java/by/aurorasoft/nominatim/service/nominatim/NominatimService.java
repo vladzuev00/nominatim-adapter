@@ -59,10 +59,7 @@ public final class NominatimService implements AutoCloseable {
             while (!this.durationBetweenRequestsPassed) {
                 this.condition.await();
             }
-            final String uri = new NominatimReverseUriBuilder()
-                    .catalogLatitude(coordinate.getLatitude())
-                    .catalogLongitude(coordinate.getLongitude())
-                    .build();
+            final String uri = createUri(coordinate);
             final ResponseEntity<NominatimReverseResponse> responseEntity = this.restTemplate
                     .exchange(uri, GET, EMPTY, PARAMETERIZED_TYPE_REFERENCE);
             this.durationBetweenRequestsPassed = false;
@@ -74,6 +71,12 @@ public final class NominatimService implements AutoCloseable {
         } finally {
             this.lock.unlock();
         }
+    }
+
+    @Override
+    @PreDestroy
+    public void close() {
+        this.executorService.shutdownNow();
     }
 
     private Runnable createTaskWaitingNecessaryDurationBetweenRequests() {
@@ -96,10 +99,11 @@ public final class NominatimService implements AutoCloseable {
         };
     }
 
-    @Override
-    @PreDestroy
-    public void close() {
-        this.executorService.shutdownNow();
+    private static String createUri(Coordinate coordinate) {
+        return new NominatimReverseUriBuilder()
+                .catalogLatitude(coordinate.getLatitude())
+                .catalogLongitude(coordinate.getLongitude())
+                .build();
     }
 
     private static final class NominatimReverseUriBuilder {
