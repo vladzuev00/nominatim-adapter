@@ -9,7 +9,7 @@ import by.aurorasoft.nominatim.rest.model.SearchingCitiesProcessPageResponse;
 import by.aurorasoft.nominatim.rest.model.SearchingCitiesProcessResponse;
 import by.aurorasoft.nominatim.rest.model.StartSearchingCitiesRequest;
 import by.aurorasoft.nominatim.rest.validator.StartSearchingCitiesRequestValidator;
-import by.aurorasoft.nominatim.service.StartingSearchingCitiesProcessService;
+import by.aurorasoft.nominatim.service.searchcity.StartingSearchingCitiesProcessService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;

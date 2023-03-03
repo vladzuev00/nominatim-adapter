@@ -1,4 +1,4 @@
-package by.aurorasoft.nominatim.service;
+package by.aurorasoft.nominatim.service.searchcity;
 
 import by.aurorasoft.nominatim.crud.model.dto.AreaCoordinate;
 import by.aurorasoft.nominatim.crud.model.dto.City;
@@ -171,8 +171,7 @@ public class StartingSearchingCitiesProcessService {
 
         public Collection<City> execute() {
             try {
-                final Collection<City> foundCities = StartingSearchingCitiesProcessService
-                        .this.searchCityService.findByCoordinates(this.coordinates);
+                final Collection<City> foundCities = searchCityService.findByCoordinates(this.coordinates);
                 eventHandlingSearchCityProcessService.onSuccessFindCitiesBySubtask(
                         this.process, this.coordinates.size());
                 return foundCities;
