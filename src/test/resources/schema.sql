@@ -10,12 +10,14 @@ CREATE TYPE city_type AS ENUM ('CAPITAL', 'REGIONAL', 'NOT_DEFINED');
 
 CREATE TABLE city
 (
-    id       SERIAL PRIMARY KEY,
-    type     city_type    NOT NULL,
-    name     VARCHAR(256) NOT NULL,
-    geometry GEOMETRY     NOT NULL,
-    bounding_box GEOMETRY NOT NULL
+    id           SERIAL PRIMARY KEY,
+    type         city_type    NOT NULL,
+    name         VARCHAR(256) NOT NULL,
+    geometry     GEOMETRY     NOT NULL,
+    bounding_box GEOMETRY     NOT NULL
 );
+
+ALTER SEQUENCE city_id_seq INCREMENT 50;
 
 CREATE TYPE searching_cities_process_type AS ENUM('HANDLING', 'SUCCESS', 'ERROR');
 
@@ -31,7 +33,8 @@ CREATE TABLE searching_cities_process
     created_time   TIMESTAMP                     NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE OR REPLACE FUNCTION on_update_searching_cities_process() RETURNS TRIGGER AS
+CREATE
+OR REPLACE FUNCTION on_update_searching_cities_process() RETURNS TRIGGER AS
 '
     BEGIN
         NEW.updated_time = CURRENT_TIMESTAMP;

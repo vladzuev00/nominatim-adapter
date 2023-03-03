@@ -26,8 +26,8 @@ import static javax.persistence.GenerationType.IDENTITY;
 public class SearchingCitiesProcessEntity extends BaseEntity<Long> {
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id")
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @Column(name = "bounds")

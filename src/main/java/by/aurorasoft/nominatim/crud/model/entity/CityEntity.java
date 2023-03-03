@@ -3,7 +3,6 @@ package by.aurorasoft.nominatim.crud.model.entity;
 import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType;
 import lombok.*;
 import org.hibernate.annotations.TypeDef;
-import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.Geometry;
 
 import javax.persistence.*;
@@ -20,7 +19,6 @@ import static javax.persistence.GenerationType.SEQUENCE;
         name = "pgsql_enum",
         typeClass = PostgreSQLEnumType.class
 )
-@SequenceGenerator(name = "city_id_seq", sequenceName = "city_id_seq", allocationSize = 1)
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
@@ -30,8 +28,9 @@ import static javax.persistence.GenerationType.SEQUENCE;
 public class CityEntity extends BaseEntity<Long> {
 
     @Id
-    @GeneratedValue(strategy = SEQUENCE, generator = "city_id_seq")
     @Column(name = "id")
+    @GeneratedValue(strategy = SEQUENCE, generator = "city_id_seq")
+    @SequenceGenerator(name = "city_id_seq", sequenceName = "city_id_seq")
     private Long id;
 
     @Column(name = "name")

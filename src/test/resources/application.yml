@@ -20,7 +20,7 @@ spring:
       matching-strategy: ant_path_matcher
 
 search-cities:
-  amount-handled-points-to-save-state: 10
+  amount-handled-points-to-save-state: 2
 
 server:
   servlet:
