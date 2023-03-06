@@ -7,13 +7,16 @@ import by.aurorasoft.nominatim.rest.model.MileageRequest.TrackPoint;
 import by.aurorasoft.nominatim.rest.model.MileageResponse;
 import by.nhorushko.distancecalculator.*;
 import com.opencsv.CSVReader;
+import org.junit.After;
 import org.junit.Test;
 import org.locationtech.jts.geom.prep.PreparedGeometry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.io.FileReader;
+import java.lang.reflect.Field;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +31,8 @@ import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 
 public final class MileageServiceIT extends AbstractContextTest {
+    private static final String FIELD_NAME_CITIES_GEOMETRIES_BY_BOUNDING_BOX = "citiesGeometriesByBoundingBoxes";
+
     private static final String FOLDER_PATH_WITH_TRACK_POINTS = "./src/test/resources/tracks";
     private static final String SLASH = "/";
 
@@ -61,13 +66,25 @@ public final class MileageServiceIT extends AbstractContextTest {
         this.trackPointFactory = new TrackPointFactory();
     }
 
+    @After
+    public void setCitiesGeometriesByBoundingBoxesAsNull()
+            throws Exception {
+        final Field field = MileageService.class.getDeclaredField(FIELD_NAME_CITIES_GEOMETRIES_BY_BOUNDING_BOX);
+        field.setAccessible(true);
+        try {
+            field.set(this.mileageService, null);
+        } finally {
+            field.setAccessible(false);
+        }
+    }
+
     @Test
     @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'Something', "
             + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326), "
             + "'NOT_DEFINED', "
             + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326)"
             + ")")
-    public void case1() {
+    public void case1WithLoadingBoundingBoxAndGeometries() {
         this.loadCitiesBoundingBoxesAndGeometries();
 
         final MileageRequest givenMileageRequest = createMileageRequest(
@@ -88,7 +105,26 @@ public final class MileageServiceIT extends AbstractContextTest {
             + "'NOT_DEFINED', "
             + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326)"
             + ")")
-    public void case2() {
+    public void case1WithoutLoadingBoundingBoxAndGeometries() {
+        final MileageRequest givenMileageRequest = createMileageRequest(
+                List.of(
+                        createTrackPoint(1.015F, 2.025F),
+                        createTrackPoint(1.025F, 2.025F)
+                )
+        );
+
+        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
+        final MileageResponse expected = new MileageResponse(0, 1.111948206008131);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'Something', "
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326), "
+            + "'NOT_DEFINED', "
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326)"
+            + ")")
+    public void case2WithLoadingBoundingBoxAndGeometries() {
         this.loadCitiesBoundingBoxesAndGeometries();
 
         final MileageRequest givenMileageRequest = createMileageRequest(
@@ -109,7 +145,26 @@ public final class MileageServiceIT extends AbstractContextTest {
             + "'NOT_DEFINED', "
             + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326)"
             + ")")
-    public void case3() {
+    public void case2WithoutLoadingBoundingBoxAndGeometries() {
+        final MileageRequest givenMileageRequest = createMileageRequest(
+                List.of(
+                        createTrackPoint(1.005F, 2.015F),
+                        createTrackPoint(1.015F, 2.015F)
+                )
+        );
+
+        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
+        final MileageResponse expected = new MileageResponse(1.111948206008131, 0);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'Something', "
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326), "
+            + "'NOT_DEFINED', "
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326)"
+            + ")")
+    public void case3WithLoadingBoundingBoxAndGeometries() {
         this.loadCitiesBoundingBoxesAndGeometries();
 
         final MileageRequest givenMileageRequest = createMileageRequest(
@@ -130,7 +185,26 @@ public final class MileageServiceIT extends AbstractContextTest {
             + "'NOT_DEFINED', "
             + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326)"
             + ")")
-    public void case4() {
+    public void case3WithoutLoadingBoundingBoxAndGeometries() {
+        final MileageRequest givenMileageRequest = createMileageRequest(
+                List.of(
+                        createTrackPoint(1.005F, 2.015F),
+                        createTrackPoint(1.025F, 2.015F)
+                )
+        );
+
+        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
+        final MileageResponse expected = new MileageResponse(0, 2.223896412016262);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'Something', "
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326), "
+            + "'NOT_DEFINED', "
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326)"
+            + ")")
+    public void case4WithLoadingBoundingBoxAndGeometries() {
         this.loadCitiesBoundingBoxesAndGeometries();
 
         final MileageRequest givenMileageRequest = createMileageRequest(
@@ -151,7 +225,26 @@ public final class MileageServiceIT extends AbstractContextTest {
             + "'NOT_DEFINED', "
             + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326)"
             + ")")
-    public void case5() {
+    public void case4WithoutLoadingBoundingBoxAndGeometries() {
+        final MileageRequest givenMileageRequest = createMileageRequest(
+                List.of(
+                        createTrackPoint(1.015F, 2.015F),
+                        createTrackPoint(1.025F, 2.015F)
+                )
+        );
+
+        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
+        final MileageResponse expected = new MileageResponse(0., 1.111948206008131);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'Something', "
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326), "
+            + "'NOT_DEFINED', "
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326)"
+            + ")")
+    public void case5WithLoadingBoundingBoxAndGeometries() {
         this.loadCitiesBoundingBoxesAndGeometries();
 
         final MileageRequest givenMileageRequest = createMileageRequest(
@@ -172,7 +265,26 @@ public final class MileageServiceIT extends AbstractContextTest {
             + "'NOT_DEFINED', "
             + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326)"
             + ")")
-    public void case6() {
+    public void case5WithoutLoadingBoundingBoxAndGeometries() {
+        final MileageRequest givenMileageRequest = createMileageRequest(
+                List.of(
+                        createTrackPoint(1.013F, 2.015F),
+                        createTrackPoint(1.016F, 2.015F)
+                )
+        );
+
+        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
+        final MileageResponse expected = new MileageResponse(0.3335871128960806, 0.);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'Something', "
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326), "
+            + "'NOT_DEFINED', "
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326)"
+            + ")")
+    public void case6WithLoadingBoundingBoxAndGeometries() {
         this.loadCitiesBoundingBoxesAndGeometries();
 
         final MileageRequest givenMileageRequest = createMileageRequest(
@@ -193,7 +305,26 @@ public final class MileageServiceIT extends AbstractContextTest {
             + "'NOT_DEFINED', "
             + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326)"
             + ")")
-    public void case7() {
+    public void case6WithoutLoadingBoundingBoxAndGeometries() {
+        final MileageRequest givenMileageRequest = createMileageRequest(
+                List.of(
+                        createTrackPoint(1.02F, 2.015F),
+                        createTrackPoint(1.03F, 2.015F)
+                )
+        );
+
+        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
+        final MileageResponse expected = new MileageResponse(0, 1.111948206008131);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'Something', "
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326), "
+            + "'NOT_DEFINED', "
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326)"
+            + ")")
+    public void case7WithLoadingBoundingBoxAndGeometries() {
         this.loadCitiesBoundingBoxesAndGeometries();
 
         final MileageRequest givenMileageRequest = createMileageRequest(
@@ -214,9 +345,51 @@ public final class MileageServiceIT extends AbstractContextTest {
             + "'NOT_DEFINED', "
             + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326)"
             + ")")
-    public void case8() {
+    public void case7WithoutLoadingBoundingBoxAndGeometries() {
         this.loadCitiesBoundingBoxesAndGeometries();
 
+        final MileageRequest givenMileageRequest = createMileageRequest(
+                List.of(
+                        createTrackPoint(1.005F, 2.015F),
+                        createTrackPoint(1.01F, 2.015F)
+                )
+        );
+
+        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
+        final MileageResponse expected = new MileageResponse(0, 0.5559741030040655);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'Something', "
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326), "
+            + "'NOT_DEFINED', "
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326)"
+            + ")")
+    public void case8WithLoadingBoundingBoxAndGeometries() {
+        this.loadCitiesBoundingBoxesAndGeometries();
+
+        final MileageRequest givenMileageRequest = createMileageRequest(
+                List.of(
+                        createTrackPoint(1.005F, 2.015F),
+                        createTrackPoint(1.015F, 2.015F),
+                        createTrackPoint(1.025F, 2.015F)
+                )
+        );
+
+        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
+        final MileageResponse expected = new MileageResponse(1.111948206008131,
+                1.111948206008131);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'Something', "
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326), "
+            + "'NOT_DEFINED', "
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326)"
+            + ")")
+    public void case8WithoutLoadingBoundingBoxAndGeometries() {
         final MileageRequest givenMileageRequest = createMileageRequest(
                 List.of(
                         createTrackPoint(1.005F, 2.015F),
@@ -237,9 +410,30 @@ public final class MileageServiceIT extends AbstractContextTest {
             + "'NOT_DEFINED',"
             + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326)"
             + ")")
-    public void case9() {
+    public void case9WithLoadingBoundingBoxAndGeometries() {
         this.loadCitiesBoundingBoxesAndGeometries();
 
+        final MileageRequest givenMileageRequest = createMileageRequest(
+                List.of(
+                        createTrackPoint(1.005F, 2.015F),
+                        createTrackPoint(1.015F, 2.018F),
+                        createTrackPoint(1.025F, 2.015F)
+                )
+        );
+
+        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
+        final MileageResponse expected = new MileageResponse(1.1608862638235358,
+                1.1608859675523793);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'Something', "
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326), "
+            + "'NOT_DEFINED',"
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326)"
+            + ")")
+    public void case9WithoutLoadingBoundingBoxAndGeometries() {
         final MileageRequest givenMileageRequest = createMileageRequest(
                 List.of(
                         createTrackPoint(1.005F, 2.015F),
@@ -260,7 +454,7 @@ public final class MileageServiceIT extends AbstractContextTest {
             + "'NOT_DEFINED', "
             + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326)"
             + ")")
-    public void case10() {
+    public void case10WithLoadingBoundingBoxAndGeometries() {
         this.loadCitiesBoundingBoxesAndGeometries();
 
         final MileageRequest givenMileageRequest = createMileageRequest(
@@ -283,7 +477,28 @@ public final class MileageServiceIT extends AbstractContextTest {
             + "'NOT_DEFINED', "
             + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326)"
             + ")")
-    public void case11() {
+    public void case10WithoutLoadingBoundingBoxAndGeometries() {
+        final MileageRequest givenMileageRequest = createMileageRequest(
+                List.of(
+                        createTrackPoint(1.013F, 2.015F),
+                        createTrackPoint(1.017F, 2.015F),
+                        createTrackPoint(1.025F, 2.015F)
+                )
+        );
+
+        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
+        final MileageResponse expected = new MileageResponse(0.44477398021596953,
+                0.8895612159001461);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'Something', "
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326), "
+            + "'NOT_DEFINED', "
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326)"
+            + ")")
+    public void case11WithLoadingBoundingBoxAndGeometries() {
         this.loadCitiesBoundingBoxesAndGeometries();
 
         final MileageRequest givenMileageRequest = createMileageRequest(
@@ -307,9 +522,53 @@ public final class MileageServiceIT extends AbstractContextTest {
             + "'NOT_DEFINED', "
             + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326)"
             + ")")
-    public void case12() {
+    public void case11WithoutLoadingBoundingBoxAndGeometries() {
+        final MileageRequest givenMileageRequest = createMileageRequest(
+                List.of(
+                        createTrackPoint(1.005F, 2.015F),
+                        createTrackPoint(1.013F, 2.015F),
+                        createTrackPoint(1.017F, 2.015F),
+                        createTrackPoint(1.025F, 2.015F)
+                )
+        );
+
+        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
+        final MileageResponse expected = new MileageResponse(1.3343351961161156,
+                0.8895612159001461);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'Something', "
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326), "
+            + "'NOT_DEFINED', "
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326)"
+            + ")")
+    public void case12WithLoadingBoundingBoxAndGeometries() {
         this.loadCitiesBoundingBoxesAndGeometries();
 
+        final MileageRequest givenMileageRequest = createMileageRequest(
+                List.of(
+                        createTrackPoint(1.005F, 2.015F),
+                        createTrackPoint(1.013F, 2.013F),
+                        createTrackPoint(1.017F, 2.017F),
+                        createTrackPoint(1.025F, 2.015F)
+                )
+        );
+
+        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
+        final MileageResponse expected = new MileageResponse(1.545888809855105,
+                0.9169261331290726);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'Something', "
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326), "
+            + "'NOT_DEFINED', "
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326)"
+            + ")")
+    public void case12WithoutLoadingBoundingBoxAndGeometries() {
         final MileageRequest givenMileageRequest = createMileageRequest(
                 List.of(
                         createTrackPoint(1.005F, 2.015F),
@@ -335,7 +594,7 @@ public final class MileageServiceIT extends AbstractContextTest {
             + "'NOT_DEFINED', "
             + "ST_GeomFromText('POLYGON((2 1.005, 2 1.025, 2.03 1.025, 2.03 1.005, 2 1.005))', 4326)"
             + ")")
-    public void case13() {
+    public void case13WithLoadingBoundingBoxAndGeometries() {
         this.loadCitiesBoundingBoxesAndGeometries();
 
         final MileageRequest givenMileageRequest = createMileageRequest(
@@ -362,9 +621,60 @@ public final class MileageServiceIT extends AbstractContextTest {
             + "'NOT_DEFINED', "
             + "ST_GeomFromText('POLYGON((2 1.005, 2 1.025, 2.03 1.025, 2.03 1.005, 2 1.005))', 4326)"
             + ")")
-    public void case14() {
+    public void case13WithoutLoadingBoundingBoxAndGeometries() {
+        final MileageRequest givenMileageRequest = createMileageRequest(
+                List.of(
+                        createTrackPoint(1.005F, 2.015F),
+                        createTrackPoint(1.015F, 2.015F),
+                        createTrackPoint(1.025F, 2.015F)
+                )
+        );
+
+        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
+        final MileageResponse expected = new MileageResponse(1.111948206008131,
+                1.111948206008131);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'First', "
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326), "
+            + "'NOT_DEFINED', "
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326))")
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(256, 'Second', "
+            + "ST_GeomFromText('POLYGON((2.01 1.005, 2 1.01, 2.02 1.025, 2.03 1.02, 2.01 1.005))', 4326), "
+            + "'NOT_DEFINED', "
+            + "ST_GeomFromText('POLYGON((2 1.005, 2 1.025, 2.03 1.025, 2.03 1.005, 2 1.005))', 4326)"
+            + ")")
+    public void case14WithLoadingBoundingBoxAndGeometries() {
         this.loadCitiesBoundingBoxesAndGeometries();
 
+        final MileageRequest givenMileageRequest = createMileageRequest(
+                List.of(
+                        createTrackPoint(1.005F, 2.015F),
+                        createTrackPoint(1.012F, 2.018F),
+                        createTrackPoint(1.015F, 2.015F),
+                        createTrackPoint(1.025F, 2.015F)
+                )
+        );
+
+        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
+        final MileageResponse expected = new MileageResponse(1.3185101144130753,
+                1.111948206008131);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'First', "
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326), "
+            + "'NOT_DEFINED', "
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326))")
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(256, 'Second', "
+            + "ST_GeomFromText('POLYGON((2.01 1.005, 2 1.01, 2.02 1.025, 2.03 1.02, 2.01 1.005))', 4326), "
+            + "'NOT_DEFINED', "
+            + "ST_GeomFromText('POLYGON((2 1.005, 2 1.025, 2.03 1.025, 2.03 1.005, 2 1.005))', 4326)"
+            + ")")
+    public void case14WithoutLoadingBoundingBoxAndGeometries() {
         final MileageRequest givenMileageRequest = createMileageRequest(
                 List.of(
                         createTrackPoint(1.005F, 2.015F),
@@ -385,7 +695,7 @@ public final class MileageServiceIT extends AbstractContextTest {
             + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.01 1.01))', 4326), "
             + "'NOT_DEFINED', "
             + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326))")
-    public void case15() {
+    public void case15WithLoadingBoundingBoxAndGeometries() {
         this.loadCitiesBoundingBoxesAndGeometries();
 
         final MileageRequest givenMileageRequest = createMileageRequest(
@@ -401,10 +711,28 @@ public final class MileageServiceIT extends AbstractContextTest {
         assertEquals(expected, actual);
     }
 
+    @Test
+    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'First', "
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.01 1.01))', 4326), "
+            + "'NOT_DEFINED', "
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326))")
+    public void case15WithoutLoadingBoundingBoxAndGeometries() {
+        final MileageRequest givenMileageRequest = createMileageRequest(
+                List.of(
+                        createTrackPoint(1.005F, 2.015F),
+                        createTrackPoint(1.015F, 2.015F),
+                        createTrackPoint(1.025F, 2.015F)
+                )
+        );
+
+        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
+        final MileageResponse expected = new MileageResponse(0, 2.223896412016262);
+        assertEquals(expected, actual);
+    }
 
     @Test
     @Sql("classpath:sql/insert-belarus-city.sql")
-    public void mileageShouldBeCalculatedForFirstTrackPoints()
+    public void mileageShouldBeCalculatedForFirstTrackPointsWithLoadingCitiesBoundingBoxesAndGeometries()
             throws Exception {
         this.loadCitiesBoundingBoxesAndGeometries();
 
@@ -423,7 +751,24 @@ public final class MileageServiceIT extends AbstractContextTest {
 
     @Test
     @Sql("classpath:sql/insert-belarus-city.sql")
-    public void mileageShouldBeCalculatedForSecondTrackPoints()
+    public void mileageShouldBeCalculatedForFirstTrackPointsWithoutLoadingCitiesBoundingBoxesAndGeometries()
+            throws Exception {
+        final List<TrackPoint> givenTrackPoints = this.readTrackPoints(FILE_NAME_WITH_FIRST_TRACK_POINTS);
+        final MileageRequest givenMileageRequest = createMileageRequest(givenTrackPoints);
+
+        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
+        final MileageResponse expected = new MileageResponse(355.72511991398096,
+                357.73277661649564);
+        assertEquals(expected, actual);
+
+        final double actualAllDistance = actual.getUrban() + actual.getCountry();
+        final double expectedAllDistance = this.findExpectedAllDistance(givenTrackPoints);
+        assertEquals(expectedAllDistance, actualAllDistance, ALLOWABLE_INACCURACY_OF_DISTANCE);
+    }
+
+    @Test
+    @Sql("classpath:sql/insert-belarus-city.sql")
+    public void mileageShouldBeCalculatedForSecondTrackPointsWithLoadingBoundingBoxesAndGeometries()
             throws Exception {
         this.loadCitiesBoundingBoxesAndGeometries();
 
@@ -442,10 +787,46 @@ public final class MileageServiceIT extends AbstractContextTest {
 
     @Test
     @Sql("classpath:sql/insert-belarus-city.sql")
-    public void mileageShouldBeCalculatedForThirdTrackPoints()
+    public void mileageShouldBeCalculatedForSecondTrackPointsWithoutLoadingBoundingBoxesAndGeometries()
+            throws Exception {
+        final List<TrackPoint> givenTrackPoints = this.readTrackPoints(FILE_NAME_WITH_SECOND_TRACK_POINTS);
+        final MileageRequest givenMileageRequest = createMileageRequest(givenTrackPoints);
+
+        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
+        final MileageResponse expected = new MileageResponse(562.8989367618942,
+                518.031547816519);
+        assertEquals(expected, actual);
+
+        final double actualAllDistance = actual.getUrban() + actual.getCountry();
+        final double expectedAllDistance = this.findExpectedAllDistance(givenTrackPoints);
+        assertEquals(expectedAllDistance, actualAllDistance, ALLOWABLE_INACCURACY_OF_DISTANCE);
+    }
+
+    @Test
+    @Sql("classpath:sql/insert-belarus-city.sql")
+    public void mileageShouldBeCalculatedForThirdTrackPointsWithLoadingBoundingBoxesAndGeometries()
             throws Exception {
         this.loadCitiesBoundingBoxesAndGeometries();
 
+        final List<TrackPoint> givenTrackPoints = this.readTrackPoints(FILE_NAME_WITH_THIRD_TRACK_POINTS);
+        final MileageRequest givenMileageRequest = createMileageRequest(givenTrackPoints);
+
+        System.out.println(LocalDateTime.now());
+        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
+        System.out.println(LocalDateTime.now());
+        final MileageResponse expected = new MileageResponse(1207.6871617415154,
+                1241.2063545061649);
+        assertEquals(expected, actual);
+
+        final double actualAllDistance = actual.getUrban() + actual.getCountry();
+        final double expectedAllDistance = this.findExpectedAllDistance(givenTrackPoints);
+        assertEquals(expectedAllDistance, actualAllDistance, ALLOWABLE_INACCURACY_OF_DISTANCE);
+    }
+
+    @Test
+    @Sql("classpath:sql/insert-belarus-city.sql")
+    public void mileageShouldBeCalculatedForThirdTrackPointsWithoutLoadingBoundingBoxesAndGeometries()
+            throws Exception {
         final List<TrackPoint> givenTrackPoints = this.readTrackPoints(FILE_NAME_WITH_THIRD_TRACK_POINTS);
         final MileageRequest givenMileageRequest = createMileageRequest(givenTrackPoints);
 
@@ -461,10 +842,27 @@ public final class MileageServiceIT extends AbstractContextTest {
 
     @Test
     @Sql("classpath:sql/insert-belarus-city.sql")
-    public void mileageShouldBeCalculatedByForFourthTrackPoints()
+    public void mileageShouldBeCalculatedByForFourthTrackPointsWithLoadingCitiesBoundingBoxesAndGeometries()
             throws Exception {
         this.loadCitiesBoundingBoxesAndGeometries();
 
+        final List<TrackPoint> givenTrackPoints = this.readTrackPoints(FILE_NAME_WITH_FOURTH_TRACK_POINTS);
+        final MileageRequest givenMileageRequest = createMileageRequest(givenTrackPoints);
+
+        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
+        final MileageResponse expected = new MileageResponse(125.27265649913504,
+                117.8709566688135);
+        assertEquals(expected, actual);
+
+        final double actualAllDistance = actual.getUrban() + actual.getCountry();
+        final double expectedAllDistance = this.findExpectedAllDistance(givenTrackPoints);
+        assertEquals(expectedAllDistance, actualAllDistance, ALLOWABLE_INACCURACY_OF_DISTANCE);
+    }
+
+    @Test
+    @Sql("classpath:sql/insert-belarus-city.sql")
+    public void mileageShouldBeCalculatedByForFourthTrackPointsWithoutLoadingCitiesBoundingBoxesAndGeometries()
+            throws Exception {
         final List<TrackPoint> givenTrackPoints = this.readTrackPoints(FILE_NAME_WITH_FOURTH_TRACK_POINTS);
         final MileageRequest givenMileageRequest = createMileageRequest(givenTrackPoints);
 
