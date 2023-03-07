@@ -28,7 +28,7 @@ public final class SearchingCitiesProcessServiceTest extends AbstractContextTest
     @Test
     @Sql(statements = "INSERT INTO searching_cities_process "
             + "(id, bounds, search_step, total_points, handled_points, status) "
-            + "VALUES(255, ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))'), 0.01, 10000, 1000, 'HANDLING')")
+            + "VALUES(255, ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326), 0.01, 10000, 1000, 'HANDLING')")
     public void processShouldBeUpdatedByStatus() {
         final SearchingCitiesProcess processToBeUpdated = SearchingCitiesProcess.builder()
                 .id(255L)
@@ -58,7 +58,7 @@ public final class SearchingCitiesProcessServiceTest extends AbstractContextTest
     @Test
     @Sql(statements = "INSERT INTO searching_cities_process "
             + "(id, bounds, search_step, total_points, handled_points, status) "
-            + "VALUES(255, ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))'), 0.01, 10000, 1000, 'HANDLING')")
+            + "VALUES(255, ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326), 0.01, 10000, 1000, 'HANDLING')")
     public void processShouldBeUpdatedByIncreasingHandledPoints() {
         final SearchingCitiesProcess processToBeUpdated = SearchingCitiesProcess.builder()
                 .id(255L)
@@ -88,13 +88,13 @@ public final class SearchingCitiesProcessServiceTest extends AbstractContextTest
     @Test
     @Sql(statements = "INSERT INTO searching_cities_process "
             + "(id, bounds, search_step, total_points, handled_points, status) "
-            + "VALUES(255, ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))'), 0.01, 10000, 1000, 'HANDLING')")
+            + "VALUES(255, ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326), 0.01, 10000, 1000, 'HANDLING')")
     @Sql(statements = "INSERT INTO searching_cities_process "
             + "(id, bounds, search_step, total_points, handled_points, status) "
-            + "VALUES(256, ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))'), 0.01, 10000, 1000, 'HANDLING')")
+            + "VALUES(256, ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326), 0.01, 10000, 1000, 'HANDLING')")
     @Sql(statements = "INSERT INTO searching_cities_process "
             + "(id, bounds, search_step, total_points, handled_points, status) "
-            + "VALUES(257, ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))'), 0.01, 10000, 1000, 'ERROR')")
+            + "VALUES(257, ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326), 0.01, 10000, 1000, 'ERROR')")
     public void processesShouldBeFoundByStatus() {
         final List<SearchingCitiesProcess> foundProcesses = this.service.findByStatus(HANDLING, 0, 3);
         final List<Long> actualIds = foundProcesses.stream()

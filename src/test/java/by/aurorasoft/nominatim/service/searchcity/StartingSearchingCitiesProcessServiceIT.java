@@ -230,7 +230,7 @@ public final class StartingSearchingCitiesProcessServiceIT extends AbstractConte
     @Test
     @Sql(statements = "INSERT INTO searching_cities_process "
             + "(id, bounds, search_step, total_points, handled_points, status) "
-            + "VALUES(255, ST_GeomFromText('POLYGON((1 1, 5 1, 5 5, 1 5, 1 1))'), 1, 25, 6, 'HANDLING')")
+            + "VALUES(255, ST_GeomFromText('POLYGON((1 1, 5 1, 5 5, 1 5, 1 1))', 4326), 1, 25, 6, 'HANDLING')")
     public void subTaskSearchingCitiesShouldFoundCities()
             throws Exception {
         final List<Coordinate> givenCoordinates = List.of(
@@ -301,7 +301,7 @@ public final class StartingSearchingCitiesProcessServiceIT extends AbstractConte
     @Test
     @Sql(statements = "INSERT INTO searching_cities_process "
             + "(id, bounds, search_step, total_points, handled_points, status) "
-            + "VALUES(255, ST_GeomFromText('POLYGON((1 1, 5 1, 5 5, 1 5, 1 1))'), 1, 25, 6, 'HANDLING')")
+            + "VALUES(255, ST_GeomFromText('POLYGON((1 1, 5 1, 5 5, 1 5, 1 1))', 4326), 1, 25, 6, 'HANDLING')")
     public void subTaskSearchingCitiesShouldBeFailed()
             throws Exception {
         final List<Coordinate> givenCoordinates = List.of(
@@ -326,7 +326,7 @@ public final class StartingSearchingCitiesProcessServiceIT extends AbstractConte
     @Test
     @Sql(statements = "INSERT INTO searching_cities_process "
             + "(id, bounds, search_step, total_points, handled_points, status) "
-            + "VALUES(255, ST_GeomFromText('POLYGON((1 1, 5 1, 5 5, 1 5, 1 1))'), 0.5, 9, 0, 'HANDLING')")
+            + "VALUES(255, ST_GeomFromText('POLYGON((1 1, 5 1, 5 5, 1 5, 1 1))', 4326), 0.5, 9, 0, 'HANDLING')")
     public void taskSearchingCitiesShouldBeSuccess()
             throws Exception {
         final AreaCoordinate givenAreaCoordinate = new AreaCoordinate(
@@ -396,6 +396,7 @@ public final class StartingSearchingCitiesProcessServiceIT extends AbstractConte
                 this.createCityEntity(firstGivenResponseName, firstGivenGeoJson, CAPITAL),
                 this.createCityEntity(secondGivenResponseName, secondGivenGeoJson, REGIONAL)
         );
+        assertNotNull(actualFoundCities);
         checkEqualsExceptId(expectedFoundCities, actualFoundCities);
 
         super.entityManager.flush();
@@ -423,7 +424,7 @@ public final class StartingSearchingCitiesProcessServiceIT extends AbstractConte
     @Test
     @Sql(statements = "INSERT INTO searching_cities_process "
             + "(id, bounds, search_step, total_points, handled_points, status) "
-            + "VALUES(255, ST_GeomFromText('POLYGON((1 1, 5 1, 5 5, 1 5, 1 1))'), 0.5, 9, 0, 'HANDLING')")
+            + "VALUES(255, ST_GeomFromText('POLYGON((1 1, 5 1, 5 5, 1 5, 1 1))', 4326), 0.5, 9, 0, 'HANDLING')")
     public void taskSearchingCitiesShouldBeFailedBecauseOfSubtaskWasFailed()
             throws Exception {
         final AreaCoordinate givenAreaCoordinate = new AreaCoordinate(
@@ -460,11 +461,6 @@ public final class StartingSearchingCitiesProcessServiceIT extends AbstractConte
                 .status(ERROR)
                 .build();
         checkEquals(expectedProcessAfterTaskFinished, actualProcessAfterTaskFinished);
-    }
-
-    @Test
-    public void processShouldBeStartedAndFinishedSuccessfully() {
-        throw new RuntimeException();
     }
 
     private static Iterator<Coordinate> createAreaIterator(AreaCoordinate areaCoordinate, double searchStep)
@@ -624,15 +620,4 @@ public final class StartingSearchingCitiesProcessServiceIT extends AbstractConte
         assertEquals(expected.getHandledPoints(), actual.getHandledPoints());
         assertSame(expected.getStatus(), actual.getStatus());
     }
-
-//    private static SearchingCitiesProcess createWithErrorStatus(SearchingCitiesProcess source) {
-//        return SearchingCitiesProcess.builder()
-//                .id(source.getId())
-//                .geometry(source.getGeometry())
-//                .searchStep(source.getSearchStep())
-//                .totalPoints(source.getTotalPoints())
-//                .handledPoints(source.getHandledPoints())
-//                .status(ERROR)
-//                .build();
-//    }
 }

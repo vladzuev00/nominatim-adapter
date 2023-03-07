@@ -16,7 +16,6 @@ import org.springframework.test.context.jdbc.Sql;
 import java.io.FileReader;
 import java.lang.reflect.Field;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
@@ -346,8 +345,6 @@ public final class MileageServiceIT extends AbstractContextTest {
             + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326)"
             + ")")
     public void case7WithoutLoadingBoundingBoxAndGeometries() {
-        this.loadCitiesBoundingBoxesAndGeometries();
-
         final MileageRequest givenMileageRequest = createMileageRequest(
                 List.of(
                         createTrackPoint(1.005F, 2.015F),
@@ -668,7 +665,8 @@ public final class MileageServiceIT extends AbstractContextTest {
     @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'First', "
             + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326), "
             + "'NOT_DEFINED', "
-            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326))")
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326)"
+            + ")")
     @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(256, 'Second', "
             + "ST_GeomFromText('POLYGON((2.01 1.005, 2 1.01, 2.02 1.025, 2.03 1.02, 2.01 1.005))', 4326), "
             + "'NOT_DEFINED', "
@@ -694,7 +692,8 @@ public final class MileageServiceIT extends AbstractContextTest {
     @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'First', "
             + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.01 1.01))', 4326), "
             + "'NOT_DEFINED', "
-            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326))")
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326)"
+            + ")")
     public void case15WithLoadingBoundingBoxAndGeometries() {
         this.loadCitiesBoundingBoxesAndGeometries();
 
@@ -715,7 +714,8 @@ public final class MileageServiceIT extends AbstractContextTest {
     @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'First', "
             + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.01 1.01))', 4326), "
             + "'NOT_DEFINED', "
-            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326))")
+            + "ST_GeomFromText('POLYGON((2.01 1.01, 2.01 1.02, 2.02 1.02, 2.02 1.01, 2.01 1.01))', 4326)"
+            + ")")
     public void case15WithoutLoadingBoundingBoxAndGeometries() {
         final MileageRequest givenMileageRequest = createMileageRequest(
                 List.of(
@@ -811,9 +811,7 @@ public final class MileageServiceIT extends AbstractContextTest {
         final List<TrackPoint> givenTrackPoints = this.readTrackPoints(FILE_NAME_WITH_THIRD_TRACK_POINTS);
         final MileageRequest givenMileageRequest = createMileageRequest(givenTrackPoints);
 
-        System.out.println(LocalDateTime.now());
         final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        System.out.println(LocalDateTime.now());
         final MileageResponse expected = new MileageResponse(1207.6871617415154,
                 1241.2063545061649);
         assertEquals(expected, actual);

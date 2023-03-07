@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,7 @@ import static org.testcontainers.utility.DockerImageName.parse;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ContextConfiguration(initializers = {AbstractContextTest.DBContainerInitializer.class})
+@DirtiesContext
 public abstract class AbstractContextTest {
     @SuppressWarnings("resource")
     public static PostgreSQLContainer<?> postgreSQLContainer

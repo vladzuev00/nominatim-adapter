@@ -63,7 +63,7 @@ public class SearchCityProcessControllerIT extends AbstractContextTest {
     @Transactional(propagation = NOT_SUPPORTED)
     @Sql(statements = "INSERT INTO searching_cities_process "
             + "(id, bounds, search_step, total_points, handled_points, status) "
-            + "VALUES(255, ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))'), 0.01, 10000, 1000, 'HANDLING')")
+            + "VALUES(255, ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326), 0.01, 10000, 1000, 'HANDLING')")
     @Sql(statements = "DELETE FROM searching_cities_process", executionPhase = AFTER_TEST_METHOD)
     public void processShouldBeFoundById() {
         final Long givenId = 255L;
@@ -100,16 +100,16 @@ public class SearchCityProcessControllerIT extends AbstractContextTest {
     @Transactional(propagation = NOT_SUPPORTED)
     @Sql(statements = "INSERT INTO searching_cities_process "
             + "(id, bounds, search_step, total_points, handled_points, status) "
-            + "VALUES(255, ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))'), 0.01, 10000, 1000, 'HANDLING')")
+            + "VALUES(255, ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326), 0.01, 10000, 1000, 'HANDLING')")
     @Sql(statements = "INSERT INTO searching_cities_process "
             + "(id, bounds, search_step, total_points, handled_points, status) "
-            + "VALUES(256, ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))'), 0.01, 10000, 1000, 'HANDLING')")
+            + "VALUES(256, ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326), 0.01, 10000, 1000, 'HANDLING')")
     @Sql(statements = "INSERT INTO searching_cities_process "
             + "(id, bounds, search_step, total_points, handled_points, status) "
-            + "VALUES(257, ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))'), 0.01, 10000, 10000, 'SUCCESS')")
+            + "VALUES(257, ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326), 0.01, 10000, 10000, 'SUCCESS')")
     @Sql(statements = "INSERT INTO searching_cities_process "
             + "(id, bounds, search_step, total_points, handled_points, status) "
-            + "VALUES(258, ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))'), 0.01, 10000, 5000, 'ERROR')")
+            + "VALUES(258, ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326), 0.01, 10000, 5000, 'ERROR')")
     @Sql(statements = "DELETE FROM searching_cities_process", executionPhase = AFTER_TEST_METHOD)
     public void processesShouldBeFoundByStatus() {
         final int givenPageNumber = 0;

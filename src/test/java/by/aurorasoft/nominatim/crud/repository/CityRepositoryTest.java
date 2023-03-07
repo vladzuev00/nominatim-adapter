@@ -28,7 +28,8 @@ public final class CityRepositoryTest extends AbstractContextTest {
 
     @Test
     @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'Minsk', "
-            + "ST_GeomFromText('POLYGON((1 1, 2 1, 2 2, 1 1))', 4326), 'CAPITAL', "
+            + "ST_GeomFromText('POLYGON((1 1, 2 1, 2 2, 1 1))', 4326), "
+            + "'CAPITAL', "
             + "ST_GeomFromText('POLYGON((1 1, 2 1, 2 2, 1 2, 1 1))', 4326)"
             + ")")
     public void cityShouldBeFoundById() {
@@ -89,7 +90,7 @@ public final class CityRepositoryTest extends AbstractContextTest {
     @Test
     @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'First', "
             + "ST_GeomFromText('POLYGON((1 1, 2 1, 2 2, 1 1))', 4326), "
-            + "'CAPITAL',"
+            + "'CAPITAL', "
             + "ST_GeomFromText('POLYGON((1 1, 2 1, 2 2, 1 2, 1 1))', 4326)"
             + ")")
     @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(256, 'Second', "
