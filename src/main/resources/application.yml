@@ -2,7 +2,7 @@ spring:
   application:
     name: cities-searcher
   datasource:
-    url: jdbc:postgresql://localhost:5432/nominatim
+    url: jdbc:postgresql://localhost:5432/nominatim_adapter
     username: postgres
     password: root
     driver-class-name: org.postgresql.Driver
