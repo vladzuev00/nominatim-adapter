@@ -1,0 +1,18 @@
+databaseChangeLog:
+    - changeSet:
+        id: create_city_and_searching_city_process_tables
+        author: Vlad Zuev
+        changes:
+            - sqlFile:
+                dbms: postgresql
+                encoding: utf8
+                endDelimiter: \n/\s*\n|\n/\s*$
+                path: changelog/scripts/create_city_and_searching_city_process_tables.sql
+                relativeToChangelogFile: true
+                splitStatements: true
+                stripComments: true
+
+
+
+
+

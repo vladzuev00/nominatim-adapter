@@ -18,6 +18,8 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  liquibase:
+    changeLog: classpath:db/db.changelog-master.yaml
 
 search-cities:
   amount-handled-points-to-save-state: 2
