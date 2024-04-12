@@ -15,10 +15,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
 
 @Entity
 @Table(name = "city")
-@TypeDef(
-        name = "pgsql_enum",
-        typeClass = PostgreSQLEnumType.class
-)
+@TypeDef(name = "pgsql_enum", typeClass = PostgreSQLEnumType.class)
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
