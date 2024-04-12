@@ -23,10 +23,9 @@ import static org.junit.Assert.assertEquals;
 import static org.testcontainers.utility.DockerImageName.parse;
 
 @Transactional
-@RunWith(SpringRunner.class)
 @SpringBootTest
+@RunWith(SpringRunner.class)
 @ContextConfiguration(initializers = {AbstractSpringBootTest.DBContainerInitializer.class})
-@DirtiesContext
 public abstract class AbstractSpringBootTest {
     @SuppressWarnings("resource")
     public static PostgreSQLContainer<?> postgreSQLContainer
