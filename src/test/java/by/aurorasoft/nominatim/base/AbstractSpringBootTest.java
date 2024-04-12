@@ -43,13 +43,9 @@ public abstract class AbstractSpringBootTest {
         queryInterceptor.startQueryCount();
     }
 
-    protected final Long getQueryCount() {
-        return queryInterceptor.getQueryCount();
-    }
-
     protected final void checkQueryCount(final int expected) {
         entityManager.flush();
         log.info("======================= FINISH QUERY COUNTER ====================================");
-        assertEquals("wrong count of queries", Long.valueOf(expected), getQueryCount());
+        assertEquals("wrong count of queries", Long.valueOf(expected), queryInterceptor.getQueryCount());
     }
 }
