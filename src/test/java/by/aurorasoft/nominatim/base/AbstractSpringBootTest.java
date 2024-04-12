@@ -1,80 +1,55 @@
 package by.aurorasoft.nominatim.base;
 
+import by.aurorasoft.nominatim.base.containerinitializer.DataBaseContainerInitializer;
 import com.yannbriancon.interceptor.HibernateQueryInterceptor;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.util.TestPropertyValues;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.containers.PostgreSQLContainer;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import static java.time.ZoneOffset.UTC;
 import static java.util.TimeZone.getTimeZone;
 import static java.util.TimeZone.setDefault;
 import static org.junit.Assert.assertEquals;
-import static org.testcontainers.utility.DockerImageName.parse;
 
+@Slf4j
 @Transactional
 @SpringBootTest
 @RunWith(SpringRunner.class)
-@ContextConfiguration(initializers = {AbstractSpringBootTest.DBContainerInitializer.class})
+@ContextConfiguration(initializers = DataBaseContainerInitializer.class)
 public abstract class AbstractSpringBootTest {
-    @SuppressWarnings("resource")
-    public static PostgreSQLContainer<?> postgreSQLContainer
-            = new PostgreSQLContainer<>(
-                    parse("mdillon/postgis:9.5")
-                            .asCompatibleSubstituteFor("postgres"))
-            .withDatabaseName("integration-tests-db")
-            .withUsername("sa")
-            .withPassword("sa");
-
-    static {
-        postgreSQLContainer.start();
-    }
 
     @PersistenceContext
     protected EntityManager entityManager;
 
     @Autowired
-    protected HibernateQueryInterceptor queryInterceptor;
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    private HibernateQueryInterceptor queryInterceptor;
 
     @BeforeClass
     public static void setDefaultTimeZone() {
-        setDefault(getTimeZone("UTC"));
+        setDefault(getTimeZone(UTC));
     }
 
     protected final void startQueryCount() {
-        System.out.println("======================= START QUERY COUNTER ====================================");
-        this.queryInterceptor.startQueryCount();
+        log.info("======================= START QUERY COUNTER ====================================");
+        queryInterceptor.startQueryCount();
     }
 
     protected final Long getQueryCount() {
-        return this.queryInterceptor.getQueryCount();
+        return queryInterceptor.getQueryCount();
     }
 
-    protected final void checkQueryCount(int expected) {
-        this.entityManager.flush();
-        System.out.println("======================= FINISH QUERY COUNTER ====================================");
-        assertEquals("wrong count of queries", Long.valueOf(expected), this.getQueryCount());
-    }
-
-    static class DBContainerInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-
-        @Override
-        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-            TestPropertyValues.of(
-                    "spring.datasource.url=" + postgreSQLContainer.getJdbcUrl(),
-                    "spring.datasource.username=" + postgreSQLContainer.getUsername(),
-                    "spring.datasource.password=" + postgreSQLContainer.getPassword()
-            ).applyTo(configurableApplicationContext.getEnvironment());
-        }
+    protected final void checkQueryCount(final int expected) {
+        entityManager.flush();
+        log.info("======================= FINISH QUERY COUNTER ====================================");
+        assertEquals("wrong count of queries", Long.valueOf(expected), getQueryCount());
     }
 }
