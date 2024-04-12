@@ -3,8 +3,10 @@ package by.aurorasoft.nominatim.crud.mapper;
 import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import by.aurorasoft.nominatim.crud.model.dto.SearchingCitiesProcess;
 import by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity;
+import by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity.Status;
 import org.junit.Test;
 import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -13,6 +15,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
 public final class SearchingCitiesProcessMapperTest extends AbstractSpringBootTest {
+    private static final Coordinate[] GIVEN_GEOMETRY_COORDINATES = new Coordinate[]{
+            new Coordinate(1, 2),
+            new Coordinate(2, 3),
+            new Coordinate(3, 4),
+            new Coordinate(4, 5),
+            new Coordinate(1, 2)
+    };
 
     @Autowired
     private SearchingCitiesProcessMapper mapper;
@@ -22,63 +31,68 @@ public final class SearchingCitiesProcessMapperTest extends AbstractSpringBootTe
 
     @Test
     public void dtoShouldBeMappedToEntity() {
-        final Coordinate[] givenGeometryCoordinates = createGeometryCoordinates();
+        final Long givenId = 255L;
+        final Geometry givenGeometry = createGivenGeometry();
+        final double givenSearchStep = 0.01;
+        final long givenTotalPoints = 100;
+        final long givenHandledPoints = 50;
+        final Status givenStatus = SUCCESS;
         final SearchingCitiesProcess givenDto = SearchingCitiesProcess.builder()
-                .id(255L)
-                .geometry(this.geometryFactory.createPolygon(givenGeometryCoordinates))
-                .searchStep(0.01)
-                .totalPoints(100)
-                .handledPoints(50)
-                .status(SUCCESS)
+                .id(givenId)
+                .geometry(givenGeometry)
+                .searchStep(givenSearchStep)
+                .totalPoints(givenTotalPoints)
+                .handledPoints(givenHandledPoints)
+                .status(givenStatus)
                 .build();
 
-        final SearchingCitiesProcessEntity actual = this.mapper.toEntity(givenDto);
+        final SearchingCitiesProcessEntity actual = mapper.toEntity(givenDto);
         final SearchingCitiesProcessEntity expected = SearchingCitiesProcessEntity.builder()
-                .id(255L)
-                .geometry(this.geometryFactory.createPolygon(givenGeometryCoordinates))
-                .searchStep(0.01)
-                .totalPoints(100)
-                .handledPoints(50)
-                .status(SUCCESS)
+                .id(givenId)
+                .geometry(givenGeometry)
+                .searchStep(givenSearchStep)
+                .totalPoints(givenTotalPoints)
+                .handledPoints(givenHandledPoints)
+                .status(givenStatus)
                 .build();
         checkEquals(expected, actual);
     }
 
     @Test
     public void entityShouldBeMappedToDto() {
-        final Coordinate[] givenGeometryCoordinates = createGeometryCoordinates();
+        final Long givenId = 255L;
+        final Geometry givenGeometry = createGivenGeometry();
+        final double givenSearchStep = 0.01;
+        final long givenTotalPoints = 100;
+        final long givenHandledPoints = 50;
+        final Status givenStatus = SUCCESS;
         final SearchingCitiesProcessEntity givenEntity = SearchingCitiesProcessEntity.builder()
-                .id(255L)
-                .geometry(this.geometryFactory.createPolygon(givenGeometryCoordinates))
-                .searchStep(0.01)
-                .totalPoints(100)
-                .handledPoints(50)
-                .status(SUCCESS)
+                .id(givenId)
+                .geometry(givenGeometry)
+                .searchStep(givenSearchStep)
+                .totalPoints(givenTotalPoints)
+                .handledPoints(givenHandledPoints)
+                .status(givenStatus)
                 .build();
 
-        final SearchingCitiesProcess actual = this.mapper.toDto(givenEntity);
+        final SearchingCitiesProcess actual = mapper.toDto(givenEntity);
         final SearchingCitiesProcess expected = SearchingCitiesProcess.builder()
-                .id(255L)
-                .geometry(this.geometryFactory.createPolygon(givenGeometryCoordinates))
-                .searchStep(0.01)
-                .totalPoints(100)
-                .handledPoints(50)
-                .status(SUCCESS)
+                .id(givenId)
+                .geometry(givenGeometry)
+                .searchStep(givenSearchStep)
+                .totalPoints(givenTotalPoints)
+                .handledPoints(givenHandledPoints)
+                .status(givenStatus)
                 .build();
         assertEquals(expected, actual);
     }
 
-    private static Coordinate[] createGeometryCoordinates() {
-        return new Coordinate[]{
-                new Coordinate(1, 2),
-                new Coordinate(2, 3),
-                new Coordinate(3, 4),
-                new Coordinate(4, 5),
-                new Coordinate(1, 2)
-        };
+    private Geometry createGivenGeometry() {
+        return geometryFactory.createPolygon(GIVEN_GEOMETRY_COORDINATES);
     }
 
-    private static void checkEquals(SearchingCitiesProcessEntity expected, SearchingCitiesProcessEntity actual) {
+    private static void checkEquals(final SearchingCitiesProcessEntity expected,
+                                    final SearchingCitiesProcessEntity actual) {
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getGeometry(), actual.getGeometry());
         assertEquals(expected.getSearchStep(), actual.getSearchStep(), 0.);

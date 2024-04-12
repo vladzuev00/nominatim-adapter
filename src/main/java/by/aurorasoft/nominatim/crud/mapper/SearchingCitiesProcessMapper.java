@@ -7,16 +7,21 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class SearchingCitiesProcessMapper
-        extends AbsMapperEntityDto<SearchingCitiesProcessEntity, SearchingCitiesProcess> {
+public final class SearchingCitiesProcessMapper extends AbsMapperEntityDto<SearchingCitiesProcessEntity, SearchingCitiesProcess> {
 
-    public SearchingCitiesProcessMapper(ModelMapper modelMapper) {
+    public SearchingCitiesProcessMapper(final ModelMapper modelMapper) {
         super(modelMapper, SearchingCitiesProcessEntity.class, SearchingCitiesProcess.class);
     }
 
     @Override
-    protected SearchingCitiesProcess create(SearchingCitiesProcessEntity entity) {
-        return new SearchingCitiesProcess(entity.getId(), entity.getGeometry(), entity.getSearchStep(),
-                entity.getTotalPoints(), entity.getHandledPoints(), entity.getStatus());
+    protected SearchingCitiesProcess create(final SearchingCitiesProcessEntity entity) {
+        return new SearchingCitiesProcess(
+                entity.getId(),
+                entity.getGeometry(),
+                entity.getSearchStep(),
+                entity.getTotalPoints(),
+                entity.getHandledPoints(),
+                entity.getStatus()
+        );
     }
 }

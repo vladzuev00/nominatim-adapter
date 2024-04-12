@@ -77,7 +77,7 @@ public final class CityMapperTest extends AbstractSpringBootTest {
                 .boundingBox(givenBoundingBox)
                 .build();
 
-        final City actual = this.mapper.toDto(givenEntity);
+        final City actual = mapper.toDto(givenEntity);
         final City expected = City.builder()
                 .id(givenId)
                 .name(givenName)
