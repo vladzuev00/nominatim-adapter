@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.crud.repository;
 
-import by.aurorasoft.nominatim.base.AbstractContextTest;
+import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity;
 import org.junit.Test;
 import org.locationtech.jts.geom.Coordinate;
@@ -17,7 +17,7 @@ import static by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEn
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.*;
 
-public final class SearchingCitiesProcessRepositoryTest extends AbstractContextTest {
+public final class SearchingCitiesProcessRepositoryTest extends AbstractSpringBootTest {
 
     @Autowired
     private SearchingCitiesProcessRepository repository;

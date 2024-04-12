@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.service.mileage;
 
-import by.aurorasoft.nominatim.base.AbstractContextTest;
+import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import by.aurorasoft.nominatim.crud.service.CityService;
 import by.aurorasoft.nominatim.rest.model.MileageRequest;
 import by.aurorasoft.nominatim.rest.model.MileageRequest.TrackPoint;
@@ -29,7 +29,7 @@ import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 
-public final class MileageServiceIT extends AbstractContextTest {
+public final class MileageServiceIT extends AbstractSpringBootTest {
     private static final String FIELD_NAME_CITIES_GEOMETRIES_BY_BOUNDING_BOX = "citiesGeometriesByBoundingBoxes";
 
     private static final String FOLDER_PATH_WITH_TRACK_POINTS = "./src/test/resources/tracks";

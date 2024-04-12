@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.service.mileage;
 
-import by.aurorasoft.nominatim.base.AbstractContextTest;
+import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import by.nhorushko.distancecalculator.LatLngAlt;
 import by.nhorushko.distancecalculator.LatLngAltImpl;
 import org.junit.Test;
@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 
 import static org.junit.Assert.assertEquals;
 
-public final class GeometryCreatingServiceTest extends AbstractContextTest {
+public final class GeometryCreatingServiceTest extends AbstractSpringBootTest {
     private static final Supplier<Instant> LAT_LNG_ALT_DATE_TIME_SUPPLIER = Instant::now;
     private static final int LAT_LNG_ALT_ALTITUDE = 15;
     private static final int LAT_LNG_ALT_SPEED = 10;

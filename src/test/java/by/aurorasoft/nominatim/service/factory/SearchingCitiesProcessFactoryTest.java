@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.service.factory;
 
-import by.aurorasoft.nominatim.base.AbstractContextTest;
+import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import by.aurorasoft.nominatim.crud.model.dto.AreaCoordinate;
 import by.aurorasoft.nominatim.crud.model.dto.Coordinate;
 import by.aurorasoft.nominatim.crud.model.dto.SearchingCitiesProcess;
@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity.Status.HANDLING;
 import static org.junit.Assert.assertEquals;
 
-public final class SearchingCitiesProcessFactoryTest extends AbstractContextTest {
+public final class SearchingCitiesProcessFactoryTest extends AbstractSpringBootTest {
 
     @Autowired
     private SearchingCitiesProcessFactory processFactory;

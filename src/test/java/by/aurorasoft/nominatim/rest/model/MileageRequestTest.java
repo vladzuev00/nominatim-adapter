@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.rest.model;
 
-import by.aurorasoft.nominatim.base.AbstractContextTest;
+import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import by.aurorasoft.nominatim.rest.model.MileageRequest.TrackPoint;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 
@@ -19,7 +18,7 @@ import static java.time.temporal.ChronoUnit.SECONDS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public final class MileageRequestTest extends AbstractContextTest {
+public final class MileageRequestTest extends AbstractSpringBootTest {
 
     @Autowired
     private Validator validator;

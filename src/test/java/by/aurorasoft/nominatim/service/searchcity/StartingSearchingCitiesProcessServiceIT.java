@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.service.searchcity;
 
-import by.aurorasoft.nominatim.base.AbstractContextTest;
+import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import by.aurorasoft.nominatim.crud.model.dto.*;
 import by.aurorasoft.nominatim.crud.model.dto.NominatimReverseResponse.ExtraTags;
 import by.aurorasoft.nominatim.crud.model.entity.CityEntity;
@@ -44,7 +44,7 @@ import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.web.util.UriComponentsBuilder.fromUriString;
 
-public final class StartingSearchingCitiesProcessServiceIT extends AbstractContextTest {
+public final class StartingSearchingCitiesProcessServiceIT extends AbstractSpringBootTest {
     private static final String CLASS_NAME_AREA_ITERATOR
             = "by.aurorasoft.nominatim.service.searchcity.StartingSearchingCitiesProcessService$AreaIterator";
     private static final String CLASS_NAME_SUB_AREA_ITERATOR

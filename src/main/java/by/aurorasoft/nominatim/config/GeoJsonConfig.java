@@ -14,7 +14,7 @@ public class GeoJsonConfig {
     }
 
     @Bean
-    public GeoJSONWriter geoJSONWriter() {
+    public GeoJSONWriter geoJsonWriter() {
         return new GeoJSONWriter();
     }
 }

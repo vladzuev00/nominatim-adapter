@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.crud.model.dto;
 
-import by.aurorasoft.nominatim.base.AbstractContextTest;
+import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
@@ -15,7 +15,7 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public final class CoordinateTest extends AbstractContextTest {
+public final class CoordinateTest extends AbstractSpringBootTest {
 
     @Autowired
     private Validator validator;

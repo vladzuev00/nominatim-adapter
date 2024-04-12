@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.rest.mapper;
 
-import by.aurorasoft.nominatim.base.AbstractContextTest;
+import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import by.aurorasoft.nominatim.crud.model.dto.City;
 import by.aurorasoft.nominatim.rest.model.CityPageResponse;
 import by.aurorasoft.nominatim.rest.model.CityRequest;
@@ -22,7 +22,7 @@ import static java.util.Arrays.deepEquals;
 import static java.util.stream.IntStream.range;
 import static org.junit.Assert.*;
 
-public final class CityControllerMapperTest extends AbstractContextTest {
+public final class CityControllerMapperTest extends AbstractSpringBootTest {
 
     @Autowired
     private CityControllerMapper mapper;

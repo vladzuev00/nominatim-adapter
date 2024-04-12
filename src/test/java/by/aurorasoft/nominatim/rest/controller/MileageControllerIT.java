@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.rest.controller;
 
-import by.aurorasoft.nominatim.base.AbstractContextTest;
+import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,7 +18,7 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TES
 import static org.springframework.transaction.annotation.Propagation.NOT_SUPPORTED;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-public class MileageControllerIT extends AbstractContextTest {
+public class MileageControllerIT extends AbstractSpringBootTest {
     private static final String CONTROLLER_URL = "/api/v1/mileage";
 
     @Autowired

@@ -25,9 +25,9 @@ import static org.testcontainers.utility.DockerImageName.parse;
 @Transactional
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ContextConfiguration(initializers = {AbstractContextTest.DBContainerInitializer.class})
+@ContextConfiguration(initializers = {AbstractSpringBootTest.DBContainerInitializer.class})
 @DirtiesContext
-public abstract class AbstractContextTest {
+public abstract class AbstractSpringBootTest {
     @SuppressWarnings("resource")
     public static PostgreSQLContainer<?> postgreSQLContainer
             = new PostgreSQLContainer<>(

@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.crud.service;
 
-import by.aurorasoft.nominatim.base.AbstractContextTest;
+import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import by.aurorasoft.nominatim.crud.model.dto.City;
 import org.junit.Test;
 import org.locationtech.jts.geom.*;
@@ -15,7 +15,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.junit.Assert.*;
 
-public final class CityServiceTest extends AbstractContextTest {
+public final class CityServiceTest extends AbstractSpringBootTest {
 
     @Autowired
     private CityService service;

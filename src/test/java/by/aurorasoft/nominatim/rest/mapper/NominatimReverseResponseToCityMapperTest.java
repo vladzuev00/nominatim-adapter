@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.rest.mapper;
 
-import by.aurorasoft.nominatim.base.AbstractContextTest;
+import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import by.aurorasoft.nominatim.crud.model.dto.City;
 import by.aurorasoft.nominatim.crud.model.dto.NominatimReverseResponse;
 import by.aurorasoft.nominatim.crud.model.dto.NominatimReverseResponse.ExtraTags;
@@ -12,7 +12,7 @@ import org.wololo.jts2geojson.GeoJSONReader;
 import static by.aurorasoft.nominatim.crud.model.entity.CityEntity.Type.*;
 import static org.junit.Assert.assertEquals;
 
-public final class NominatimReverseResponseToCityMapperTest extends AbstractContextTest {
+public final class NominatimReverseResponseToCityMapperTest extends AbstractSpringBootTest {
 
     @Autowired
     private NominatimReverseResponseToCityMapper mapper;

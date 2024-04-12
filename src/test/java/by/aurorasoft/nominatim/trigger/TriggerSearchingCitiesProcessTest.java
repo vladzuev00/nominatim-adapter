@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.trigger;
 
-import by.aurorasoft.nominatim.base.AbstractContextTest;
+import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 import static org.springframework.transaction.annotation.Propagation.NOT_SUPPORTED;
 
-public final class TriggerSearchingCitiesProcessTest extends AbstractContextTest {
+public final class TriggerSearchingCitiesProcessTest extends AbstractSpringBootTest {
     private static final String SQL_QUERY_TO_FIND_PROCESS_UPDATED_TIME
             = "SELECT updated_time FROM searching_cities_process WHERE id = :id";
     private static final String SQL_QUERY_TO_INCREASE_PROCESS_HANDLED_POINTS

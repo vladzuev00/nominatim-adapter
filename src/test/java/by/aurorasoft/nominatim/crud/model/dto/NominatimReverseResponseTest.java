@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.crud.model.dto;
 
-import by.aurorasoft.nominatim.base.AbstractContextTest;
+import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import by.aurorasoft.nominatim.crud.model.dto.NominatimReverseResponse.ExtraTags;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.Assert.assertEquals;
 
-public final class NominatimReverseResponseTest extends AbstractContextTest {
+public final class NominatimReverseResponseTest extends AbstractSpringBootTest {
 
     @Autowired
     private ObjectMapper objectMapper;

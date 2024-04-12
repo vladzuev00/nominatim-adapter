@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.crud.repository;
 
-import by.aurorasoft.nominatim.base.AbstractContextTest;
+import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import by.aurorasoft.nominatim.crud.model.entity.CityEntity;
 import org.junit.Test;
 import org.locationtech.jts.geom.*;
@@ -16,7 +16,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.junit.Assert.*;
 
-public final class CityRepositoryTest extends AbstractContextTest {
+public final class CityRepositoryTest extends AbstractSpringBootTest {
     private static final String TUPLE_ALIAS_OF_BOUNDING_BOX = "boundingBox";
     private static final String TUPLE_ALIAS_OF_GEOMETRY = "geometry";
 

@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.rest.controller;
 
-import by.aurorasoft.nominatim.base.AbstractContextTest;
+import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import by.aurorasoft.nominatim.crud.model.dto.City;
 import by.aurorasoft.nominatim.crud.model.dto.SearchingCitiesProcess;
 import by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity.Status;
@@ -39,7 +39,7 @@ import static org.springframework.transaction.annotation.Propagation.NOT_SUPPORT
 import static org.springframework.web.util.UriComponentsBuilder.fromUriString;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-public class SearchCityProcessControllerIT extends AbstractContextTest {
+public class SearchCityProcessControllerIT extends AbstractSpringBootTest {
 
     private static final String CONTROLLER_URL = "/api/v1/searchCity";
     private static final String SLASH = "/";

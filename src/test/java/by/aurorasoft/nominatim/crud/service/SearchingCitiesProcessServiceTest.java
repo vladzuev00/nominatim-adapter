@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.crud.service;
 
-import by.aurorasoft.nominatim.base.AbstractContextTest;
+import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import by.aurorasoft.nominatim.crud.model.dto.SearchingCitiesProcess;
 import org.junit.Test;
 import org.locationtech.jts.geom.Coordinate;
@@ -17,7 +17,7 @@ import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public final class SearchingCitiesProcessServiceTest extends AbstractContextTest {
+public final class SearchingCitiesProcessServiceTest extends AbstractSpringBootTest {
 
     @Autowired
     private SearchingCitiesProcessService service;

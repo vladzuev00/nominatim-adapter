@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.rest.mapper;
 
-import by.aurorasoft.nominatim.base.AbstractContextTest;
+import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import by.aurorasoft.nominatim.crud.model.dto.SearchingCitiesProcess;
 import by.aurorasoft.nominatim.rest.model.SearchingCitiesProcessResponse;
 import org.junit.Test;
@@ -19,7 +19,7 @@ import static by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEn
 import static java.util.Arrays.deepEquals;
 import static org.junit.Assert.*;
 
-public final class SearchingCitiesProcessControllerMapperTest extends AbstractContextTest {
+public final class SearchingCitiesProcessControllerMapperTest extends AbstractSpringBootTest {
 
     @Autowired
     private SearchingCitiesProcessControllerMapper mapper;
