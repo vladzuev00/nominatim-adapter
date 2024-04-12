@@ -18,21 +18,35 @@ import static org.springframework.http.MediaType.ALL;
 public class RestTemplateConfig {
 
     @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
-        final MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        converter.setSupportedMediaTypes(singletonList(ALL));
-        converter.setObjectMapper(this.objectMapper());
-        restTemplateBuilder.additionalMessageConverters(converter);
-        return restTemplateBuilder.build();
+    public JtsModule jtsModule() {
+        return new JtsModule();
+    }
+
+    @Bean
+    public JavaTimeModule javaTimeModule() {
+        return new JavaTimeModule();
     }
 
     @Bean
     public ObjectMapper objectMapper() {
         final ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JtsModule());
-        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.registerModule(jtsModule());
+        objectMapper.registerModule(javaTimeModule());
         objectMapper.configure(WRITE_DATES_AS_TIMESTAMPS, false);
         objectMapper.configure(FAIL_ON_UNKNOWN_PROPERTIES, false);
         return objectMapper;
+    }
+
+    @Bean
+    public MappingJackson2HttpMessageConverter messageConverter() {
+        final MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+        converter.setSupportedMediaTypes(singletonList(ALL));
+        converter.setObjectMapper(objectMapper());
+        return converter;
+    }
+
+    @Bean
+    public RestTemplate restTemplate(final RestTemplateBuilder builder) {
+        return builder.additionalMessageConverters(messageConverter()).build();
     }
 }
