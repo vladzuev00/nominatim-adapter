@@ -2,8 +2,8 @@ package by.aurorasoft.nominatim.rest.mapper;
 
 import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import by.aurorasoft.nominatim.crud.model.dto.City;
-import by.aurorasoft.nominatim.crud.model.dto.NominatimReverseResponse;
-import by.aurorasoft.nominatim.crud.model.dto.NominatimReverseResponse.ExtraTags;
+import by.aurorasoft.nominatim.model.NominatimReverseResponse;
+import by.aurorasoft.nominatim.model.NominatimReverseResponse.ExtraTags;
 import org.junit.Test;
 import org.locationtech.jts.geom.Geometry;
 import org.springframework.beans.factory.annotation.Autowired;

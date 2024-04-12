@@ -1,9 +1,9 @@
 package by.aurorasoft.nominatim.service.nominatim;
 
 import by.aurorasoft.nominatim.config.RestTemplateConfig;
-import by.aurorasoft.nominatim.crud.model.dto.Coordinate;
-import by.aurorasoft.nominatim.crud.model.dto.NominatimReverseResponse;
-import by.aurorasoft.nominatim.crud.model.dto.NominatimReverseResponse.ExtraTags;
+import by.aurorasoft.nominatim.model.Coordinate;
+import by.aurorasoft.nominatim.model.NominatimReverseResponse;
+import by.aurorasoft.nominatim.model.NominatimReverseResponse.ExtraTags;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jetbrains.annotations.NotNull;

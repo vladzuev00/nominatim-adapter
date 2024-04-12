@@ -1,7 +1,7 @@
 package by.aurorasoft.nominatim.service.factory;
 
-import by.aurorasoft.nominatim.crud.model.dto.AreaCoordinate;
-import by.aurorasoft.nominatim.crud.model.dto.Coordinate;
+import by.aurorasoft.nominatim.model.AreaCoordinate;
+import by.aurorasoft.nominatim.model.Coordinate;
 import by.aurorasoft.nominatim.crud.model.dto.SearchingCitiesProcess;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.CoordinateXY;

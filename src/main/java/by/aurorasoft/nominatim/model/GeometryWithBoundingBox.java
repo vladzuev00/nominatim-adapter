@@ -1,4 +1,4 @@
-package by.aurorasoft.nominatim.crud.model.dto;
+package by.aurorasoft.nominatim.model;
 
 import lombok.Value;
 import org.locationtech.jts.geom.Geometry;

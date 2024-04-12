@@ -12,7 +12,7 @@ public abstract class BaseEntity<IdType> implements AbstractEntity<IdType> {
 
     @Override
     @SuppressWarnings({"unchecked", "EqualsWhichDoesntCheckParameterClass"})
-    public final boolean equals(Object otherObject) {
+    public final boolean equals(final Object otherObject) {
         if (this == otherObject) {
             return true;
         }
@@ -23,16 +23,11 @@ public abstract class BaseEntity<IdType> implements AbstractEntity<IdType> {
             return false;
         }
         final BaseEntity<IdType> other = (BaseEntity<IdType>) otherObject;
-        return Objects.equals(this.getId(), other.getId());
+        return Objects.equals(getId(), other.getId());
     }
 
     @Override
     public final int hashCode() {
-        return hash(this.getId());
-    }
-
-    @Override
-    public String toString() {
-        return this.getClass().getName() + "[id = " + this.getId() + "]";
+        return hash(getId());
     }
 }

@@ -1,7 +1,7 @@
 package by.aurorasoft.nominatim.service.nominatim;
 
-import by.aurorasoft.nominatim.crud.model.dto.Coordinate;
-import by.aurorasoft.nominatim.crud.model.dto.NominatimReverseResponse;
+import by.aurorasoft.nominatim.model.Coordinate;
+import by.aurorasoft.nominatim.model.NominatimReverseResponse;
 import by.aurorasoft.nominatim.service.nominatim.exception.NominatimClientException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;

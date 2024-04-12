@@ -1,9 +1,9 @@
 package by.aurorasoft.nominatim.service.searchcity;
 
 import by.aurorasoft.nominatim.crud.model.dto.City;
-import by.aurorasoft.nominatim.crud.model.dto.Coordinate;
-import by.aurorasoft.nominatim.crud.model.dto.NominatimReverseResponse;
-import by.aurorasoft.nominatim.crud.model.dto.NominatimReverseResponse.ExtraTags;
+import by.aurorasoft.nominatim.model.Coordinate;
+import by.aurorasoft.nominatim.model.NominatimReverseResponse;
+import by.aurorasoft.nominatim.model.NominatimReverseResponse.ExtraTags;
 import by.aurorasoft.nominatim.service.nominatim.NominatimService;
 import by.aurorasoft.nominatim.rest.mapper.NominatimReverseResponseToCityMapper;
 import org.junit.Before;

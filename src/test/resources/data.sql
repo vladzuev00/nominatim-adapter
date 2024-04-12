@@ -1,0 +1,1 @@
+INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'test-city', ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326), 'CAPITAL', ST_Envelope(ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326)))

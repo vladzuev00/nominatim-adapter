@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.service.searchcity;
 
-import by.aurorasoft.nominatim.crud.model.dto.AreaCoordinate;
+import by.aurorasoft.nominatim.model.AreaCoordinate;
 import by.aurorasoft.nominatim.crud.model.dto.City;
 import by.aurorasoft.nominatim.crud.model.dto.SearchingCitiesProcess;
 import by.aurorasoft.nominatim.crud.service.CityService;

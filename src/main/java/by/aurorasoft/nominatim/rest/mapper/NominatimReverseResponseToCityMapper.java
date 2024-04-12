@@ -1,8 +1,8 @@
 package by.aurorasoft.nominatim.rest.mapper;
 
 import by.aurorasoft.nominatim.crud.model.dto.City;
-import by.aurorasoft.nominatim.crud.model.dto.NominatimReverseResponse;
-import by.aurorasoft.nominatim.crud.model.dto.NominatimReverseResponse.ExtraTags;
+import by.aurorasoft.nominatim.model.NominatimReverseResponse;
+import by.aurorasoft.nominatim.model.NominatimReverseResponse.ExtraTags;
 import by.aurorasoft.nominatim.crud.model.entity.CityEntity.Type;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Geometry;

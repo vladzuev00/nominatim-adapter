@@ -2,11 +2,14 @@ package by.aurorasoft.nominatim.service.searchcity;
 
 import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import by.aurorasoft.nominatim.crud.model.dto.*;
-import by.aurorasoft.nominatim.crud.model.dto.NominatimReverseResponse.ExtraTags;
+import by.aurorasoft.nominatim.model.NominatimReverseResponse;
+import by.aurorasoft.nominatim.model.NominatimReverseResponse.ExtraTags;
 import by.aurorasoft.nominatim.crud.model.entity.CityEntity;
 import by.aurorasoft.nominatim.crud.model.entity.CityEntity.Type;
 import by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity;
 import by.aurorasoft.nominatim.crud.service.SearchingCitiesProcessService;
+import by.aurorasoft.nominatim.model.AreaCoordinate;
+import by.aurorasoft.nominatim.model.Coordinate;
 import by.aurorasoft.nominatim.service.exception.FindingCitiesException;
 import org.junit.Test;
 import org.locationtech.jts.geom.CoordinateXY;

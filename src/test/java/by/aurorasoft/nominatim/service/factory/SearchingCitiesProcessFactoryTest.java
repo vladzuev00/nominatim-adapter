@@ -1,8 +1,8 @@
 package by.aurorasoft.nominatim.service.factory;
 
 import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
-import by.aurorasoft.nominatim.crud.model.dto.AreaCoordinate;
-import by.aurorasoft.nominatim.crud.model.dto.Coordinate;
+import by.aurorasoft.nominatim.model.AreaCoordinate;
+import by.aurorasoft.nominatim.model.Coordinate;
 import by.aurorasoft.nominatim.crud.model.dto.SearchingCitiesProcess;
 import org.junit.Test;
 import org.locationtech.jts.geom.CoordinateXY;

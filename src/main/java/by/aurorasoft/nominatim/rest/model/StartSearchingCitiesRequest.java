@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.rest.model;
 
-import by.aurorasoft.nominatim.crud.model.dto.AreaCoordinate;
+import by.aurorasoft.nominatim.model.AreaCoordinate;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
