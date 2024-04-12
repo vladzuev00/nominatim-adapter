@@ -30,7 +30,7 @@ public class StartingSearchingCitiesProcessService {
 
     public StartingSearchingCitiesProcessService(SearchCityService searchCityService,
                                                  EventHandlingSearchCityProcessService eventHandlingSearchCityProcessService,
-                                                 @Qualifier("executorServiceToSearchCities") ExecutorService executorService,
+                                                 @Qualifier("executorServiceSearchingCities") ExecutorService executorService,
                                                  @Value("${search-cities.amount-handled-points-to-save-state}") int amountHandledPointsToSaveState) {
         this.searchCityService = searchCityService;
         this.eventHandlingSearchCityProcessService = eventHandlingSearchCityProcessService;

@@ -8,10 +8,10 @@ import java.util.concurrent.ExecutorService;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 
 @Configuration
-public class SearchCitiesConfig {
+public class SearchingCitiesConfig {
 
     @Bean
-    public ExecutorService executorServiceToSearchCities() {
+    public ExecutorService executorServiceSearchingCities() {
         return newSingleThreadExecutor();
     }
 }
