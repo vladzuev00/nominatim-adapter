@@ -60,7 +60,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <org.postgresql.version>42.5.1</org.postgresql.version>
+    <org.postgresql.version>42.7.2</org.postgresql.version>
     <org.n52.jackson.version>1.2.10</org.n52.jackson.version>
     <com.github.NikolayNN.crud-generic.version>
       9.0
