@@ -39,9 +39,13 @@ public final class MileageServiceIT extends AbstractContextTest {
     private static final String FILE_NAME_WITH_SECOND_TRACK_POINTS = "track_460_64000.csv";
     private static final String FILE_NAME_WITH_THIRD_TRACK_POINTS = "track_460_131000.csv";
     private static final String FILE_NAME_WITH_FOURTH_TRACK_POINTS = "unit_460_13000.csv";
+    //TODO: add 1 case
+    private static final String FILE_NAME_WITH_FIFTH_TRACK_POINTS = "track-minsk-8.25_km.csv";
+    //TODO: add 2 case
+    private static final String FILE_NAME_WITH_SIXTH_TRACK_POINTS = "2907_track-total_10.53_kobrin_2.9_country_7.63.csv";
 
     private static final int MIN_DETECTION_SPEED = 0;
-    private static final int MAX_MESSAGE_TIMEOUT = 10;
+    private static final int MAX_MESSAGE_TIMEOUT = 30;
 
     private static final int TRACK_POINT_ALTITUDE = 15;
     private static final int TRACK_POINT_SPEED = 15;
@@ -840,7 +844,7 @@ public final class MileageServiceIT extends AbstractContextTest {
 
     @Test
     @Sql("classpath:sql/insert-belarus-city.sql")
-    public void mileageShouldBeCalculatedByForFourthTrackPointsWithLoadingCitiesBoundingBoxesAndGeometries()
+    public void mileageShouldBeCalculatedForFourthTrackPointsWithLoadingCitiesBoundingBoxesAndGeometries()
             throws Exception {
         this.loadCitiesBoundingBoxesAndGeometries();
 
@@ -859,7 +863,7 @@ public final class MileageServiceIT extends AbstractContextTest {
 
     @Test
     @Sql("classpath:sql/insert-belarus-city.sql")
-    public void mileageShouldBeCalculatedByForFourthTrackPointsWithoutLoadingCitiesBoundingBoxesAndGeometries()
+    public void mileageShouldBeCalculatedForFourthTrackPointsWithoutLoadingCitiesBoundingBoxesAndGeometries()
             throws Exception {
         final List<TrackPoint> givenTrackPoints = this.readTrackPoints(FILE_NAME_WITH_FOURTH_TRACK_POINTS);
         final MileageRequest givenMileageRequest = createMileageRequest(givenTrackPoints);
@@ -867,6 +871,24 @@ public final class MileageServiceIT extends AbstractContextTest {
         final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
         final MileageResponse expected = new MileageResponse(125.27265649913504,
                 117.8709566688135);
+        assertEquals(expected, actual);
+
+        final double actualAllDistance = actual.getUrban() + actual.getCountry();
+        final double expectedAllDistance = this.findExpectedAllDistance(givenTrackPoints);
+        assertEquals(expectedAllDistance, actualAllDistance, ALLOWABLE_INACCURACY_OF_DISTANCE);
+    }
+
+    @Test
+    @Sql("classpath:sql/insert-belarus-city.sql")
+    public void mileageShouldBeCalculatedForFifthTrackPointsWithLoadingCitiesBoundingBoxesAndGeometries()
+            throws Exception {
+        this.loadCitiesBoundingBoxesAndGeometries();
+
+        final List<TrackPoint> givenTrackPoints = this.readTrackPoints(FILE_NAME_WITH_FIFTH_TRACK_POINTS);
+        final MileageRequest givenMileageRequest = createMileageRequest(givenTrackPoints);
+
+        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
+        final MileageResponse expected = new MileageResponse(0.7554422195522208, 0);
         assertEquals(expected, actual);
 
         final double actualAllDistance = actual.getUrban() + actual.getCountry();
