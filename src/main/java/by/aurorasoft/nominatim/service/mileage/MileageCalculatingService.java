@@ -11,11 +11,9 @@ import org.locationtech.jts.geom.prep.PreparedGeometry;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
-import static java.util.stream.Collectors.partitioningBy;
-import static java.util.stream.Collectors.summingDouble;
-import static java.util.stream.IntStream.rangeClosed;
+import static java.util.stream.Collectors.*;
+import static java.util.stream.IntStream.range;
 
 @Service
 @RequiredArgsConstructor
@@ -25,25 +23,26 @@ public final class MileageCalculatingService {
     private final DistanceCalculator distanceCalculator;
 
     public Mileage calculate(final Track track, final DistanceCalculatorSettings settings) {
-        final Map<Boolean, Double> mileagesByUrban = findMileagesByUrban(track, settings);
-        final double urban = mileagesByUrban.get(true);
-        final double country = mileagesByUrban.get(false);
-        return new Mileage(urban, country);
-    }
-
-    private Map<Boolean, Double> findMileagesByUrban(final Track track, final DistanceCalculatorSettings settings) {
         final List<PreparedGeometry> cityGeometries = trackCityGeometryLoader.load(track);
-        final int penultimatePointIndex = track.getPoints().size() - 2;
-        return rangeClosed(0, penultimatePointIndex)
-                .mapToObj(i -> getSlice(track, i, cityGeometries))
-                .collect(partitioningBy(TrackSlice::isUrban, summingDouble(slice -> calculateDistance(slice, settings))));
+        return range(0, getSliceCount(track))
+                .mapToObj(i -> getSlice(track, i))
+                .collect(
+                        collectingAndThen(
+                                partitioningBy(
+                                        slice -> geometryService.isAnyContain(cityGeometries, slice.second),
+                                        summingDouble(slice -> calculateDistance(slice, settings))
+                                ),
+                                mileagesByUrban -> new Mileage(mileagesByUrban.get(true), mileagesByUrban.get(false))
+                        )
+                );
     }
 
-    private TrackSlice getSlice(final Track track, final int index, final List<PreparedGeometry> cityGeometries) {
-        final TrackPoint first = track.getPoint(index);
-        final TrackPoint second = track.getPoint(index + 1);
-        final boolean urban = geometryService.isAnyContain(cityGeometries, second);
-        return new TrackSlice(first, second, urban);
+    private int getSliceCount(final Track track) {
+        return track.getPoints().size() - 1;
+    }
+
+    private TrackSlice getSlice(final Track track, final int index) {
+        return new TrackSlice(track.getPoint(index), track.getPoint(index + 1));
     }
 
     private double calculateDistance(final TrackSlice slice, final DistanceCalculatorSettings settings) {
@@ -54,6 +53,5 @@ public final class MileageCalculatingService {
     private static class TrackSlice {
         TrackPoint first;
         TrackPoint second;
-        boolean urban;
     }
 }
