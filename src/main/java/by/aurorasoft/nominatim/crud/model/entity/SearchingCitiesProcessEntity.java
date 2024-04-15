@@ -1,5 +1,6 @@
 package by.aurorasoft.nominatim.crud.model.entity;
 
+import by.aurorasoft.nominatim.model.SearchingCitiesProcessStatus;
 import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType;
 import lombok.*;
 import org.hibernate.annotations.Type;
@@ -45,9 +46,5 @@ public class SearchingCitiesProcessEntity extends BaseEntity<Long> {
     @Enumerated(STRING)
     @Column(name = "status")
     @Type(type = "pgsql_enum")
-    private Status status;
-
-    public enum Status {
-        HANDLING, SUCCESS, ERROR
-    }
+    private SearchingCitiesProcessStatus status;
 }
