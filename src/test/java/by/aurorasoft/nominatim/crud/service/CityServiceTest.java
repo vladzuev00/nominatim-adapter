@@ -216,7 +216,7 @@ public final class CityServiceTest extends AbstractSpringBootTest {
         });
 
         final List<PreparedGeometry> foundPreparedGeometries = this.service
-                .findPreparedGeometriesWhoseBoundingBoxIntersectedByLineString(givenLineString);
+                .findIntersectedPreparedGeometries(givenLineString);
         final List<Geometry> actual = foundPreparedGeometries.stream()
                 .map(PreparedGeometry::getGeometry)
                 .collect(toList());
@@ -264,7 +264,7 @@ public final class CityServiceTest extends AbstractSpringBootTest {
         });
 
         final List<PreparedGeometry> foundPreparedGeometries = this.service
-                .findPreparedGeometriesWhoseBoundingBoxIntersectedByLineString(givenLineString);
+                .findIntersectedPreparedGeometries(givenLineString);
         assertTrue(foundPreparedGeometries.isEmpty());
     }
 }

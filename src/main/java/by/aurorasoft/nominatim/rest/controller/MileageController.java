@@ -21,6 +21,7 @@ public class MileageController {
 
     @PostMapping
     public ResponseEntity<Mileage> findMileage(@Valid @RequestBody MileageRequest mileageRequest) {
-        return ok(this.mileageService.calculate(null, null));
+//        return ok(this.mileageService.calculate(null, null));
+        return null;
     }
 }

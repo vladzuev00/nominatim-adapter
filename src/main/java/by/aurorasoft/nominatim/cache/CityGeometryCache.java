@@ -10,5 +10,4 @@ import java.util.Map;
 @Getter
 public final class CityGeometryCache {
     private final Map<PreparedGeometry, PreparedGeometry> geometriesByBoundingBoxes;
-    private final boolean filled;
 }
