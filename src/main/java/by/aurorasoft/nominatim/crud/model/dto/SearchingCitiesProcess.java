@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.crud.model.dto;
 
-import by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity.Status;
+import by.aurorasoft.nominatim.model.SearchingCitiesProcessStatus;
 import by.nhorushko.crudgeneric.v2.domain.AbstractDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,5 +16,5 @@ public class SearchingCitiesProcess implements AbstractDto<Long> {
     double searchStep;
     long totalPoints;
     long handledPoints;
-    Status status;
+    SearchingCitiesProcessStatus status;
 }

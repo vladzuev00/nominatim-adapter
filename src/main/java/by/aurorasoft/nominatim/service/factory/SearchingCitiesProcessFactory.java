@@ -9,7 +9,7 @@ import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.stereotype.Component;
 
-import static by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity.Status.HANDLING;
+import static by.aurorasoft.nominatim.model.SearchingCitiesProcessStatus.HANDLING;
 import static java.math.BigDecimal.valueOf;
 import static java.math.RoundingMode.UP;
 

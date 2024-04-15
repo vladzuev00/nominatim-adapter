@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.rest.model;
 
-import by.aurorasoft.nominatim.crud.model.entity.CityEntity.Type;
+import by.aurorasoft.nominatim.model.CityType;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
@@ -25,12 +25,12 @@ public class CityRequest {
     Geometry geometry;
 
     @NotNull
-    Type type;
+    CityType type;
 
     @JsonCreator
     public CityRequest(@JsonProperty("name") String name,
                        @JsonProperty("geometry") Geometry geometry,
-                       @JsonProperty("type") Type type) {
+                       @JsonProperty("type") CityType type) {
         this.name = name;
         this.geometry = geometry;
         this.type = type;

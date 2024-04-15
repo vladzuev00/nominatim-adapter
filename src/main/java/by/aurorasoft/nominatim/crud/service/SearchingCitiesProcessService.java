@@ -3,8 +3,8 @@ package by.aurorasoft.nominatim.crud.service;
 import by.aurorasoft.nominatim.crud.mapper.SearchingCitiesProcessMapper;
 import by.aurorasoft.nominatim.crud.model.dto.SearchingCitiesProcess;
 import by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity;
-import by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity.Status;
 import by.aurorasoft.nominatim.crud.repository.SearchingCitiesProcessRepository;
+import by.aurorasoft.nominatim.model.SearchingCitiesProcessStatus;
 import by.nhorushko.crudgeneric.v2.service.AbsServiceCRUD;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +23,7 @@ public class SearchingCitiesProcessService
         super(mapper, repository);
     }
 
-    public void updateStatus(SearchingCitiesProcess process, Status newStatus) {
+    public void updateStatus(SearchingCitiesProcess process, SearchingCitiesProcessStatus newStatus) {
         super.repository.updateStatus(process.getId(), newStatus);
     }
 
@@ -32,7 +32,7 @@ public class SearchingCitiesProcessService
     }
 
     @Transactional(readOnly = true)
-    public List<SearchingCitiesProcess> findByStatus(Status status, int pageNumber, int pageSize) {
+    public List<SearchingCitiesProcess> findByStatus(SearchingCitiesProcessStatus status, int pageNumber, int pageSize) {
         final Pageable pageable = PageRequest.of(pageNumber, pageSize);
         final List<SearchingCitiesProcessEntity> foundEntities = super.repository.findByStatus(status, pageable);
         return super.mapper.toDtos(foundEntities);

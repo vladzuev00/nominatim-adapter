@@ -1,8 +1,8 @@
 package by.aurorasoft.nominatim.rest.controller;
 
 import by.aurorasoft.nominatim.crud.model.dto.SearchingCitiesProcess;
-import by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity.Status;
 import by.aurorasoft.nominatim.crud.service.SearchingCitiesProcessService;
+import by.aurorasoft.nominatim.model.SearchingCitiesProcessStatus;
 import by.aurorasoft.nominatim.rest.controller.exception.NoSuchEntityException;
 import by.aurorasoft.nominatim.rest.mapper.SearchingCitiesProcessControllerMapper;
 import by.aurorasoft.nominatim.rest.model.SearchingCitiesProcessPageResponse;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -47,7 +46,7 @@ public class SearchCityProcessController {
 
     @GetMapping
     public ResponseEntity<SearchingCitiesProcessPageResponse> findByStatus(
-            @RequestParam(name = "status") Status status,
+            @RequestParam(name = "status") SearchingCitiesProcessStatus status,
             @RequestParam(name = "pageNumber") @Min(0) @Max(10000) int pageNumber,
             @RequestParam(name = "pageSize") @Min(1) @Max(10000) int pageSize) {
         final List<SearchingCitiesProcess> foundProcesses = this.processService.findByStatus(

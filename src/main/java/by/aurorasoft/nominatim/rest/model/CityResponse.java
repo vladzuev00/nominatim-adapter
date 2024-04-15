@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.rest.model;
 
-import by.aurorasoft.nominatim.crud.model.entity.CityEntity.Type;
+import by.aurorasoft.nominatim.model.CityType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
@@ -16,5 +16,5 @@ public class CityResponse {
     Long id;
     String name;
     Geometry geometry;
-    Type type;
+    CityType type;
 }

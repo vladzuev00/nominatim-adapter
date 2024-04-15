@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.rest.model;
 
-import by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity.Status;
+import by.aurorasoft.nominatim.model.SearchingCitiesProcessStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
@@ -18,5 +18,5 @@ public class SearchingCitiesProcessResponse {
     double searchStep;
     long totalPoints;
     long handledPoints;
-    Status status;
+    SearchingCitiesProcessStatus status;
 }

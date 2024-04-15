@@ -1,16 +1,14 @@
 package by.aurorasoft.nominatim.rest.mapper;
 
 import by.aurorasoft.nominatim.crud.model.dto.City;
+import by.aurorasoft.nominatim.model.CityType;
 import by.aurorasoft.nominatim.model.NominatimReverseResponse;
 import by.aurorasoft.nominatim.model.NominatimReverseResponse.ExtraTags;
-import by.aurorasoft.nominatim.crud.model.entity.CityEntity.Type;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.stereotype.Component;
 import org.wololo.jts2geojson.GeoJSONReader;
-
-import static by.aurorasoft.nominatim.crud.model.entity.CityEntity.Type.*;
 
 @Component
 @RequiredArgsConstructor
@@ -32,8 +30,8 @@ public final class NominatimReverseResponseToCityMapper {
         return this.geoJSONReader.read(source.getGeojson(), this.geometryFactory);
     }
 
-    private static Type identifyCityType(NominatimReverseResponse source) {
+    private static CityType identifyCityType(NominatimReverseResponse source) {
         final ExtraTags extraTags = source.getExtratags();
-        return extraTags != null ? findByCapitalJsonValue(extraTags.getCapital()) : null;
+        return extraTags != null ? CityType.findByJsonValue(extraTags.getCapital()) : null;
     }
 }

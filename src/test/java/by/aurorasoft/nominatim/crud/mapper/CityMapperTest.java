@@ -3,7 +3,7 @@ package by.aurorasoft.nominatim.crud.mapper;
 import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import by.aurorasoft.nominatim.crud.model.dto.City;
 import by.aurorasoft.nominatim.crud.model.entity.CityEntity;
-import by.aurorasoft.nominatim.crud.model.entity.CityEntity.Type;
+import by.aurorasoft.nominatim.model.CityType;
 import org.junit.Test;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.CoordinateXY;
@@ -11,7 +11,7 @@ import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static by.aurorasoft.nominatim.crud.model.entity.CityEntity.Type.CAPITAL;
+import static by.aurorasoft.nominatim.model.CityType.CAPITAL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
@@ -41,7 +41,7 @@ public final class CityMapperTest extends AbstractSpringBootTest {
         final Long givenId = 255L;
         final String givenName = "city";
         final Geometry givenGeometry = createGivenGeometry();
-        final Type givenType = CAPITAL;
+        final CityType givenType = CAPITAL;
         final Geometry givenBoundingBox = createGivenBoundingBox();
         final City givenDto = City.builder()
                 .id(givenId)
@@ -67,7 +67,7 @@ public final class CityMapperTest extends AbstractSpringBootTest {
         final Long givenId = 255L;
         final String givenName = "city";
         final Geometry givenGeometry = createGivenGeometry();
-        final Type givenType = CAPITAL;
+        final CityType givenType = CAPITAL;
         final Geometry givenBoundingBox = createGivenBoundingBox();
         final CityEntity givenEntity = CityEntity.builder()
                 .id(givenId)

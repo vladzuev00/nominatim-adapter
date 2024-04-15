@@ -1,10 +1,10 @@
 package by.aurorasoft.nominatim.service.searchcity;
 
-import by.aurorasoft.nominatim.model.AreaCoordinate;
 import by.aurorasoft.nominatim.crud.model.dto.City;
 import by.aurorasoft.nominatim.crud.model.dto.SearchingCitiesProcess;
 import by.aurorasoft.nominatim.crud.service.CityService;
 import by.aurorasoft.nominatim.crud.service.SearchingCitiesProcessService;
+import by.aurorasoft.nominatim.model.AreaCoordinate;
 import by.aurorasoft.nominatim.service.factory.SearchingCitiesProcessFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 import java.util.List;
 
-import static by.aurorasoft.nominatim.crud.model.entity.SearchingCitiesProcessEntity.Status.*;
+import static by.aurorasoft.nominatim.model.SearchingCitiesProcessStatus.ERROR;
+import static by.aurorasoft.nominatim.model.SearchingCitiesProcessStatus.SUCCESS;
 import static java.util.stream.Collectors.toList;
 
 @Slf4j
