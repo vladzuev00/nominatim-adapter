@@ -32,3 +32,6 @@ nominatim:
 
 search-mileage:
   load-city-geometries-on-start-application: false
+
+track-simplifier:
+  epsilon: 0.00015

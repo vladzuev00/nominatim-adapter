@@ -20,7 +20,7 @@ public final class GeometryCreatingServiceTest extends AbstractSpringBootTest {
     private static final boolean LAT_LNG_ALT_VALID = true;
 
     @Autowired
-    private GeometryCreatingService service;
+    private GeometryService service;
 
     @Autowired
     private GeometryFactory geometryFactory;

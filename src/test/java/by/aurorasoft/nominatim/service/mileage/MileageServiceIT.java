@@ -4,7 +4,7 @@ import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import by.aurorasoft.nominatim.crud.service.CityService;
 import by.aurorasoft.nominatim.rest.model.MileageRequest;
 import by.aurorasoft.nominatim.rest.model.MileageRequest.TrackPoint;
-import by.aurorasoft.nominatim.rest.model.MileageResponse;
+import by.aurorasoft.nominatim.rest.model.Mileage;
 import by.nhorushko.distancecalculator.*;
 import com.opencsv.CSVReader;
 import org.junit.After;
@@ -55,7 +55,7 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
     private static final double ALLOWABLE_INACCURACY_OF_DISTANCE = 0.00001;
 
     @Autowired
-    private MileageService mileageService;
+    private MileageCalculatingService mileageService;
 
     @Autowired
     private DistanceCalculator distanceCalculator;
@@ -72,7 +72,7 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
     @After
     public void setCitiesGeometriesByBoundingBoxesAsNull()
             throws Exception {
-        final Field field = MileageService.class.getDeclaredField(FIELD_NAME_CITIES_GEOMETRIES_BY_BOUNDING_BOX);
+        final Field field = MileageCalculatingService.class.getDeclaredField(FIELD_NAME_CITIES_GEOMETRIES_BY_BOUNDING_BOX);
         field.setAccessible(true);
         try {
             field.set(this.mileageService, null);
@@ -97,8 +97,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
                 )
         );
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(0, 1.111948206008131);
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(0, 1.111948206008131);
         assertEquals(expected, actual);
     }
 
@@ -116,8 +116,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
                 )
         );
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(0, 1.111948206008131);
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(0, 1.111948206008131);
         assertEquals(expected, actual);
     }
 
@@ -137,8 +137,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
                 )
         );
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(1.111948206008131, 0);
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(1.111948206008131, 0);
         assertEquals(expected, actual);
     }
 
@@ -156,8 +156,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
                 )
         );
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(1.111948206008131, 0);
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(1.111948206008131, 0);
         assertEquals(expected, actual);
     }
 
@@ -177,8 +177,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
                 )
         );
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(0, 2.223896412016262);
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(0, 2.223896412016262);
         assertEquals(expected, actual);
     }
 
@@ -196,8 +196,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
                 )
         );
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(0, 2.223896412016262);
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(0, 2.223896412016262);
         assertEquals(expected, actual);
     }
 
@@ -217,8 +217,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
                 )
         );
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(0., 1.111948206008131);
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(0., 1.111948206008131);
         assertEquals(expected, actual);
     }
 
@@ -236,8 +236,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
                 )
         );
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(0., 1.111948206008131);
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(0., 1.111948206008131);
         assertEquals(expected, actual);
     }
 
@@ -257,8 +257,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
                 )
         );
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(0.3335871128960806, 0.);
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(0.3335871128960806, 0.);
         assertEquals(expected, actual);
     }
 
@@ -276,8 +276,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
                 )
         );
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(0.3335871128960806, 0.);
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(0.3335871128960806, 0.);
         assertEquals(expected, actual);
     }
 
@@ -297,8 +297,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
                 )
         );
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(0, 1.111948206008131);
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(0, 1.111948206008131);
         assertEquals(expected, actual);
     }
 
@@ -316,8 +316,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
                 )
         );
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(0, 1.111948206008131);
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(0, 1.111948206008131);
         assertEquals(expected, actual);
     }
 
@@ -337,8 +337,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
                 )
         );
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(0, 0.5559741030040655);
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(0, 0.5559741030040655);
         assertEquals(expected, actual);
     }
 
@@ -356,8 +356,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
                 )
         );
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(0, 0.5559741030040655);
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(0, 0.5559741030040655);
         assertEquals(expected, actual);
     }
 
@@ -378,8 +378,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
                 )
         );
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(1.111948206008131,
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(1.111948206008131,
                 1.111948206008131);
         assertEquals(expected, actual);
     }
@@ -399,8 +399,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
                 )
         );
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(1.111948206008131,
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(1.111948206008131,
                 1.111948206008131);
         assertEquals(expected, actual);
     }
@@ -422,8 +422,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
                 )
         );
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(1.1608862638235358,
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(1.1608862638235358,
                 1.1608859675523793);
         assertEquals(expected, actual);
     }
@@ -443,8 +443,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
                 )
         );
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(1.1608862638235358,
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(1.1608862638235358,
                 1.1608859675523793);
         assertEquals(expected, actual);
     }
@@ -466,8 +466,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
                 )
         );
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(0.44477398021596953,
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(0.44477398021596953,
                 0.8895612159001461);
         assertEquals(expected, actual);
     }
@@ -487,8 +487,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
                 )
         );
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(0.44477398021596953,
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(0.44477398021596953,
                 0.8895612159001461);
         assertEquals(expected, actual);
     }
@@ -511,8 +511,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
                 )
         );
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(1.3343351961161156,
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(1.3343351961161156,
                 0.8895612159001461);
         assertEquals(expected, actual);
     }
@@ -533,8 +533,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
                 )
         );
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(1.3343351961161156,
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(1.3343351961161156,
                 0.8895612159001461);
         assertEquals(expected, actual);
     }
@@ -557,8 +557,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
                 )
         );
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(1.545888809855105,
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(1.545888809855105,
                 0.9169261331290726);
         assertEquals(expected, actual);
     }
@@ -579,8 +579,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
                 )
         );
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(1.545888809855105,
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(1.545888809855105,
                 0.9169261331290726);
         assertEquals(expected, actual);
     }
@@ -606,8 +606,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
                 )
         );
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(1.111948206008131,
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(1.111948206008131,
                 1.111948206008131);
         assertEquals(expected, actual);
     }
@@ -631,8 +631,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
                 )
         );
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(1.111948206008131,
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(1.111948206008131,
                 1.111948206008131);
         assertEquals(expected, actual);
     }
@@ -659,8 +659,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
                 )
         );
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(1.3185101144130753,
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(1.3185101144130753,
                 1.111948206008131);
         assertEquals(expected, actual);
     }
@@ -686,8 +686,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
                 )
         );
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(1.3185101144130753,
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(1.3185101144130753,
                 1.111948206008131);
         assertEquals(expected, actual);
     }
@@ -709,8 +709,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
                 )
         );
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(0, 2.223896412016262);
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(0, 2.223896412016262);
         assertEquals(expected, actual);
     }
 
@@ -729,8 +729,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
                 )
         );
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(0, 2.223896412016262);
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(0, 2.223896412016262);
         assertEquals(expected, actual);
     }
 
@@ -743,8 +743,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
         final List<TrackPoint> givenTrackPoints = this.readTrackPoints(FILE_NAME_WITH_FIRST_TRACK_POINTS);
         final MileageRequest givenMileageRequest = createMileageRequest(givenTrackPoints);
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(355.72511991398096,
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(355.72511991398096,
                 357.73277661649564);
         assertEquals(expected, actual);
 
@@ -760,8 +760,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
         final List<TrackPoint> givenTrackPoints = this.readTrackPoints(FILE_NAME_WITH_FIRST_TRACK_POINTS);
         final MileageRequest givenMileageRequest = createMileageRequest(givenTrackPoints);
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(355.72511991398096,
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(355.72511991398096,
                 357.73277661649564);
         assertEquals(expected, actual);
 
@@ -779,8 +779,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
         final List<TrackPoint> givenTrackPoints = this.readTrackPoints(FILE_NAME_WITH_SECOND_TRACK_POINTS);
         final MileageRequest givenMileageRequest = createMileageRequest(givenTrackPoints);
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(562.8989367618942,
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(562.8989367618942,
                 518.031547816519);
         assertEquals(expected, actual);
 
@@ -796,8 +796,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
         final List<TrackPoint> givenTrackPoints = this.readTrackPoints(FILE_NAME_WITH_SECOND_TRACK_POINTS);
         final MileageRequest givenMileageRequest = createMileageRequest(givenTrackPoints);
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(562.8989367618942,
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(562.8989367618942,
                 518.031547816519);
         assertEquals(expected, actual);
 
@@ -815,8 +815,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
         final List<TrackPoint> givenTrackPoints = this.readTrackPoints(FILE_NAME_WITH_THIRD_TRACK_POINTS);
         final MileageRequest givenMileageRequest = createMileageRequest(givenTrackPoints);
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(1207.6871617415154,
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(1207.6871617415154,
                 1241.2063545061649);
         assertEquals(expected, actual);
 
@@ -832,8 +832,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
         final List<TrackPoint> givenTrackPoints = this.readTrackPoints(FILE_NAME_WITH_THIRD_TRACK_POINTS);
         final MileageRequest givenMileageRequest = createMileageRequest(givenTrackPoints);
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(1207.6871617415154,
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(1207.6871617415154,
                 1241.2063545061649);
         assertEquals(expected, actual);
 
@@ -851,8 +851,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
         final List<TrackPoint> givenTrackPoints = this.readTrackPoints(FILE_NAME_WITH_FOURTH_TRACK_POINTS);
         final MileageRequest givenMileageRequest = createMileageRequest(givenTrackPoints);
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(125.27265649913504,
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(125.27265649913504,
                 117.8709566688135);
         assertEquals(expected, actual);
 
@@ -868,8 +868,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
         final List<TrackPoint> givenTrackPoints = this.readTrackPoints(FILE_NAME_WITH_FOURTH_TRACK_POINTS);
         final MileageRequest givenMileageRequest = createMileageRequest(givenTrackPoints);
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(125.27265649913504,
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(125.27265649913504,
                 117.8709566688135);
         assertEquals(expected, actual);
 
@@ -887,8 +887,8 @@ public final class MileageServiceIT extends AbstractSpringBootTest {
         final List<TrackPoint> givenTrackPoints = this.readTrackPoints(FILE_NAME_WITH_FIFTH_TRACK_POINTS);
         final MileageRequest givenMileageRequest = createMileageRequest(givenTrackPoints);
 
-        final MileageResponse actual = this.mileageService.findMileage(givenMileageRequest);
-        final MileageResponse expected = new MileageResponse(0.7554422195522208, 0);
+        final Mileage actual = this.mileageService.calculate(givenMileageRequest);
+        final Mileage expected = new Mileage(0.7554422195522208, 0);
         assertEquals(expected, actual);
 
         final double actualAllDistance = actual.getUrban() + actual.getCountry();

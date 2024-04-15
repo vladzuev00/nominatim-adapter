@@ -11,11 +11,11 @@ import java.util.Map;
 
 @Component
 public class LoaderCitiesGeometriesAndBoundingBoxes {
-    private final MileageService mileageService;
+    private final MileageCalculatingService mileageService;
     private final CityService cityService;
     private final boolean cityGeometriesShouldBeLoaded;
 
-    public LoaderCitiesGeometriesAndBoundingBoxes(MileageService mileageService, CityService cityService,
+    public LoaderCitiesGeometriesAndBoundingBoxes(MileageCalculatingService mileageService, CityService cityService,
                                                   @Value("${search-mileage.load-city-geometries-on-start-application}")
                                                   boolean cityGeometriesShouldBeLoaded) {
         this.mileageService = mileageService;

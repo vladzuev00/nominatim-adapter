@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
 public final class LoaderCitiesGeometriesAndBoundingBoxesTest {
 
     @Mock
-    private MileageService mockedMileageService;
+    private MileageCalculatingService mockedMileageService;
 
     @Mock
     private CityService mockedCityService;

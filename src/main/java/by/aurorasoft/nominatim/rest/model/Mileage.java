@@ -3,7 +3,7 @@ package by.aurorasoft.nominatim.rest.model;
 import lombok.Value;
 
 @Value
-public class MileageResponse {
+public class Mileage {
     double urban;
     double country;
 }
