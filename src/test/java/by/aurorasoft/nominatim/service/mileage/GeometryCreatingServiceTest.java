@@ -1,6 +1,7 @@
 package by.aurorasoft.nominatim.service.mileage;
 
 import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
+import by.aurorasoft.nominatim.service.geometry.GeometryService;
 import by.nhorushko.distancecalculator.LatLngAlt;
 import by.nhorushko.distancecalculator.LatLngAltImpl;
 import org.junit.Test;

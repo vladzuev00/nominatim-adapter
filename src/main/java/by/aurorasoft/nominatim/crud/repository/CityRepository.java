@@ -11,14 +11,15 @@ import java.util.List;
 
 public interface CityRepository extends JpaRepository<CityEntity, Long> {
 
-    @Query(value = "SELECT EXISTS(SELECT 1 FROM city WHERE ST_Equals(city.geometry, :geometry))",
-            nativeQuery = true)
-    boolean isExistByGeometry(Geometry geometry);
+    @Query(value = "SELECT EXISTS(SELECT 1 FROM city WHERE ST_Equals(city.geometry, :geometry))", nativeQuery = true)
+    boolean isExistByGeometry(final Geometry geometry);
 
-    @Query("SELECT ce.boundingBox AS boundingBox, ce.geometry AS geometry FROM CityEntity ce")
+    @Query("SELECT e.boundingBox AS boundingBox, e.geometry AS geometry FROM CityEntity e")
     List<Tuple> findBoundingBoxesWithGeometries();
 
-    @Query(value = "SELECT id, name, geometry, type, bounding_box FROM city "
-            + "WHERE ST_Intersects(bounding_box, :lineString)", nativeQuery = true)
-    List<CityEntity> findCitiesWhoseBoundingBoxIntersectedByLineString(LineString lineString);
+    @Query(
+            value = "SELECT id, name, geometry, type, bounding_box FROM city WHERE ST_Intersects(bounding_box, :line)",
+            nativeQuery = true
+    )
+    List<CityEntity> findIntersectedCities(final LineString line);
 }

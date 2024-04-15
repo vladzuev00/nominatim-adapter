@@ -1,1 +1,3 @@
-INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'test-city', ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326), 'CAPITAL', ST_Envelope(ST_GeomFromText('POLYGON((1 2, 3 4, 5 6, 6 7, 1 2))', 4326)))
+INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'first-city', ST_GeomFromText('POLYGON((1 1, 1 2, 2 2, 2 1, 1 1))', 4326), 'CAPITAL', ST_GeomFromText('POLYGON((1 1, 1 2, 2 2, 2 1, 1 1))', 4326));
+INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(256, 'second-city', ST_GeomFromText('POLYGON((3 3, 4 3, 4 4, 3 3))', 4326), 'REGIONAL', ST_GeomFromText('POLYGON((3 3, 3 4, 4 4, 4 3, 3 3))', 4326));
+INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(257, 'third-city', ST_GeomFromText('POLYGON((3 1, 3 2, 4 2, 4 1, 3 1))', 4326), 'NOT_DEFINED', ST_GeomFromText('POLYGON((3 1, 3 2, 4 2, 4 1, 3 1))', 4326));

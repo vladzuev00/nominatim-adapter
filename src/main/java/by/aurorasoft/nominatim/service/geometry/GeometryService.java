@@ -1,4 +1,4 @@
-package by.aurorasoft.nominatim.service.mileage;
+package by.aurorasoft.nominatim.service.geometry;
 
 import by.aurorasoft.nominatim.model.Track;
 import by.nhorushko.distancecalculator.LatLngAlt;

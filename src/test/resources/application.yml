@@ -31,7 +31,10 @@ server:
 nominatim:
   millis-between-requests: 1000
 
-search-mileage:
-  load-city-geometries-on-start-application: false
+mileage-calc:
+  load-city-geometries-on-start-app: false
+
+track-simplifier:
+  epsilon: 0.00015
 
 

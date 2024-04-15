@@ -1,8 +1,8 @@
 package by.aurorasoft.nominatim.service.mileage.geometryloader;
 
 import by.aurorasoft.nominatim.cache.CityGeometryCache;
-import by.aurorasoft.nominatim.service.mileage.GeometryService;
-import by.aurorasoft.nominatim.service.mileage.TrackSimplifier;
+import by.aurorasoft.nominatim.service.geometry.GeometryService;
+import by.aurorasoft.nominatim.service.mileage.tracksimplifer.TrackSimplifier;
 import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.prep.PreparedGeometry;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 @Component
-@ConditionalOnProperty(prefix = "mileage-calc", name = "load-city-geometries-on-start-app", havingValue = "false")
+@ConditionalOnProperty(prefix = "mileage-calc", name = "load-city-geometries-on-start-app", havingValue = "true")
 public final class TrackCityGeometryLoaderFromCache extends TrackCityGeometryLoader {
     private final CityGeometryCache geometryCache;
 

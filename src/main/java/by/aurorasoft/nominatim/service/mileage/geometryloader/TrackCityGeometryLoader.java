@@ -1,8 +1,8 @@
 package by.aurorasoft.nominatim.service.mileage.geometryloader;
 
 import by.aurorasoft.nominatim.model.Track;
-import by.aurorasoft.nominatim.service.mileage.GeometryService;
-import by.aurorasoft.nominatim.service.mileage.TrackSimplifier;
+import by.aurorasoft.nominatim.service.geometry.GeometryService;
+import by.aurorasoft.nominatim.service.mileage.tracksimplifer.TrackSimplifier;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.prep.PreparedGeometry;

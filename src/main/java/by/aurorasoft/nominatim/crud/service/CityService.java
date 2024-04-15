@@ -66,7 +66,7 @@ public class CityService extends AbsServiceCRUD<Long, CityEntity, City, CityRepo
     @Transactional(readOnly = true)
     public List<PreparedGeometry> findIntersectedPreparedGeometries(
             LineString lineString) {
-        final List<CityEntity> cityEntities = super.repository.findCitiesWhoseBoundingBoxIntersectedByLineString(
+        final List<CityEntity> cityEntities = super.repository.findIntersectedCities(
                 lineString);
         return cityEntities.stream()
                 .map(CityEntity::getGeometry)
