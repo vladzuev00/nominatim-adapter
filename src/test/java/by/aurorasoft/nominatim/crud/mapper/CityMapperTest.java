@@ -4,7 +4,7 @@ import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import by.aurorasoft.nominatim.crud.model.dto.City;
 import by.aurorasoft.nominatim.crud.model.entity.CityEntity;
 import by.aurorasoft.nominatim.model.CityType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.CoordinateXY;
 import org.locationtech.jts.geom.Geometry;
@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static by.aurorasoft.nominatim.model.CityType.CAPITAL;
 import static by.aurorasoft.nominatim.util.CityEntityUtil.checkEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public final class CityMapperTest extends AbstractSpringBootTest {
 
