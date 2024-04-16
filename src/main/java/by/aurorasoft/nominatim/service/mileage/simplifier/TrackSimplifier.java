@@ -1,4 +1,4 @@
-package by.aurorasoft.nominatim.service.mileage.tracksimplifer;
+package by.aurorasoft.nominatim.service.mileage.simplifier;
 
 import by.aurorasoft.nominatim.model.Track;
 import by.aurorasoft.nominatim.model.TrackPoint;

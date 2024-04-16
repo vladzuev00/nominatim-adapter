@@ -1,8 +1,8 @@
-package by.aurorasoft.nominatim.service.mileage.geometryloader;
+package by.aurorasoft.nominatim.service.mileage.loader;
 
 import by.aurorasoft.nominatim.crud.service.CityService;
 import by.aurorasoft.nominatim.service.geometry.GeometryService;
-import by.aurorasoft.nominatim.service.mileage.tracksimplifer.TrackSimplifier;
+import by.aurorasoft.nominatim.service.mileage.simplifier.TrackSimplifier;
 import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.prep.PreparedGeometry;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

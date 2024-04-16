@@ -4,7 +4,7 @@ import by.aurorasoft.nominatim.model.Track;
 import by.aurorasoft.nominatim.model.TrackPoint;
 import by.aurorasoft.nominatim.rest.model.Mileage;
 import by.aurorasoft.nominatim.service.geometry.GeometryService;
-import by.aurorasoft.nominatim.service.mileage.geometryloader.TrackCityGeometryLoader;
+import by.aurorasoft.nominatim.service.mileage.loader.TrackCityGeometryLoader;
 import by.nhorushko.distancecalculator.DistanceCalculator;
 import by.nhorushko.distancecalculator.DistanceCalculatorSettings;
 import lombok.RequiredArgsConstructor;
