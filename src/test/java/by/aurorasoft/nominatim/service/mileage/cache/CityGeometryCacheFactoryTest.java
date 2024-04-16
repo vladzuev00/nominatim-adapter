@@ -1,19 +1,16 @@
 package by.aurorasoft.nominatim.service.mileage.cache;
 
 import by.aurorasoft.nominatim.crud.service.CityService;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.locationtech.jts.geom.prep.PreparedGeometry;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public final class CityGeometryCacheFactoryTest {
@@ -21,23 +18,36 @@ public final class CityGeometryCacheFactoryTest {
     @Mock
     private CityService mockedCityService;
 
-    private CityGeometryCacheFactory factory;
-
-    @Before
-    public void initializeFactory() {
-        factory = new CityGeometryCacheFactory(mockedCityService);
-    }
-
     @Test
-    public void cacheShouldBeCreated() {
-        final Map<PreparedGeometry, PreparedGeometry> givenGeometriesByBoundingBoxes = new HashMap<>();
+    @SuppressWarnings("unchecked")
+    public void cacheShouldBeCreatedWithLoadedGeometries() {
+        final CityGeometryCacheFactory givenFactory = createFactory(true);
+
+        final Map<PreparedGeometry, PreparedGeometry> givenGeometriesByBoundingBoxes = mock(Map.class);
         when(mockedCityService.findPreparedGeometriesByPreparedBoundingBoxes())
                 .thenReturn(givenGeometriesByBoundingBoxes);
 
-        final CityGeometryCache actual = factory.create();
+        final CityGeometryCache actual = givenFactory.create();
         assertNotNull(actual);
 
         final var actualGeometriesByBoundingBoxes = actual.getGeometriesByBoundingBoxes();
         assertSame(givenGeometriesByBoundingBoxes, actualGeometriesByBoundingBoxes);
+    }
+
+    @Test
+    public void cacheShouldBeCreatedWithoutLoadedGeometries() {
+        final CityGeometryCacheFactory givenFactory = createFactory(false);
+
+        final CityGeometryCache actual = givenFactory.create();
+        assertNotNull(actual);
+
+        final var actualGeometriesByBoundingBoxes = actual.getGeometriesByBoundingBoxes();
+        assertTrue(actualGeometriesByBoundingBoxes.isEmpty());
+
+        verifyNoInteractions(mockedCityService);
+    }
+
+    private CityGeometryCacheFactory createFactory(final boolean shouldBeCached) {
+        return new CityGeometryCacheFactory(mockedCityService, shouldBeCached);
     }
 }
