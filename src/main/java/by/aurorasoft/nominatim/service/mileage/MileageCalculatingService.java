@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.*;
 import static java.util.stream.IntStream.range;
 
@@ -25,7 +26,7 @@ public final class MileageCalculatingService {
     private final DistanceCalculator distanceCalculator;
 
     public Mileage calculate(final Track track, final DistanceCalculatorSettings settings) {
-        final List<PreparedGeometry> cityGeometries = trackCityGeometryLoader.load(track);
+        final List<PreparedGeometry> cityGeometries = loadCityGeometries(track);
         return range(0, getSliceCount(track))
                 .mapToObj(i -> getSlice(track, i))
                 .collect(
@@ -37,6 +38,10 @@ public final class MileageCalculatingService {
                                 mileagesByUrban -> new Mileage(mileagesByUrban.get(true), mileagesByUrban.get(false))
                         )
                 );
+    }
+
+    private List<PreparedGeometry> loadCityGeometries(final Track track) {
+        return !track.getPoints().isEmpty() ? trackCityGeometryLoader.load(track) : emptyList();
     }
 
     private int getSliceCount(final Track track) {
