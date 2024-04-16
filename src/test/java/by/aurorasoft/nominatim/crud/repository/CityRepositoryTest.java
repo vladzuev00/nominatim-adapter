@@ -13,7 +13,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import static by.aurorasoft.nominatim.model.CityType.CAPITAL;
-import static java.util.stream.Collectors.toList;
+import static by.aurorasoft.nominatim.util.CityEntityUtil.checkEquals;
+import static by.aurorasoft.nominatim.util.EntityUtil.mapToIds;
 import static java.util.stream.Collectors.toMap;
 import static org.junit.Assert.*;
 
@@ -134,57 +135,69 @@ public final class CityRepositoryTest extends AbstractSpringBootTest {
         assertFalse(exists);
     }
 
-    //TODO: stop
     @Test
     public void boundingBoxesWithGeometriesShouldBeFound() {
         startQueryCount();
-        final List<Tuple> boundingBoxWithGeometryTuples = repository.findBoundingBoxesWithGeometries();
+        final List<Tuple> actualTuples = repository.findBoundingBoxesWithGeometries();
         checkQueryCount(1);
 
-        final int expectedTuplesCount = 2;
-        final int actualTuplesCount = boundingBoxWithGeometryTuples.size();
+        final int expectedTuplesCount = 3;
+        final int actualTuplesCount = actualTuples.size();
         assertEquals(expectedTuplesCount, actualTuplesCount);
 
-        final Map<Geometry, Geometry> actual = boundingBoxWithGeometryTuples.stream()
-                .collect(
-                        toMap(
-                                tuple -> (Geometry) tuple.get(TUPLE_ALIAS_BOUNDING_BOX),
-                                tuple -> (Geometry) tuple.get(TUPLE_ALIAS_GEOMETRY)
-                        )
-                );
+        final Map<Geometry, Geometry> actual = findGeometriesByBoundingBox();
         final Map<Geometry, Geometry> expected = Map.of(
-                this.geometryFactory.createPolygon(
+                geometryFactory.createPolygon(
                         new Coordinate[]{
                                 new CoordinateXY(1, 1),
-                                new CoordinateXY(2, 1),
-                                new CoordinateXY(2, 2),
                                 new CoordinateXY(1, 2),
+                                new CoordinateXY(2, 2),
+                                new CoordinateXY(2, 1),
                                 new CoordinateXY(1, 1)
                         }
                 ),
-                this.geometryFactory.createPolygon(
+                geometryFactory.createPolygon(
                         new Coordinate[]{
                                 new CoordinateXY(1, 1),
-                                new CoordinateXY(2, 1),
+                                new CoordinateXY(1, 2),
                                 new CoordinateXY(2, 2),
-                                new CoordinateXY(1, 1)
+                                new CoordinateXY(2, 1),
+                                new CoordinateXY(1, 1),
                         }
                 ),
-                this.geometryFactory.createPolygon(
+                geometryFactory.createPolygon(
                         new Coordinate[]{
+                                new CoordinateXY(3, 3),
+                                new CoordinateXY(3, 4),
                                 new CoordinateXY(4, 4),
-                                new CoordinateXY(5, 4),
-                                new CoordinateXY(5, 5),
-                                new CoordinateXY(4, 5),
-                                new CoordinateXY(4, 4)
+                                new CoordinateXY(4, 3),
+                                new CoordinateXY(3, 3)
                         }
                 ),
-                this.geometryFactory.createPolygon(
+                geometryFactory.createPolygon(
                         new Coordinate[]{
+                                new CoordinateXY(3, 3),
+                                new CoordinateXY(4, 3),
                                 new CoordinateXY(4, 4),
-                                new CoordinateXY(5, 4),
-                                new CoordinateXY(5, 5),
-                                new CoordinateXY(4, 4)
+                                new CoordinateXY(3, 3)
+                        }
+                ),
+                geometryFactory.createPolygon(
+                        new Coordinate[]{
+                                new CoordinateXY(3, 1),
+                                new CoordinateXY(3, 2),
+                                new CoordinateXY(4, 2),
+                                new CoordinateXY(4, 1),
+                                new CoordinateXY(3, 1),
+                        }
+                ),
+                geometryFactory.createPolygon(
+                        new Coordinate[]{
+                                new CoordinateXY(3, 1),
+                                new CoordinateXY(3, 2),
+                                new CoordinateXY(4, 2),
+                                new CoordinateXY(4, 1),
+                                new CoordinateXY(3, 1),
                         }
                 )
         );
@@ -192,85 +205,66 @@ public final class CityRepositoryTest extends AbstractSpringBootTest {
     }
 
     @Test
+    @Sql(statements = "DELETE FROM city")
     public void boundingBoxesWithGeometriesShouldNotBeFound() {
-        super.startQueryCount();
-        final List<Tuple> tuplesOfBoundingBoxesWithGeometries = this.repository.findBoundingBoxesWithGeometries();
-        super.checkQueryCount(1);
+        startQueryCount();
+        final List<Tuple> actual = repository.findBoundingBoxesWithGeometries();
+        checkQueryCount(1);
 
-        assertTrue(tuplesOfBoundingBoxesWithGeometries.isEmpty());
+        assertTrue(actual.isEmpty());
     }
 
     @Test
-    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'First', "
-            + "ST_GeomFromText('POLYGON((1 1, 1 2, 2 2, 2 1, 1 1))', 4326), "
-            + "'CAPITAL',"
-            + "ST_GeomFromText('POLYGON((1 1, 1 2, 2 2, 2 1, 1 1))', 4326)"
-            + ")")
-    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(256, 'Second', "
-            + "ST_GeomFromText('POLYGON((3 3, 4 3, 4 4, 3 3))', 4326), "
-            + "'REGIONAL', "
-            + "ST_GeomFromText('POLYGON((3 3, 3 4, 4 4, 4 3, 3 3))', 4326)"
-            + ")")
-    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(257, 'Third', "
-            + "ST_GeomFromText('POLYGON((3 1, 3 2, 4 2, 4 1, 3 1))', 4326), "
-            + "'NOT_DEFINED', "
-            + "ST_GeomFromText('POLYGON((3 1, 3 2, 4 2, 4 1, 3 1))', 4326)"
-            + ")")
-    public void citiesWhoseBoundingBoxIntersectedByLineStringShouldBeFound() {
-        final LineString givenLineString = this.geometryFactory.createLineString(new Coordinate[]{
-                new CoordinateXY(1.5, 1.5),
-                new CoordinateXY(3.5, 3.5),
-                new CoordinateXY(4.5, 4.5)
-        });
+    public void citiesIntersectedByLineShouldBeFound() {
+        final LineString givenLine = geometryFactory.createLineString(
+                new Coordinate[]{
+                        new CoordinateXY(1.5, 1.5),
+                        new CoordinateXY(3.5, 3.5),
+                        new CoordinateXY(4.5, 4.5)
+                }
+        );
 
-        super.startQueryCount();
-        final List<CityEntity> foundCities = this.repository.findIntersectedCities(
-                givenLineString);
-        super.checkQueryCount(1);
+        startQueryCount();
+        final List<CityEntity> actual = repository.findIntersectedCities(givenLine);
+        checkQueryCount(1);
 
-        final List<Long> actual = foundCities.stream()
-                .map(CityEntity::getId)
-                .collect(toList());
+        final List<Long> actualIds = mapToIds(actual);
         final List<Long> expected = List.of(255L, 256L);
-        assertEquals(expected, actual);
+        assertEquals(expected, actualIds);
     }
 
     @Test
-    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(255, 'First', "
-            + "ST_GeomFromText('POLYGON((1 1, 1 2, 2 2, 2 1, 1 1))', 4326), "
-            + "'CAPITAL',"
-            + "ST_GeomFromText('POLYGON((1 1, 1 2, 2 2, 2 1, 1 1))', 4326)"
-            + ")")
-    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(256, 'Second', "
-            + "ST_GeomFromText('POLYGON((3 3, 4 3, 4 4, 3 3))', 4326), "
-            + "'REGIONAL', "
-            + "ST_GeomFromText('POLYGON((3 3, 3 4, 4 4, 4 3, 3 3))', 4326)"
-            + ")")
-    @Sql(statements = "INSERT INTO city(id, name, geometry, type, bounding_box) VALUES(257, 'Third', "
-            + "ST_GeomFromText('POLYGON((3 1, 3 2, 4 2, 4 1, 3 1))', 4326), "
-            + "'NOT_DEFINED', "
-            + "ST_GeomFromText('POLYGON((3 1, 3 2, 4 2, 4 1, 3 1))', 4326)"
-            + ")")
-    public void citiesWhoseBoundingBoxIntersectedByLineStringShouldNotBeFound() {
-        final LineString givenLineString = this.geometryFactory.createLineString(new Coordinate[]{
-                new CoordinateXY(5.5, 5.5),
-                new CoordinateXY(6.5, 6.5),
-                new CoordinateXY(7.5, 7.5)
-        });
+    public void citiesIntersectedByLineShouldNotBeFound() {
+        final LineString givenLine = geometryFactory.createLineString(
+                new Coordinate[]{
+                        new CoordinateXY(5.5, 5.5),
+                        new CoordinateXY(6.5, 6.5),
+                        new CoordinateXY(7.5, 7.5)
+                }
+        );
 
-        super.startQueryCount();
-        final List<CityEntity> foundCities = this.repository.findIntersectedCities(
-                givenLineString);
-        super.checkQueryCount(1);
+        startQueryCount();
+        final List<CityEntity> actual = repository.findIntersectedCities(givenLine);
+        checkQueryCount(1);
 
-        assertTrue(foundCities.isEmpty());
+        assertTrue(actual.isEmpty());
     }
 
-    private static void checkEquals(final CityEntity expected, final CityEntity actual) {
-        assertEquals(expected.getId(), actual.getId());
-        assertEquals(expected.getName(), actual.getName());
-        assertEquals(expected.getGeometry(), actual.getGeometry());
-        assertSame(expected.getType(), actual.getType());
-        assertEquals(expected.getBoundingBox(), actual.getBoundingBox());
+    private Map<Geometry, Geometry> findGeometriesByBoundingBox() {
+        return repository.findBoundingBoxesWithGeometries()
+                .stream()
+                .collect(toMap(CityRepositoryTest::getBoundingBox, CityRepositoryTest::getGeometry));
+    }
+
+    private static Geometry getBoundingBox(final Tuple tuple) {
+        return getGeometry(tuple, TUPLE_ALIAS_BOUNDING_BOX);
+    }
+
+    private static Geometry getGeometry(final Tuple tuple) {
+        return getGeometry(tuple, TUPLE_ALIAS_GEOMETRY);
+    }
+
+    private static Geometry getGeometry(final Tuple tuple, final String alias) {
+        return (Geometry) tuple.get(alias);
     }
 }
