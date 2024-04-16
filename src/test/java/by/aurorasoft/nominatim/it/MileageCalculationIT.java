@@ -41,6 +41,7 @@ import static org.springframework.transaction.annotation.Propagation.NOT_SUPPORT
 
 @DirtiesContext
 @Transactional(propagation = NOT_SUPPORTED)
+@Sql("classpath:sql/insert-belarus-cities.sql")
 public abstract class MileageCalculationIT extends AbstractSpringBootTest {
     private static final String URL = "/api/v1/mileage";
     private static final MediaType MEDIA_TYPE = APPLICATION_JSON;
@@ -51,7 +52,6 @@ public abstract class MileageCalculationIT extends AbstractSpringBootTest {
     private TestRestTemplate restTemplate;
 
     @ParameterizedTest
-    @Sql("classpath:sql/insert-belarus-cities.sql")
     @MethodSource("provideTrackFileNamesAndExpectedMileage")
     public final void mileageShouldBeCalculatedForTrackFromFile(final String fileName, final Mileage expected) {
         final MileageRequest givenRequest = requestFactory.create(fileName);

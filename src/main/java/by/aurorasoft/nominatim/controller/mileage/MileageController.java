@@ -1,4 +1,4 @@
-package by.aurorasoft.nominatim.controller;
+package by.aurorasoft.nominatim.controller.mileage;
 
 import by.aurorasoft.nominatim.model.Track;
 import by.aurorasoft.nominatim.model.TrackPoint;

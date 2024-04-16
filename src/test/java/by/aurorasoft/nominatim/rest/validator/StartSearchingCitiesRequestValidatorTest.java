@@ -1,6 +1,5 @@
 package by.aurorasoft.nominatim.rest.validator;
 
-import by.aurorasoft.nominatim.model.AreaCoordinate;
 import by.aurorasoft.nominatim.model.Coordinate;
 import by.aurorasoft.nominatim.rest.controller.exception.CustomValidationException;
 import by.aurorasoft.nominatim.rest.model.StartSearchingCitiesRequest;
