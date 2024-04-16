@@ -1,5 +1,7 @@
 package by.aurorasoft.nominatim.config;
 
+import by.aurorasoft.nominatim.service.mileage.cache.CityGeometryCache;
+import by.aurorasoft.nominatim.service.mileage.cache.CityGeometryCacheFactory;
 import by.nhorushko.distancecalculator.DistanceCalculator;
 import by.nhorushko.distancecalculator.DistanceCalculatorImpl;
 import by.nhorushko.trackfilter.TrackFilter;
@@ -17,5 +19,10 @@ public class MileageConfig {
     @Bean
     public DistanceCalculator distanceCalculator() {
         return new DistanceCalculatorImpl();
+    }
+
+    @Bean
+    public CityGeometryCache cityGeometryCache(final CityGeometryCacheFactory factory) {
+        return factory.create();
     }
 }
