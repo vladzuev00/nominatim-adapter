@@ -1,7 +1,6 @@
-package by.aurorasoft.nominatim.cache;
+package by.aurorasoft.nominatim.service.mileage.cache;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.prep.PreparedGeometry;
 import org.springframework.stereotype.Component;
 

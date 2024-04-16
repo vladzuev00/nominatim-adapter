@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.service.mileage.geometryloader;
 
-import by.aurorasoft.nominatim.cache.CityGeometryCache;
+import by.aurorasoft.nominatim.service.mileage.cache.CityGeometryCache;
 import by.aurorasoft.nominatim.service.geometry.GeometryService;
 import by.aurorasoft.nominatim.service.mileage.tracksimplifer.TrackSimplifier;
 import org.locationtech.jts.geom.LineString;
