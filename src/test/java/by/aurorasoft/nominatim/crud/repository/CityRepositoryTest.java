@@ -11,12 +11,14 @@ import javax.persistence.Tuple;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static by.aurorasoft.nominatim.model.CityType.CAPITAL;
 import static by.aurorasoft.nominatim.util.CityEntityUtil.checkEquals;
 import static by.aurorasoft.nominatim.util.EntityUtil.mapToIds;
 import static java.util.stream.Collectors.toMap;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public final class CityRepositoryTest extends AbstractSpringBootTest {
     private static final String TUPLE_ALIAS_BOUNDING_BOX = "boundingBox";
@@ -97,42 +99,6 @@ public final class CityRepositoryTest extends AbstractSpringBootTest {
         startQueryCount();
         repository.save(givenCity);
         checkQueryCount(2);
-    }
-
-    @Test
-    public void cityWithGivenGeometryShouldExist() {
-        final Geometry givenGeometry = geometryFactory.createPolygon(
-                new Coordinate[]{
-                        new CoordinateXY(1, 1),
-                        new CoordinateXY(1, 2),
-                        new CoordinateXY(2, 2),
-                        new CoordinateXY(2, 1),
-                        new CoordinateXY(1, 1)
-                }
-        );
-
-        startQueryCount();
-        final boolean exists = repository.isExistByGeometry(givenGeometry);
-        checkQueryCount(1);
-        assertTrue(exists);
-    }
-
-    @Test
-    public void cityWithGivenGeometryShouldNotExist() {
-        final Geometry givenGeometry = geometryFactory.createPolygon(
-                new Coordinate[]{
-                        new CoordinateXY(1, 2),
-                        new CoordinateXY(3, 4),
-                        new CoordinateXY(5, 6),
-                        new CoordinateXY(6, 7),
-                        new CoordinateXY(1, 2)
-                }
-        );
-
-        startQueryCount();
-        final boolean exists = repository.isExistByGeometry(givenGeometry);
-        checkQueryCount(1);
-        assertFalse(exists);
     }
 
     @Test
@@ -225,12 +191,12 @@ public final class CityRepositoryTest extends AbstractSpringBootTest {
         );
 
         startQueryCount();
-        final List<CityEntity> actual = repository.findIntersectedCities(givenLine);
-        checkQueryCount(1);
-
-        final List<Long> actualIds = mapToIds(actual);
-        final List<Long> expected = List.of(255L, 256L);
-        assertEquals(expected, actualIds);
+        try (final Stream<CityEntity> actual = repository.findIntersectedCities(givenLine)) {
+            checkQueryCount(1);
+            final List<Long> actualIds = mapToIds(actual);
+            final List<Long> expected = List.of(255L, 256L);
+            assertEquals(expected, actualIds);
+        }
     }
 
     @Test
@@ -244,10 +210,10 @@ public final class CityRepositoryTest extends AbstractSpringBootTest {
         );
 
         startQueryCount();
-        final List<CityEntity> actual = repository.findIntersectedCities(givenLine);
-        checkQueryCount(1);
-
-        assertTrue(actual.isEmpty());
+        try (final Stream<CityEntity> actual = repository.findIntersectedCities(givenLine)) {
+            checkQueryCount(1);
+            assertTrue(actual.findAny().isEmpty());
+        }
     }
 
     private Map<Geometry, Geometry> findGeometriesByBoundingBox() {

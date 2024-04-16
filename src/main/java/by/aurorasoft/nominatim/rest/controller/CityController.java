@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import java.util.List;
 import java.util.Optional;
 
 import static java.lang.String.format;
@@ -35,8 +34,9 @@ public class CityController {
     public ResponseEntity<CityPageResponse> findAll(
             @RequestParam(name = "pageNumber") @Min(0) @Max(10000) int pageNumber,
             @RequestParam(name = "pageSize") @Min(1) @Max(10000) int pageSize) {
-        final List<City> foundCities = this.service.findAll(pageNumber, pageSize);
-        return ok(this.mapper.mapToResponse(pageNumber, pageSize, foundCities));
+//        final List<City> foundCities = this.service.findAll(pageNumber, pageSize);
+//        return ok(this.mapper.mapToResponse(pageNumber, pageSize, foundCities));
+        return null;
     }
 
     @PostMapping

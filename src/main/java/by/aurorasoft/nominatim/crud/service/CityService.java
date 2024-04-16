@@ -10,7 +10,6 @@ import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.prep.PreparedGeometry;
 import org.locationtech.jts.geom.prep.PreparedGeometryFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,59 +17,53 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.Tuple;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.locationtech.jts.geom.prep.PreparedGeometryFactory.prepare;
 
 @Service
-@Transactional
 public class CityService extends AbsServiceCRUD<Long, CityEntity, City, CityRepository> {
-    private static final String TUPLE_ALIAS_OF_BOUNDING_BOX = "boundingBox";
-    private static final String TUPLE_ALIAS_OF_GEOMETRY = "geometry";
+    private static final String TUPLE_ALIAS_BOUNDING_BOX = "boundingBox";
+    private static final String TUPLE_ALIAS_GEOMETRY = "geometry";
 
-    public CityService(CityMapper mapper, CityRepository repository) {
+    public CityService(final CityMapper mapper, final CityRepository repository) {
         super(mapper, repository);
     }
 
     @Transactional(readOnly = true)
-    public List<City> findAll(int pageNumber, int pageSize) {
-        final Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        final Page<CityEntity> page = super.repository.findAll(pageable);
-        final List<CityEntity> foundEntities = page.getContent();
-        return super.mapper.toDtos(foundEntities);
-    }
-
-    @Transactional(readOnly = true)
-    public boolean isExistByGeometry(Geometry geometry) {
-        return super.repository.isExistByGeometry(geometry);
+    public List<City> findAll(final Pageable pageable) {
+        final Page<CityEntity> page = repository.findAll(pageable);
+        final List<CityEntity> entities = page.getContent();
+        return mapper.toDtos(entities);
     }
 
     @Transactional(readOnly = true)
     public Map<PreparedGeometry, PreparedGeometry> findPreparedGeometriesByPreparedBoundingBoxes() {
-        final List<Tuple> geometriesWithBoundingBoxes = super.repository.findBoundingBoxesWithGeometries();
-        return geometriesWithBoundingBoxes
+        return repository.findBoundingBoxesWithGeometries()
                 .stream()
-                .collect(
-                        toMap(
-                                geometryWithBoundingBox -> prepare(
-                                        (Geometry) geometryWithBoundingBox.get(TUPLE_ALIAS_OF_BOUNDING_BOX)
-                                ),
-                                geometryWithBoundingBox -> prepare(
-                                        (Geometry) geometryWithBoundingBox.get(TUPLE_ALIAS_OF_GEOMETRY)
-                                )
-                        )
-                );
+                .collect(toMap(CityService::getPreparedBoundingBox, CityService::getPreparedGeometry));
     }
 
     @Transactional(readOnly = true)
-    public List<PreparedGeometry> findIntersectedPreparedGeometries(
-            LineString lineString) {
-        final List<CityEntity> cityEntities = super.repository.findIntersectedCities(
-                lineString);
-        return cityEntities.stream()
-                .map(CityEntity::getGeometry)
-                .map(PreparedGeometryFactory::prepare)
-                .collect(toList());
+    public List<PreparedGeometry> findIntersectedPreparedGeometries(final LineString line) {
+        try (final Stream<CityEntity> entityStream = repository.findIntersectedCities(line)) {
+            return entityStream.map(CityEntity::getGeometry)
+                    .map(PreparedGeometryFactory::prepare)
+                    .toList();
+        }
+    }
+
+    private static PreparedGeometry getPreparedBoundingBox(final Tuple tuple) {
+        return getPreparedGeometry(tuple, TUPLE_ALIAS_BOUNDING_BOX);
+    }
+
+    private static PreparedGeometry getPreparedGeometry(final Tuple tuple) {
+        return getPreparedGeometry(tuple, TUPLE_ALIAS_GEOMETRY);
+    }
+
+    private static PreparedGeometry getPreparedGeometry(final Tuple tuple, final String alias) {
+        final Geometry geometry = (Geometry) tuple.get(alias);
+        return prepare(geometry);
     }
 }
