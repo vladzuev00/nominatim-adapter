@@ -2,7 +2,7 @@ package by.aurorasoft.nominatim.service.mileage;
 
 import by.aurorasoft.nominatim.model.Track;
 import by.aurorasoft.nominatim.model.TrackPoint;
-import by.aurorasoft.nominatim.rest.model.Mileage;
+import by.aurorasoft.nominatim.model.Mileage;
 import by.aurorasoft.nominatim.service.geometry.GeometryService;
 import by.aurorasoft.nominatim.service.mileage.loader.TrackCityGeometryLoader;
 import by.nhorushko.distancecalculator.DistanceCalculator;

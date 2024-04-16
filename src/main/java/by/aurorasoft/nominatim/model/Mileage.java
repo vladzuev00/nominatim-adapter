@@ -1,4 +1,4 @@
-package by.aurorasoft.nominatim.rest.model;
+package by.aurorasoft.nominatim.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

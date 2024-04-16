@@ -1,7 +1,7 @@
 package by.aurorasoft.nominatim.it;
 
 import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
-import by.aurorasoft.nominatim.rest.model.Mileage;
+import by.aurorasoft.nominatim.model.Mileage;
 import by.aurorasoft.nominatim.rest.model.MileageRequest;
 import by.aurorasoft.nominatim.rest.model.MileageRequest.RequestTrackPoint;
 import com.opencsv.CSVReader;
@@ -37,11 +37,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 import static org.springframework.transaction.annotation.Propagation.NOT_SUPPORTED;
 
-@DirtiesContext
 @Transactional(propagation = NOT_SUPPORTED)
 @Sql("classpath:sql/insert-belarus-cities.sql")
+@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 public abstract class MileageCalculationIT extends AbstractSpringBootTest {
     private static final String URL = "/api/v1/mileage";
     private static final MediaType MEDIA_TYPE = APPLICATION_JSON;
@@ -52,21 +53,21 @@ public abstract class MileageCalculationIT extends AbstractSpringBootTest {
     private TestRestTemplate restTemplate;
 
     @ParameterizedTest
-    @MethodSource("provideTrackFileNamesAndExpectedMileage")
+    @MethodSource("provideTrackFileNamesAndExpectedMileages")
     public final void mileageShouldBeCalculatedForTrackFromFile(final String fileName, final Mileage expected) {
         final MileageRequest givenRequest = requestFactory.create(fileName);
         final Mileage actual = requestExpectingOkHttpStatus(givenRequest);
         assertEquals(expected, actual);
     }
 
-    private static Stream<Arguments> provideTrackFileNamesAndExpectedMileage() {
+    private static Stream<Arguments> provideTrackFileNamesAndExpectedMileages() {
         return Stream.of(
                 Arguments.of("2907_track-total_10.53_kobrin_2.9_country_7.63.csv", new Mileage(2.827594290976988, 7.275646401909089)),
-                Arguments.of("track-minsk-8.25_km.csv", new Mileage(0, 8.241159744065632)),
-                Arguments.of("track_460_40000.csv", new Mileage(0, 4676.888678553615)),
-                Arguments.of("track_460_64000.csv", new Mileage(0, 6850.768901052526)),
-                Arguments.of("track_460_131000.csv", new Mileage(0, 14085.314546247428)),
-                Arguments.of("unit_460_13000.csv", new Mileage(0, 1771.209035225683))
+                Arguments.of("track-minsk-8.25_km.csv", new Mileage(8.241159744065632, 0)),
+                Arguments.of("track_460_40000.csv", new Mileage(1248.0929696134724, 3428.795708940143)),
+                Arguments.of("track_460_64000.csv", new Mileage(1980.8237700784719, 4869.945130974054)),
+                Arguments.of("track_460_131000.csv", new Mileage(4211.268783970594, 9874.045762276834)),
+                Arguments.of("unit_460_13000.csv", new Mileage(439.11730474078814, 1332.0917304848947))
         );
     }
 

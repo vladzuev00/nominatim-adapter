@@ -4,7 +4,7 @@
 //import by.aurorasoft.nominatim.crud.service.CityService;
 //import by.aurorasoft.nominatim.rest.model.MileageRequest;
 //import by.aurorasoft.nominatim.rest.model.MileageRequest.TrackPoint;
-//import by.aurorasoft.nominatim.rest.model.Mileage;
+//import by.aurorasoft.nominatim.model.Mileage;
 //import by.nhorushko.distancecalculator.*;
 //import com.opencsv.CSVReader;
 //import org.junit.After;

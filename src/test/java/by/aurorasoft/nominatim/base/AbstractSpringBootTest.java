@@ -1,5 +1,6 @@
 package by.aurorasoft.nominatim.base;
 
+import by.aurorasoft.nominatim.ApplicationRunner;
 import by.aurorasoft.nominatim.base.containerinitializer.DataBaseContainerInitializer;
 import com.yannbriancon.interceptor.HibernateQueryInterceptor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
 @Transactional
-@SpringBootTest
+@SpringBootTest(classes = ApplicationRunner.class)
 @ContextConfiguration(initializers = DataBaseContainerInitializer.class)
 public abstract class AbstractSpringBootTest {
 

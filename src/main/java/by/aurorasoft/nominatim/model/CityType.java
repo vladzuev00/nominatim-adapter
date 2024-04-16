@@ -1,5 +1,6 @@
 package by.aurorasoft.nominatim.model;
 
 public enum CityType {
-    CAPITAL, REGIONAL
+    //TODO: remove NOT_DEFINED
+    CAPITAL, REGIONAL, NOT_DEFINED
 }
