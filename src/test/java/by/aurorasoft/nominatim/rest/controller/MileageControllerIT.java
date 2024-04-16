@@ -3,7 +3,6 @@ package by.aurorasoft.nominatim.rest.controller;
 import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -17,7 +16,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 import static org.springframework.transaction.annotation.Propagation.NOT_SUPPORTED;
 
-@SpringBootTest(webEnvironment = RANDOM_PORT)
+@org.springframework.boot.test.context.SpringBootTest(webEnvironment = RANDOM_PORT)
 public class MileageControllerIT extends AbstractSpringBootTest {
     private static final String CONTROLLER_URL = "/api/v1/mileage";
 

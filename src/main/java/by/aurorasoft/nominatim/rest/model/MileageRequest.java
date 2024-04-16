@@ -2,7 +2,6 @@ package by.aurorasoft.nominatim.rest.model;
 
 import by.nhorushko.distancecalculator.LatLngAlt;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Value;
@@ -21,7 +20,7 @@ public class MileageRequest {
 
     @NotNull
     @Size(min = 2)
-    List<@Valid TrackPoint> trackPoints;
+    List<@Valid RequestTrackPoint> trackPoints;
 
     @NotNull
     @Min(0)
@@ -32,7 +31,7 @@ public class MileageRequest {
     Integer maxMessageTimeout;
 
     @JsonCreator
-    public MileageRequest(@JsonProperty("trackPoints") List<TrackPoint> trackPoints,
+    public MileageRequest(@JsonProperty("trackPoints") List<RequestTrackPoint> trackPoints,
                           @JsonProperty("minDetectionSpeed") Integer minDetectionSpeed,
                           @JsonProperty("maxMessageTimeout") Integer maxMessageTimeout) {
         this.trackPoints = trackPoints;
@@ -42,7 +41,7 @@ public class MileageRequest {
 
     @Value
     @Builder
-    public static class TrackPoint implements LatLngAlt {
+    public static class RequestTrackPoint implements LatLngAlt {
         private static final float NOT_DEFINED_LATITUDE_VALUE = NaN;
         private static final float NOT_DEFINED_LONGITUDE_VALUE = NaN;
         private static final int NOT_DEFINED_ALTITUDE_VALUE = MIN_VALUE;
@@ -75,12 +74,12 @@ public class MileageRequest {
         Boolean valid;
 
         @JsonCreator
-        public TrackPoint(@JsonProperty("datetime") Instant datetime,
-                          @JsonProperty("latitude") Float latitude,
-                          @JsonProperty("longitude") Float longitude,
-                          @JsonProperty("altitude") Integer altitude,
-                          @JsonProperty("speed") Integer speed,
-                          @JsonProperty("valid") Boolean valid) {
+        public RequestTrackPoint(@JsonProperty("datetime") Instant datetime,
+                                 @JsonProperty("latitude") Float latitude,
+                                 @JsonProperty("longitude") Float longitude,
+                                 @JsonProperty("altitude") Integer altitude,
+                                 @JsonProperty("speed") Integer speed,
+                                 @JsonProperty("valid") Boolean valid) {
             this.datetime = datetime;
             this.latitude = latitude;
             this.longitude = longitude;

@@ -1,7 +1,6 @@
 package by.aurorasoft.nominatim.model;
 
 import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
-import by.aurorasoft.nominatim.model.Coordinate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
