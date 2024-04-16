@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 
 import static by.aurorasoft.nominatim.model.CityType.CAPITAL;
 import static by.aurorasoft.nominatim.util.CityEntityUtil.checkEquals;
-import static by.aurorasoft.nominatim.util.EntityUtil.mapToIds;
+import static by.aurorasoft.nominatim.util.IdUtil.mapToIds;
 import static java.util.stream.Collectors.toMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
