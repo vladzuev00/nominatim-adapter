@@ -2,8 +2,8 @@ package by.aurorasoft.nominatim.it;
 
 import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import by.aurorasoft.nominatim.model.Mileage;
-import by.aurorasoft.nominatim.rest.model.MileageRequest;
-import by.aurorasoft.nominatim.rest.model.MileageRequest.RequestTrackPoint;
+import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest;
+import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest.RequestTrackPoint;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import org.junit.jupiter.params.ParameterizedTest;

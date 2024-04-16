@@ -3,8 +3,8 @@ package by.aurorasoft.nominatim.controller.mileage;
 import by.aurorasoft.nominatim.model.Track;
 import by.aurorasoft.nominatim.model.TrackPoint;
 import by.aurorasoft.nominatim.model.Mileage;
-import by.aurorasoft.nominatim.rest.model.MileageRequest;
-import by.aurorasoft.nominatim.rest.model.MileageRequest.RequestTrackPoint;
+import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest;
+import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest.RequestTrackPoint;
 import by.aurorasoft.nominatim.service.mileage.MileageCalculatingService;
 import by.nhorushko.distancecalculator.DistanceCalculatorSettingsImpl;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +45,7 @@ public class MileageController {
                 request.getLongitude(),
                 request.getAltitude(),
                 request.getSpeed(),
-                request.isValid()
+                request.getValid()
         );
     }
 }

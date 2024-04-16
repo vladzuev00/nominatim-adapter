@@ -1,7 +1,8 @@
 package by.aurorasoft.nominatim.rest.model;
 
 import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
-import by.aurorasoft.nominatim.rest.model.MileageRequest.RequestTrackPoint;
+import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest;
+import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest.RequestTrackPoint;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
