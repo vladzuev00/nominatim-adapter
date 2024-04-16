@@ -1,6 +1,7 @@
 package by.aurorasoft.nominatim.service.geometry;
 
 import by.aurorasoft.nominatim.model.Track;
+import by.aurorasoft.nominatim.model.TrackPoint;
 import by.nhorushko.distancecalculator.LatLngAlt;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.*;
@@ -15,32 +16,37 @@ import java.util.List;
 public final class GeometryService {
     private final GeometryFactory geometryFactory;
 
-    public LineString createLineString(List<? extends LatLngAlt> latLngAlts) {
-        final CoordinateSequence coordinateSequence = new CoordinateArraySequence(mapToCoordinates(latLngAlts));
-        return new LineString(coordinateSequence, this.geometryFactory);
-    }
-
     public LineString createLine(final Track track) {
-        final CoordinateSequence coordinateSequence = new CoordinateArraySequence(mapToCoordinates(track.getPoints()));
-        return new LineString(coordinateSequence, this.geometryFactory);
+        final CoordinateSequence coordinateSequence = mapToCoordinateSequence(track);
+        return new LineString(coordinateSequence, geometryFactory);
     }
 
-    public Point createPoint(LatLngAlt latLngAlt) {
-        final Coordinate coordinate = mapToCoordinate(latLngAlt);
-        return this.geometryFactory.createPoint(coordinate);
+    public boolean isAnyContain(final List<PreparedGeometry> geometries, final TrackPoint point) {
+        return geometries.stream().anyMatch(geometry -> isContain(geometry, point));
     }
 
-    public boolean isAnyContain(final List<PreparedGeometry> geometries, final LatLngAlt latLngAlt) {
-        return geometries.stream().anyMatch(geometry -> geometry.contains(createPoint(latLngAlt)));
+    private static CoordinateSequence mapToCoordinateSequence(final Track track) {
+        final CoordinateXY[] coordinates = mapToCoordinates(track.getPoints());
+        return new CoordinateArraySequence(coordinates);
     }
 
-    private static CoordinateXY[] mapToCoordinates(List<? extends LatLngAlt> points) {
+    private static CoordinateXY[] mapToCoordinates(final List<? extends LatLngAlt> points) {
         return points.stream()
                 .map(GeometryService::mapToCoordinate)
                 .toArray(CoordinateXY[]::new);
     }
 
-    private static CoordinateXY mapToCoordinate(LatLngAlt mapped) {
-        return new CoordinateXY(mapped.getLongitude(), mapped.getLatitude());
+    private static CoordinateXY mapToCoordinate(final LatLngAlt point) {
+        return new CoordinateXY(point.getLongitude(), point.getLatitude());
+    }
+
+    private boolean isContain(final PreparedGeometry geometry, final LatLngAlt latLngAlt) {
+        final Point point = mapToPoint(latLngAlt);
+        return geometry.contains(point);
+    }
+
+    private Point mapToPoint(final LatLngAlt latLngAlt) {
+        final Coordinate coordinate = mapToCoordinate(latLngAlt);
+        return geometryFactory.createPoint(coordinate);
     }
 }
