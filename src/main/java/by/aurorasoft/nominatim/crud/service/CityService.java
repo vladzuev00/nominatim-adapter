@@ -32,10 +32,8 @@ public class CityService extends AbsServiceCRUD<Long, CityEntity, City, CityRepo
     }
 
     @Transactional(readOnly = true)
-    public List<City> findAll(final Pageable pageable) {
-        final Page<CityEntity> page = repository.findAll(pageable);
-        final List<CityEntity> entities = page.getContent();
-        return mapper.toDtos(entities);
+    public Page<City> findAll(final Pageable pageable) {
+        return repository.findAll(pageable).map(mapper::toDto);
     }
 
     @Transactional(readOnly = true)
