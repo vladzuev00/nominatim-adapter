@@ -11,7 +11,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public final class TrackFactory {
-    private final TrackPointFactory trackPointFactory;
+    private final TrackPointFactory pointFactory;
 
     public Track create(final MileageRequest request) {
         final List<TrackPoint> points = createPoints(request);
@@ -21,7 +21,7 @@ public final class TrackFactory {
     private List<TrackPoint> createPoints(final MileageRequest request) {
         return request.getTrackPoints()
                 .stream()
-                .map(trackPointFactory::create)
+                .map(pointFactory::create)
                 .toList();
     }
 }
