@@ -1,9 +1,9 @@
 package by.aurorasoft.nominatim.it;
 
-import by.aurorasoft.nominatim.base.AbstractJunitSpringBootTest;
-import by.aurorasoft.nominatim.model.Mileage;
+import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest;
 import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest.TrackPointRequest;
+import by.aurorasoft.nominatim.model.Mileage;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -16,7 +16,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileNotFoundException;
@@ -41,9 +40,8 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 import static org.springframework.transaction.annotation.Propagation.NOT_SUPPORTED;
 
 @Transactional(propagation = NOT_SUPPORTED)
-@Sql("classpath:sql/insert-belarus-cities.sql")
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
-public abstract class MileageCalculationIT extends AbstractJunitSpringBootTest {
+public abstract class MileageCalculationIT extends AbstractSpringBootTest {
     private static final String URL = "/api/v1/mileage";
     private static final MediaType MEDIA_TYPE = APPLICATION_JSON;
 
