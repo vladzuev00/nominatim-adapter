@@ -1,7 +1,6 @@
-package by.aurorasoft.nominatim.controller.mileage;
+package by.aurorasoft.nominatim.controller.mileage.model;
 
 import by.aurorasoft.nominatim.base.AbstractJunitSpringBootTest;
-import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest;
 import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest.TrackPointRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
