@@ -367,4 +367,122 @@ public final class MileageRequestTest extends AbstractJunitSpringBootTest {
                 .build();
         assertEquals(expected, actual);
     }
+
+    @Test
+    public void mileageShouldNotBeValidBecauseOfTrackPointsIsNull() {
+        final MileageRequest givenMileage = MileageRequest.builder()
+                .minDetectionSpeed(10)
+                .maxMessageTimeout(11)
+                .build();
+
+        final Set<ConstraintViolation<MileageRequest>> violations = validator.validate(givenMileage);
+        assertEquals(1, violations.size());
+        assertEquals("не должно равняться null", findFirstMessage(violations));
+    }
+
+    @Test
+    public void mileageShouldNotBeValidBecauseOfTrackPointCountIsLessThanMinimalAllowable() {
+        final MileageRequest givenMileage = MileageRequest.builder()
+                .trackPoints(
+                        List.of(
+                                new TrackPointRequest(parse("2023-02-14T12:28:04Z"), 45F, 46F, 15, 500, true)
+                        )
+                )
+                .minDetectionSpeed(10)
+                .maxMessageTimeout(11)
+                .build();
+
+        final Set<ConstraintViolation<MileageRequest>> violations = validator.validate(givenMileage);
+        assertEquals(1, violations.size());
+        assertEquals("размер должен находиться в диапазоне от 2 до 2147483647", findFirstMessage(violations));
+    }
+
+    @Test
+    public void mileageShouldNotBeValidBecauseOfNotValidTrackPoint() {
+        final MileageRequest givenMileage = MileageRequest.builder()
+                .trackPoints(
+                        List.of(
+                                new TrackPointRequest(parse("2023-02-14T12:28:04Z"), 45F, 46F, 15, 500, true),
+                                new TrackPointRequest(parse("2023-02-14T12:28:05Z"), -90.1F, 46F, 15, 500, true)
+                        )
+                )
+                .minDetectionSpeed(10)
+                .maxMessageTimeout(11)
+                .build();
+
+        final Set<ConstraintViolation<MileageRequest>> violations = validator.validate(givenMileage);
+        assertEquals(1, violations.size());
+        assertEquals("должно быть больше, чем или равно -90", findFirstMessage(violations));
+    }
+
+    @Test
+    public void mileageShouldNotBeValidBecauseOfMinDetectionSpeedIsNull() {
+        final MileageRequest givenMileage = MileageRequest.builder()
+                .trackPoints(
+                        List.of(
+                                new TrackPointRequest(parse("2023-02-14T12:28:04Z"), 45F, 46F, 15, 500, true),
+                                new TrackPointRequest(parse("2023-02-14T12:28:05Z"), 45.01F, 46F, 15, 500, true)
+                        )
+                )
+                .maxMessageTimeout(11)
+                .build();
+
+        final Set<ConstraintViolation<MileageRequest>> violations = validator.validate(givenMileage);
+        assertEquals(1, violations.size());
+        assertEquals("не должно равняться null", findFirstMessage(violations));
+    }
+
+    @Test
+    public void mileageShouldNotBeValidBecauseOfMinDetectionSpeedIsLessThanMinimalAllowable() {
+        final MileageRequest givenMileage = MileageRequest.builder()
+                .trackPoints(
+                        List.of(
+                                new TrackPointRequest(parse("2023-02-14T12:28:04Z"), 45F, 46F, 15, 500, true),
+                                new TrackPointRequest(parse("2023-02-14T12:28:05Z"), 45.01F, 46F, 15, 500, true)
+                        )
+                )
+                .minDetectionSpeed(-1)
+                .maxMessageTimeout(11)
+                .build();
+
+        final Set<ConstraintViolation<MileageRequest>> violations = validator.validate(givenMileage);
+        assertEquals(1, violations.size());
+        assertEquals("должно быть не меньше 0", findFirstMessage(violations));
+    }
+
+    @Test
+    public void mileageShouldNotBeValidBecauseOfMaxMessageTimeoutIsNull() {
+        final MileageRequest givenMileage = MileageRequest.builder()
+                .trackPoints(
+                        List.of(
+                                new TrackPointRequest(parse("2023-02-14T12:28:04Z"), 45F, 46F, 15, 500, true),
+                                new TrackPointRequest(parse("2023-02-14T12:28:05Z"), 45.01F, 46F, 15, 500, true)
+                        )
+                )
+                .minDetectionSpeed(10)
+                .build();
+
+        final Set<ConstraintViolation<MileageRequest>> violations = validator.validate(givenMileage);
+        assertEquals(1, violations.size());
+        assertEquals("не должно равняться null", findFirstMessage(violations));
+    }
+
+    @Test
+    public void mileageShouldNotBeValidBecauseOfMaxMessageTimeoutIsLessThanMinimalAllowable() {
+        final MileageRequest givenMileage = MileageRequest.builder()
+                .trackPoints(
+                        List.of(
+                                new TrackPointRequest(parse("2023-02-14T12:28:04Z"), 45F, 46F, 15, 500, true),
+                                new TrackPointRequest(parse("2023-02-14T12:28:05Z"), 45.01F, 46F, 15, 500, true)
+                        )
+                )
+                .minDetectionSpeed(10)
+                .maxMessageTimeout(-1)
+                .build();
+
+        final Set<ConstraintViolation<MileageRequest>> violations = validator.validate(givenMileage);
+        assertEquals(1, violations.size());
+        assertEquals("должно быть не меньше 0", findFirstMessage(violations));
+    }
+
 }
