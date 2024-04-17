@@ -17,11 +17,15 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 
 import java.util.List;
 
+import static by.aurorasoft.nominatim.util.HttpUtil.postExpectingNotAcceptable;
+import static by.aurorasoft.nominatim.util.HttpUtil.postExpectingOk;
 import static java.time.Instant.parse;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
@@ -64,6 +68,33 @@ public final class MileageControllerTest extends AbstractJunitSpringBootTest {
         when(mockedMileageCalculatingService.calculate(same(givenTrack), same(givenDistanceCalculatorSettings)))
                 .thenReturn(givenMileage);
 
+        final Mileage actual = findMileageExpectingOk(givenRequest);
+        assertEquals(givenMileage, actual);
+    }
 
+    @Test
+    public void mileageShouldNotBeFoundBecauseOfNotValidRequest()
+            throws Exception {
+        final MileageRequest givenRequest = MileageRequest.builder()
+                .minDetectionSpeed(10)
+                .maxMessageTimeout(11)
+                .build();
+
+        final String actual = findMileageExpectingNotAcceptable(givenRequest);
+        final String expected = """
+                {
+                  "httpStatus": "NOT_ACCEPTABLE",
+                  "message": "trackPoints : не должно равняться null",
+                  "dateTime": "2024-04-17 09-53-51"
+                }""";
+        assertEquals(expected, actual, true);
+    }
+
+    private Mileage findMileageExpectingOk(final MileageRequest request) {
+        return postExpectingOk(restTemplate, URL, request, Mileage.class);
+    }
+
+    private String findMileageExpectingNotAcceptable(final MileageRequest request) {
+        return postExpectingNotAcceptable(restTemplate, URL, request, String.class);
     }
 }

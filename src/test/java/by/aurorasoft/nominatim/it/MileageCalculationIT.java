@@ -4,7 +4,6 @@ import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest;
 import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest.TrackPointRequest;
 import by.aurorasoft.nominatim.model.Mileage;
-import by.aurorasoft.nominatim.util.HttpUtil;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -24,6 +23,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static by.aurorasoft.nominatim.util.HttpUtil.postExpectingOk;
 import static java.lang.Float.parseFloat;
 import static java.lang.Integer.parseInt;
 import static java.time.ZoneOffset.UTC;
@@ -44,9 +44,9 @@ public abstract class MileageCalculationIT extends AbstractSpringBootTest {
 
     @ParameterizedTest
     @MethodSource("provideTrackFileNamesAndExpectedMileages")
-    public final void mileageShouldBeCalculatedForTrackFromFile(final String fileName, final Mileage expected) {
+    public final void mileageShouldBeFoundForTrackFromFile(final String fileName, final Mileage expected) {
         final MileageRequest givenRequest = requestFactory.create(fileName);
-        final Mileage actual = postExpectingOk(givenRequest);
+        final Mileage actual = findMileage(givenRequest);
         assertEquals(expected, actual);
     }
 
@@ -61,8 +61,8 @@ public abstract class MileageCalculationIT extends AbstractSpringBootTest {
         );
     }
 
-    private Mileage postExpectingOk(final MileageRequest request) {
-        return HttpUtil.postExpectingOk(restTemplate, URL, request, Mileage.class);
+    private Mileage findMileage(final MileageRequest request) {
+        return postExpectingOk(restTemplate, URL, request, Mileage.class);
     }
 
     private static final class MileageRequestFactory {

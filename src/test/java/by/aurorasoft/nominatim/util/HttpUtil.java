@@ -3,15 +3,13 @@ package by.aurorasoft.nominatim.util;
 import lombok.experimental.UtilityClass;
 import org.skyscreamer.jsonassert.comparator.CustomComparator;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.skyscreamer.jsonassert.Customization.customization;
 import static org.skyscreamer.jsonassert.JSONCompareMode.STRICT;
+import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
@@ -25,13 +23,28 @@ public final class HttpUtil {
             customization(JSON_PROPERTY_NAME_DATE_TIME, (first, second) -> true)
     );
 
-    public <B, R> R postExpectingOk(final TestRestTemplate restTemplate,
-                                    final String url,
-                                    final B body,
-                                    final Class<R> resultType) {
+    public static <B, R> R postExpectingOk(final TestRestTemplate restTemplate,
+                                           final String url,
+                                           final B body,
+                                           final Class<R> resultType) {
+        return postExpectingStatus(restTemplate, url, body, resultType, OK);
+    }
+
+    public static <B, R> R postExpectingNotAcceptable(final TestRestTemplate restTemplate,
+                                                      final String url,
+                                                      final B body,
+                                                      final Class<R> resultType) {
+        return postExpectingStatus(restTemplate, url, body, resultType, NOT_ACCEPTABLE);
+    }
+
+    private static <B, R> R postExpectingStatus(final TestRestTemplate restTemplate,
+                                                final String url,
+                                                final B body,
+                                                final Class<R> resultType,
+                                                final HttpStatus status) {
         final HttpEntity<B> httpEntity = createHttpEntity(body);
         final ResponseEntity<R> response = restTemplate.postForEntity(url, httpEntity, resultType);
-        assertSame(OK, response.getStatusCode());
+        assertSame(status, response.getStatusCode());
         return response.getBody();
     }
 
