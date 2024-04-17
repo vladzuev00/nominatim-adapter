@@ -52,10 +52,10 @@ public abstract class MileageCalculationIT extends AbstractSpringBootTest {
 
     private static Stream<Arguments> provideTrackFileNamesAndExpectedMileages() {
         return Stream.of(
-                Arguments.of("2907_track-total_10.53_kobrin_2.9_country_7.63.csv", new Mileage(2.827594290976988, 7.275646401909089)),
+                Arguments.of("2907_track-total_10.53_kobrin_2.9_country_7.63.csv", new Mileage(2.827594290976988, 7.27564640190909)),
                 Arguments.of("track-minsk-8.25_km.csv", new Mileage(8.241159744065632, 0)),
                 Arguments.of("track_460_40000.csv", new Mileage(1248.0929696134724, 3428.795708940143)),
-                Arguments.of("track_460_64000.csv", new Mileage(1980.8237700784719, 4869.945130974054)),
+                Arguments.of("track_460_64000.csv", new Mileage(1980.823770078472, 4869.945130974054)),
                 Arguments.of("track_460_131000.csv", new Mileage(4211.268783970594, 9874.045762276834)),
                 Arguments.of("unit_460_13000.csv", new Mileage(439.11730474078814, 1332.0917304848947))
         );

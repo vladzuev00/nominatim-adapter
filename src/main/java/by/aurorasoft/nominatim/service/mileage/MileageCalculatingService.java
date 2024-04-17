@@ -1,8 +1,8 @@
 package by.aurorasoft.nominatim.service.mileage;
 
+import by.aurorasoft.nominatim.model.Mileage;
 import by.aurorasoft.nominatim.model.Track;
 import by.aurorasoft.nominatim.model.TrackPoint;
-import by.aurorasoft.nominatim.model.Mileage;
 import by.aurorasoft.nominatim.service.geometry.GeometryService;
 import by.aurorasoft.nominatim.service.mileage.loader.TrackCityGeometryLoader;
 import by.nhorushko.distancecalculator.DistanceCalculator;
@@ -28,6 +28,7 @@ public final class MileageCalculatingService {
     public Mileage calculate(final Track track, final DistanceCalculatorSettings settings) {
         final List<PreparedGeometry> cityGeometries = loadCityGeometries(track);
         return range(0, getSliceCount(track))
+                .parallel()
                 .mapToObj(i -> getSlice(track, i))
                 .collect(
                         collectingAndThen(
