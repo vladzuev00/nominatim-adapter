@@ -3,7 +3,7 @@ package by.aurorasoft.nominatim.it;
 import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import by.aurorasoft.nominatim.model.Mileage;
 import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest;
-import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest.RequestTrackPoint;
+import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest.TrackPointRequest;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -100,11 +100,11 @@ public abstract class MileageCalculationIT extends AbstractSpringBootTest {
         private final TrackPointParser pointParser = new TrackPointParser();
 
         public MileageRequest create(final String fileName) {
-            final List<RequestTrackPoint> trackPoints = readTrackPoints(fileName);
+            final List<TrackPointRequest> trackPoints = readTrackPoints(fileName);
             return new MileageRequest(trackPoints, MIN_DETECTION_SPEED, MAX_MESSAGE_TIMEOUT);
         }
 
-        private List<RequestTrackPoint> readTrackPoints(final String fileName) {
+        private List<TrackPointRequest> readTrackPoints(final String fileName) {
             try (final CSVReader csvReader = createReader(fileName)) {
                 return csvReader.readAll()
                         .stream()
@@ -135,8 +135,8 @@ public abstract class MileageCalculationIT extends AbstractSpringBootTest {
 
         private static final String VALID_TRUE_ALIAS = "VALID";
 
-        public RequestTrackPoint parse(final String[] properties) {
-            return RequestTrackPoint.builder()
+        public TrackPointRequest parse(final String[] properties) {
+            return TrackPointRequest.builder()
                     .datetime(parseDateTime(properties))
                     .latitude(parseLatitude(properties))
                     .longitude(parseLongitude(properties))

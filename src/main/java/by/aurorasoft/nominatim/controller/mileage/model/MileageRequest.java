@@ -16,7 +16,7 @@ public class MileageRequest {
 
     @NotNull
     @Size(min = 2)
-    List<@Valid RequestTrackPoint> trackPoints;
+    List<@Valid TrackPointRequest> trackPoints;
 
     @NotNull
     @Min(0)
@@ -27,9 +27,9 @@ public class MileageRequest {
     Integer maxMessageTimeout;
 
     @JsonCreator
-    public MileageRequest(@JsonProperty("trackPoints") List<RequestTrackPoint> trackPoints,
-                          @JsonProperty("minDetectionSpeed") Integer minDetectionSpeed,
-                          @JsonProperty("maxMessageTimeout") Integer maxMessageTimeout) {
+    public MileageRequest(@JsonProperty("trackPoints") final List<TrackPointRequest> trackPoints,
+                          @JsonProperty("minDetectionSpeed") final Integer minDetectionSpeed,
+                          @JsonProperty("maxMessageTimeout") final Integer maxMessageTimeout) {
         this.trackPoints = trackPoints;
         this.minDetectionSpeed = minDetectionSpeed;
         this.maxMessageTimeout = maxMessageTimeout;
@@ -37,7 +37,7 @@ public class MileageRequest {
 
     @Value
     @Builder
-    public static class RequestTrackPoint {
+    public static class TrackPointRequest {
 
         @NotNull
         @PastOrPresent
@@ -65,7 +65,7 @@ public class MileageRequest {
         Boolean valid;
 
         @JsonCreator
-        public RequestTrackPoint(@JsonProperty("datetime") final Instant datetime,
+        public TrackPointRequest(@JsonProperty("datetime") final Instant datetime,
                                  @JsonProperty("latitude") final Float latitude,
                                  @JsonProperty("longitude") final Float longitude,
                                  @JsonProperty("altitude") final Integer altitude,

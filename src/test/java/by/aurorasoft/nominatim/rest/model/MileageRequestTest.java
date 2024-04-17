@@ -2,7 +2,7 @@ package by.aurorasoft.nominatim.rest.model;
 
 import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest;
-import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest.RequestTrackPoint;
+import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest.TrackPointRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
 
     @Test
     public void trackPointShouldBeValid() {
-        final RequestTrackPoint givenTrackPoint = RequestTrackPoint.builder()
+        final TrackPointRequest givenTrackPoint = TrackPointRequest.builder()
                 .datetime(now())
                 .latitude(45F)
                 .longitude(46F)
@@ -38,13 +38,13 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
                 .valid(true)
                 .build();
 
-        final Set<ConstraintViolation<RequestTrackPoint>> constraintViolations = this.validator.validate(givenTrackPoint);
+        final Set<ConstraintViolation<TrackPointRequest>> constraintViolations = this.validator.validate(givenTrackPoint);
         assertTrue(constraintViolations.isEmpty());
     }
 
     @Test
     public void trackPointShouldNotBeValidBecauseOfDateTimeIsNull() {
-        final RequestTrackPoint givenTrackPoint = RequestTrackPoint.builder()
+        final TrackPointRequest givenTrackPoint = TrackPointRequest.builder()
                 .latitude(45F)
                 .longitude(46F)
                 .altitude(15)
@@ -52,14 +52,14 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
                 .valid(true)
                 .build();
 
-        final Set<ConstraintViolation<RequestTrackPoint>> constraintViolations = this.validator.validate(givenTrackPoint);
+        final Set<ConstraintViolation<TrackPointRequest>> constraintViolations = this.validator.validate(givenTrackPoint);
         assertEquals(1, constraintViolations.size());
         assertEquals("не должно равняться null", constraintViolations.iterator().next().getMessage());
     }
 
     @Test
     public void trackPointShouldNotBeValidBecauseOfDateTimeIsFuture() {
-        final RequestTrackPoint givenTrackPoint = RequestTrackPoint.builder()
+        final TrackPointRequest givenTrackPoint = TrackPointRequest.builder()
                 .datetime(now().plus(10, SECONDS))
                 .latitude(45F)
                 .longitude(46F)
@@ -68,7 +68,7 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
                 .valid(true)
                 .build();
 
-        final Set<ConstraintViolation<RequestTrackPoint>> constraintViolations = this.validator.validate(givenTrackPoint);
+        final Set<ConstraintViolation<TrackPointRequest>> constraintViolations = this.validator.validate(givenTrackPoint);
         assertEquals(1, constraintViolations.size());
         assertEquals(
                 "должно содержать прошедшую дату или сегодняшнее число",
@@ -77,7 +77,7 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
 
     @Test
     public void trackPointShouldNotBeValidBecauseOfLatitudeIsNull() {
-        final RequestTrackPoint givenTrackPoint = RequestTrackPoint.builder()
+        final TrackPointRequest givenTrackPoint = TrackPointRequest.builder()
                 .datetime(now())
                 .longitude(46F)
                 .altitude(15)
@@ -85,14 +85,14 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
                 .valid(true)
                 .build();
 
-        final Set<ConstraintViolation<RequestTrackPoint>> constraintViolations = this.validator.validate(givenTrackPoint);
+        final Set<ConstraintViolation<TrackPointRequest>> constraintViolations = this.validator.validate(givenTrackPoint);
         assertEquals(1, constraintViolations.size());
         assertEquals("не должно равняться null", constraintViolations.iterator().next().getMessage());
     }
 
     @Test
     public void trackPointShouldNotBeValidBecauseOfLatitudeIsLessThanMinimalAllowable() {
-        final RequestTrackPoint givenTrackPoint = RequestTrackPoint.builder()
+        final TrackPointRequest givenTrackPoint = TrackPointRequest.builder()
                 .datetime(now())
                 .latitude(-90.1F)
                 .longitude(46F)
@@ -101,7 +101,7 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
                 .valid(true)
                 .build();
 
-        final Set<ConstraintViolation<RequestTrackPoint>> constraintViolations = this.validator.validate(givenTrackPoint);
+        final Set<ConstraintViolation<TrackPointRequest>> constraintViolations = this.validator.validate(givenTrackPoint);
         assertEquals(1, constraintViolations.size());
         assertEquals(
                 "должно быть больше, чем или равно -90",
@@ -110,7 +110,7 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
 
     @Test
     public void trackPointShouldNotBeValidBecauseOfLatitudeIsBiggerThanMaximalAllowable() {
-        final RequestTrackPoint givenTrackPoint = RequestTrackPoint.builder()
+        final TrackPointRequest givenTrackPoint = TrackPointRequest.builder()
                 .datetime(now())
                 .latitude(90.1F)
                 .longitude(46F)
@@ -119,7 +119,7 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
                 .valid(true)
                 .build();
 
-        final Set<ConstraintViolation<RequestTrackPoint>> constraintViolations = this.validator.validate(givenTrackPoint);
+        final Set<ConstraintViolation<TrackPointRequest>> constraintViolations = this.validator.validate(givenTrackPoint);
         assertEquals(1, constraintViolations.size());
         assertEquals(
                 "должно быть меньше, чем или равно 90",
@@ -128,7 +128,7 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
 
     @Test
     public void trackPointShouldNotBeValidBecauseOfLongitudeIsNull() {
-        final RequestTrackPoint givenTrackPoint = RequestTrackPoint.builder()
+        final TrackPointRequest givenTrackPoint = TrackPointRequest.builder()
                 .datetime(now())
                 .latitude(45F)
                 .altitude(15)
@@ -136,14 +136,14 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
                 .valid(true)
                 .build();
 
-        final Set<ConstraintViolation<RequestTrackPoint>> constraintViolations = this.validator.validate(givenTrackPoint);
+        final Set<ConstraintViolation<TrackPointRequest>> constraintViolations = this.validator.validate(givenTrackPoint);
         assertEquals(1, constraintViolations.size());
         assertEquals("не должно равняться null", constraintViolations.iterator().next().getMessage());
     }
 
     @Test
     public void trackPointShouldNotBeValidBecauseOfLongitudeIsLessThanMinimalAllowable() {
-        final RequestTrackPoint givenTrackPoint = RequestTrackPoint.builder()
+        final TrackPointRequest givenTrackPoint = TrackPointRequest.builder()
                 .datetime(now())
                 .latitude(45F)
                 .longitude(-180.1F)
@@ -152,14 +152,14 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
                 .valid(true)
                 .build();
 
-        final Set<ConstraintViolation<RequestTrackPoint>> constraintViolations = this.validator.validate(givenTrackPoint);
+        final Set<ConstraintViolation<TrackPointRequest>> constraintViolations = this.validator.validate(givenTrackPoint);
         assertEquals(1, constraintViolations.size());
         assertEquals("должно быть больше, чем или равно -180", constraintViolations.iterator().next().getMessage());
     }
 
     @Test
     public void trackPointShouldNotBeValidBecauseOfLongitudeIsMoreThanMaximalAllowalbe() {
-        final RequestTrackPoint givenTrackPoint = RequestTrackPoint.builder()
+        final TrackPointRequest givenTrackPoint = TrackPointRequest.builder()
                 .datetime(now())
                 .latitude(45F)
                 .longitude(180.1F)
@@ -168,14 +168,14 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
                 .valid(true)
                 .build();
 
-        final Set<ConstraintViolation<RequestTrackPoint>> constraintViolations = this.validator.validate(givenTrackPoint);
+        final Set<ConstraintViolation<TrackPointRequest>> constraintViolations = this.validator.validate(givenTrackPoint);
         assertEquals(1, constraintViolations.size());
         assertEquals("должно быть меньше, чем или равно 180", constraintViolations.iterator().next().getMessage());
     }
 
     @Test
     public void trackPointShouldNotBeValidBecauseOfAltitudeIsNull() {
-        final RequestTrackPoint givenTrackPoint = RequestTrackPoint.builder()
+        final TrackPointRequest givenTrackPoint = TrackPointRequest.builder()
                 .datetime(now())
                 .latitude(45F)
                 .longitude(45F)
@@ -183,14 +183,14 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
                 .valid(true)
                 .build();
 
-        final Set<ConstraintViolation<RequestTrackPoint>> constraintViolations = this.validator.validate(givenTrackPoint);
+        final Set<ConstraintViolation<TrackPointRequest>> constraintViolations = this.validator.validate(givenTrackPoint);
         assertEquals(1, constraintViolations.size());
         assertEquals("не должно равняться null", constraintViolations.iterator().next().getMessage());
     }
 
     @Test
     public void trackPointShouldNotBeValidBecauseOfSpeedIsNull() {
-        final RequestTrackPoint givenTrackPoint = RequestTrackPoint.builder()
+        final TrackPointRequest givenTrackPoint = TrackPointRequest.builder()
                 .datetime(now())
                 .latitude(45F)
                 .longitude(46F)
@@ -198,14 +198,14 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
                 .valid(true)
                 .build();
 
-        final Set<ConstraintViolation<RequestTrackPoint>> constraintViolations = this.validator.validate(givenTrackPoint);
+        final Set<ConstraintViolation<TrackPointRequest>> constraintViolations = this.validator.validate(givenTrackPoint);
         assertEquals(1, constraintViolations.size());
         assertEquals("не должно равняться null", constraintViolations.iterator().next().getMessage());
     }
 
     @Test
     public void trackPointShouldNotBeValidBecauseOfSpeedIsLessThanMinimalAllowable() {
-        final RequestTrackPoint givenTrackPoint = RequestTrackPoint.builder()
+        final TrackPointRequest givenTrackPoint = TrackPointRequest.builder()
                 .datetime(now())
                 .latitude(45F)
                 .longitude(46F)
@@ -214,14 +214,14 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
                 .valid(true)
                 .build();
 
-        final Set<ConstraintViolation<RequestTrackPoint>> constraintViolations = this.validator.validate(givenTrackPoint);
+        final Set<ConstraintViolation<TrackPointRequest>> constraintViolations = this.validator.validate(givenTrackPoint);
         assertEquals(1, constraintViolations.size());
         assertEquals("должно быть не меньше 0", constraintViolations.iterator().next().getMessage());
     }
 
     @Test
     public void trackPointShouldNotBeValidBecauseOfSpeedIsMoreThanMaximalAllowable() {
-        final RequestTrackPoint givenTrackPoint = RequestTrackPoint.builder()
+        final TrackPointRequest givenTrackPoint = TrackPointRequest.builder()
                 .datetime(now())
                 .latitude(45F)
                 .longitude(46F)
@@ -230,14 +230,14 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
                 .valid(true)
                 .build();
 
-        final Set<ConstraintViolation<RequestTrackPoint>> constraintViolations = this.validator.validate(givenTrackPoint);
+        final Set<ConstraintViolation<TrackPointRequest>> constraintViolations = this.validator.validate(givenTrackPoint);
         assertEquals(1, constraintViolations.size());
         assertEquals("должно быть не больше 1000", constraintViolations.iterator().next().getMessage());
     }
 
     @Test
     public void trackPointShouldNotBeValidBecauseOfValidIsNull() {
-        final RequestTrackPoint givenTrackPoint = RequestTrackPoint.builder()
+        final TrackPointRequest givenTrackPoint = TrackPointRequest.builder()
                 .datetime(now())
                 .latitude(45F)
                 .longitude(46F)
@@ -245,7 +245,7 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
                 .speed(500)
                 .build();
 
-        final Set<ConstraintViolation<RequestTrackPoint>> constraintViolations = this.validator.validate(givenTrackPoint);
+        final Set<ConstraintViolation<TrackPointRequest>> constraintViolations = this.validator.validate(givenTrackPoint);
         assertEquals(1, constraintViolations.size());
         assertEquals("не должно равняться null", constraintViolations.iterator().next().getMessage());
     }
@@ -253,7 +253,7 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
     @Test
     public void trackPointShouldBeConvertedToJson()
             throws Exception {
-        final RequestTrackPoint givenTrackPoint = RequestTrackPoint.builder()
+        final TrackPointRequest givenTrackPoint = TrackPointRequest.builder()
                 .datetime(parse("2007-12-03T10:15:30Z"))
                 .latitude(45F)
                 .longitude(46F)
@@ -282,8 +282,8 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
                 + "\"speed\":500,"
                 + "\"valid\":true}";
 
-        final RequestTrackPoint actual = this.objectMapper.readValue(givenJson, RequestTrackPoint.class);
-        final RequestTrackPoint expected = RequestTrackPoint.builder()
+        final TrackPointRequest actual = this.objectMapper.readValue(givenJson, TrackPointRequest.class);
+        final TrackPointRequest expected = TrackPointRequest.builder()
                 .datetime(parse("2023-02-14T12:28:04Z"))
                 .latitude(45F)
                 .longitude(46F)
@@ -298,7 +298,7 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
     public void mileageRequestShouldBeValid() {
         final MileageRequest givenMileageRequest = MileageRequest.builder()
                 .trackPoints(List.of(
-                        RequestTrackPoint.builder()
+                        TrackPointRequest.builder()
                                 .datetime(parse("2023-02-14T12:28:04Z"))
                                 .latitude(45F)
                                 .longitude(46F)
@@ -306,7 +306,7 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
                                 .speed(500)
                                 .valid(true)
                                 .build(),
-                        RequestTrackPoint.builder()
+                        TrackPointRequest.builder()
                                 .datetime(parse("2023-02-14T12:28:05Z"))
                                 .latitude(45.001F)
                                 .longitude(46F)
@@ -341,7 +341,7 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
     public void mileageRequestShouldNotBeValidBecauseOfAmountOfTrackPointsIsLessThanMinimalAllowable() {
         final MileageRequest givenMileageRequest = MileageRequest.builder()
                 .trackPoints(List.of(
-                        RequestTrackPoint.builder()
+                        TrackPointRequest.builder()
                                 .datetime(parse("2023-02-14T12:28:04Z"))
                                 .latitude(45F)
                                 .longitude(46F)
@@ -365,7 +365,7 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
     public void mileageRequestShouldNotBeValidBecauseOfMinDetectionSpeedIsNull() {
         final MileageRequest givenMileageRequest = MileageRequest.builder()
                 .trackPoints(List.of(
-                        RequestTrackPoint.builder()
+                        TrackPointRequest.builder()
                                 .datetime(parse("2023-02-14T12:28:04Z"))
                                 .latitude(45F)
                                 .longitude(46F)
@@ -373,7 +373,7 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
                                 .speed(500)
                                 .valid(true)
                                 .build(),
-                        RequestTrackPoint.builder()
+                        TrackPointRequest.builder()
                                 .datetime(parse("2023-02-14T12:28:05Z"))
                                 .latitude(45.001F)
                                 .longitude(46F)
@@ -395,7 +395,7 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
     public void mileageRequestShouldNotBeValidBecauseOfMinDetectionSpeedIsLessThanMinimalAllowable() {
         final MileageRequest givenMileageRequest = MileageRequest.builder()
                 .trackPoints(List.of(
-                        RequestTrackPoint.builder()
+                        TrackPointRequest.builder()
                                 .datetime(parse("2023-02-14T12:28:04Z"))
                                 .latitude(45F)
                                 .longitude(46F)
@@ -403,7 +403,7 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
                                 .speed(500)
                                 .valid(true)
                                 .build(),
-                        RequestTrackPoint.builder()
+                        TrackPointRequest.builder()
                                 .datetime(parse("2023-02-14T12:28:05Z"))
                                 .latitude(45.001F)
                                 .longitude(46F)
@@ -426,7 +426,7 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
     public void mileageRequestShouldNotBeValidBecauseOfMaxMessageTimeoutIsNull() {
         final MileageRequest givenMileageRequest = MileageRequest.builder()
                 .trackPoints(List.of(
-                        RequestTrackPoint.builder()
+                        TrackPointRequest.builder()
                                 .datetime(parse("2023-02-14T12:28:04Z"))
                                 .latitude(45F)
                                 .longitude(46F)
@@ -434,7 +434,7 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
                                 .speed(500)
                                 .valid(true)
                                 .build(),
-                        RequestTrackPoint.builder()
+                        TrackPointRequest.builder()
                                 .datetime(parse("2023-02-14T12:28:05Z"))
                                 .latitude(45.001F)
                                 .longitude(46F)
@@ -456,7 +456,7 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
     public void mileageRequestShouldNotBeValidBecauseOfMaxMessageTimeoutIsLessThanMinimalAllowable() {
         final MileageRequest givenMileageRequest = MileageRequest.builder()
                 .trackPoints(List.of(
-                        RequestTrackPoint.builder()
+                        TrackPointRequest.builder()
                                 .datetime(parse("2023-02-14T12:28:04Z"))
                                 .latitude(45F)
                                 .longitude(46F)
@@ -464,7 +464,7 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
                                 .speed(500)
                                 .valid(true)
                                 .build(),
-                        RequestTrackPoint.builder()
+                        TrackPointRequest.builder()
                                 .datetime(parse("2023-02-14T12:28:05Z"))
                                 .latitude(45.001F)
                                 .longitude(46F)
@@ -488,7 +488,7 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
             throws Exception {
         final MileageRequest givenMileageRequest = MileageRequest.builder()
                 .trackPoints(List.of(
-                        RequestTrackPoint.builder()
+                        TrackPointRequest.builder()
                                 .datetime(parse("2007-12-03T10:15:30Z"))
                                 .latitude(53F)
                                 .longitude(20F)
@@ -496,7 +496,7 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
                                 .speed(15)
                                 .valid(true)
                                 .build(),
-                        RequestTrackPoint.builder()
+                        TrackPointRequest.builder()
                                 .datetime(parse("2007-12-03T10:15:31Z"))
                                 .latitude(53.001F)
                                 .longitude(20.001F)
@@ -530,7 +530,7 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
         final MileageRequest actual = this.objectMapper.readValue(givenJson, MileageRequest.class);
         final MileageRequest expected = MileageRequest.builder()
                 .trackPoints(List.of(
-                        RequestTrackPoint.builder()
+                        TrackPointRequest.builder()
                                 .datetime(parse("2007-12-03T10:15:30Z"))
                                 .latitude(53F)
                                 .longitude(20F)
@@ -538,7 +538,7 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
                                 .speed(15)
                                 .valid(true)
                                 .build(),
-                        RequestTrackPoint.builder()
+                        TrackPointRequest.builder()
                                 .datetime(parse("2007-12-03T10:15:31Z"))
                                 .latitude(53.001F)
                                 .longitude(20.001F)

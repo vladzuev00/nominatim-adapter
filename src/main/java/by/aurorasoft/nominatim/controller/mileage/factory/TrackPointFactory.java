@@ -1,13 +1,13 @@
 package by.aurorasoft.nominatim.controller.mileage.factory;
 
-import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest.RequestTrackPoint;
+import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest.TrackPointRequest;
 import by.aurorasoft.nominatim.model.TrackPoint;
 import org.springframework.stereotype.Component;
 
 @Component
 public final class TrackPointFactory {
 
-    public TrackPoint create(final RequestTrackPoint request) {
+    public TrackPoint create(final TrackPointRequest request) {
         return new TrackPoint(
                 request.getDatetime(),
                 request.getLatitude(),
