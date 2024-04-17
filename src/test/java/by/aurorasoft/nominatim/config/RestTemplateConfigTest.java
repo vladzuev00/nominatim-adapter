@@ -3,7 +3,7 @@ package by.aurorasoft.nominatim.config;
 import by.aurorasoft.nominatim.base.AbstractJunitSpringBootTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.n52.jackson.datatype.jts.JtsModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 import static java.util.Collections.singletonList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 import static org.springframework.http.MediaType.ALL;
 
 public final class RestTemplateConfigTest extends AbstractJunitSpringBootTest {
