@@ -5,9 +5,11 @@ import by.aurorasoft.nominatim.base.containerinitializer.DataBaseContainerInitia
 import com.yannbriancon.interceptor.HibernateQueryInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.BeforeClass;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -20,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
 @Transactional
+@RunWith(SpringRunner.class)
 @SpringBootTest(classes = ApplicationRunner.class)
 @ContextConfiguration(initializers = DataBaseContainerInitializer.class)
 public abstract class AbstractSpringBootTest {
