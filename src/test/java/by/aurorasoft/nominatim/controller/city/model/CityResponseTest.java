@@ -11,6 +11,7 @@ import org.wololo.jts2geojson.GeoJSONReader;
 import org.wololo.jts2geojson.GeoJSONWriter;
 
 import static by.aurorasoft.nominatim.model.CityType.CAPITAL;
+import static by.aurorasoft.nominatim.util.CityResponseUtil.checkEquals;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 
 public final class CityResponseTest extends AbstractJunitSpringBootTest {
@@ -75,6 +76,56 @@ public final class CityResponseTest extends AbstractJunitSpringBootTest {
                   "type": "CAPITAL"
                 }""";
         assertEquals(expected, actual, true);
+    }
+
+    @Test
+    public void jsonShouldBeConvertedToResponse()
+            throws Exception {
+        final String givenJson = """
+                {
+                  "id": 255,
+                  "name": "name",
+                  "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                      [
+                        [
+                          1,
+                          1
+                        ],
+                        [
+                          2,
+                          1
+                        ],
+                        [
+                          2,
+                          2
+                        ],
+                        [
+                          1,
+                          1
+                        ]
+                      ]
+                    ]
+                  },
+                  "type": "CAPITAL"
+                }""";
+
+        final CityResponse actual = objectMapper.readValue(givenJson, CityResponse.class);
+        final CityResponse expected = new CityResponse(
+                255L,
+                "name",
+                createGeometry(
+                        new Coordinate[]{
+                                new Coordinate(1, 1),
+                                new Coordinate(2, 1),
+                                new Coordinate(2, 2),
+                                new Coordinate(1, 1)
+                        }
+                ),
+                CAPITAL
+        );
+        checkEquals(expected, actual, geoJSONReader);
     }
 
     private Geometry createGeometry(final Coordinate[] coordinates) {
