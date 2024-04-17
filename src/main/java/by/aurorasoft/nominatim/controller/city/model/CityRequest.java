@@ -11,7 +11,6 @@ import org.wololo.geojson.Geometry;
 import javax.validation.constraints.NotNull;
 
 @Value
-@Builder
 public class CityRequest {
 
     @CityName
@@ -23,6 +22,7 @@ public class CityRequest {
     @NotNull
     CityType type;
 
+    @Builder
     @JsonCreator
     public CityRequest(@JsonProperty("name") final String name,
                        @JsonProperty("geometry") final Geometry geometry,

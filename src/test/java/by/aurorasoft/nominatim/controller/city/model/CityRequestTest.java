@@ -17,9 +17,9 @@ import java.util.Set;
 import static by.aurorasoft.nominatim.model.CityType.CAPITAL;
 import static by.aurorasoft.nominatim.util.ConstraintViolationUtil.findFirstMessage;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
+import static by.aurorasoft.nominatim.util.CityRequestUtil.checkEquals;
 
 public final class CityRequestTest extends AbstractJunitSpringBootTest {
 
@@ -131,7 +131,7 @@ public final class CityRequestTest extends AbstractJunitSpringBootTest {
                 ),
                 CAPITAL
         );
-        checkEquals(expected, actual);
+        checkEquals(expected, actual, geoJSONReader);
     }
 
     @Test
@@ -229,15 +229,5 @@ public final class CityRequestTest extends AbstractJunitSpringBootTest {
 
     private Geometry createGeometry(final Coordinate[] coordinates) {
         return geoJSONWriter.write(geometryFactory.createPolygon(coordinates));
-    }
-
-    private void checkEquals(final CityRequest expected, final CityRequest actual) {
-        assertEquals(expected.getName(), actual.getName());
-        checkEquals(expected.getGeometry(), actual.getGeometry());
-        assertSame(expected.getType(), actual.getType());
-    }
-
-    private void checkEquals(final Geometry expected, final Geometry actual) {
-        assertEquals(geoJSONReader.read(expected), geoJSONReader.read(actual));
     }
 }
