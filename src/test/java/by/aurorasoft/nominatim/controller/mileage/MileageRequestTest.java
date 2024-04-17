@@ -146,7 +146,7 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
 
     @Test
     public void pointShouldNotBeValidBecauseOfLatitudeIsBiggerThanMaximalAllowable() {
-        final RequestTrackPoint givenTrackPoint = RequestTrackPoint.builder()
+        final RequestTrackPoint givenPoint = RequestTrackPoint.builder()
                 .datetime(now())
                 .latitude(90.1F)
                 .longitude(46F)
@@ -155,7 +155,7 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
                 .valid(true)
                 .build();
 
-        final Set<ConstraintViolation<RequestTrackPoint>> violations = validator.validate(givenTrackPoint);
+        final Set<ConstraintViolation<RequestTrackPoint>> violations = validator.validate(givenPoint);
         assertEquals(1, violations.size());
         assertEquals("должно быть меньше, чем или равно 90", findFirstMessage(violations));
     }
