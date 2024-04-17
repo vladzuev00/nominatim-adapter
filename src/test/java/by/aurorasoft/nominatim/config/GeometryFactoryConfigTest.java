@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.PrecisionModel;
 
+import static by.aurorasoft.nominatim.config.GeometryFactoryConfig.SRID;
 import static org.junit.Assert.assertEquals;
 
 public final class GeometryFactoryConfigTest {
@@ -12,7 +13,7 @@ public final class GeometryFactoryConfigTest {
     @Test
     public void geometryFactoryShouldBeCreated() {
         final GeometryFactory actual = config.geometryFactory();
-        final GeometryFactory expected = new GeometryFactory(new PrecisionModel(), 4326);
+        final GeometryFactory expected = new GeometryFactory(new PrecisionModel(), SRID);
         checkEquals(expected, actual);
     }
 
