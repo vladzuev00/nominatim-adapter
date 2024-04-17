@@ -19,9 +19,9 @@ import javax.validation.Valid;
 
 import static org.springframework.http.ResponseEntity.ok;
 
+@Validated
 @RestController
 @RequestMapping("/api/v1/mileage")
-@Validated
 @RequiredArgsConstructor
 public class MileageController {
     private final TrackFactory trackFactory;
