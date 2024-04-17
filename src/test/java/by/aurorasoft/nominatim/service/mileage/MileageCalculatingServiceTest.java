@@ -62,12 +62,17 @@ public final class MileageCalculatingServiceTest {
         setBelonging(thirdGivenPoint, givenCityGeometries, false);
         setBelonging(fourthGivenPoint, givenCityGeometries, true);
 
-        setDistanceBetweenPoint(firstGivenPoint, secondGivenPoint, givenSettings, 1.1);
-        setDistanceBetweenPoint(secondGivenPoint, thirdGivenPoint, givenSettings, 2.2);
-        setDistanceBetweenPoint(thirdGivenPoint, fourthGivenPoint, givenSettings, 3.3);
+        final double firstSliceGivenDistance = 1.1;
+        setDistanceBetweenPoint(firstGivenPoint, secondGivenPoint, givenSettings, firstSliceGivenDistance);
+
+        final double secondSliceGivenDistance = 2.2;
+        setDistanceBetweenPoint(secondGivenPoint, thirdGivenPoint, givenSettings, secondSliceGivenDistance);
+
+        final double thirdSliceGivenDistance = 3.3;
+        setDistanceBetweenPoint(thirdGivenPoint, fourthGivenPoint, givenSettings, thirdSliceGivenDistance);
 
         final Mileage actual = service.calculate(givenTrack, givenSettings);
-        final Mileage expected = new Mileage(4.4, 2.2);
+        final Mileage expected = new Mileage(firstSliceGivenDistance + thirdSliceGivenDistance, secondSliceGivenDistance);
         assertEquals(expected, actual);
 
         verify(mockedGeometryService, times(0)).isAnyContain(same(givenCityGeometries), same(firstGivenPoint));
