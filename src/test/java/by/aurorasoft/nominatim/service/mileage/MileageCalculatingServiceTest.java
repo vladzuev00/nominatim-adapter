@@ -1,8 +1,8 @@
 package by.aurorasoft.nominatim.service.mileage;
 
+import by.aurorasoft.nominatim.model.Mileage;
 import by.aurorasoft.nominatim.model.Track;
 import by.aurorasoft.nominatim.model.TrackPoint;
-import by.aurorasoft.nominatim.model.Mileage;
 import by.aurorasoft.nominatim.service.geometry.GeometryService;
 import by.aurorasoft.nominatim.service.mileage.loader.TrackCityGeometryLoader;
 import by.nhorushko.distancecalculator.DistanceCalculator;
@@ -55,33 +55,22 @@ public final class MileageCalculatingServiceTest {
 
         final DistanceCalculatorSettings givenSettings = mock(DistanceCalculatorSettings.class);
 
-        final List<PreparedGeometry> givenGeometries = mock(List.class);
-        when(mockedTrackCityGeometryLoader.load(same(givenTrack))).thenReturn(givenGeometries);
+        final List<PreparedGeometry> givenCityGeometries = mock(List.class);
+        when(mockedTrackCityGeometryLoader.load(same(givenTrack))).thenReturn(givenCityGeometries);
 
-        when(mockedGeometryService.isAnyContain(same(givenGeometries), same(secondGivenPoint))).thenReturn(true);
-        when(mockedGeometryService.isAnyContain(same(givenGeometries), same(thirdGivenPoint))).thenReturn(false);
-        when(mockedGeometryService.isAnyContain(same(givenGeometries), same(fourthGivenPoint))).thenReturn(true);
+        setBelonging(secondGivenPoint, givenCityGeometries, true);
+        setBelonging(thirdGivenPoint, givenCityGeometries, false);
+        setBelonging(fourthGivenPoint, givenCityGeometries, true);
 
-        final double givenDistanceBetweenFirstAndSecondPoints = 1.1;
-        when(mockedDistanceCalculator.calculateDistance(same(firstGivenPoint), same(secondGivenPoint), same(givenSettings)))
-                .thenReturn(givenDistanceBetweenFirstAndSecondPoints);
-
-        final double givenDistanceBetweenSecondAndThirdPoints = 2.2;
-        when(mockedDistanceCalculator.calculateDistance(same(secondGivenPoint), same(thirdGivenPoint), same(givenSettings)))
-                .thenReturn(givenDistanceBetweenSecondAndThirdPoints);
-
-        final double givenDistanceBetweenThirdAndFourthPoints = 3.3;
-        when(mockedDistanceCalculator.calculateDistance(same(thirdGivenPoint), same(fourthGivenPoint), same(givenSettings)))
-                .thenReturn(givenDistanceBetweenThirdAndFourthPoints);
+        setDistanceBetweenPoint(firstGivenPoint, secondGivenPoint, givenSettings, 1.1);
+        setDistanceBetweenPoint(secondGivenPoint, thirdGivenPoint, givenSettings, 2.2);
+        setDistanceBetweenPoint(thirdGivenPoint, fourthGivenPoint, givenSettings, 3.3);
 
         final Mileage actual = service.calculate(givenTrack, givenSettings);
-        final Mileage expected = new Mileage(
-                givenDistanceBetweenFirstAndSecondPoints + givenDistanceBetweenThirdAndFourthPoints,
-                givenDistanceBetweenSecondAndThirdPoints
-        );
+        final Mileage expected = new Mileage(4.4, 2.2);
         assertEquals(expected, actual);
 
-        verify(mockedGeometryService, times(0)).isAnyContain(same(givenGeometries), same(firstGivenPoint));
+        verify(mockedGeometryService, times(0)).isAnyContain(same(givenCityGeometries), same(firstGivenPoint));
     }
 
     @Test
@@ -96,5 +85,16 @@ public final class MileageCalculatingServiceTest {
         verifyNoInteractions(mockedTrackCityGeometryLoader);
         verifyNoInteractions(mockedGeometryService);
         verifyNoInteractions(mockedDistanceCalculator);
+    }
+
+    private void setDistanceBetweenPoint(final TrackPoint first,
+                                         final TrackPoint second,
+                                         final DistanceCalculatorSettings settings,
+                                         final double distance) {
+        when(mockedDistanceCalculator.calculateDistance(same(first), same(second), same(settings))).thenReturn(distance);
+    }
+
+    private void setBelonging(final TrackPoint point, final List<PreparedGeometry> geometries, final boolean belonged) {
+        when(mockedGeometryService.isAnyContain(same(geometries), same(point))).thenReturn(belonged);
     }
 }
