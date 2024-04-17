@@ -12,8 +12,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,15 +25,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static by.aurorasoft.nominatim.util.HttpUtil.createHttpEntity;
 import static java.lang.Float.parseFloat;
 import static java.lang.Integer.parseInt;
 import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.ofPattern;
-import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 import static org.springframework.transaction.annotation.Propagation.NOT_SUPPORTED;
 
@@ -43,7 +40,6 @@ import static org.springframework.transaction.annotation.Propagation.NOT_SUPPORT
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 public abstract class MileageCalculationIT extends AbstractSpringBootTest {
     private static final String URL = "/api/v1/mileage";
-    private static final MediaType MEDIA_TYPE = APPLICATION_JSON;
 
     private final MileageRequestFactory requestFactory = new MileageRequestFactory();
 
@@ -74,18 +70,6 @@ public abstract class MileageCalculationIT extends AbstractSpringBootTest {
         final ResponseEntity<Mileage> response = restTemplate.postForEntity(URL, httpEntity, Mileage.class);
         assertSame(OK, response.getStatusCode());
         return response.getBody();
-    }
-
-    private static HttpEntity<MileageRequest> createHttpEntity(final MileageRequest body) {
-        final HttpHeaders headers = createHttpHeaders();
-        return new HttpEntity<>(body, headers);
-    }
-
-    private static HttpHeaders createHttpHeaders() {
-        final HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MEDIA_TYPE);
-        headers.setAccept(singletonList(MEDIA_TYPE));
-        return headers;
     }
 
     private static final class MileageRequestFactory {

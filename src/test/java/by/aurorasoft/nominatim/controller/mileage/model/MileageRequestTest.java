@@ -368,6 +368,23 @@ public final class MileageRequestTest extends AbstractJunitSpringBootTest {
     }
 
     @Test
+    public void mileageShouldBeValid() {
+        final MileageRequest givenMileage = MileageRequest.builder()
+                .trackPoints(
+                        List.of(
+                                new TrackPointRequest(parse("2023-02-14T12:28:04Z"), 45F, 46F, 15, 500, true),
+                                new TrackPointRequest(parse("2023-02-14T12:28:05Z"), 45.001F, 46F, 15, 500, true)
+                        )
+                )
+                .minDetectionSpeed(10)
+                .maxMessageTimeout(11)
+                .build();
+
+        final Set<ConstraintViolation<MileageRequest>> violations = validator.validate(givenMileage);
+        assertTrue(violations.isEmpty());
+    }
+
+    @Test
     public void mileageShouldNotBeValidBecauseOfTrackPointsIsNull() {
         final MileageRequest givenMileage = MileageRequest.builder()
                 .minDetectionSpeed(10)
