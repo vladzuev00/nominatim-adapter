@@ -11,8 +11,7 @@ import javax.validation.Validator;
 import java.util.Set;
 
 import static by.aurorasoft.nominatim.util.ConstraintViolationUtil.findFirstMessage;
-import static java.time.Instant.MAX;
-import static java.time.Instant.parse;
+import static java.time.Instant.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
@@ -112,5 +111,52 @@ public final class MileageRequestTest extends AbstractSpringBootTest {
         final Set<ConstraintViolation<RequestTrackPoint>> violations = validator.validate(givenPoint);
         assertEquals(1, violations.size());
         assertEquals("должно содержать прошедшую дату или сегодняшнее число", findFirstMessage(violations));
+    }
+
+    @Test
+    public void pointShouldNotBeValidBecauseOfLatitudeIsNull() {
+        final RequestTrackPoint givenPoint = RequestTrackPoint.builder()
+                .datetime(now())
+                .longitude(46F)
+                .altitude(15)
+                .speed(500)
+                .valid(true)
+                .build();
+
+        final Set<ConstraintViolation<RequestTrackPoint>> violations = validator.validate(givenPoint);
+        assertEquals(1, violations.size());
+        assertEquals("не должно равняться null", findFirstMessage(violations));
+    }
+
+    @Test
+    public void pointShouldNotBeValidBecauseOfLatitudeIsLessThanMinimalAllowable() {
+        final RequestTrackPoint givenPoint = RequestTrackPoint.builder()
+                .datetime(now())
+                .latitude(-90.1F)
+                .longitude(46F)
+                .altitude(15)
+                .speed(500)
+                .valid(true)
+                .build();
+
+        final Set<ConstraintViolation<RequestTrackPoint>> violations = validator.validate(givenPoint);
+        assertEquals(1, violations.size());
+        assertEquals("должно быть больше, чем или равно -90", findFirstMessage(violations));
+    }
+
+    @Test
+    public void pointShouldNotBeValidBecauseOfLatitudeIsBiggerThanMaximalAllowable() {
+        final RequestTrackPoint givenTrackPoint = RequestTrackPoint.builder()
+                .datetime(now())
+                .latitude(90.1F)
+                .longitude(46F)
+                .altitude(15)
+                .speed(500)
+                .valid(true)
+                .build();
+
+        final Set<ConstraintViolation<RequestTrackPoint>> violations = validator.validate(givenTrackPoint);
+        assertEquals(1, violations.size());
+        assertEquals("должно быть меньше, чем или равно 90", findFirstMessage(violations));
     }
 }
