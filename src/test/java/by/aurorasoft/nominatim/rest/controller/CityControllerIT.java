@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.rest.controller;
 
-import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
+import by.aurorasoft.nominatim.base.AbstractJunitSpringBootTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -23,7 +23,7 @@ import static org.springframework.transaction.annotation.Propagation.NOT_SUPPORT
 import static org.springframework.web.util.UriComponentsBuilder.fromUriString;
 
 @org.springframework.boot.test.context.SpringBootTest(webEnvironment = RANDOM_PORT)
-public class CityControllerIT extends AbstractSpringBootTest {
+public class CityControllerIT extends AbstractJunitSpringBootTest {
     private static final String CONTROLLER_URL = "/api/v1/city";
     private static final String SLASH = "/";
 

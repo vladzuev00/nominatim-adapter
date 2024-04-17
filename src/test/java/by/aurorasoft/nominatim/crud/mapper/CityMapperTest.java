@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.crud.mapper;
 
-import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
+import by.aurorasoft.nominatim.base.AbstractJunitSpringBootTest;
 import by.aurorasoft.nominatim.crud.model.dto.City;
 import by.aurorasoft.nominatim.crud.model.entity.CityEntity;
 import by.aurorasoft.nominatim.model.CityType;
@@ -15,7 +15,7 @@ import static by.aurorasoft.nominatim.model.CityType.CAPITAL;
 import static by.aurorasoft.nominatim.util.CityEntityUtil.checkEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public final class CityMapperTest extends AbstractSpringBootTest {
+public final class CityMapperTest extends AbstractJunitSpringBootTest {
 
     @Autowired
     private CityMapper mapper;

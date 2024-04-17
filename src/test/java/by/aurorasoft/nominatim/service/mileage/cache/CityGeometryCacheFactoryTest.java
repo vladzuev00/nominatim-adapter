@@ -47,7 +47,7 @@ public final class CityGeometryCacheFactoryTest {
         verifyNoInteractions(mockedCityService);
     }
 
-    private CityGeometryCacheFactory createFactory(final boolean shouldBeCached) {
-        return new CityGeometryCacheFactory(mockedCityService, shouldBeCached);
+    private CityGeometryCacheFactory createFactory(final boolean shouldBeFilled) {
+        return new CityGeometryCacheFactory(mockedCityService, shouldBeFilled);
     }
 }

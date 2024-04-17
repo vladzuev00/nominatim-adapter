@@ -12,12 +12,12 @@ import static java.util.Collections.emptyMap;
 @Component
 public final class CityGeometryCacheFactory {
     private final CityService cityService;
-    private final boolean shouldBeCached;
+    private final boolean shouldBeFilled;
 
     public CityGeometryCacheFactory(final CityService cityService,
-                                    @Value("${mileage-calc.load-city-geometries-on-start-app}") final boolean shouldBeCached) {
+                                    @Value("${mileage-calc.load-city-geometries-on-start-app}") final boolean shouldBeFilled) {
         this.cityService = cityService;
-        this.shouldBeCached = shouldBeCached;
+        this.shouldBeFilled = shouldBeFilled;
     }
 
     public CityGeometryCache create() {
@@ -26,6 +26,6 @@ public final class CityGeometryCacheFactory {
     }
 
     private Map<PreparedGeometry, PreparedGeometry> loadGeometries() {
-        return shouldBeCached ? cityService.findPreparedGeometriesByPreparedBoundingBoxes() : emptyMap();
+        return shouldBeFilled ? cityService.findPreparedGeometriesByPreparedBoundingBoxes() : emptyMap();
     }
 }

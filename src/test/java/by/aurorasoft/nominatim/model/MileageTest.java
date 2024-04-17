@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.model;
 
-import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
+import by.aurorasoft.nominatim.base.AbstractJunitSpringBootTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 
-public final class MileageTest extends AbstractSpringBootTest {
+public final class MileageTest extends AbstractJunitSpringBootTest {
 
     @Autowired
     private ObjectMapper objectMapper;

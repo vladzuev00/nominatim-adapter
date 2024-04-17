@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.controller.mileage;
 
-import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
+import by.aurorasoft.nominatim.base.AbstractJunitSpringBootTest;
 import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest;
 import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest.TrackPointRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 
-public final class MileageRequestTest extends AbstractSpringBootTest {
+public final class MileageRequestTest extends AbstractJunitSpringBootTest {
 
     @Autowired
     private ObjectMapper objectMapper;

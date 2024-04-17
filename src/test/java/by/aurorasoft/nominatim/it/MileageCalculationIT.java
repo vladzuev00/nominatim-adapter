@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.it;
 
-import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
+import by.aurorasoft.nominatim.base.AbstractJunitSpringBootTest;
 import by.aurorasoft.nominatim.model.Mileage;
 import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest;
 import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest.TrackPointRequest;
@@ -43,7 +43,7 @@ import static org.springframework.transaction.annotation.Propagation.NOT_SUPPORT
 @Transactional(propagation = NOT_SUPPORTED)
 @Sql("classpath:sql/insert-belarus-cities.sql")
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
-public abstract class MileageCalculationIT extends AbstractSpringBootTest {
+public abstract class MileageCalculationIT extends AbstractJunitSpringBootTest {
     private static final String URL = "/api/v1/mileage";
     private static final MediaType MEDIA_TYPE = APPLICATION_JSON;
 

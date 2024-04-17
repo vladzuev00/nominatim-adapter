@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.crud.service;
 
-import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
+import by.aurorasoft.nominatim.base.AbstractJunitSpringBootTest;
 import by.aurorasoft.nominatim.crud.model.dto.City;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.*;
@@ -17,7 +17,7 @@ import static java.util.stream.Collectors.toMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public final class CityServiceTest extends AbstractSpringBootTest {
+public final class CityServiceTest extends AbstractJunitSpringBootTest {
 
     @Autowired
     private CityService service;

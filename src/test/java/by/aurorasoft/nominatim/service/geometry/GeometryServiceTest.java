@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.service.geometry;
 
-import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
+import by.aurorasoft.nominatim.base.AbstractJunitSpringBootTest;
 import by.aurorasoft.nominatim.model.Track;
 import by.aurorasoft.nominatim.model.TrackPoint;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.locationtech.jts.geom.prep.PreparedGeometryFactory.prepare;
 
-public final class GeometryServiceTest extends AbstractSpringBootTest {
+public final class GeometryServiceTest extends AbstractJunitSpringBootTest {
 
     @Autowired
     private GeometryService service;
