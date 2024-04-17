@@ -1,4 +1,4 @@
-package by.aurorasoft.nominatim.rest.model;
+package by.aurorasoft.nominatim.controller.city.model;
 
 import by.aurorasoft.nominatim.model.CityType;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -10,9 +10,6 @@ import org.wololo.geojson.Geometry;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-/**
- * equals and hashcode doesn't work correctly because of geometry doesn't override them
- */
 @Value
 @Builder
 public class CityRequest {
@@ -28,9 +25,9 @@ public class CityRequest {
     CityType type;
 
     @JsonCreator
-    public CityRequest(@JsonProperty("name") String name,
-                       @JsonProperty("geometry") Geometry geometry,
-                       @JsonProperty("type") CityType type) {
+    public CityRequest(@JsonProperty("name") final String name,
+                       @JsonProperty("geometry") final Geometry geometry,
+                       @JsonProperty("type") final CityType type) {
         this.name = name;
         this.geometry = geometry;
         this.type = type;

@@ -1,4 +1,4 @@
-package by.aurorasoft.nominatim.rest.model;
+package by.aurorasoft.nominatim.controller.city.model;
 
 import by.aurorasoft.nominatim.model.CityType;
 import lombok.AllArgsConstructor;

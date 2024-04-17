@@ -3,8 +3,8 @@
 //import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 //import by.aurorasoft.nominatim.crud.model.dto.City;
 //import by.aurorasoft.nominatim.rest.model.CityPageResponse;
-//import by.aurorasoft.nominatim.rest.model.CityRequest;
-//import by.aurorasoft.nominatim.rest.model.CityResponse;
+//import by.aurorasoft.nominatim.controller.city.model.CityRequest;
+//import by.aurorasoft.nominatim.controller.city.model.CityResponse;
 //import org.junit.Test;
 //import org.locationtech.jts.geom.Coordinate;
 //import org.locationtech.jts.geom.CoordinateXY;

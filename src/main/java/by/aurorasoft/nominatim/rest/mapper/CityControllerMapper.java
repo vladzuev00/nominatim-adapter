@@ -2,9 +2,8 @@ package by.aurorasoft.nominatim.rest.mapper;
 
 import by.aurorasoft.nominatim.crud.model.dto.City;
 import by.aurorasoft.nominatim.crud.model.dto.City.CityBuilder;
-import by.aurorasoft.nominatim.rest.model.CityPageResponse;
-import by.aurorasoft.nominatim.rest.model.CityRequest;
-import by.aurorasoft.nominatim.rest.model.CityResponse;
+import by.aurorasoft.nominatim.controller.city.model.CityRequest;
+import by.aurorasoft.nominatim.controller.city.model.CityResponse;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Geometry;
 import org.springframework.stereotype.Component;
@@ -43,14 +42,6 @@ public final class CityControllerMapper {
     public City mapToCity(Long id, CityRequest mapped) {
         return this.startBuildCityWithoutId(mapped)
                 .id(id)
-                .build();
-    }
-
-    public CityPageResponse mapToResponse(int pageNumber, int pageSize, List<City> cities) {
-        return CityPageResponse.builder()
-                .pageNumber(pageNumber)
-                .pageSize(pageSize)
-                .cities(this.mapToResponses(cities))
                 .build();
     }
 

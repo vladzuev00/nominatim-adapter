@@ -1,20 +1,17 @@
 package by.aurorasoft.nominatim.rest.controller;
 
+import by.aurorasoft.nominatim.controller.city.model.CityRequest;
+import by.aurorasoft.nominatim.controller.city.model.CityResponse;
 import by.aurorasoft.nominatim.crud.model.dto.City;
 import by.aurorasoft.nominatim.crud.service.CityService;
 import by.aurorasoft.nominatim.rest.controller.exception.NoSuchEntityException;
 import by.aurorasoft.nominatim.rest.mapper.CityControllerMapper;
-import by.aurorasoft.nominatim.rest.model.CityPageResponse;
-import by.aurorasoft.nominatim.rest.model.CityRequest;
-import by.aurorasoft.nominatim.rest.model.CityResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import java.util.Optional;
 
 import static java.lang.String.format;
@@ -30,14 +27,14 @@ public class CityController {
     private final CityService service;
     private final CityControllerMapper mapper;
 
-    @GetMapping
-    public ResponseEntity<CityPageResponse> findAll(
-            @RequestParam(name = "pageNumber") @Min(0) @Max(10000) int pageNumber,
-            @RequestParam(name = "pageSize") @Min(1) @Max(10000) int pageSize) {
-//        final List<City> foundCities = this.service.findAll(pageNumber, pageSize);
-//        return ok(this.mapper.mapToResponse(pageNumber, pageSize, foundCities));
-        return null;
-    }
+//    @GetMapping
+//    public ResponseEntity<CityPageResponse> findAll(
+//            @RequestParam(name = "pageNumber") @Min(0) @Max(10000) int pageNumber,
+//            @RequestParam(name = "pageSize") @Min(1) @Max(10000) int pageSize) {
+////        final List<City> foundCities = this.service.findAll(pageNumber, pageSize);
+////        return ok(this.mapper.mapToResponse(pageNumber, pageSize, foundCities));
+//        return null;
+//    }
 
     @PostMapping
     public ResponseEntity<CityResponse> save(@Valid @RequestBody CityRequest request) {
