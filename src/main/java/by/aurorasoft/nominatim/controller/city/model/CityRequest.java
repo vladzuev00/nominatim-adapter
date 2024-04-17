@@ -1,6 +1,7 @@
 package by.aurorasoft.nominatim.controller.city.model;
 
 import by.aurorasoft.nominatim.model.CityType;
+import by.aurorasoft.nominatim.validation.annotation.CityName;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
@@ -8,14 +9,12 @@ import lombok.Value;
 import org.wololo.geojson.Geometry;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
 @Value
 @Builder
 public class CityRequest {
 
-    @NotNull
-    @Pattern(regexp = "^[a-zA-Z]+(?:[\\s-][a-zA-Z]+)*$")
+    @CityName
     String name;
 
     @NotNull
