@@ -4,6 +4,7 @@ import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest;
 import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest.TrackPointRequest;
 import by.aurorasoft.nominatim.model.Mileage;
+import by.aurorasoft.nominatim.util.HttpUtil;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -11,8 +12,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,14 +24,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static by.aurorasoft.nominatim.util.HttpUtil.createHttpEntity;
 import static java.lang.Float.parseFloat;
 import static java.lang.Integer.parseInt;
 import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 import static org.springframework.transaction.annotation.Propagation.NOT_SUPPORTED;
 
@@ -50,7 +46,7 @@ public abstract class MileageCalculationIT extends AbstractSpringBootTest {
     @MethodSource("provideTrackFileNamesAndExpectedMileages")
     public final void mileageShouldBeCalculatedForTrackFromFile(final String fileName, final Mileage expected) {
         final MileageRequest givenRequest = requestFactory.create(fileName);
-        final Mileage actual = requestExpectingOkHttpStatus(givenRequest);
+        final Mileage actual = postExpectingOk(givenRequest);
         assertEquals(expected, actual);
     }
 
@@ -65,11 +61,8 @@ public abstract class MileageCalculationIT extends AbstractSpringBootTest {
         );
     }
 
-    private Mileage requestExpectingOkHttpStatus(final MileageRequest request) {
-        final HttpEntity<MileageRequest> httpEntity = createHttpEntity(request);
-        final ResponseEntity<Mileage> response = restTemplate.postForEntity(URL, httpEntity, Mileage.class);
-        assertSame(OK, response.getStatusCode());
-        return response.getBody();
+    private Mileage postExpectingOk(final MileageRequest request) {
+        return HttpUtil.postExpectingOk(restTemplate, URL, request, Mileage.class);
     }
 
     private static final class MileageRequestFactory {

@@ -3,13 +3,25 @@ package by.aurorasoft.nominatim.controller.mileage;
 import by.aurorasoft.nominatim.base.AbstractJunitSpringBootTest;
 import by.aurorasoft.nominatim.controller.mileage.factory.DistanceCalculatorSettingsFactory;
 import by.aurorasoft.nominatim.controller.mileage.factory.TrackFactory;
+import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest;
+import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest.TrackPointRequest;
+import by.aurorasoft.nominatim.model.Mileage;
+import by.aurorasoft.nominatim.model.Track;
 import by.aurorasoft.nominatim.service.mileage.MileageCalculatingService;
+import by.nhorushko.distancecalculator.DistanceCalculatorSettings;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 
+import java.util.List;
+
+import static java.time.Instant.parse;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.same;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
@@ -30,6 +42,28 @@ public final class MileageControllerTest extends AbstractJunitSpringBootTest {
 
     @Test
     public void mileageShouldBeFound() {
+        final MileageRequest givenRequest = MileageRequest.builder()
+                .trackPoints(
+                        List.of(
+                                new TrackPointRequest(parse("2023-02-14T12:28:04Z"), 45F, 46F, 15, 500, true),
+                                new TrackPointRequest(parse("2023-02-14T12:28:05Z"), 45.001F, 46F, 15, 500, true)
+                        )
+                )
+                .minDetectionSpeed(10)
+                .maxMessageTimeout(11)
+                .build();
+
+        final Track givenTrack = mock(Track.class);
+        when(mockedTrackFactory.create(eq(givenRequest))).thenReturn(givenTrack);
+
+        final DistanceCalculatorSettings givenDistanceCalculatorSettings = mock(DistanceCalculatorSettings.class);
+        when(mockedDistanceCalculatorSettingsFactory.create(eq(givenRequest)))
+                .thenReturn(givenDistanceCalculatorSettings);
+
+        final Mileage givenMileage = new Mileage(5.5, 6.6);
+        when(mockedMileageCalculatingService.calculate(same(givenTrack), same(givenDistanceCalculatorSettings)))
+                .thenReturn(givenMileage);
+
 
     }
 }
