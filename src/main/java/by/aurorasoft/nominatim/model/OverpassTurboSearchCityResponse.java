@@ -9,15 +9,15 @@ import java.util.List;
 
 @Value
 public class OverpassTurboSearchCityResponse {
-    List<City> cities;
+    List<Relation> relations;
 
     @JsonCreator
-    public OverpassTurboSearchCityResponse(@JsonProperty(value = "elements", required = true) final List<City> cities) {
-        this.cities = cities;
+    public OverpassTurboSearchCityResponse(@JsonProperty(value = "elements", required = true) final List<Relation> relations) {
+        this.relations = relations;
     }
 
     @Value
-    public static class City {
+    public static class Relation {
         String name;
         String capital;
         String place;
@@ -25,11 +25,11 @@ public class OverpassTurboSearchCityResponse {
         Geometry geometry;
 
         @JsonCreator
-        public City(@JsonProperty(value = "name:en", required = true) final String name,
-                    @JsonProperty(value = "capital") final String capital,
-                    @JsonProperty(value = "place", required = true) final String place,
-                    @JsonProperty(value = "bounds") final Geometry boundingBox,
-                    @JsonProperty(value = "geometry", required = true) final Geometry geometry) {
+        public Relation(@JsonProperty(value = "name:ru", required = true) final String name,
+                        @JsonProperty(value = "capital") final String capital,
+                        @JsonProperty(value = "place", required = true) final String place,
+                        @JsonProperty(value = "bounds") final Geometry boundingBox,
+                        @JsonProperty(value = "geometry", required = true) final Geometry geometry) {
             this.name = name;
             this.capital = capital;
             this.place = place;
