@@ -12,9 +12,18 @@ import java.time.Instant;
 @Builder
 public class TrackPoint implements LatLngAlt {
     Instant datetime;
-    float latitude;
-    float longitude;
+    Coordinate coordinate;
     int altitude;
     int speed;
     boolean valid;
+
+    @Override
+    public float getLatitude() {
+        return coordinate.getLatitude();
+    }
+
+    @Override
+    public float getLongitude() {
+        return coordinate.getLongitude();
+    }
 }

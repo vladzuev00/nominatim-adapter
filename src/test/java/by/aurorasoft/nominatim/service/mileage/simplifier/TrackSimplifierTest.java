@@ -1,5 +1,6 @@
 package by.aurorasoft.nominatim.service.mileage.simplifier;
 
+import by.aurorasoft.nominatim.model.Coordinate;
 import by.aurorasoft.nominatim.model.Track;
 import by.aurorasoft.nominatim.model.TrackPoint;
 import by.nhorushko.trackfilter.TrackFilter;
@@ -53,8 +54,7 @@ public final class TrackSimplifierTest {
 
     private static TrackPoint createPoint(final float latitude, final float longitude) {
         return TrackPoint.builder()
-                .latitude(latitude)
-                .longitude(longitude)
+                .coordinate(new Coordinate(latitude, longitude))
                 .build();
     }
 }

@@ -1,6 +1,7 @@
 package by.aurorasoft.nominatim.controller.mileage.factory;
 
 import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest.TrackPointRequest;
+import by.aurorasoft.nominatim.model.Coordinate;
 import by.aurorasoft.nominatim.model.TrackPoint;
 import org.junit.Test;
 
@@ -32,8 +33,7 @@ public final class TrackPointFactoryTest {
         final TrackPoint actual = factory.create(givenRequest);
         final TrackPoint expected = new TrackPoint(
                 givenDateTime,
-                givenLatitude,
-                givenLongitude,
+                new Coordinate(givenLatitude, givenLongitude),
                 givenAltitude,
                 givenSpeed,
                 givenValid
