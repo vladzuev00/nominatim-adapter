@@ -8,6 +8,7 @@ import by.aurorasoft.nominatim.crud.model.dto.City;
 import by.aurorasoft.nominatim.crud.service.CityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ import javax.validation.constraints.Min;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
-import static org.springframework.data.domain.PageRequest.of;
+import static by.aurorasoft.nominatim.util.PageRequestUtil.createRequestSortingById;
 import static org.springframework.http.ResponseEntity.noContent;
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -33,7 +34,8 @@ public class CityController {
     @GetMapping
     public ResponseEntity<Page<CityResponse>> findAll(@RequestParam(name = "pageNumber") @Min(0) final int pageNumber,
                                                       @RequestParam(name = "pageSize") @Min(1) final int pageSize) {
-        final Page<CityResponse> page = cityService.findAll(of(pageNumber, pageSize)).map(responseFactory::create);
+        final PageRequest request = createRequestSortingById(pageNumber, pageSize);
+        final Page<CityResponse> page = cityService.findAll(request).map(responseFactory::create);
         return ok(page);
     }
 
