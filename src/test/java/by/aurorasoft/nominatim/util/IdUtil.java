@@ -10,11 +10,11 @@ import java.util.stream.Stream;
 @UtilityClass
 public final class IdUtil {
 
-    public static <ID> List<ID> mapToIds(final Stream<? extends IdEntity<ID>> stream) {
-        return stream.map(IdEntity::getId).toList();
+    public static <ID extends Comparable<ID>> List<ID> mapToSortedIds(final Stream<? extends IdEntity<ID>> stream) {
+        return stream.map(IdEntity::getId).sorted().toList();
     }
 
-    public static <ID> List<ID> mapToIds(final Collection<? extends IdEntity<ID>> entities) {
-        return mapToIds(entities.stream());
+    public static <ID extends Comparable<ID>> List<ID> mapToSortedIds(final Collection<? extends IdEntity<ID>> entities) {
+        return mapToSortedIds(entities.stream());
     }
 }
