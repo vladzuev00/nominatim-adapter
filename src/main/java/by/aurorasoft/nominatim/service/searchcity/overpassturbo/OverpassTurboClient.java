@@ -1,4 +1,4 @@
-package by.aurorasoft.nominatim.service.overpassturbo;
+package by.aurorasoft.nominatim.service.searchcity.overpassturbo;
 
 import by.aurorasoft.nominatim.model.AreaCoordinate;
 import by.aurorasoft.nominatim.model.OverpassTurboSearchCityQuery;
@@ -6,20 +6,20 @@ import by.aurorasoft.nominatim.model.OverpassTurboSearchCityResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import static org.springframework.http.MediaType.TEXT_PLAIN;
 
-@Service
+@Component
 @RequiredArgsConstructor
-public final class OverpassTurboSearchCityService {
+public final class OverpassTurboClient {
     private static final String URL = "https://overpass-api.de/api/interpreter";
 
     private final OverpassTurboSearchCityQueryFactory queryFactory;
     private final RestTemplate restTemplate;
 
-    public OverpassTurboSearchCityResponse request(final AreaCoordinate areaCoordinate) {
+    public OverpassTurboSearchCityResponse findCities(final AreaCoordinate areaCoordinate) {
         final OverpassTurboSearchCityQuery query = queryFactory.create(areaCoordinate);
         final HttpEntity<String> httpEntity = createHttpEntity(query);
         return restTemplate.postForObject(URL, httpEntity, OverpassTurboSearchCityResponse.class);

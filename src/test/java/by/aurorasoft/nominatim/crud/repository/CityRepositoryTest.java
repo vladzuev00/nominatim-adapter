@@ -16,8 +16,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static by.aurorasoft.nominatim.model.CityType.NOT_DEFINED;
-import static by.aurorasoft.nominatim.model.CityType.REGIONAL;
+import static by.aurorasoft.nominatim.model.CityType.TOWN;
+import static by.aurorasoft.nominatim.model.CityType.CITY;
 import static by.aurorasoft.nominatim.util.CityEntityUtil.checkEquals;
 import static by.aurorasoft.nominatim.util.GeometryUtil.createLineByText;
 import static by.aurorasoft.nominatim.util.GeometryUtil.createPolygonByText;
@@ -51,7 +51,7 @@ public final class CityRepositoryTest extends AbstractJunitSpringBootTest {
                 .id(givenId)
                 .name("Сарни")
                 .geometry(createPolygon("POLYGON((26.5713051 51.3218903,26.5786303 51.3192656,26.5831032 51.3074501,26.601612 51.2990736,26.6273034 51.2947553,26.6366959 51.3036507,26.6459503 51.3315349,26.637939 51.3463765,26.6047889 51.3591434,26.5759207 51.355952,26.5713051 51.3218903))"))
-                .type(NOT_DEFINED)
+                .type(TOWN)
                 .boundingBox(createPolygon("POLYGON((26.5713051 51.3218903,26.5786303 51.3192656,26.5831032 51.3074501,26.601612 51.2990736,26.6273034 51.2947553,26.6366959 51.3036507,26.6459503 51.3315349,26.637939 51.3463765,26.6047889 51.3591434,26.5759207 51.355952,26.5713051 51.3218903))"))
                 .build();
         checkEquals(expected, actual);
@@ -62,7 +62,7 @@ public final class CityRepositoryTest extends AbstractJunitSpringBootTest {
         final CityEntity givenCity = CityEntity.builder()
                 .name("TestCity")
                 .geometry(createPolygon("POLYGON((1 1, 2 1, 2 2, 1 1))"))
-                .type(REGIONAL)
+                .type(CITY)
                 .boundingBox(createPolygon("POLYGON((1 1, 2 1, 2 2, 1 2, 1 1))"))
                 .build();
 
