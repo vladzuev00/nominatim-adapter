@@ -11,7 +11,9 @@ import org.springframework.web.client.RestTemplate;
 //    private static final String URL = "https://overpass-api.de/api/interpreter";
 //
 //    private final RestTemplate restTemplate;
-//    private final OverpassTurboRequestFactory requestFactory;
+//    private final OverpassTurboHttpEntityFactory requestFactory;
 //
-////    public OverpassTurboResponse doRequest()
+//    public OverpassTurboResponse doRequest() {
+//        restTemplate.postForEntity(URL, )
+//    }
 //}
