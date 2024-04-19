@@ -3,7 +3,6 @@ package by.aurorasoft.nominatim.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Value;
-import org.wololo.geojson.Geometry;
 
 import java.util.List;
 
@@ -18,23 +17,48 @@ public class OverpassTurboSearchCityResponse {
 
     @Value
     public static class Relation {
-        String name;
-        String capital;
-        String place;
-        Geometry boundingBox;
-        Geometry geometry;
+        Bounds bounds;
 
         @JsonCreator
-        public Relation(@JsonProperty(value = "name:ru", required = true) final String name,
-                        @JsonProperty(value = "capital") final String capital,
-                        @JsonProperty(value = "place", required = true) final String place,
-                        @JsonProperty(value = "bounds") final Geometry boundingBox,
-                        @JsonProperty(value = "geometry", required = true) final Geometry geometry) {
-            this.name = name;
-            this.capital = capital;
-            this.place = place;
-            this.boundingBox = boundingBox;
-            this.geometry = geometry;
+        public Relation(@JsonProperty(value = "bounds", required = true) final Bounds bounds) {
+            this.bounds = bounds;
         }
+    }
+
+    @Value
+    public static class Bounds {
+        double minLatitude;
+        double minLongitude;
+        double maxLatitude;
+        double maxLongitude;
+
+        @JsonCreator
+        public Bounds(@JsonProperty(value = "minlat", required = true) final double minLatitude,
+                      @JsonProperty(value = "minlon", required = true) final double minLongitude,
+                      @JsonProperty(value = "maxlat", required = true) final double maxLatitude,
+                      @JsonProperty(value = "maxlon", required = true) final double maxLongitude) {
+            this.minLatitude = minLatitude;
+            this.minLongitude = minLongitude;
+            this.maxLatitude = maxLatitude;
+            this.maxLongitude = maxLongitude;
+        }
+    }
+
+    @Value
+    public static class Coordinate {
+        double latitude;
+        double longitude;
+
+        public Coordinate(@JsonProperty(value = "lat", required = true) final double latitude,
+                          @JsonProperty(value = "lon", required = true) final double longitude) {
+            this.latitude = latitude;
+            this.longitude = longitude;
+        }
+    }
+
+    @Value
+    public static class Tags {
+        String capital;      //capital
+        String name;         //name:en
     }
 }
