@@ -2,6 +2,7 @@ package by.aurorasoft.nominatim.model;
 
 import by.aurorasoft.nominatim.base.AbstractJunitSpringBootTest;
 import by.aurorasoft.nominatim.model.OverpassTurboSearchCityResponse.Bounds;
+import by.aurorasoft.nominatim.model.OverpassTurboSearchCityResponse.Relation;
 import by.aurorasoft.nominatim.model.OverpassTurboSearchCityResponse.Tags;
 import by.aurorasoft.nominatim.model.OverpassTurboSearchCityResponse.Way;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -212,14 +213,15 @@ public final class OverpassTurboSearchCityResponseTest extends AbstractJunitSpri
     @Test
     public void tagsShouldBeConvertedToJson()
             throws Exception {
-        final Tags givenTags = new Tags("yes", "Minsk");
+        final Tags givenTags = new Tags("yes", "Minsk", "city");
 
         final String actual = objectMapper.writeValueAsString(givenTags);
         final String expected = """
                 {
-                  "capital": "yes",
-                  "name": "Minsk"
-                }""";
+                   "capital": "yes",
+                   "name": "Minsk",
+                   "place": "city"
+                 }""";
         assertEquals(expected, actual, true);
     }
 
@@ -228,12 +230,13 @@ public final class OverpassTurboSearchCityResponseTest extends AbstractJunitSpri
             throws Exception {
         final String givenJson = """
                 {
-                  "capital": "yes",
-                  "name:en": "Minsk"
-                }""";
+                   "capital": "yes",
+                   "name": "Minsk",
+                   "place": "city"
+                 }""";
 
         final Tags actual = objectMapper.readValue(givenJson, Tags.class);
-        final Tags expected = new Tags("yes", "Minsk");
+        final Tags expected = new Tags("yes", "Minsk", "city");
         assertEquals(expected, actual);
     }
 
@@ -242,11 +245,12 @@ public final class OverpassTurboSearchCityResponseTest extends AbstractJunitSpri
             throws Exception {
         final String givenJson = """
                 {
-                  "name:en": "Minsk"
-                }""";
+                   "name": "Minsk",
+                   "place": "city"
+                 }""";
 
         final Tags actual = objectMapper.readValue(givenJson, Tags.class);
-        final Tags expected = new Tags(null, "Minsk");
+        final Tags expected = new Tags(null, "Minsk", "city");
         assertEquals(expected, actual);
     }
 
@@ -255,9 +259,572 @@ public final class OverpassTurboSearchCityResponseTest extends AbstractJunitSpri
             throws Exception {
         final String givenJson = """
                 {
-                  "capital": "yes"
-                }""";
+                   "capital": "yes",
+                   "place": "city"
+                 }""";
 
         objectMapper.readValue(givenJson, Tags.class);
+    }
+
+    @Test(expected = MismatchedInputException.class)
+    public void jsonShouldNotBeConvertedToTagsBecauseOfPlaceNotDefined()
+            throws Exception {
+        final String givenJson = """
+                {
+                   "capital": "yes",
+                   "name": "Minsk"
+                 }""";
+
+        objectMapper.readValue(givenJson, Tags.class);
+    }
+
+    @Test
+    public void relationShouldBeConvertedToJson()
+            throws Exception {
+        final Relation givenRelation = new Relation(
+                new Bounds(53.0231471, 24.0772654, 53.0474761, 24.1242676),
+                List.of(
+                        new Way(
+                                List.of(
+                                        new Coordinate(53.0336909, 24.0807023),
+                                        new Coordinate(53.030599, 24.0823296),
+                                        new Coordinate(53.0307359, 24.0836708),
+                                        new Coordinate(53.0277788, 24.086618),
+                                        new Coordinate(53.0263041, 24.0887068)
+                                )
+                        ),
+                        new Way(
+                                List.of(
+                                        new Coordinate(53.0449014, 24.0838195),
+                                        new Coordinate(53.0449475, 24.0839479),
+                                        new Coordinate(53.0452405, 24.0836663)
+                                )
+                        )
+                ),
+                new Tags(null, "Свіслач", "town")
+        );
+
+        final String actual = objectMapper.writeValueAsString(givenRelation);
+        final String expected = """
+                {
+                  "bounds": {
+                    "minLatitude": 53.0231471,
+                    "minLongitude": 24.0772654,
+                    "maxLatitude": 53.0474761,
+                    "maxLongitude": 24.1242676
+                  },
+                  "tags": {
+                    "capital": null,
+                    "name": "Свіслач",
+                    "place": "town"
+                  },
+                  "ways": [
+                    {
+                      "coordinates": [
+                        {
+                          "latitude": 53.0336909,
+                          "longitude": 24.0807023
+                        },
+                        {
+                          "latitude": 53.030599,
+                          "longitude": 24.0823296
+                        },
+                        {
+                          "latitude": 53.0307359,
+                          "longitude": 24.0836708
+                        },
+                        {
+                          "latitude": 53.0277788,
+                          "longitude": 24.086618
+                        },
+                        {
+                          "latitude": 53.0263041,
+                          "longitude": 24.0887068
+                        }
+                      ]
+                    },
+                    {
+                      "coordinates": [
+                        {
+                          "latitude": 53.0449014,
+                          "longitude": 24.0838195
+                        },
+                        {
+                          "latitude": 53.0449475,
+                          "longitude": 24.0839479
+                        },
+                        {
+                          "latitude": 53.0452405,
+                          "longitude": 24.0836663
+                        }
+                      ]
+                    }
+                  ]
+                }""";
+        assertEquals(expected, actual, true);
+    }
+
+    @Test
+    public void jsonShouldBeConvertedToRelation()
+            throws Exception {
+        final String givenJson = """
+                {
+                   "bounds": {
+                     "minlat": 53.0231471,
+                     "minlon": 24.0772654,
+                     "maxlat": 53.0474761,
+                     "maxlon": 24.1242676
+                   },
+                   "members": [
+                     {
+                       "geometry": [
+                         {
+                           "lat": 53.0336909,
+                           "lon": 24.0807023
+                         },
+                         {
+                           "lat": 53.030599,
+                           "lon": 24.0823296
+                         },
+                         {
+                           "lat": 53.0307359,
+                           "lon": 24.0836708
+                         },
+                         {
+                           "lat": 53.0277788,
+                           "lon": 24.086618
+                         },
+                         {
+                           "lat": 53.0263041,
+                           "lon": 24.0887068
+                         }
+                       ]
+                     },
+                     {
+                       "geometry": [
+                         {
+                           "lat": 53.0449014,
+                           "lon": 24.0838195
+                         },
+                         {
+                           "lat": 53.0449475,
+                           "lon": 24.0839479
+                         },
+                         {
+                           "lat": 53.0452405,
+                           "lon": 24.0836663
+                         }
+                       ]
+                     }
+                   ],
+                   "tags": {
+                     "name": "Свіслач",
+                     "place": "town"
+                   }
+                 }""";
+
+        final Relation actual = objectMapper.readValue(givenJson, Relation.class);
+        final Relation expected = new Relation(
+                new Bounds(53.0231471, 24.0772654, 53.0474761, 24.1242676),
+                List.of(
+                        new Way(
+                                List.of(
+                                        new Coordinate(53.0336909, 24.0807023),
+                                        new Coordinate(53.030599, 24.0823296),
+                                        new Coordinate(53.0307359, 24.0836708),
+                                        new Coordinate(53.0277788, 24.086618),
+                                        new Coordinate(53.0263041, 24.0887068)
+                                )
+                        ),
+                        new Way(
+                                List.of(
+                                        new Coordinate(53.0449014, 24.0838195),
+                                        new Coordinate(53.0449475, 24.0839479),
+                                        new Coordinate(53.0452405, 24.0836663)
+                                )
+                        )
+                ),
+                new Tags(null, "Свіслач", "town")
+        );
+        assertEquals(expected, actual);
+    }
+
+    @Test(expected = MismatchedInputException.class)
+    public void jsonShouldNotBeConvertedToRelationBecauseOfNotDefinedBounds()
+            throws Exception {
+        final String givenJson = """
+                {
+                   "members": [
+                     {
+                       "geometry": [
+                         {
+                           "lat": 53.0336909,
+                           "lon": 24.0807023
+                         },
+                         {
+                           "lat": 53.030599,
+                           "lon": 24.0823296
+                         },
+                         {
+                           "lat": 53.0307359,
+                           "lon": 24.0836708
+                         },
+                         {
+                           "lat": 53.0277788,
+                           "lon": 24.086618
+                         },
+                         {
+                           "lat": 53.0263041,
+                           "lon": 24.0887068
+                         }
+                       ]
+                     },
+                     {
+                       "geometry": [
+                         {
+                           "lat": 53.0449014,
+                           "lon": 24.0838195
+                         },
+                         {
+                           "lat": 53.0449475,
+                           "lon": 24.0839479
+                         },
+                         {
+                           "lat": 53.0452405,
+                           "lon": 24.0836663
+                         }
+                       ]
+                     }
+                   ],
+                   "tags": {
+                     "name": "Свіслач",
+                     "place": "town"
+                   }
+                 }""";
+
+        objectMapper.readValue(givenJson, Relation.class);
+    }
+
+    @Test(expected = MismatchedInputException.class)
+    public void jsonShouldNotBeConvertedToRelationBecauseOfNotDefinedWays()
+            throws Exception {
+        final String givenJson = """
+                {
+                   "bounds": {
+                     "minlat": 53.0231471,
+                     "minlon": 24.0772654,
+                     "maxlat": 53.0474761,
+                     "maxlon": 24.1242676
+                   },
+                   "tags": {
+                     "name": "Свіслач",
+                     "place": "town"
+                   }
+                 }""";
+
+        objectMapper.readValue(givenJson, Relation.class);
+    }
+
+    @Test(expected = MismatchedInputException.class)
+    public void jsonShouldNotBeConvertedToRelationBecauseOfNotDefinedTags()
+            throws Exception {
+        final String givenJson = """
+                {
+                   "bounds": {
+                     "minlat": 53.0231471,
+                     "minlon": 24.0772654,
+                     "maxlat": 53.0474761,
+                     "maxlon": 24.1242676
+                   },
+                   "members": [
+                     {
+                       "geometry": [
+                         {
+                           "lat": 53.0336909,
+                           "lon": 24.0807023
+                         },
+                         {
+                           "lat": 53.030599,
+                           "lon": 24.0823296
+                         },
+                         {
+                           "lat": 53.0307359,
+                           "lon": 24.0836708
+                         },
+                         {
+                           "lat": 53.0277788,
+                           "lon": 24.086618
+                         },
+                         {
+                           "lat": 53.0263041,
+                           "lon": 24.0887068
+                         }
+                       ]
+                     },
+                     {
+                       "geometry": [
+                         {
+                           "lat": 53.0449014,
+                           "lon": 24.0838195
+                         },
+                         {
+                           "lat": 53.0449475,
+                           "lon": 24.0839479
+                         },
+                         {
+                           "lat": 53.0452405,
+                           "lon": 24.0836663
+                         }
+                       ]
+                     }
+                   ]
+                 }""";
+
+        objectMapper.readValue(givenJson, Relation.class);
+    }
+
+    @Test
+    public void responseShouldBeConvertedToJson()
+            throws Exception {
+        final OverpassTurboSearchCityResponse givenResponse = new OverpassTurboSearchCityResponse(
+                List.of(
+                        new Relation(
+                                new Bounds(53.5833949, 24.9732414, 53.6059, 24.9957),
+                                List.of(
+                                        new Way(
+                                                List.of(
+                                                        new Coordinate(53.5866941, 24.9764369),
+                                                        new Coordinate(53.5864079, 24.9774542)
+                                                )
+                                        ),
+                                        new Way(
+                                                List.of(
+                                                        new Coordinate(53.6001648, 24.9747556),
+                                                        new Coordinate(53.5996087, 24.9746791),
+                                                        new Coordinate(53.5968642, 24.9774069)
+                                                )
+                                        )
+                                ),
+                                new Tags(null, "Жалудок", "town")
+                        ),
+                        new Relation(
+                                new Bounds(54.0213346, 25.9151011, 54.0410501, 25.9469228),
+                                List.of(
+                                        new Way(
+                                                List.of(
+                                                        new Coordinate(54.0283401, 25.9267536),
+                                                        new Coordinate(54.0266101, 25.9310107)
+                                                )
+                                        )
+                                ),
+                                new Tags(null, "Юрацішкі", "town")
+                        )
+                )
+        );
+
+        final String actual = objectMapper.writeValueAsString(givenResponse);
+        final String expected = """
+                {
+                  "relations": [
+                    {
+                      "bounds": {
+                        "minLatitude": 53.5833949,
+                        "minLongitude": 24.9732414,
+                        "maxLatitude": 53.6059,
+                        "maxLongitude": 24.9957
+                      },
+                      "tags": {
+                        "capital": null,
+                        "name": "Жалудок",
+                        "place": "town"
+                      },
+                      "ways": [
+                        {
+                          "coordinates": [
+                            {
+                              "latitude": 53.5866941,
+                              "longitude": 24.9764369
+                            },
+                            {
+                              "latitude": 53.5864079,
+                              "longitude": 24.9774542
+                            }
+                          ]
+                        },
+                        {
+                          "coordinates": [
+                            {
+                              "latitude": 53.6001648,
+                              "longitude": 24.9747556
+                            },
+                            {
+                              "latitude": 53.5996087,
+                              "longitude": 24.9746791
+                            },
+                            {
+                              "latitude": 53.5968642,
+                              "longitude": 24.9774069
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "bounds": {
+                        "minLatitude": 54.0213346,
+                        "minLongitude": 25.9151011,
+                        "maxLatitude": 54.0410501,
+                        "maxLongitude": 25.9469228
+                      },
+                      "tags": {
+                        "capital": null,
+                        "name": "Юрацішкі",
+                        "place": "town"
+                      },
+                      "ways": [
+                        {
+                          "coordinates": [
+                            {
+                              "latitude": 54.0283401,
+                              "longitude": 25.9267536
+                            },
+                            {
+                              "latitude": 54.0266101,
+                              "longitude": 25.9310107
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }""";
+        assertEquals(expected, actual, true);
+    }
+
+    @Test
+    public void jsonShouldBeConvertedToResponse()
+            throws Exception {
+        final String givenJson = """
+                {
+                  "elements": [
+                    {
+                      "bounds": {
+                        "minlat": 53.5833949,
+                        "minlon": 24.9732414,
+                        "maxlat": 53.6059,
+                        "maxlon": 24.9957
+                      },
+                      "members": [
+                        {
+                          "geometry": [
+                            {
+                              "lat": 53.5866941,
+                              "lon": 24.9764369
+                            },
+                            {
+                              "lat": 53.5864079,
+                              "lon": 24.9774542
+                            }
+                          ]
+                        },
+                        {
+                          "geometry": [
+                            {
+                              "lat": 53.6001648,
+                              "lon": 24.9747556
+                            },
+                            {
+                              "lat": 53.5996087,
+                              "lon": 24.9746791
+                            },
+                            {
+                              "lat": 53.5968642,
+                              "lon": 24.9774069
+                            }
+                          ]
+                        }
+                      ],
+                      "tags": {
+                        "name": "Жалудок",
+                        "place": "town"
+                      }
+                    },
+                    {
+                      "bounds": {
+                        "minlat": 54.0213346,
+                        "minlon": 25.9151011,
+                        "maxlat": 54.0410501,
+                        "maxlon": 25.9469228
+                      },
+                      "members": [
+                        {
+                          "geometry": [
+                            {
+                              "lat": 54.0283401,
+                              "lon": 25.9267536
+                            },
+                            {
+                              "lat": 54.0266101,
+                              "lon": 25.9310107
+                            }
+                          ]
+                        }
+                      ],
+                      "tags": {
+                        "name": "Юрацішкі",
+                        "place": "town"
+                      }
+                    }
+                  ]
+                }""";
+
+        final OverpassTurboSearchCityResponse actual = objectMapper.readValue(givenJson, OverpassTurboSearchCityResponse.class);
+        final OverpassTurboSearchCityResponse expected = new OverpassTurboSearchCityResponse(
+                List.of(
+                        new Relation(
+                                new Bounds(53.5833949, 24.9732414, 53.6059, 24.9957),
+                                List.of(
+                                        new Way(
+                                                List.of(
+                                                        new Coordinate(53.5866941, 24.9764369),
+                                                        new Coordinate(53.5864079, 24.9774542)
+                                                )
+                                        ),
+                                        new Way(
+                                                List.of(
+                                                        new Coordinate(53.6001648, 24.9747556),
+                                                        new Coordinate(53.5996087, 24.9746791),
+                                                        new Coordinate(53.5968642, 24.9774069)
+                                                )
+                                        )
+                                ),
+                                new Tags(null, "Жалудок", "town")
+                        ),
+                        new Relation(
+                                new Bounds(54.0213346, 25.9151011, 54.0410501, 25.9469228),
+                                List.of(
+                                        new Way(
+                                                List.of(
+                                                        new Coordinate(54.0283401, 25.9267536),
+                                                        new Coordinate(54.0266101, 25.9310107)
+                                                )
+                                        )
+                                ),
+                                new Tags(null, "Юрацішкі", "town")
+                        )
+                )
+        );
+        assertEquals(expected, actual);
+    }
+
+    @Test(expected = MismatchedInputException.class)
+    public void jsonShouldNotBeConvertedToResponseBecauseOfRelationsNotDefined()
+            throws Exception {
+        final String givenJson = """
+                {
+                
+                }""";
+
+        objectMapper.readValue(givenJson, OverpassTurboSearchCityResponse.class);
     }
 }

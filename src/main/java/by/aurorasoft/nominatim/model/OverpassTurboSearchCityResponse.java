@@ -77,12 +77,15 @@ public class OverpassTurboSearchCityResponse {
     public static class Tags {
         String capital;
         String name;
+        String place;
 
         @JsonCreator
         public Tags(@JsonProperty("capital") final String capital,
-                    @JsonProperty(value = "name:en", required = true) final String name) {
+                    @JsonProperty(value = "name", required = true) final String name,
+                    @JsonProperty(value = "place", required = true) final String place) {
             this.capital = capital;
             this.name = name;
+            this.place = place;
         }
     }
 }
