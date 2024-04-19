@@ -23,11 +23,11 @@ public final class CityFactory {
     }
 
     private static String getName(final Relation relation) {
-
+        return relation.getTags().getName();
     }
 
     private Geometry getGeometry(final Relation relation) {
-
+        geometryFactory.createMultiLineString().
     }
 
     private CityType getType(final Relation relation) {
