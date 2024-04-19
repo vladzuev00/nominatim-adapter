@@ -18,10 +18,16 @@ public class OverpassTurboSearchCityResponse {
     @Value
     public static class Relation {
         Bounds bounds;
+        List<Way> ways;
+        Tags tags;
 
         @JsonCreator
-        public Relation(@JsonProperty(value = "bounds", required = true) final Bounds bounds) {
+        public Relation(@JsonProperty(value = "bounds", required = true) final Bounds bounds,
+                        @JsonProperty(value = "members", required = true) final List<Way> ways,
+                        @JsonProperty(value = "tags", required = true) final Tags tags) {
             this.bounds = bounds;
+            this.ways = ways;
+            this.tags = tags;
         }
     }
 
@@ -45,10 +51,21 @@ public class OverpassTurboSearchCityResponse {
     }
 
     @Value
+    public static class Way {
+        List<Coordinate> coordinates;
+
+        @JsonCreator
+        public Way(@JsonProperty(value = "geometry", required = true) final List<Coordinate> coordinates) {
+            this.coordinates = coordinates;
+        }
+    }
+
+    @Value
     public static class Coordinate {
         double latitude;
         double longitude;
 
+        @JsonCreator
         public Coordinate(@JsonProperty(value = "lat", required = true) final double latitude,
                           @JsonProperty(value = "lon", required = true) final double longitude) {
             this.latitude = latitude;
@@ -58,7 +75,14 @@ public class OverpassTurboSearchCityResponse {
 
     @Value
     public static class Tags {
-        String capital;      //capital
-        String name;         //name:en
+        String capital;
+        String name;
+
+        @JsonCreator
+        public Tags(@JsonProperty("capital") final String capital,
+                    @JsonProperty(value = "name:en", required = true) final String name) {
+            this.capital = capital;
+            this.name = name;
+        }
     }
 }
