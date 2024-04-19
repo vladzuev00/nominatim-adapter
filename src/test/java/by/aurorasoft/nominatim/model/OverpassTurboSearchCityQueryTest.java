@@ -20,7 +20,7 @@ public final class OverpassTurboSearchCityQueryTest {
         final String expected = """
                 [out:json][timeout:50];
                 (
-                  nwr["place"~"(city)|(town)"](5.5, 6.6, 7.7, 8.8);
+                  relation["place"~"(city)|(town)"](5.5, 6.6, 7.7, 8.8);
                 );
                 out geom;""";
         assertEquals(expected, actual);

@@ -11,7 +11,7 @@ public class OverpassTurboSearchCityQuery {
         return """
                 [out:json][timeout:%d];
                 (
-                  nwr["place"~"(city)|(town)"](%s, %s, %s, %s);
+                  relation["place"~"(city)|(town)"](%s, %s, %s, %s);
                 );
                 out geom;"""
                 .formatted(
