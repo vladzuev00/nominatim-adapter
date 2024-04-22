@@ -1,5 +1,7 @@
 package by.aurorasoft.nominatim.service.geometry;
 
+import by.aurorasoft.nominatim.model.OverpassTurboSearchCityResponse.Relation;
+import by.aurorasoft.nominatim.model.OverpassTurboSearchCityResponse.Way;
 import by.aurorasoft.nominatim.model.Track;
 import by.aurorasoft.nominatim.model.TrackPoint;
 import by.nhorushko.distancecalculator.LatLngAlt;
@@ -25,9 +27,28 @@ public final class GeometryService {
         return geometries.stream().anyMatch(geometry -> isContain(geometry, point));
     }
 
+    private LineString createLine(final Way way) {
+        return geometryFactory.createLineString(mapToCoordinates(way));
+    }
+
+    public Geometry getGeometry(final Relation relation) {
+        final Geometry[] lines = relation.getWays()
+                .stream()
+                .map(this::createLine)
+                .toArray(Geometry[]::new);
+        return new GeometryCollection(lines, geometryFactory).union();
+    }
+
     private static CoordinateSequence mapToCoordinateSequence(final Track track) {
         final CoordinateXY[] coordinates = mapToCoordinates(track.getPoints());
         return new CoordinateArraySequence(coordinates);
+    }
+
+    private static CoordinateXY[] mapToCoordinates(final Way way) {
+        return way.getCoordinates()
+                .stream()
+                .map(c -> new CoordinateXY(c.getLongitude(), c.getLatitude()))
+                .toArray(CoordinateXY[]::new);
     }
 
     private static CoordinateXY[] mapToCoordinates(final List<? extends LatLngAlt> points) {

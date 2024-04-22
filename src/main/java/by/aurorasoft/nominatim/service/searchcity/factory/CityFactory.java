@@ -3,15 +3,15 @@ package by.aurorasoft.nominatim.service.searchcity.factory;
 import by.aurorasoft.nominatim.crud.model.dto.City;
 import by.aurorasoft.nominatim.model.CityType;
 import by.aurorasoft.nominatim.model.OverpassTurboSearchCityResponse.Relation;
+import by.aurorasoft.nominatim.service.geometry.GeometryService;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Geometry;
-import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public final class CityFactory {
-    private final GeometryFactory geometryFactory;
+    private final GeometryService geometryService;
 
     public City create(final Relation relation) {
         return City.builder()
@@ -27,14 +27,14 @@ public final class CityFactory {
     }
 
     private Geometry getGeometry(final Relation relation) {
-        geometryFactory.createMultiLineString().
+        return geometryService.getGeometry(relation);
     }
 
     private CityType getType(final Relation relation) {
-
+        return null;
     }
 
     private Geometry getBoundingBox(final Relation relation) {
-
+        return null;
     }
 }
