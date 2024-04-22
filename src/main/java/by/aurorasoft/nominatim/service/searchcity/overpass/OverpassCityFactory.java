@@ -17,15 +17,11 @@ public final class OverpassCityFactory {
 
     public City create(final Relation relation) {
         return City.builder()
-                .name(relation.getName())
-                .geometry(getGeometry(relation))
                 .type(getType(relation))
+                .name(getName(relation))
+                .geometry(getGeometry(relation))
                 .boundingBox(getBoundingBox(relation))
                 .build();
-    }
-
-    private Geometry getGeometry(final Relation relation) {
-        return geometryService.createMultiPolygon(relation);
     }
 
     private CityType getType(final Relation relation) {
@@ -37,6 +33,14 @@ public final class OverpassCityFactory {
                                 "Impossible to identify city's type in relation: %s".formatted(relation)
                         )
                 );
+    }
+
+    private static String getName(final Relation relation) {
+        return relation.getTags().getName();
+    }
+
+    private Geometry getGeometry(final Relation relation) {
+        return geometryService.createMultiPolygon(relation);
     }
 
     private Geometry getBoundingBox(final Relation relation) {

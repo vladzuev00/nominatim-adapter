@@ -1,7 +1,6 @@
 package by.aurorasoft.nominatim.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Value;
@@ -32,11 +31,6 @@ public class OverpassTurboSearchCityResponse {
             this.ways = ways;
             this.tags = tags;
         }
-
-        @JsonIgnore
-        public String getName() {
-            return tags.getName();
-        }
     }
 
     @Value
@@ -46,6 +40,7 @@ public class OverpassTurboSearchCityResponse {
         double maxLatitude;
         double maxLongitude;
 
+        @Builder
         @JsonCreator
         public Bounds(@JsonProperty(value = "minlat", required = true) final double minLatitude,
                       @JsonProperty(value = "minlon", required = true) final double minLongitude,
