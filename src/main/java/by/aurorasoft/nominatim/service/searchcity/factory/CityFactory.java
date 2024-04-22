@@ -27,7 +27,7 @@ public final class CityFactory {
     }
 
     private Geometry getGeometry(final Relation relation) {
-        return geometryService.getGeometry(relation);
+        return geometryService.createMultiPolygon(relation);
     }
 
     private CityType getType(final Relation relation) {

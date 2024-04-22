@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.*;
 import org.locationtech.jts.geom.impl.CoordinateArraySequence;
 import org.locationtech.jts.geom.prep.PreparedGeometry;
+import org.locationtech.jts.operation.polygonize.Polygonizer;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,16 +28,19 @@ public final class GeometryService {
         return geometries.stream().anyMatch(geometry -> isContain(geometry, point));
     }
 
-    private LineString createLine(final Way way) {
-        return geometryFactory.createLineString(mapToCoordinates(way));
-    }
-
-    public Geometry getGeometry(final Relation relation) {
-        final Geometry[] lines = relation.getWays()
+    public Geometry createMultiPolygon(final Relation relation) {
+        final List<LineString> lines = relation.getWays()
                 .stream()
                 .map(this::createLine)
-                .toArray(Geometry[]::new);
-        return new GeometryCollection(lines, geometryFactory).union();
+                .toList();
+        final Polygonizer polygonizer = new Polygonizer();
+        polygonizer.add(lines);
+        final Polygon[] polygons = (Polygon[]) polygonizer.getPolygons().toArray(Polygon[]::new);
+        return geometryFactory.createMultiPolygon(polygons);
+    }
+
+    private LineString createLine(final Way way) {
+        return geometryFactory.createLineString(mapToCoordinates(way));
     }
 
     private static CoordinateSequence mapToCoordinateSequence(final Track track) {

@@ -2,6 +2,7 @@ package by.aurorasoft.nominatim.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Value;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class OverpassTurboSearchCityResponse {
         List<Way> ways;
         Tags tags;
 
+        @Builder
         @JsonCreator
         public Relation(@JsonProperty(value = "bounds", required = true) final Bounds bounds,
                         @JsonProperty(value = "members", required = true) final List<Way> ways,
