@@ -46,10 +46,10 @@ public final class TrackCityGeometryLoaderTest {
         final LineString givenSimplifiedLine = mock(LineString.class);
         when(mockedGeometryService.createLine(same(givenSimplifiedTrack))).thenReturn(givenSimplifiedLine);
 
-        loader.expectedSimplifiedLine = givenSimplifiedLine;
-
         final List<PreparedGeometry> actual = loader.load(givenTrack);
         assertTrue(actual.isEmpty());
+
+        assertSame(loader.capturedLine, givenSimplifiedLine);
     }
 
     private static Track createEmptyTrack() {
@@ -57,7 +57,7 @@ public final class TrackCityGeometryLoaderTest {
     }
 
     private static final class TestTrackCityGeometryLoader extends TrackCityGeometryLoader {
-        private LineString expectedSimplifiedLine;
+        private LineString capturedLine;
 
         public TestTrackCityGeometryLoader(final TrackSimplifier trackSimplifier, final GeometryService geometryService) {
             super(trackSimplifier, geometryService);
@@ -65,7 +65,7 @@ public final class TrackCityGeometryLoaderTest {
 
         @Override
         protected List<PreparedGeometry> load(final LineString line) {
-            assertSame(expectedSimplifiedLine, line);
+            capturedLine = line;
             return emptyList();
         }
     }
