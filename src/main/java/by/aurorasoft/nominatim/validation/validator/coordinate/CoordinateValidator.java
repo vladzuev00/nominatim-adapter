@@ -15,6 +15,6 @@ public abstract class CoordinateValidator<A extends Annotation> implements Const
 
     @Override
     public final boolean isValid(final Double value, final ConstraintValidatorContext context) {
-        return compare(value, minAllowable) >= 0 && compare(value, maxAllowable) <= 0;
+        return value != null && compare(value, minAllowable) >= 0 && compare(value, maxAllowable) <= 0;
     }
 }
