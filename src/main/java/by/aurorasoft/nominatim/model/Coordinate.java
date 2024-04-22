@@ -4,6 +4,6 @@ import lombok.Value;
 
 @Value
 public class Coordinate {
-    float latitude;
-    float longitude;
+    double latitude;
+    double longitude;
 }

@@ -1,23 +1,25 @@
 package by.aurorasoft.nominatim.controller.cityscan.model;
 
+import by.aurorasoft.nominatim.validation.annotation.Latitude;
+import by.aurorasoft.nominatim.validation.annotation.Longitude;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
-
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 
 @Value
 @RequiredArgsConstructor
 @Builder
 public class AreaCoordinateRequest {
 
-    @NotNull
-    @Min(90)
-    @Max(90)
+    @Latitude
     Double minLatitude;
+
+    @Longitude
     Double minLongitude;
+
+    @Latitude
     Double maxLatitude;
+
+    @Longitude
     Double maxLongitude;
 }

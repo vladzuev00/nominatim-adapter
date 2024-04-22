@@ -19,11 +19,11 @@ public class TrackPoint implements LatLngAlt {
 
     @Override
     public float getLatitude() {
-        return coordinate.getLatitude();
+        return (float) coordinate.getLatitude();
     }
 
     @Override
     public float getLongitude() {
-        return coordinate.getLongitude();
+        return (float) coordinate.getLongitude();
     }
 }
