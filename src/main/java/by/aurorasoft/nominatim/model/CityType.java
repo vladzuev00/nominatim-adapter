@@ -8,7 +8,7 @@ public enum CityType {
     CAPITAL {
         @Override
         public boolean match(final Tags tags) {
-            return Objects.equals(EXPECTED_CAPITAL_VALUE, tags.getCapital());
+            return Objects.equals(SUITABLE_CAPITAL_VALUE, tags.getCapital());
         }
     },
 
@@ -26,7 +26,7 @@ public enum CityType {
         }
     };
 
-    private static final String EXPECTED_CAPITAL_VALUE = "yes";
+    private static final String SUITABLE_CAPITAL_VALUE = "yes";
     private static final String CITY_PLACE_VALUE = "city";
     private static final String TOWN_PLACE_VALUE = "town";
 
