@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class OverpassTurboSearchCityQueryFactory {
+public final class OverpassSearchCityQueryFactory {
     private final int timeout;
 
-    public OverpassTurboSearchCityQueryFactory(@Value("${overpass-turbo.timeout}") final int timeout) {
+    public OverpassSearchCityQueryFactory(@Value("${overpass-turbo.timeout}") final int timeout) {
         this.timeout = timeout;
     }
 

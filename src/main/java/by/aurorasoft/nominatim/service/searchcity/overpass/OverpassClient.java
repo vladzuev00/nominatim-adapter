@@ -11,9 +11,9 @@ import org.springframework.web.client.RestTemplate;
 @Component
 @RequiredArgsConstructor
 public final class OverpassClient {
-    private static final String URL = "https://overpass-api.de/api/interpreter";
+    static final String URL = "https://overpass-api.de/api/interpreter";
 
-    private final OverpassTurboSearchCityQueryFactory queryFactory;
+    private final OverpassSearchCityQueryFactory queryFactory;
     private final RestTemplate restTemplate;
 
     public OverpassSearchCityResponse findCities(final AreaCoordinate areaCoordinate) {
