@@ -32,10 +32,36 @@ public final class OverpassCityFactory {
         return stream(CityType.values())
                 .filter(type -> type.match(relation.getTags()))
                 .findFirst()
-                .orElseThrow();
+                .orElseThrow(
+                        () -> new OverpassCityCreatingException(
+                                "Impossible to identify city's type in relation: %s".formatted(relation)
+                        )
+                );
     }
 
     private Geometry getBoundingBox(final Relation relation) {
         return geometryService.createPolygon(relation.getBounds());
+    }
+
+    static final class OverpassCityCreatingException extends RuntimeException {
+
+        @SuppressWarnings("unused")
+        public OverpassCityCreatingException() {
+
+        }
+
+        public OverpassCityCreatingException(final String description) {
+            super(description);
+        }
+
+        @SuppressWarnings("unused")
+        public OverpassCityCreatingException(final Exception cause) {
+            super(cause);
+        }
+
+        @SuppressWarnings("unused")
+        public OverpassCityCreatingException(final String description, final Exception cause) {
+            super(description, cause);
+        }
     }
 }
