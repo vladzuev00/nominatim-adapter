@@ -34,7 +34,7 @@ public final class MileageCalculatingService {
                         collectingAndThen(
                                 partitioningBy(
                                         slice -> geometryService.isAnyContain(cityGeometries, slice.second),
-                                        summingDouble(slice -> calculateDistance(slice, settings))
+                                        summingDouble(slice -> findLength(slice, settings))
                                 ),
                                 mileagesByUrban -> new Mileage(mileagesByUrban.get(true), mileagesByUrban.get(false))
                         )
@@ -53,7 +53,7 @@ public final class MileageCalculatingService {
         return new TrackSlice(track.getPoint(index), track.getPoint(index + 1));
     }
 
-    private double calculateDistance(final TrackSlice slice, final DistanceCalculatorSettings settings) {
+    private double findLength(final TrackSlice slice, final DistanceCalculatorSettings settings) {
         return distanceCalculator.calculateDistance(slice.first, slice.second, settings);
     }
 
