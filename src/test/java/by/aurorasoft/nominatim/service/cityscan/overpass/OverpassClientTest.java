@@ -1,4 +1,4 @@
-package by.aurorasoft.nominatim.service.searchcity.overpass;
+package by.aurorasoft.nominatim.service.cityscan.overpass;
 
 import by.aurorasoft.nominatim.model.AreaCoordinate;
 import by.aurorasoft.nominatim.model.OverpassSearchCityQuery;
@@ -11,7 +11,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpEntity;
 import org.springframework.web.client.RestTemplate;
 
-import static by.aurorasoft.nominatim.service.searchcity.overpass.OverpassClient.URL;
+import static by.aurorasoft.nominatim.service.cityscan.overpass.OverpassClient.URL;
 import static org.junit.Assert.assertSame;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;

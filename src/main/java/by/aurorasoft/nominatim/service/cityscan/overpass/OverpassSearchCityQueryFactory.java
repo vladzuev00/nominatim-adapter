@@ -1,4 +1,4 @@
-package by.aurorasoft.nominatim.service.searchcity.overpass;
+package by.aurorasoft.nominatim.service.cityscan.overpass;
 
 import by.aurorasoft.nominatim.model.AreaCoordinate;
 import by.aurorasoft.nominatim.model.OverpassSearchCityQuery;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public final class OverpassSearchCityQueryFactory {
     private final int timeout;
 
-    public OverpassSearchCityQueryFactory(@Value("${overpass-turbo.timeout}") final int timeout) {
+    public OverpassSearchCityQueryFactory(@Value("${overpass.timeout}") final int timeout) {
         this.timeout = timeout;
     }
 

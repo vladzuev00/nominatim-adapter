@@ -1,4 +1,4 @@
-package by.aurorasoft.nominatim.service.searchcity.overpass;
+package by.aurorasoft.nominatim.service.cityscan.overpass;
 
 import by.aurorasoft.nominatim.crud.model.dto.City;
 import by.aurorasoft.nominatim.model.CityType;

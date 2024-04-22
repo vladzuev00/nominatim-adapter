@@ -36,5 +36,5 @@ mileage-calc:
 track-simplifier:
   epsilon: 0.00015
 
-overpass-turbo:
+overpass:
   timeout: 50
