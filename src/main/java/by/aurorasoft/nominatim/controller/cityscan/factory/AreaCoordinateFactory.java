@@ -17,6 +17,6 @@ public final class AreaCoordinateFactory {
     }
 
     private Coordinate getMaxCoordinate(final AreaCoordinateRequest request) {
-        return new Coordinate(request.getMaxLongitude(), request.getMinLongitude());
+        return new Coordinate(request.getMaxLatitude(), request.getMaxLongitude());
     }
 }
