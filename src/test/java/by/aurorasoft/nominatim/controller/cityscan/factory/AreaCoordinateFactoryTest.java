@@ -1,6 +1,5 @@
-package by.aurorasoft.nominatim.controller.cityscan;
+package by.aurorasoft.nominatim.controller.cityscan.factory;
 
-import by.aurorasoft.nominatim.controller.cityscan.factory.AreaCoordinateFactory;
 import by.aurorasoft.nominatim.controller.cityscan.model.AreaCoordinateRequest;
 import by.aurorasoft.nominatim.model.AreaCoordinate;
 import by.aurorasoft.nominatim.model.Coordinate;
