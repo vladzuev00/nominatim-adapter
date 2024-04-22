@@ -27,12 +27,12 @@ public final class GeometryServiceTest extends AbstractJunitSpringBootTest {
 
     @Test
     public void lineShouldBeCreated() {
-        final float firstGivenLatitude = 4.4F;
-        final float firstGivenLongitude = 5.5F;
-        final float secondGivenLatitude = 6.6F;
-        final float secondGivenLongitude = 7.7F;
-        final float thirdGivenLatitude = 8.8F;
-        final float thirdGivenLongitude = 9.9F;
+        final double firstGivenLatitude = 4.4;
+        final double firstGivenLongitude = 5.5;
+        final double secondGivenLatitude = 6.6;
+        final double secondGivenLongitude = 7.7;
+        final double thirdGivenLatitude = 8.8;
+        final double thirdGivenLongitude = 9.9;
 
         final Track givenTrack = new Track(
                 List.of(
@@ -150,7 +150,7 @@ public final class GeometryServiceTest extends AbstractJunitSpringBootTest {
         assertEquals(expected, actual);
     }
 
-    private static TrackPoint createTrackPoint(final float latitude, final float longitude) {
+    private static TrackPoint createTrackPoint(final double latitude, final double longitude) {
         return TrackPoint.builder()
                 .coordinate(new by.aurorasoft.nominatim.model.Coordinate(latitude, longitude))
                 .build();

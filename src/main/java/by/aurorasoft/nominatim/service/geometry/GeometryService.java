@@ -6,7 +6,6 @@ import by.aurorasoft.nominatim.model.OverpassSearchCityResponse.Relation;
 import by.aurorasoft.nominatim.model.OverpassSearchCityResponse.Way;
 import by.aurorasoft.nominatim.model.Track;
 import by.aurorasoft.nominatim.model.TrackPoint;
-import by.nhorushko.distancecalculator.LatLngAlt;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.*;
 import org.locationtech.jts.geom.prep.PreparedGeometry;
@@ -39,10 +38,10 @@ public final class GeometryService {
         return geometryFactory.createPolygon(getJtsCoordinates(bounds));
     }
 
-    private boolean isContain(final PreparedGeometry geometry, final LatLngAlt latLngAlt) {
-        final Coordinate coordinate = createJtsCoordinate(latLngAlt);
-        final Point point = geometryFactory.createPoint(coordinate);
-        return geometry.contains(point);
+    private boolean isContain(final PreparedGeometry geometry, final TrackPoint point) {
+        final Coordinate coordinate = createJtsCoordinate(point);
+        final Point jtsPoint = geometryFactory.createPoint(coordinate);
+        return geometry.contains(jtsPoint);
     }
 
     @SuppressWarnings("unchecked")
@@ -88,16 +87,20 @@ public final class GeometryService {
         return sources.map(factory).toArray(CoordinateXY[]::new);
     }
 
+    private static CoordinateXY createJtsCoordinate(final TrackPoint trackPoint) {
+        return createJtsCoordinate(
+                trackPoint,
+                point -> point.getCoordinate().getLatitude(),
+                point -> point.getCoordinate().getLongitude()
+        );
+    }
+
     private static CoordinateXY createJtsCoordinate(final OverpassSearchCityResponse.Coordinate coordinate) {
         return createJtsCoordinate(
                 coordinate,
                 OverpassSearchCityResponse.Coordinate::getLatitude,
                 OverpassSearchCityResponse.Coordinate::getLongitude
         );
-    }
-
-    private static CoordinateXY createJtsCoordinate(final LatLngAlt point) {
-        return createJtsCoordinate(point, LatLngAlt::getLatitude, LatLngAlt::getLongitude);
     }
 
     private static CoordinateXY getLeftBottomJtsCoordinate(final Bounds bounds) {

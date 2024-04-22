@@ -35,15 +35,15 @@ public final class TrackSimplifierTest {
     @SuppressWarnings({"rawtypes", "unchecked"})
     public void trackShouldBeSimplified() {
         final List<TrackPoint> givenPoints = List.of(
-                createPoint(4.4F, 5.5F),
-                createPoint(6.6F, 7.7F),
-                createPoint(8.8F, 9.9F)
+                createPoint(4.4, 5.5),
+                createPoint(6.6, 7.7),
+                createPoint(8.8, 9.9)
         );
         final Track givenTrack = new Track(givenPoints);
 
         final List givenFilteredPoints = List.of(
-                createPoint(4.4F, 5.5F),
-                createPoint(8.8F, 9.9F)
+                createPoint(4.4, 5.5),
+                createPoint(8.8, 9.9)
         );
         when(mockedTrackFilter.filter(same(givenPoints), eq(GIVEN_EPSILON))).thenReturn(givenFilteredPoints);
 
@@ -52,7 +52,7 @@ public final class TrackSimplifierTest {
         assertEquals(expected, actual);
     }
 
-    private static TrackPoint createPoint(final float latitude, final float longitude) {
+    private static TrackPoint createPoint(final double latitude, final double longitude) {
         return TrackPoint.builder()
                 .coordinate(new Coordinate(latitude, longitude))
                 .build();
