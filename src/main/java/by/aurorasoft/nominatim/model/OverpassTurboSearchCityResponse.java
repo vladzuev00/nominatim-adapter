@@ -87,6 +87,7 @@ public class OverpassTurboSearchCityResponse {
         String name;
         String place;
 
+        @Builder
         @JsonCreator
         public Tags(@JsonProperty("capital") final String capital,
                     @JsonProperty(value = "name", required = true) final String name,
