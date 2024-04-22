@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Geometry;
 import org.springframework.stereotype.Component;
 
+import static java.util.Arrays.stream;
+
 @Component
 @RequiredArgsConstructor
 public final class OverpassCityFactory {
@@ -27,10 +29,13 @@ public final class OverpassCityFactory {
     }
 
     private CityType getType(final Relation relation) {
-
+        return stream(CityType.values())
+                .filter(type -> type.match(relation.getTags()))
+                .findFirst()
+                .orElseThrow();
     }
 
     private Geometry getBoundingBox(final Relation relation) {
-        return null;
+        return geometryService.createPolygon(relation.getBounds());
     }
 }

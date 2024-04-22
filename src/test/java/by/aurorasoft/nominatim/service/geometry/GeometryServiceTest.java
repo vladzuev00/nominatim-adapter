@@ -2,6 +2,7 @@ package by.aurorasoft.nominatim.service.geometry;
 
 import by.aurorasoft.nominatim.base.AbstractJunitSpringBootTest;
 import by.aurorasoft.nominatim.model.OverpassTurboSearchCityResponse;
+import by.aurorasoft.nominatim.model.OverpassTurboSearchCityResponse.Bounds;
 import by.aurorasoft.nominatim.model.OverpassTurboSearchCityResponse.Relation;
 import by.aurorasoft.nominatim.model.OverpassTurboSearchCityResponse.Way;
 import by.aurorasoft.nominatim.model.Track;
@@ -128,6 +129,25 @@ public final class GeometryServiceTest extends AbstractJunitSpringBootTest {
                 )
         );
         assertTrue(expected.equalsTopo(actual));
+    }
+
+    @Test
+    public void polygonShouldBeCreated() {
+        final double givenMinLatitude = 5.5;
+        final double givenMinLongitude = 6.6;
+        final double givenMaxLatitude = 7.7;
+        final double givenMaxLongitude = 8.8;
+        final Bounds givenBounds = new Bounds(givenMinLatitude, givenMinLongitude, givenMaxLatitude, givenMaxLongitude);
+
+        final Polygon actual = service.createPolygon(givenBounds);
+        final Polygon expected = createPolygon(
+                new CoordinateXY(givenMinLongitude, givenMinLatitude),
+                new CoordinateXY(givenMinLongitude, givenMaxLatitude),
+                new CoordinateXY(givenMaxLongitude, givenMaxLatitude),
+                new CoordinateXY(givenMaxLongitude, givenMinLatitude),
+                new CoordinateXY(givenMinLongitude, givenMinLatitude)
+        );
+        assertEquals(expected, actual);
     }
 
     private static TrackPoint createTrackPoint(final float latitude, final float longitude) {
