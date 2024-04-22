@@ -1,4 +1,4 @@
-package by.aurorasoft.nominatim.service.searchcity.overpassturbo;
+package by.aurorasoft.nominatim.service.searchcity.overpass;
 
 import by.aurorasoft.nominatim.model.AreaCoordinate;
 import by.aurorasoft.nominatim.model.OverpassTurboSearchCityQuery;
