@@ -13,8 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 import static org.locationtech.jts.geom.prep.PreparedGeometryFactory.prepare;
 
 public final class GeometryServiceTest extends AbstractJunitSpringBootTest {
@@ -27,28 +26,26 @@ public final class GeometryServiceTest extends AbstractJunitSpringBootTest {
 
     @Test
     public void lineShouldBeCreated() {
-        final float firstPointGivenLatitude = 4.4F;
-        final float firstPointGivenLongitude = 5.5F;
-        final float secondPointGivenLatitude = 6.6F;
-        final float secondPointGivenLongitude = 7.7F;
-        final float thirdPointGivenLatitude = 8.8F;
-        final float thirdPointGivenLongitude = 9.9F;
+        final float firstGivenLatitude = 4.4F;
+        final float firstGivenLongitude = 5.5F;
+        final float secondGivenLatitude = 6.6F;
+        final float secondGivenLongitude = 7.7F;
+        final float thirdGivenLatitude = 8.8F;
+        final float thirdGivenLongitude = 9.9F;
 
         final Track givenTrack = new Track(
                 List.of(
-                        createTrackPoint(firstPointGivenLatitude, firstPointGivenLongitude),
-                        createTrackPoint(secondPointGivenLatitude, secondPointGivenLongitude),
-                        createTrackPoint(thirdPointGivenLatitude, thirdPointGivenLongitude)
+                        createTrackPoint(firstGivenLatitude, firstGivenLongitude),
+                        createTrackPoint(secondGivenLatitude, secondGivenLongitude),
+                        createTrackPoint(thirdGivenLatitude, thirdGivenLongitude)
                 )
         );
 
         final LineString actual = service.createLine(givenTrack);
-        final LineString expected = geometryFactory.createLineString(
-                new Coordinate[]{
-                        new CoordinateXY(firstPointGivenLongitude, firstPointGivenLatitude),
-                        new CoordinateXY(secondPointGivenLongitude, secondPointGivenLatitude),
-                        new CoordinateXY(thirdPointGivenLongitude, thirdPointGivenLatitude)
-                }
+        final LineString expected = createLine(
+                new CoordinateXY(firstGivenLongitude, firstGivenLatitude),
+                new CoordinateXY(secondGivenLongitude, secondGivenLatitude),
+                new CoordinateXY(thirdGivenLongitude, thirdGivenLatitude)
         );
         assertEquals(expected, actual);
     }
@@ -56,23 +53,19 @@ public final class GeometryServiceTest extends AbstractJunitSpringBootTest {
     @Test
     public void geometriesShouldContainPoint() {
         final List<PreparedGeometry> givenGeometries = List.of(
-                createPreparedGeometry(
-                        new Coordinate[]{
-                                new CoordinateXY(1, 1),
-                                new CoordinateXY(1, 2),
-                                new CoordinateXY(2, 2),
-                                new CoordinateXY(2, 1),
-                                new CoordinateXY(1, 1)
-                        }
+                createPreparedPolygon(
+                        new CoordinateXY(1, 1),
+                        new CoordinateXY(1, 2),
+                        new CoordinateXY(2, 2),
+                        new CoordinateXY(2, 1),
+                        new CoordinateXY(1, 1)
                 ),
-                createPreparedGeometry(
-                        new Coordinate[]{
-                                new CoordinateXY(3, 3),
-                                new CoordinateXY(3, 4),
-                                new CoordinateXY(4, 4),
-                                new CoordinateXY(4, 3),
-                                new CoordinateXY(3, 3)
-                        }
+                createPreparedPolygon(
+                        new CoordinateXY(3, 3),
+                        new CoordinateXY(3, 4),
+                        new CoordinateXY(4, 4),
+                        new CoordinateXY(4, 3),
+                        new CoordinateXY(3, 3)
                 )
         );
         final TrackPoint givenPoint = createTrackPoint(4, 4);
@@ -84,23 +77,19 @@ public final class GeometryServiceTest extends AbstractJunitSpringBootTest {
     @Test
     public void geometriesShouldNotContainPoint() {
         final List<PreparedGeometry> givenGeometries = List.of(
-                createPreparedGeometry(
-                        new Coordinate[]{
-                                new CoordinateXY(1, 1),
-                                new CoordinateXY(1, 2),
-                                new CoordinateXY(2, 2),
-                                new CoordinateXY(2, 1),
-                                new CoordinateXY(1, 1)
-                        }
+                createPreparedPolygon(
+                        new CoordinateXY(1, 1),
+                        new CoordinateXY(1, 2),
+                        new CoordinateXY(2, 2),
+                        new CoordinateXY(2, 1),
+                        new CoordinateXY(1, 1)
                 ),
-                createPreparedGeometry(
-                        new Coordinate[]{
-                                new CoordinateXY(3, 3),
-                                new CoordinateXY(3, 4),
-                                new CoordinateXY(4, 4),
-                                new CoordinateXY(4, 3),
-                                new CoordinateXY(3, 3)
-                        }
+                createPreparedPolygon(
+                        new CoordinateXY(3, 3),
+                        new CoordinateXY(3, 4),
+                        new CoordinateXY(4, 4),
+                        new CoordinateXY(4, 3),
+                        new CoordinateXY(3, 3)
                 )
         );
         final TrackPoint givenPoint = createTrackPoint(4.5F, 4.5F);
@@ -121,9 +110,24 @@ public final class GeometryServiceTest extends AbstractJunitSpringBootTest {
                 )
                 .build();
 
-        final Geometry actual = service.createMultiPolygon(givenRelation);
-        System.out.println(actual);
-        throw new RuntimeException();
+        final MultiPolygon actual = service.createMultiPolygon(givenRelation);
+        final MultiPolygon expected = createMultipolygon(
+                createPolygon(
+                        new CoordinateXY(1, 3),
+                        new CoordinateXY(2, 6),
+                        new CoordinateXY(4, 8),
+                        new CoordinateXY(5, 5),
+                        new CoordinateXY(4, 2),
+                        new CoordinateXY(1, 3)
+                ),
+                createPolygon(
+                        new CoordinateXY(7, 2),
+                        new CoordinateXY(7, 6),
+                        new CoordinateXY(10, 5),
+                        new CoordinateXY(7, 2)
+                )
+        );
+        assertTrue(expected.equalsTopo(actual));
     }
 
     private static TrackPoint createTrackPoint(final float latitude, final float longitude) {
@@ -132,11 +136,15 @@ public final class GeometryServiceTest extends AbstractJunitSpringBootTest {
                 .build();
     }
 
-    private PreparedGeometry createPreparedGeometry(final Coordinate[] coordinates) {
-        final Geometry geometry = geometryFactory.createPolygon(coordinates);
-        return prepare(geometry);
+    private LineString createLine(final Coordinate... coordinates) {
+        return geometryFactory.createLineString(coordinates);
     }
 
+    private PreparedGeometry createPreparedPolygon(final Coordinate... coordinates) {
+        return prepare(geometryFactory.createPolygon(coordinates));
+    }
+
+    @SuppressWarnings("SameParameterValue")
     private static Way createWay(final double firstLatitude, final double firstLongitude,
                                  final double secondLatitude, final double secondLongitude,
                                  final double thirdLatitude, final double thirdLongitude) {
@@ -161,5 +169,13 @@ public final class GeometryServiceTest extends AbstractJunitSpringBootTest {
                         new OverpassTurboSearchCityResponse.Coordinate(fourthLatitude, fourthLongitude)
                 )
         );
+    }
+
+    private Polygon createPolygon(final Coordinate... coordinates) {
+        return geometryFactory.createPolygon(coordinates);
+    }
+
+    private MultiPolygon createMultipolygon(final Polygon... polygons) {
+        return geometryFactory.createMultiPolygon(polygons);
     }
 }
