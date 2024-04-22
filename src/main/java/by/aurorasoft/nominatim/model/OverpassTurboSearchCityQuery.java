@@ -16,10 +16,10 @@ public class OverpassTurboSearchCityQuery {
                 out geom;"""
                 .formatted(
                         timeout,
-                        areaCoordinate.getLeftBottom().getLatitude(),
-                        areaCoordinate.getLeftBottom().getLongitude(),
-                        areaCoordinate.getRightUpper().getLatitude(),
-                        areaCoordinate.getRightUpper().getLongitude()
+                        areaCoordinate.getMin().getLatitude(),
+                        areaCoordinate.getMin().getLongitude(),
+                        areaCoordinate.getMax().getLatitude(),
+                        areaCoordinate.getMax().getLongitude()
                 );
     }
 }

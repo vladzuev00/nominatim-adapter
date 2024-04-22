@@ -13,7 +13,7 @@ import static org.springframework.http.MediaType.TEXT_PLAIN;
 
 @Component
 @RequiredArgsConstructor
-public final class OverpassTurboClient {
+public final class OverpassClient {
     private static final String URL = "https://overpass-api.de/api/interpreter";
 
     private final OverpassTurboSearchCityQueryFactory queryFactory;
