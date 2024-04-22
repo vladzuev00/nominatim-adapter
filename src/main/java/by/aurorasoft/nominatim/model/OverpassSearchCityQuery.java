@@ -3,7 +3,7 @@ package by.aurorasoft.nominatim.model;
 import lombok.Value;
 
 @Value
-public class OverpassTurboSearchCityQuery {
+public class OverpassSearchCityQuery {
     int timeout;
     AreaCoordinate areaCoordinate;
 

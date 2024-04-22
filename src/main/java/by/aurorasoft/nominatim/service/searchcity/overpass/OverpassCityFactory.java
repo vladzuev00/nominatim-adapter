@@ -2,7 +2,7 @@ package by.aurorasoft.nominatim.service.searchcity.overpass;
 
 import by.aurorasoft.nominatim.crud.model.dto.City;
 import by.aurorasoft.nominatim.model.CityType;
-import by.aurorasoft.nominatim.model.OverpassTurboSearchCityResponse.Relation;
+import by.aurorasoft.nominatim.model.OverpassSearchCityResponse.Relation;
 import by.aurorasoft.nominatim.service.geometry.GeometryService;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Geometry;

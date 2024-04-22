@@ -1,10 +1,10 @@
 package by.aurorasoft.nominatim.model;
 
 import by.aurorasoft.nominatim.base.AbstractJunitSpringBootTest;
-import by.aurorasoft.nominatim.model.OverpassTurboSearchCityResponse.Bounds;
-import by.aurorasoft.nominatim.model.OverpassTurboSearchCityResponse.Relation;
-import by.aurorasoft.nominatim.model.OverpassTurboSearchCityResponse.Tags;
-import by.aurorasoft.nominatim.model.OverpassTurboSearchCityResponse.Way;
+import by.aurorasoft.nominatim.model.OverpassSearchCityResponse.Bounds;
+import by.aurorasoft.nominatim.model.OverpassSearchCityResponse.Relation;
+import by.aurorasoft.nominatim.model.OverpassSearchCityResponse.Tags;
+import by.aurorasoft.nominatim.model.OverpassSearchCityResponse.Way;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import org.junit.Test;
@@ -12,11 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import static by.aurorasoft.nominatim.model.OverpassTurboSearchCityResponse.Coordinate;
+import static by.aurorasoft.nominatim.model.OverpassSearchCityResponse.Coordinate;
 import static org.junit.Assert.assertEquals;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 
-public final class OverpassTurboSearchCityResponseTest extends AbstractJunitSpringBootTest {
+public final class OverpassSearchCityResponseTest extends AbstractJunitSpringBootTest {
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -586,7 +586,7 @@ public final class OverpassTurboSearchCityResponseTest extends AbstractJunitSpri
     @Test
     public void responseShouldBeConvertedToJson()
             throws Exception {
-        final OverpassTurboSearchCityResponse givenResponse = new OverpassTurboSearchCityResponse(
+        final OverpassSearchCityResponse givenResponse = new OverpassSearchCityResponse(
                 List.of(
                         new Relation(
                                 new Bounds(53.5833949, 24.9732414, 53.6059, 24.9957),
@@ -778,8 +778,8 @@ public final class OverpassTurboSearchCityResponseTest extends AbstractJunitSpri
                   ]
                 }""";
 
-        final OverpassTurboSearchCityResponse actual = objectMapper.readValue(givenJson, OverpassTurboSearchCityResponse.class);
-        final OverpassTurboSearchCityResponse expected = new OverpassTurboSearchCityResponse(
+        final OverpassSearchCityResponse actual = objectMapper.readValue(givenJson, OverpassSearchCityResponse.class);
+        final OverpassSearchCityResponse expected = new OverpassSearchCityResponse(
                 List.of(
                         new Relation(
                                 new Bounds(53.5833949, 24.9732414, 53.6059, 24.9957),
@@ -825,6 +825,6 @@ public final class OverpassTurboSearchCityResponseTest extends AbstractJunitSpri
                 
                 }""";
 
-        objectMapper.readValue(givenJson, OverpassTurboSearchCityResponse.class);
+        objectMapper.readValue(givenJson, OverpassSearchCityResponse.class);
     }
 }

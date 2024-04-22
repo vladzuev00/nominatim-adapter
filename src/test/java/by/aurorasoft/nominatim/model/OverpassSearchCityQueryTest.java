@@ -4,11 +4,11 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public final class OverpassTurboSearchCityQueryTest {
+public final class OverpassSearchCityQueryTest {
 
     @Test
     public void queryShouldBePresentedAsText() {
-        final OverpassTurboSearchCityQuery givenQuery = new OverpassTurboSearchCityQuery(
+        final OverpassSearchCityQuery givenQuery = new OverpassSearchCityQuery(
                 50,
                 new AreaCoordinate(
                         new Coordinate(5.5F, 6.6F),

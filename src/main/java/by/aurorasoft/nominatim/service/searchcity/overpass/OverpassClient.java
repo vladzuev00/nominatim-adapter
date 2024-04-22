@@ -1,15 +1,12 @@
 package by.aurorasoft.nominatim.service.searchcity.overpass;
 
 import by.aurorasoft.nominatim.model.AreaCoordinate;
-import by.aurorasoft.nominatim.model.OverpassTurboSearchCityQuery;
-import by.aurorasoft.nominatim.model.OverpassTurboSearchCityResponse;
+import by.aurorasoft.nominatim.model.OverpassSearchCityQuery;
+import by.aurorasoft.nominatim.model.OverpassSearchCityResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-
-import static org.springframework.http.MediaType.TEXT_PLAIN;
 
 @Component
 @RequiredArgsConstructor
@@ -19,21 +16,9 @@ public final class OverpassClient {
     private final OverpassTurboSearchCityQueryFactory queryFactory;
     private final RestTemplate restTemplate;
 
-    public OverpassTurboSearchCityResponse findCities(final AreaCoordinate areaCoordinate) {
-        final OverpassTurboSearchCityQuery query = queryFactory.create(areaCoordinate);
-        final HttpEntity<String> httpEntity = createHttpEntity(query);
-        return restTemplate.postForObject(URL, httpEntity, OverpassTurboSearchCityResponse.class);
-    }
-
-    private static HttpEntity<String> createHttpEntity(final OverpassTurboSearchCityQuery query) {
-        final String queryText = query.asText();
-        final HttpHeaders headers = createHttpHeaders();
-        return new HttpEntity<>(queryText, headers);
-    }
-
-    private static HttpHeaders createHttpHeaders() {
-        final HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(TEXT_PLAIN);
-        return headers;
+    public OverpassSearchCityResponse findCities(final AreaCoordinate areaCoordinate) {
+        final OverpassSearchCityQuery query = queryFactory.create(areaCoordinate);
+        final HttpEntity<String> httpEntity = new HttpEntity<>(query.asText());
+        return restTemplate.postForObject(URL, httpEntity, OverpassSearchCityResponse.class);
     }
 }

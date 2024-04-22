@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.model;
 
-import by.aurorasoft.nominatim.model.OverpassTurboSearchCityResponse.Tags;
+import by.aurorasoft.nominatim.model.OverpassSearchCityResponse.Tags;
 import org.junit.Test;
 
 import static by.aurorasoft.nominatim.model.CityType.*;

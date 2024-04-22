@@ -8,11 +8,11 @@ import lombok.Value;
 import java.util.List;
 
 @Value
-public class OverpassTurboSearchCityResponse {
+public class OverpassSearchCityResponse {
     List<Relation> relations;
 
     @JsonCreator
-    public OverpassTurboSearchCityResponse(@JsonProperty(value = "elements", required = true) final List<Relation> relations) {
+    public OverpassSearchCityResponse(@JsonProperty(value = "elements", required = true) final List<Relation> relations) {
         this.relations = relations;
     }
 

@@ -1,9 +1,9 @@
 package by.aurorasoft.nominatim.service.geometry;
 
-import by.aurorasoft.nominatim.model.OverpassTurboSearchCityResponse;
-import by.aurorasoft.nominatim.model.OverpassTurboSearchCityResponse.Bounds;
-import by.aurorasoft.nominatim.model.OverpassTurboSearchCityResponse.Relation;
-import by.aurorasoft.nominatim.model.OverpassTurboSearchCityResponse.Way;
+import by.aurorasoft.nominatim.model.OverpassSearchCityResponse;
+import by.aurorasoft.nominatim.model.OverpassSearchCityResponse.Bounds;
+import by.aurorasoft.nominatim.model.OverpassSearchCityResponse.Relation;
+import by.aurorasoft.nominatim.model.OverpassSearchCityResponse.Way;
 import by.aurorasoft.nominatim.model.Track;
 import by.aurorasoft.nominatim.model.TrackPoint;
 import by.nhorushko.distancecalculator.LatLngAlt;
@@ -88,11 +88,11 @@ public final class GeometryService {
         return sources.map(factory).toArray(CoordinateXY[]::new);
     }
 
-    private static CoordinateXY createJtsCoordinate(final OverpassTurboSearchCityResponse.Coordinate coordinate) {
+    private static CoordinateXY createJtsCoordinate(final OverpassSearchCityResponse.Coordinate coordinate) {
         return createJtsCoordinate(
                 coordinate,
-                OverpassTurboSearchCityResponse.Coordinate::getLatitude,
-                OverpassTurboSearchCityResponse.Coordinate::getLongitude
+                OverpassSearchCityResponse.Coordinate::getLatitude,
+                OverpassSearchCityResponse.Coordinate::getLongitude
         );
     }
 

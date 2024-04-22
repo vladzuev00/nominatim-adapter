@@ -1,9 +1,9 @@
 package by.aurorasoft.nominatim.service.searchcity.overpass;
 
 import by.aurorasoft.nominatim.crud.model.dto.City;
-import by.aurorasoft.nominatim.model.OverpassTurboSearchCityResponse.Bounds;
-import by.aurorasoft.nominatim.model.OverpassTurboSearchCityResponse.Relation;
-import by.aurorasoft.nominatim.model.OverpassTurboSearchCityResponse.Tags;
+import by.aurorasoft.nominatim.model.OverpassSearchCityResponse.Bounds;
+import by.aurorasoft.nominatim.model.OverpassSearchCityResponse.Relation;
+import by.aurorasoft.nominatim.model.OverpassSearchCityResponse.Tags;
 import by.aurorasoft.nominatim.service.geometry.GeometryService;
 import by.aurorasoft.nominatim.service.searchcity.overpass.OverpassCityFactory.OverpassCityCreatingException;
 import org.junit.Before;

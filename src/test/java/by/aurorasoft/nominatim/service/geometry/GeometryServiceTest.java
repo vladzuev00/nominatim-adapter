@@ -1,10 +1,10 @@
 package by.aurorasoft.nominatim.service.geometry;
 
 import by.aurorasoft.nominatim.base.AbstractJunitSpringBootTest;
-import by.aurorasoft.nominatim.model.OverpassTurboSearchCityResponse;
-import by.aurorasoft.nominatim.model.OverpassTurboSearchCityResponse.Bounds;
-import by.aurorasoft.nominatim.model.OverpassTurboSearchCityResponse.Relation;
-import by.aurorasoft.nominatim.model.OverpassTurboSearchCityResponse.Way;
+import by.aurorasoft.nominatim.model.OverpassSearchCityResponse;
+import by.aurorasoft.nominatim.model.OverpassSearchCityResponse.Bounds;
+import by.aurorasoft.nominatim.model.OverpassSearchCityResponse.Relation;
+import by.aurorasoft.nominatim.model.OverpassSearchCityResponse.Way;
 import by.aurorasoft.nominatim.model.Track;
 import by.aurorasoft.nominatim.model.TrackPoint;
 import org.junit.Test;
@@ -170,9 +170,9 @@ public final class GeometryServiceTest extends AbstractJunitSpringBootTest {
                                  final double thirdLatitude, final double thirdLongitude) {
         return new Way(
                 List.of(
-                        new OverpassTurboSearchCityResponse.Coordinate(firstLatitude, firstLongitude),
-                        new OverpassTurboSearchCityResponse.Coordinate(secondLatitude, secondLongitude),
-                        new OverpassTurboSearchCityResponse.Coordinate(thirdLatitude, thirdLongitude)
+                        new OverpassSearchCityResponse.Coordinate(firstLatitude, firstLongitude),
+                        new OverpassSearchCityResponse.Coordinate(secondLatitude, secondLongitude),
+                        new OverpassSearchCityResponse.Coordinate(thirdLatitude, thirdLongitude)
                 )
         );
     }
@@ -183,10 +183,10 @@ public final class GeometryServiceTest extends AbstractJunitSpringBootTest {
                                  final double fourthLatitude, final double fourthLongitude) {
         return new Way(
                 List.of(
-                        new OverpassTurboSearchCityResponse.Coordinate(firstLatitude, firstLongitude),
-                        new OverpassTurboSearchCityResponse.Coordinate(secondLatitude, secondLongitude),
-                        new OverpassTurboSearchCityResponse.Coordinate(thirdLatitude, thirdLongitude),
-                        new OverpassTurboSearchCityResponse.Coordinate(fourthLatitude, fourthLongitude)
+                        new OverpassSearchCityResponse.Coordinate(firstLatitude, firstLongitude),
+                        new OverpassSearchCityResponse.Coordinate(secondLatitude, secondLongitude),
+                        new OverpassSearchCityResponse.Coordinate(thirdLatitude, thirdLongitude),
+                        new OverpassSearchCityResponse.Coordinate(fourthLatitude, fourthLongitude)
                 )
         );
     }
