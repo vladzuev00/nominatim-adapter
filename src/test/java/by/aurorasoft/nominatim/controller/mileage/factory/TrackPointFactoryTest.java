@@ -16,8 +16,8 @@ public final class TrackPointFactoryTest {
     @Test
     public void pointShouldBeCreated() {
         final Instant givenDateTime = parse("2007-12-03T10:15:30.00Z");
-        final float givenLatitude = 5.5F;
-        final float givenLongitude = 6.6F;
+        final double givenLatitude = 5.5;
+        final double givenLongitude = 6.6;
         final int givenAltitude = 10;
         final int givenSpeed = 15;
         final boolean givenValid = true;

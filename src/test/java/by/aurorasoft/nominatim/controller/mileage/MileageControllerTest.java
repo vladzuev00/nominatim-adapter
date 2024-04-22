@@ -48,8 +48,8 @@ public final class MileageControllerTest extends AbstractJunitSpringBootTest {
         final MileageRequest givenRequest = MileageRequest.builder()
                 .trackPoints(
                         List.of(
-                                new TrackPointRequest(parse("2023-02-14T12:28:04Z"), 45F, 46F, 15, 500, true),
-                                new TrackPointRequest(parse("2023-02-14T12:28:05Z"), 45.001F, 46F, 15, 500, true)
+                                new TrackPointRequest(parse("2023-02-14T12:28:04Z"), 45., 46., 15, 500, true),
+                                new TrackPointRequest(parse("2023-02-14T12:28:05Z"), 45.001, 46., 15, 500, true)
                         )
                 )
                 .minDetectionSpeed(10)

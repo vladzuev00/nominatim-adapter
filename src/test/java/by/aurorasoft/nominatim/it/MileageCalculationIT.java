@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static by.aurorasoft.nominatim.util.HttpUtil.postExpectingOk;
-import static java.lang.Float.parseFloat;
+import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.ofPattern;
@@ -125,12 +125,12 @@ public abstract class MileageCalculationIT extends AbstractSpringBootTest {
             return LocalDateTime.parse(properties[DATE_TIME_INDEX], DATE_TIME_FORMATTER).toInstant(UTC);
         }
 
-        private static float parseLatitude(final String[] properties) {
-            return parseFloat(properties[LATITUDE_INDEX]);
+        private static double parseLatitude(final String[] properties) {
+            return parseDouble(properties[LATITUDE_INDEX]);
         }
 
-        private static float parseLongitude(final String[] properties) {
-            return parseFloat(properties[LONGITUDE_INDEX]);
+        private static double parseLongitude(final String[] properties) {
+            return parseDouble(properties[LONGITUDE_INDEX]);
         }
 
         private static int parseAltitude(final String[] properties) {

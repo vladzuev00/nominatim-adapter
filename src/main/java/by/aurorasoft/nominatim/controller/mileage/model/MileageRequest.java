@@ -1,5 +1,7 @@
 package by.aurorasoft.nominatim.controller.mileage.model;
 
+import by.aurorasoft.nominatim.validation.annotation.Latitude;
+import by.aurorasoft.nominatim.validation.annotation.Longitude;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
@@ -43,15 +45,11 @@ public class MileageRequest {
         @PastOrPresent
         Instant datetime;
 
-        @NotNull
-        @DecimalMin("-90")
-        @DecimalMax("90")
-        Float latitude;
+        @Latitude
+        Double latitude;
 
-        @NotNull
-        @DecimalMin("-180")
-        @DecimalMax("180")
-        Float longitude;
+        @Longitude
+        Double longitude;
 
         @NotNull
         Integer altitude;
@@ -66,8 +64,8 @@ public class MileageRequest {
 
         @JsonCreator
         public TrackPointRequest(@JsonProperty("datetime") final Instant datetime,
-                                 @JsonProperty("latitude") final Float latitude,
-                                 @JsonProperty("longitude") final Float longitude,
+                                 @JsonProperty("latitude") final Double latitude,
+                                 @JsonProperty("longitude") final Double longitude,
                                  @JsonProperty("altitude") final Integer altitude,
                                  @JsonProperty("speed") final Integer speed,
                                  @JsonProperty("valid") final Boolean valid) {
