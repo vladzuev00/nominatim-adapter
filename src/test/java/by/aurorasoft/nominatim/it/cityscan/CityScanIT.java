@@ -49,12 +49,12 @@ public class CityScanIT extends AbstractSpringBootTest {
 
         postExpectingNoContext(restTemplate, URL, givenRequest);
 
-        final List<CityEntity> actual = findCitiesOrderedByName();
+        final List<CityEntity> actual = findCitiesOrderedByGeometry();
         final List<CityEntity> expected = getExpectedCitiesOrderedByGeometry();
         checkEqualsExceptId(expected, actual);
     }
 
-    private List<CityEntity> findCitiesOrderedByName() {
+    private List<CityEntity> findCitiesOrderedByGeometry() {
         return entityManager.createQuery("SELECT e FROM CityEntity e ORDER BY e.geometry", CityEntity.class).getResultList();
     }
 
