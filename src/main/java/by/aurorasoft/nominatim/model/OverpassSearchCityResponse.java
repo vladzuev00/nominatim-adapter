@@ -66,35 +66,24 @@ public class OverpassSearchCityResponse {
 
     @Value
     public static class Node implements Member {
-        Coordinate coordinate;
+        double latitude;
+        double longitude;
 
         @JsonCreator
         public Node(@JsonProperty(value = "lat", required = true) final double latitude,
                     @JsonProperty(value = "lon", required = true) final double longitude) {
-            coordinate = new Coordinate(latitude, longitude);
+            this.latitude = latitude;
+            this.longitude = longitude;
         }
     }
 
     @Value
     public static class Way implements Member {
-        List<Coordinate> coordinates;
+        List<Node> nodes;
 
         @JsonCreator
-        public Way(@JsonProperty(value = "geometry", required = true) final List<Coordinate> coordinates) {
-            this.coordinates = coordinates;
-        }
-    }
-
-    @Value
-    public static class Coordinate {
-        double latitude;
-        double longitude;
-
-        @JsonCreator
-        public Coordinate(@JsonProperty(value = "lat", required = true) final double latitude,
-                          @JsonProperty(value = "lon", required = true) final double longitude) {
-            this.latitude = latitude;
-            this.longitude = longitude;
+        public Way(@JsonProperty(value = "geometry", required = true) final List<Node> nodes) {
+            this.nodes = nodes;
         }
     }
 

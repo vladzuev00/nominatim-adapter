@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import static by.aurorasoft.nominatim.model.OverpassSearchCityResponse.Coordinate;
+import static by.aurorasoft.nominatim.model.OverpassSearchCityResponse.Node;
 import static org.junit.Assert.assertEquals;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 
@@ -108,7 +108,7 @@ public final class OverpassSearchCityResponseTest extends AbstractJunitSpringBoo
     @Test
     public void coordinateShouldBeMappedToJson()
             throws Exception {
-        final Coordinate givenCoordinate = new Coordinate(5.5, 6.6);
+        final Node givenCoordinate = new Node(5.5, 6.6);
 
         final String actual = objectMapper.writeValueAsString(givenCoordinate);
         final String expected = """
@@ -128,8 +128,8 @@ public final class OverpassSearchCityResponseTest extends AbstractJunitSpringBoo
                   "lon": 6.6
                 }""";
 
-        final Coordinate actual = objectMapper.readValue(givenJson, Coordinate.class);
-        final Coordinate expected = new Coordinate(5.5, 6.6);
+        final Node actual = objectMapper.readValue(givenJson, Node.class);
+        final Node expected = new Node(5.5, 6.6);
         assertEquals(expected, actual);
     }
 
@@ -141,7 +141,7 @@ public final class OverpassSearchCityResponseTest extends AbstractJunitSpringBoo
                   "lon": 6.6
                 }""";
 
-        objectMapper.readValue(givenJson, Coordinate.class);
+        objectMapper.readValue(givenJson, Node.class);
     }
 
     @Test(expected = MismatchedInputException.class)
@@ -152,13 +152,13 @@ public final class OverpassSearchCityResponseTest extends AbstractJunitSpringBoo
                   "lat": 5.5
                 }""";
 
-        objectMapper.readValue(givenJson, Coordinate.class);
+        objectMapper.readValue(givenJson, Node.class);
     }
 
     @Test
     public void wayShouldBeConvertedToJson()
             throws Exception {
-        final Way givenWay = new Way(List.of(new Coordinate(5.5, 6.6), new Coordinate(7.7, 8.8)));
+        final Way givenWay = new Way(List.of(new Node(5.5, 6.6), new Node(7.7, 8.8)));
 
         final String actual = objectMapper.writeValueAsString(givenWay);
         final String expected = """
@@ -195,7 +195,7 @@ public final class OverpassSearchCityResponseTest extends AbstractJunitSpringBoo
                 }""";
 
         final Way actual = objectMapper.readValue(givenJson, Way.class);
-        final Way expected = new Way(List.of(new Coordinate(5.5, 6.6), new Coordinate(7.7, 8.8)));
+        final Way expected = new Way(List.of(new Node(5.5, 6.6), new Node(7.7, 8.8)));
         assertEquals(expected, actual);
     }
 
@@ -286,18 +286,18 @@ public final class OverpassSearchCityResponseTest extends AbstractJunitSpringBoo
                 List.of(
                         new Way(
                                 List.of(
-                                        new Coordinate(53.0336909, 24.0807023),
-                                        new Coordinate(53.030599, 24.0823296),
-                                        new Coordinate(53.0307359, 24.0836708),
-                                        new Coordinate(53.0277788, 24.086618),
-                                        new Coordinate(53.0263041, 24.0887068)
+                                        new Node(53.0336909, 24.0807023),
+                                        new Node(53.030599, 24.0823296),
+                                        new Node(53.0307359, 24.0836708),
+                                        new Node(53.0277788, 24.086618),
+                                        new Node(53.0263041, 24.0887068)
                                 )
                         ),
                         new Way(
                                 List.of(
-                                        new Coordinate(53.0449014, 24.0838195),
-                                        new Coordinate(53.0449475, 24.0839479),
-                                        new Coordinate(53.0452405, 24.0836663)
+                                        new Node(53.0449014, 24.0838195),
+                                        new Node(53.0449475, 24.0839479),
+                                        new Node(53.0452405, 24.0836663)
                                 )
                         )
                 ),
@@ -429,18 +429,18 @@ public final class OverpassSearchCityResponseTest extends AbstractJunitSpringBoo
                 List.of(
                         new Way(
                                 List.of(
-                                        new Coordinate(53.0336909, 24.0807023),
-                                        new Coordinate(53.030599, 24.0823296),
-                                        new Coordinate(53.0307359, 24.0836708),
-                                        new Coordinate(53.0277788, 24.086618),
-                                        new Coordinate(53.0263041, 24.0887068)
+                                        new Node(53.0336909, 24.0807023),
+                                        new Node(53.030599, 24.0823296),
+                                        new Node(53.0307359, 24.0836708),
+                                        new Node(53.0277788, 24.086618),
+                                        new Node(53.0263041, 24.0887068)
                                 )
                         ),
                         new Way(
                                 List.of(
-                                        new Coordinate(53.0449014, 24.0838195),
-                                        new Coordinate(53.0449475, 24.0839479),
-                                        new Coordinate(53.0452405, 24.0836663)
+                                        new Node(53.0449014, 24.0838195),
+                                        new Node(53.0449475, 24.0839479),
+                                        new Node(53.0452405, 24.0836663)
                                 )
                         )
                 ),
@@ -593,15 +593,15 @@ public final class OverpassSearchCityResponseTest extends AbstractJunitSpringBoo
                                 List.of(
                                         new Way(
                                                 List.of(
-                                                        new Coordinate(53.5866941, 24.9764369),
-                                                        new Coordinate(53.5864079, 24.9774542)
+                                                        new Node(53.5866941, 24.9764369),
+                                                        new Node(53.5864079, 24.9774542)
                                                 )
                                         ),
                                         new Way(
                                                 List.of(
-                                                        new Coordinate(53.6001648, 24.9747556),
-                                                        new Coordinate(53.5996087, 24.9746791),
-                                                        new Coordinate(53.5968642, 24.9774069)
+                                                        new Node(53.6001648, 24.9747556),
+                                                        new Node(53.5996087, 24.9746791),
+                                                        new Node(53.5968642, 24.9774069)
                                                 )
                                         )
                                 ),
@@ -612,8 +612,8 @@ public final class OverpassSearchCityResponseTest extends AbstractJunitSpringBoo
                                 List.of(
                                         new Way(
                                                 List.of(
-                                                        new Coordinate(54.0283401, 25.9267536),
-                                                        new Coordinate(54.0266101, 25.9310107)
+                                                        new Node(54.0283401, 25.9267536),
+                                                        new Node(54.0266101, 25.9310107)
                                                 )
                                         )
                                 ),
@@ -786,15 +786,15 @@ public final class OverpassSearchCityResponseTest extends AbstractJunitSpringBoo
                                 List.of(
                                         new Way(
                                                 List.of(
-                                                        new Coordinate(53.5866941, 24.9764369),
-                                                        new Coordinate(53.5864079, 24.9774542)
+                                                        new Node(53.5866941, 24.9764369),
+                                                        new Node(53.5864079, 24.9774542)
                                                 )
                                         ),
                                         new Way(
                                                 List.of(
-                                                        new Coordinate(53.6001648, 24.9747556),
-                                                        new Coordinate(53.5996087, 24.9746791),
-                                                        new Coordinate(53.5968642, 24.9774069)
+                                                        new Node(53.6001648, 24.9747556),
+                                                        new Node(53.5996087, 24.9746791),
+                                                        new Node(53.5968642, 24.9774069)
                                                 )
                                         )
                                 ),
@@ -805,8 +805,8 @@ public final class OverpassSearchCityResponseTest extends AbstractJunitSpringBoo
                                 List.of(
                                         new Way(
                                                 List.of(
-                                                        new Coordinate(54.0283401, 25.9267536),
-                                                        new Coordinate(54.0266101, 25.9310107)
+                                                        new Node(54.0283401, 25.9267536),
+                                                        new Node(54.0266101, 25.9310107)
                                                 )
                                         )
                                 ),

@@ -1,7 +1,6 @@
 package by.aurorasoft.nominatim.service.geometry;
 
 import by.aurorasoft.nominatim.base.AbstractJunitSpringBootTest;
-import by.aurorasoft.nominatim.model.OverpassSearchCityResponse;
 import by.aurorasoft.nominatim.model.OverpassSearchCityResponse.Bounds;
 import by.aurorasoft.nominatim.model.OverpassSearchCityResponse.Node;
 import by.aurorasoft.nominatim.model.OverpassSearchCityResponse.Relation;
@@ -172,9 +171,9 @@ public final class GeometryServiceTest extends AbstractJunitSpringBootTest {
                                  final double thirdLatitude, final double thirdLongitude) {
         return new Way(
                 List.of(
-                        new OverpassSearchCityResponse.Coordinate(firstLatitude, firstLongitude),
-                        new OverpassSearchCityResponse.Coordinate(secondLatitude, secondLongitude),
-                        new OverpassSearchCityResponse.Coordinate(thirdLatitude, thirdLongitude)
+                        new Node(firstLatitude, firstLongitude),
+                        new Node(secondLatitude, secondLongitude),
+                        new Node(thirdLatitude, thirdLongitude)
                 )
         );
     }
@@ -185,10 +184,10 @@ public final class GeometryServiceTest extends AbstractJunitSpringBootTest {
                                  final double fourthLatitude, final double fourthLongitude) {
         return new Way(
                 List.of(
-                        new OverpassSearchCityResponse.Coordinate(firstLatitude, firstLongitude),
-                        new OverpassSearchCityResponse.Coordinate(secondLatitude, secondLongitude),
-                        new OverpassSearchCityResponse.Coordinate(thirdLatitude, thirdLongitude),
-                        new OverpassSearchCityResponse.Coordinate(fourthLatitude, fourthLongitude)
+                        new Node(firstLatitude, firstLongitude),
+                        new Node(secondLatitude, secondLongitude),
+                        new Node(thirdLatitude, thirdLongitude),
+                        new Node(fourthLatitude, fourthLongitude)
                 )
         );
     }
