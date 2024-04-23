@@ -11,7 +11,7 @@ import javax.validation.Validator;
 import java.util.List;
 import java.util.Set;
 
-import static by.aurorasoft.nominatim.util.ConstraintViolationUtil.findFirstMessage;
+import static by.aurorasoft.nominatim.testutil.ConstraintViolationUtil.findFirstMessage;
 import static java.time.Instant.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

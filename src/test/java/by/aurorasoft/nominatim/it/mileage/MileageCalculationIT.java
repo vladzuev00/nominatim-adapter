@@ -23,7 +23,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static by.aurorasoft.nominatim.util.HttpUtil.postExpectingOk;
+import static by.aurorasoft.nominatim.testutil.HttpUtil.postExpectingOk;
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 import static java.time.ZoneOffset.UTC;

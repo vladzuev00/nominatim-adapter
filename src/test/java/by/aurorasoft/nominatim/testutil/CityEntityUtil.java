@@ -1,4 +1,4 @@
-package by.aurorasoft.nominatim.util;
+package by.aurorasoft.nominatim.testutil;
 
 import by.aurorasoft.nominatim.crud.model.entity.CityEntity;
 import lombok.experimental.UtilityClass;

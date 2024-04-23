@@ -17,7 +17,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 
 import java.util.List;
 
-import static by.aurorasoft.nominatim.util.HttpUtil.*;
+import static by.aurorasoft.nominatim.testutil.HttpUtil.*;
 import static java.time.Instant.parse;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;

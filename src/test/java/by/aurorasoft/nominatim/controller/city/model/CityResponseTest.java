@@ -11,7 +11,7 @@ import org.wololo.jts2geojson.GeoJSONReader;
 import org.wololo.jts2geojson.GeoJSONWriter;
 
 import static by.aurorasoft.nominatim.model.CityType.CAPITAL;
-import static by.aurorasoft.nominatim.util.CityResponseUtil.checkEquals;
+import static by.aurorasoft.nominatim.testutil.CityResponseUtil.checkEquals;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 
 public final class CityResponseTest extends AbstractJunitSpringBootTest {

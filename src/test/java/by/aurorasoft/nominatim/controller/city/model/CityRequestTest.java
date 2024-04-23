@@ -15,11 +15,11 @@ import javax.validation.Validator;
 import java.util.Set;
 
 import static by.aurorasoft.nominatim.model.CityType.CAPITAL;
-import static by.aurorasoft.nominatim.util.ConstraintViolationUtil.findFirstMessage;
+import static by.aurorasoft.nominatim.testutil.ConstraintViolationUtil.findFirstMessage;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
-import static by.aurorasoft.nominatim.util.CityRequestUtil.checkEquals;
+import static by.aurorasoft.nominatim.testutil.CityRequestUtil.checkEquals;
 
 public final class CityRequestTest extends AbstractJunitSpringBootTest {
 

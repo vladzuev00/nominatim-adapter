@@ -1,4 +1,4 @@
-package by.aurorasoft.nominatim.util;
+package by.aurorasoft.nominatim.testutil;
 
 import by.nhorushko.crudgeneric.v2.domain.IdEntity;
 import lombok.experimental.UtilityClass;

@@ -12,7 +12,7 @@ import org.wololo.jts2geojson.GeoJSONReader;
 import org.wololo.jts2geojson.GeoJSONWriter;
 
 import static by.aurorasoft.nominatim.model.CityType.CAPITAL;
-import static by.aurorasoft.nominatim.util.CityResponseUtil.checkEquals;
+import static by.aurorasoft.nominatim.testutil.CityResponseUtil.checkEquals;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

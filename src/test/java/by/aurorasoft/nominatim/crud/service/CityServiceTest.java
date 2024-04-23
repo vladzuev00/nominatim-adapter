@@ -16,9 +16,9 @@ import org.springframework.test.context.jdbc.Sql;
 import java.util.List;
 import java.util.Map;
 
-import static by.aurorasoft.nominatim.util.GeometryUtil.createLineByText;
-import static by.aurorasoft.nominatim.util.GeometryUtil.createPolygonByText;
-import static by.aurorasoft.nominatim.util.IdUtil.mapToSortedIds;
+import static by.aurorasoft.nominatim.testutil.GeometryUtil.createLineByText;
+import static by.aurorasoft.nominatim.testutil.GeometryUtil.createPolygonByText;
+import static by.aurorasoft.nominatim.testutil.IdUtil.mapToSortedIds;
 import static java.util.stream.Collectors.toMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

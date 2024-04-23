@@ -18,10 +18,10 @@ import java.util.stream.Stream;
 
 import static by.aurorasoft.nominatim.model.CityType.TOWN;
 import static by.aurorasoft.nominatim.model.CityType.CITY;
-import static by.aurorasoft.nominatim.util.CityEntityUtil.checkEquals;
-import static by.aurorasoft.nominatim.util.GeometryUtil.createLineByText;
-import static by.aurorasoft.nominatim.util.GeometryUtil.createPolygonByText;
-import static by.aurorasoft.nominatim.util.IdUtil.mapToSortedIds;
+import static by.aurorasoft.nominatim.testutil.CityEntityUtil.checkEquals;
+import static by.aurorasoft.nominatim.testutil.GeometryUtil.createLineByText;
+import static by.aurorasoft.nominatim.testutil.GeometryUtil.createPolygonByText;
+import static by.aurorasoft.nominatim.testutil.IdUtil.mapToSortedIds;
 import static java.util.stream.Collectors.toMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

@@ -11,8 +11,8 @@ import org.locationtech.jts.geom.Polygon;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static by.aurorasoft.nominatim.model.CityType.CAPITAL;
-import static by.aurorasoft.nominatim.util.CityEntityUtil.checkEquals;
-import static by.aurorasoft.nominatim.util.GeometryUtil.createPolygonByText;
+import static by.aurorasoft.nominatim.testutil.CityEntityUtil.checkEquals;
+import static by.aurorasoft.nominatim.testutil.GeometryUtil.createPolygonByText;
 import static org.junit.Assert.assertEquals;
 
 public final class CityMapperTest extends AbstractJunitSpringBootTest {

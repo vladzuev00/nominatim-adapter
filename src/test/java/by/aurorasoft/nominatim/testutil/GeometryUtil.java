@@ -1,4 +1,4 @@
-package by.aurorasoft.nominatim.util;
+package by.aurorasoft.nominatim.testutil;
 
 import lombok.experimental.UtilityClass;
 import org.locationtech.jts.geom.Geometry;
