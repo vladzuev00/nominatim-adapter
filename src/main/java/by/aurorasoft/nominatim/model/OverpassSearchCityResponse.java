@@ -2,10 +2,15 @@ package by.aurorasoft.nominatim.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Builder;
 import lombok.Value;
 
 import java.util.List;
+
+import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME;
 
 @Value
 public class OverpassSearchCityResponse {
@@ -19,16 +24,16 @@ public class OverpassSearchCityResponse {
     @Value
     public static class Relation {
         Bounds bounds;
-        List<Way> ways;
+        List<Member> members;
         Tags tags;
 
         @Builder
         @JsonCreator
         public Relation(@JsonProperty(value = "bounds", required = true) final Bounds bounds,
-                        @JsonProperty(value = "members", required = true) final List<Way> ways,
+                        @JsonProperty(value = "members", required = true) final List<Member> members,
                         @JsonProperty(value = "tags", required = true) final Tags tags) {
             this.bounds = bounds;
-            this.ways = ways;
+            this.members = members;
             this.tags = tags;
         }
     }
@@ -53,8 +58,25 @@ public class OverpassSearchCityResponse {
         }
     }
 
+    @JsonTypeInfo(use = NAME, property = "type")
+    @JsonSubTypes({@Type(value = Node.class, name = "node"), @Type(value = Way.class, name = "way")})
+    public interface Member {
+
+    }
+
     @Value
-    public static class Way {
+    public static class Node implements Member {
+        Coordinate coordinate;
+
+        @JsonCreator
+        public Node(@JsonProperty(value = "lat", required = true) final double latitude,
+                    @JsonProperty(value = "lon", required = true) final double longitude) {
+            coordinate = new Coordinate(latitude, longitude);
+        }
+    }
+
+    @Value
+    public static class Way implements Member {
         List<Coordinate> coordinates;
 
         @JsonCreator

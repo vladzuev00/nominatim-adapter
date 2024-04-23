@@ -47,8 +47,10 @@ public final class GeometryService {
     @SuppressWarnings("unchecked")
     private Polygon[] getPolygons(final Relation relation) {
         final Polygonizer polygonizer = new Polygonizer();
-        relation.getWays()
+        relation.getMembers()
                 .stream()
+                .filter(Way.class::isInstance)
+                .map(Way.class::cast)
                 .map(this::createLine)
                 .forEach(polygonizer::add);
         return (Polygon[]) polygonizer.getPolygons().toArray(Polygon[]::new);

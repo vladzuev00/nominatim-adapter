@@ -3,6 +3,7 @@ package by.aurorasoft.nominatim.service.geometry;
 import by.aurorasoft.nominatim.base.AbstractJunitSpringBootTest;
 import by.aurorasoft.nominatim.model.OverpassSearchCityResponse;
 import by.aurorasoft.nominatim.model.OverpassSearchCityResponse.Bounds;
+import by.aurorasoft.nominatim.model.OverpassSearchCityResponse.Node;
 import by.aurorasoft.nominatim.model.OverpassSearchCityResponse.Relation;
 import by.aurorasoft.nominatim.model.OverpassSearchCityResponse.Way;
 import by.aurorasoft.nominatim.model.Track;
@@ -102,8 +103,9 @@ public final class GeometryServiceTest extends AbstractJunitSpringBootTest {
     @Test
     public void geometryShouldBeCreatedByRelation() {
         final Relation givenRelation = Relation.builder()
-                .ways(
+                .members(
                         List.of(
+                                new Node(1, 2),
                                 createWay(3, 1, 6, 2, 8, 4),
                                 createWay(8, 4, 5, 5, 2, 4, 3, 1),
                                 createWay(2, 7, 6, 7, 5, 10, 2, 7)
