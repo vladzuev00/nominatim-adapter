@@ -1,38 +1,39 @@
 package by.aurorasoft.nominatim.validation.validator.coordinate;
 
-import org.junit.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import javax.validation.ConstraintValidatorContext;
 import java.lang.annotation.Annotation;
+import java.util.stream.Stream;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyNoInteractions;
 
 public final class CoordinateValidatorTest {
     private final TestCoordinateValidator validator = new TestCoordinateValidator();
 
-    @Test
-    public void valueShouldBeValid() {
-        final double givenValue = 100;
+    @ParameterizedTest
+    @MethodSource("provideValueAndExpected")
+    public void valueShouldBeValidated(final double givenValue, final boolean expected) {
         final ConstraintValidatorContext givenContext = mock(ConstraintValidatorContext.class);
 
         final boolean actual = validator.isValid(givenValue, givenContext);
-        assertTrue(actual);
+        assertEquals(expected, actual);
 
         verifyNoInteractions(givenContext);
     }
 
-    @Test
-    public void valueShouldNotBeValid() {
-        final double givenValue = -100.00000001;
-        final ConstraintValidatorContext givenContext = mock(ConstraintValidatorContext.class);
-
-        final boolean actual = validator.isValid(givenValue, givenContext);
-        assertFalse(actual);
-
-        verifyNoInteractions(givenContext);
+    private static Stream<Arguments> provideValueAndExpected() {
+        return Stream.of(
+                Arguments.of(-100, true),
+                Arguments.of(-100.00000001, false),
+                Arguments.of(100, true),
+                Arguments.of(100.00000001, false),
+                Arguments.of(50.55, true)
+        );
     }
 
     private static final class TestCoordinateValidator extends CoordinateValidator<Annotation> {
