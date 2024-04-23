@@ -23,6 +23,7 @@ spring:
 server:
   servlet:
     context-path: /nominatim
+  port: 8081
 
 mileage-calc:
   load-city-geometries-on-start-app: false
