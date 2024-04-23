@@ -17,7 +17,7 @@ public final class CoordinateValidatorTest {
 
     @ParameterizedTest
     @MethodSource("provideValueAndExpected")
-    public void valueShouldBeValidated(final double givenValue, final boolean expected) {
+    public void valueShouldBeValidated(final Double givenValue, final boolean expected) {
         final ConstraintValidatorContext givenContext = mock(ConstraintValidatorContext.class);
 
         final boolean actual = validator.isValid(givenValue, givenContext);
@@ -28,11 +28,12 @@ public final class CoordinateValidatorTest {
 
     private static Stream<Arguments> provideValueAndExpected() {
         return Stream.of(
-                Arguments.of(-100, true),
+                Arguments.of(-100., true),
                 Arguments.of(-100.00000001, false),
-                Arguments.of(100, true),
+                Arguments.of(100., true),
                 Arguments.of(100.00000001, false),
-                Arguments.of(50.55, true)
+                Arguments.of(50.55, true),
+                Arguments.of(null, false)
         );
     }
 
