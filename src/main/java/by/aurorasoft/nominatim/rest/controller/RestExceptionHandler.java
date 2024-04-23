@@ -1,7 +1,6 @@
 package by.aurorasoft.nominatim.rest.controller;
 
-import by.aurorasoft.nominatim.rest.controller.exception.CustomValidationException;
-import by.aurorasoft.nominatim.rest.controller.exception.NoSuchEntityException;
+import by.aurorasoft.nominatim.controller.exception.CustomValidationException;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Value;
 import org.springframework.core.convert.ConversionFailedException;
@@ -50,11 +49,6 @@ public final class RestExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<RestErrorResponse> handleException(CustomValidationException exception) {
         return handleValidationException(exception.getMessage());
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<RestErrorResponse> handleException(NoSuchEntityException exception) {
-        return handleNotFoundException(exception.getMessage());
     }
 
     @ExceptionHandler

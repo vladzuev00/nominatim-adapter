@@ -3,7 +3,7 @@ package by.aurorasoft.nominatim.controller.cityscan.factory;
 import by.aurorasoft.nominatim.controller.cityscan.model.AreaCoordinateRequest;
 import by.aurorasoft.nominatim.model.AreaCoordinate;
 import by.aurorasoft.nominatim.model.Coordinate;
-import by.aurorasoft.nominatim.rest.controller.exception.CustomValidationException;
+import by.aurorasoft.nominatim.controller.exception.CustomValidationException;
 import org.springframework.stereotype.Component;
 
 import static java.lang.Double.compare;
