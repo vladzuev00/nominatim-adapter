@@ -44,12 +44,10 @@ public final class CityRequestTest extends AbstractJunitSpringBootTest {
         final CityRequest givenRequest = new CityRequest(
                 "name",
                 createGeometry(
-                        new Coordinate[]{
-                                new Coordinate(1, 1),
-                                new Coordinate(2, 1),
-                                new Coordinate(2, 2),
-                                new Coordinate(1, 1)
-                        }
+                        new Coordinate(1, 1),
+                        new Coordinate(2, 1),
+                        new Coordinate(2, 2),
+                        new Coordinate(1, 1)
                 ),
                 CAPITAL
         );
@@ -122,12 +120,10 @@ public final class CityRequestTest extends AbstractJunitSpringBootTest {
         final CityRequest expected = new CityRequest(
                 "name",
                 createGeometry(
-                        new Coordinate[]{
-                                new Coordinate(1, 1),
-                                new Coordinate(2, 1),
-                                new Coordinate(2, 2),
-                                new Coordinate(1, 1)
-                        }
+                        new Coordinate(1, 1),
+                        new Coordinate(2, 1),
+                        new Coordinate(2, 2),
+                        new Coordinate(1, 1)
                 ),
                 CAPITAL
         );
@@ -139,12 +135,10 @@ public final class CityRequestTest extends AbstractJunitSpringBootTest {
         final CityRequest givenRequest = new CityRequest(
                 "name",
                 createGeometry(
-                        new Coordinate[]{
-                                new Coordinate(1, 1),
-                                new Coordinate(2, 1),
-                                new Coordinate(2, 2),
-                                new Coordinate(1, 1)
-                        }
+                        new Coordinate(1, 1),
+                        new Coordinate(2, 1),
+                        new Coordinate(2, 2),
+                        new Coordinate(1, 1)
                 ),
                 CAPITAL
         );
@@ -158,12 +152,10 @@ public final class CityRequestTest extends AbstractJunitSpringBootTest {
         final CityRequest givenRequest = CityRequest.builder()
                 .geometry(
                         createGeometry(
-                                new Coordinate[]{
-                                        new Coordinate(1, 1),
-                                        new Coordinate(2, 1),
-                                        new Coordinate(2, 2),
-                                        new Coordinate(1, 1)
-                                }
+                                new Coordinate(1, 1),
+                                new Coordinate(2, 1),
+                                new Coordinate(2, 2),
+                                new Coordinate(1, 1)
                         )
                 )
                 .type(CAPITAL)
@@ -179,12 +171,10 @@ public final class CityRequestTest extends AbstractJunitSpringBootTest {
         final CityRequest givenRequest = new CityRequest(
                 "    ",
                 createGeometry(
-                        new Coordinate[]{
-                                new Coordinate(1, 1),
-                                new Coordinate(2, 1),
-                                new Coordinate(2, 2),
-                                new Coordinate(1, 1)
-                        }
+                        new Coordinate(1, 1),
+                        new Coordinate(2, 1),
+                        new Coordinate(2, 2),
+                        new Coordinate(1, 1)
                 ),
                 CAPITAL
         );
@@ -212,12 +202,10 @@ public final class CityRequestTest extends AbstractJunitSpringBootTest {
                 .name("name")
                 .geometry(
                         createGeometry(
-                                new Coordinate[]{
-                                        new Coordinate(1, 1),
-                                        new Coordinate(2, 1),
-                                        new Coordinate(2, 2),
-                                        new Coordinate(1, 1)
-                                }
+                                new Coordinate(1, 1),
+                                new Coordinate(2, 1),
+                                new Coordinate(2, 2),
+                                new Coordinate(1, 1)
                         )
                 )
                 .build();
@@ -227,7 +215,7 @@ public final class CityRequestTest extends AbstractJunitSpringBootTest {
         assertEquals("не должно равняться null", findFirstMessage(violations));
     }
 
-    private Geometry createGeometry(final Coordinate[] coordinates) {
+    private Geometry createGeometry(final Coordinate... coordinates) {
         return geoJSONWriter.write(geometryFactory.createPolygon(coordinates));
     }
 }
