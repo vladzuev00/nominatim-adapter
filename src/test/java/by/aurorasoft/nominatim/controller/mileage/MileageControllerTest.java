@@ -22,8 +22,7 @@ import static java.time.Instant.parse;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -87,6 +86,12 @@ public final class MileageControllerTest extends AbstractJunitSpringBootTest {
                   "dateTime": "2024-04-17 09-53-51"
                 }""";
         assertEquals(expected, actual, JSON_COMPARATOR_IGNORING_DATE_TIME);
+
+        verifyNoInteractions(
+                mockedTrackFactory,
+                mockedDistanceCalculatorSettingsFactory,
+                mockedMileageCalculatingService
+        );
     }
 
     private Mileage findMileageExpectingOk(final MileageRequest request) {

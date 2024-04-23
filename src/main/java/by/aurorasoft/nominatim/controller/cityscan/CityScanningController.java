@@ -22,12 +22,12 @@ import static org.springframework.http.ResponseEntity.noContent;
 @RequiredArgsConstructor
 public class CityScanningController {
     private final AreaCoordinateFactory areaCoordinateFactory;
-    private final CityScanningService cityScanningService;
+    private final CityScanningService service;
 
     @PostMapping
     public ResponseEntity<?> scan(@Valid @RequestBody final AreaCoordinateRequest request) {
         final AreaCoordinate areaCoordinate = areaCoordinateFactory.create(request);
-        cityScanningService.scan(areaCoordinate);
+        service.scan(areaCoordinate);
         return noContent().build();
     }
 }
