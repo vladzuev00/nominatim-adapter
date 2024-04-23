@@ -1,4 +1,4 @@
-package by.aurorasoft.nominatim.it;
+package by.aurorasoft.nominatim.it.mileage;
 
 import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest;

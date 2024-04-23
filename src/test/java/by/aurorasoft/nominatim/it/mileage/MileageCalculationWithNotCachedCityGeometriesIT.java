@@ -1,4 +1,4 @@
-package by.aurorasoft.nominatim.it;
+package by.aurorasoft.nominatim.it.mileage;
 
 import org.springframework.boot.test.context.SpringBootTest;
 
