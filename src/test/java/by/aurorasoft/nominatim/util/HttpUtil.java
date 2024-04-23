@@ -9,8 +9,7 @@ import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.skyscreamer.jsonassert.Customization.customization;
 import static org.skyscreamer.jsonassert.JSONCompareMode.STRICT;
-import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @UtilityClass
@@ -22,6 +21,10 @@ public final class HttpUtil {
             STRICT,
             customization(JSON_PROPERTY_NAME_DATE_TIME, (first, second) -> true)
     );
+
+    public static <B> void postExpectingNoContext(final TestRestTemplate restTemplate, final String url, final B body) {
+        postExpectingStatus(restTemplate, url, body, Void.class, NO_CONTENT);
+    }
 
     public static <B, R> R postExpectingOk(final TestRestTemplate restTemplate,
                                            final String url,
