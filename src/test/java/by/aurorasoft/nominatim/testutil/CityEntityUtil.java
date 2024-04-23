@@ -3,17 +3,28 @@ package by.aurorasoft.nominatim.testutil;
 import by.aurorasoft.nominatim.crud.model.entity.CityEntity;
 import lombok.experimental.UtilityClass;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import java.util.List;
+
+import static java.util.stream.IntStream.range;
+import static org.junit.Assert.*;
 
 @UtilityClass
 public final class CityEntityUtil {
 
     public static void checkEquals(final CityEntity expected, final CityEntity actual) {
+        checkEqualsExceptId(expected, actual);
         assertEquals(expected.getId(), actual.getId());
+    }
+
+    public static void checkEqualsExceptId(final CityEntity expected, final CityEntity actual) {
         assertEquals(expected.getName(), actual.getName());
-        assertEquals(expected.getGeometry(), actual.getGeometry());
+        assertTrue(expected.getGeometry().equalsTopo(actual.getGeometry()));
         assertSame(expected.getType(), actual.getType());
-        assertEquals(expected.getBoundingBox(), actual.getBoundingBox());
+        assertTrue(expected.getBoundingBox().equalsTopo(actual.getBoundingBox()));
+    }
+
+    public static void checkEqualsExceptId(final List<CityEntity> expected, final List<CityEntity> actual) {
+        assertEquals(expected.size(), actual.size());
+        range(0, expected.size()).forEach(i -> checkEqualsExceptId(expected.get(i), actual.get(i)));
     }
 }

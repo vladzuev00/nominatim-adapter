@@ -1,10 +1,7 @@
 package by.aurorasoft.nominatim.testutil;
 
 import lombok.experimental.UtilityClass;
-import org.locationtech.jts.geom.Geometry;
-import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.LineString;
-import org.locationtech.jts.geom.Polygon;
+import org.locationtech.jts.geom.*;
 import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
 import org.wololo.jts2geojson.GeoJSONReader;
@@ -28,6 +25,10 @@ public final class GeometryUtil {
 
     public static LineString createLineByText(final String text, final GeometryFactory geometryFactory) {
         return createGeometryByText(text, geometryFactory, LineString.class);
+    }
+
+    public static MultiPolygon createMultipolygon(final String text, final GeometryFactory factory) {
+        return createGeometryByText(text, factory, MultiPolygon.class);
     }
 
     private static boolean areEquals(final org.wololo.geojson.Geometry expected,
