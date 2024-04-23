@@ -4,6 +4,7 @@ import by.aurorasoft.nominatim.base.AbstractJunitSpringBootTest;
 import by.aurorasoft.nominatim.crud.model.dto.City;
 import by.aurorasoft.nominatim.crud.model.entity.CityEntity;
 import by.aurorasoft.nominatim.model.CityType;
+import by.aurorasoft.nominatim.testutil.GeometryUtil;
 import org.junit.Test;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -12,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static by.aurorasoft.nominatim.model.CityType.CAPITAL;
 import static by.aurorasoft.nominatim.testutil.CityEntityUtil.checkEquals;
-import static by.aurorasoft.nominatim.testutil.GeometryUtil.createPolygonByText;
 import static org.junit.Assert.assertEquals;
 
 public final class CityMapperTest extends AbstractJunitSpringBootTest {
@@ -76,6 +76,6 @@ public final class CityMapperTest extends AbstractJunitSpringBootTest {
     }
 
     private Polygon createPolygon(final String text) {
-        return createPolygonByText(text, geometryFactory);
+        return GeometryUtil.createPolygon(text, geometryFactory);
     }
 }

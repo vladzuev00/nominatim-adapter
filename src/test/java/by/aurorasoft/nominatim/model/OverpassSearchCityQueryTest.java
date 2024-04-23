@@ -11,8 +11,8 @@ public final class OverpassSearchCityQueryTest {
         final OverpassSearchCityQuery givenQuery = new OverpassSearchCityQuery(
                 50,
                 new AreaCoordinate(
-                        new Coordinate(5.5F, 6.6F),
-                        new Coordinate(7.7F, 8.8F)
+                        new Coordinate(5.5, 6.6),
+                        new Coordinate(7.7, 8.8)
                 )
         );
 

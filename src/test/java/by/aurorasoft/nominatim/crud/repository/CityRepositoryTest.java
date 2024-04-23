@@ -2,6 +2,7 @@ package by.aurorasoft.nominatim.crud.repository;
 
 import by.aurorasoft.nominatim.base.AbstractJunitSpringBootTest;
 import by.aurorasoft.nominatim.crud.model.entity.CityEntity;
+import by.aurorasoft.nominatim.testutil.GeometryUtil;
 import org.junit.Test;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -19,8 +20,6 @@ import java.util.stream.Stream;
 import static by.aurorasoft.nominatim.model.CityType.TOWN;
 import static by.aurorasoft.nominatim.model.CityType.CITY;
 import static by.aurorasoft.nominatim.testutil.CityEntityUtil.checkEquals;
-import static by.aurorasoft.nominatim.testutil.GeometryUtil.createLineByText;
-import static by.aurorasoft.nominatim.testutil.GeometryUtil.createPolygonByText;
 import static by.aurorasoft.nominatim.testutil.IdUtil.mapToSortedIds;
 import static java.util.stream.Collectors.toMap;
 import static org.junit.Assert.assertEquals;
@@ -123,11 +122,11 @@ public final class CityRepositoryTest extends AbstractJunitSpringBootTest {
     }
 
     private Polygon createPolygon(final String text) {
-        return createPolygonByText(text, geometryFactory);
+        return GeometryUtil.createPolygon(text, geometryFactory);
     }
 
     private LineString createLine(final String text) {
-        return createLineByText(text, geometryFactory);
+        return GeometryUtil.createLine(text, geometryFactory);
     }
 
     private Map<Geometry, Geometry> findGeometriesByBoundingBox() {

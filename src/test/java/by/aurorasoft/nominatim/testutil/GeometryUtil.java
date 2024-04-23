@@ -19,16 +19,16 @@ public final class GeometryUtil {
         assertTrue(areEquals(expected, actual, geoJSONReader));
     }
 
-    public static Polygon createPolygonByText(final String text, final GeometryFactory geometryFactory) {
-        return createGeometryByText(text, geometryFactory, Polygon.class);
+    public static Polygon createPolygon(final String text, final GeometryFactory factory) {
+        return createGeometry(text, factory, Polygon.class);
     }
 
-    public static LineString createLineByText(final String text, final GeometryFactory geometryFactory) {
-        return createGeometryByText(text, geometryFactory, LineString.class);
+    public static LineString createLine(final String text, final GeometryFactory factory) {
+        return createGeometry(text, factory, LineString.class);
     }
 
     public static MultiPolygon createMultipolygon(final String text, final GeometryFactory factory) {
-        return createGeometryByText(text, factory, MultiPolygon.class);
+        return createGeometry(text, factory, MultiPolygon.class);
     }
 
     private static boolean areEquals(final org.wololo.geojson.Geometry expected,
@@ -37,12 +37,12 @@ public final class GeometryUtil {
         return expected == actual || Objects.equals(geoJSONReader.read(expected), geoJSONReader.read(actual));
     }
 
-    private static <T extends Geometry> T createGeometryByText(final String text,
-                                                               final GeometryFactory geometryFactory,
-                                                               final Class<T> geometryType) {
+    private static <T extends Geometry> T createGeometry(final String text,
+                                                         final GeometryFactory factory,
+                                                         final Class<T> type) {
         try {
-            final Geometry geometry = new WKTReader(geometryFactory).read(text);
-            return geometryType.cast(geometry);
+            final Geometry geometry = new WKTReader(factory).read(text);
+            return type.cast(geometry);
         } catch (final ParseException cause) {
             throw new RuntimeException(cause);
         }

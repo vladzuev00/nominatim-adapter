@@ -3,10 +3,10 @@ package by.aurorasoft.nominatim.controller.exceptionhandler;
 import by.aurorasoft.nominatim.controller.exception.CustomValidationException;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Value;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -59,7 +59,7 @@ public final class RestExceptionHandler {
     private static String getMessage(final MethodArgumentNotValidException exception) {
         return exception.getAllErrors()
                 .stream()
-                .map(ObjectError::getDefaultMessage)
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(joining(NOT_VALID_ARGUMENT_MESSAGE_DELIMITER));
     }
 

@@ -51,7 +51,7 @@ public final class CityScanningControllerTest extends AbstractJunitSpringBootTes
         final String expected = """
                 {
                   "httpStatus": "NOT_ACCEPTABLE",
-                  "message": "minLatitude : Invalid latitude",
+                  "message": "Invalid latitude",
                   "dateTime": "2024-04-23 07-57-45"
                 }""";
         assertEquals(expected, actual, JSON_COMPARATOR_IGNORING_DATE_TIME);

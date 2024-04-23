@@ -2,6 +2,7 @@ package by.aurorasoft.nominatim.crud.service;
 
 import by.aurorasoft.nominatim.base.AbstractJunitSpringBootTest;
 import by.aurorasoft.nominatim.crud.model.dto.City;
+import by.aurorasoft.nominatim.testutil.GeometryUtil;
 import org.junit.Test;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -16,8 +17,6 @@ import org.springframework.test.context.jdbc.Sql;
 import java.util.List;
 import java.util.Map;
 
-import static by.aurorasoft.nominatim.testutil.GeometryUtil.createLineByText;
-import static by.aurorasoft.nominatim.testutil.GeometryUtil.createPolygonByText;
 import static by.aurorasoft.nominatim.testutil.IdUtil.mapToSortedIds;
 import static java.util.stream.Collectors.toMap;
 import static org.junit.Assert.assertEquals;
@@ -98,11 +97,11 @@ public final class CityServiceTest extends AbstractJunitSpringBootTest {
     }
 
     private Polygon createPolygon(final String text) {
-        return createPolygonByText(text, geometryFactory);
+        return GeometryUtil.createPolygon(text, geometryFactory);
     }
 
     private LineString createLine(final String text) {
-        return createLineByText(text, geometryFactory);
+        return GeometryUtil.createLine(text, geometryFactory);
     }
 
     private List<Geometry> findIntersectedGeometries(final LineString line) {
