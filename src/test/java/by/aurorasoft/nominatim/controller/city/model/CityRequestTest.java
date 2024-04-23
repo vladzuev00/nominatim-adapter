@@ -15,11 +15,11 @@ import javax.validation.Validator;
 import java.util.Set;
 
 import static by.aurorasoft.nominatim.model.CityType.CAPITAL;
+import static by.aurorasoft.nominatim.testutil.CityRequestUtil.checkEquals;
 import static by.aurorasoft.nominatim.testutil.ConstraintViolationUtil.findFirstMessage;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
-import static by.aurorasoft.nominatim.testutil.CityRequestUtil.checkEquals;
 
 public final class CityRequestTest extends AbstractJunitSpringBootTest {
 
@@ -171,13 +171,13 @@ public final class CityRequestTest extends AbstractJunitSpringBootTest {
 
         final Set<ConstraintViolation<CityRequest>> violations = validator.validate(givenRequest);
         assertEquals(1, violations.size());
-        assertEquals("Invalid name of city", findFirstMessage(violations));
+        assertEquals("не должно быть пустым", findFirstMessage(violations));
     }
 
     @Test
-    public void requestShouldNotBeValidBecauseOfNameIsNotValid() {
+    public void requestShouldNotBeValidBecauseOfNameIsBlank() {
         final CityRequest givenRequest = new CityRequest(
-                " 111",
+                "    ",
                 createGeometry(
                         new Coordinate[]{
                                 new Coordinate(1, 1),
@@ -191,7 +191,7 @@ public final class CityRequestTest extends AbstractJunitSpringBootTest {
 
         final Set<ConstraintViolation<CityRequest>> violations = validator.validate(givenRequest);
         assertEquals(1, violations.size());
-        assertEquals("Invalid name of city", findFirstMessage(violations));
+        assertEquals("не должно быть пустым", findFirstMessage(violations));
     }
 
     @Test

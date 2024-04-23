@@ -1,19 +1,19 @@
 package by.aurorasoft.nominatim.controller.city.model;
 
 import by.aurorasoft.nominatim.model.CityType;
-import by.aurorasoft.nominatim.validation.annotation.CityName;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Value;
 import org.wololo.geojson.Geometry;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Value
 public class CityRequest {
 
-    @CityName
+    @NotBlank
     String name;
 
     @NotNull

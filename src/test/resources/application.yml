@@ -21,15 +21,9 @@ spring:
   liquibase:
     changeLog: classpath:db/db.changelog-master.yaml
 
-search-cities:
-  amount-handled-points-to-save-state: 2
-
 server:
   servlet:
     context-path: /nominatim
-
-nominatim:
-  millis-between-requests: 1000
 
 mileage-calc:
   load-city-geometries-on-start-app: false
