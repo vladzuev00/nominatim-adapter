@@ -1,7 +1,7 @@
 package by.aurorasoft.nominatim.service.geometry;
 
+import by.aurorasoft.nominatim.model.OverpassSearchCityResponse;
 import by.aurorasoft.nominatim.model.OverpassSearchCityResponse.Bounds;
-import by.aurorasoft.nominatim.model.OverpassSearchCityResponse.Node;
 import by.aurorasoft.nominatim.model.OverpassSearchCityResponse.Relation;
 import by.aurorasoft.nominatim.model.OverpassSearchCityResponse.Way;
 import by.aurorasoft.nominatim.model.Track;
@@ -61,7 +61,7 @@ public final class GeometryService {
     }
 
     private static CoordinateXY[] getJtsCoordinates(final Way way) {
-        return createJtsCoordinates(way.getNodes(), GeometryService::createJtsCoordinate);
+        return createJtsCoordinates(way.getCoordinates(), GeometryService::createJtsCoordinate);
     }
 
     private static CoordinateXY[] getJtsCoordinates(final Track track) {
@@ -97,8 +97,12 @@ public final class GeometryService {
         );
     }
 
-    private static CoordinateXY createJtsCoordinate(final Node coordinate) {
-        return createJtsCoordinate(coordinate, Node::getLatitude, Node::getLongitude);
+    private static CoordinateXY createJtsCoordinate(final OverpassSearchCityResponse.Coordinate coordinate) {
+        return createJtsCoordinate(
+                coordinate,
+                OverpassSearchCityResponse.Coordinate::getLatitude,
+                OverpassSearchCityResponse.Coordinate::getLongitude
+        );
     }
 
     private static CoordinateXY getLeftBottomJtsCoordinate(final Bounds bounds) {
