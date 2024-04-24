@@ -37,7 +37,7 @@ public final class CityScanningControllerTest extends AbstractJunitSpringBootTes
         final AreaCoordinate givenAreaCoordinate = mock(AreaCoordinate.class);
         when(mockedAreaCoordinateFactory.create(eq(givenRequest))).thenReturn(givenAreaCoordinate);
 
-        scanExpectingNoContent(givenRequest);
+        postExpectingNoContext(restTemplate, URL, givenRequest);
 
         verify(mockedService, times(1)).scan(same(givenAreaCoordinate));
     }
@@ -47,7 +47,7 @@ public final class CityScanningControllerTest extends AbstractJunitSpringBootTes
             throws Exception {
         final AreaCoordinateRequest givenRequest = new AreaCoordinateRequest(-90.1, 6.6, 7.7, 8.8);
 
-        final String actual = scanExpectingNotAcceptable(givenRequest);
+        final String actual = postExpectingNotAcceptable(restTemplate, URL, givenRequest, String.class);
         final String expected = """
                 {
                   "status": "NOT_ACCEPTABLE",
@@ -57,13 +57,5 @@ public final class CityScanningControllerTest extends AbstractJunitSpringBootTes
         assertEquals(expected, actual, JSON_COMPARATOR_IGNORING_DATE_TIME);
 
         verifyNoInteractions(mockedAreaCoordinateFactory, mockedService);
-    }
-
-    private void scanExpectingNoContent(final AreaCoordinateRequest request) {
-        postExpectingNoContext(restTemplate, URL, request);
-    }
-
-    private String scanExpectingNotAcceptable(final AreaCoordinateRequest request) {
-        return postExpectingNotAcceptable(restTemplate, URL, request, String.class);
     }
 }
