@@ -35,12 +35,10 @@ public final class CityResponseTest extends AbstractJunitSpringBootTest {
                 255L,
                 "name",
                 createGeometry(
-                        new Coordinate[]{
-                                new Coordinate(1, 1),
-                                new Coordinate(2, 1),
-                                new Coordinate(2, 2),
-                                new Coordinate(1, 1)
-                        }
+                        new Coordinate(1, 1),
+                        new Coordinate(2, 1),
+                        new Coordinate(2, 2),
+                        new Coordinate(1, 1)
                 ),
                 CAPITAL
         );
@@ -116,19 +114,17 @@ public final class CityResponseTest extends AbstractJunitSpringBootTest {
                 255L,
                 "name",
                 createGeometry(
-                        new Coordinate[]{
-                                new Coordinate(1, 1),
-                                new Coordinate(2, 1),
-                                new Coordinate(2, 2),
-                                new Coordinate(1, 1)
-                        }
+                        new Coordinate(1, 1),
+                        new Coordinate(2, 1),
+                        new Coordinate(2, 2),
+                        new Coordinate(1, 1)
                 ),
                 CAPITAL
         );
         checkEquals(expected, actual, geoJSONReader);
     }
 
-    private Geometry createGeometry(final Coordinate[] coordinates) {
+    private Geometry createGeometry(final Coordinate... coordinates) {
         return geoJSONWriter.write(geometryFactory.createPolygon(coordinates));
     }
 }

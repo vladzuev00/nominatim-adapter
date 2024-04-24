@@ -22,6 +22,18 @@ public final class HttpUtil {
             customization(JSON_PROPERTY_NAME_DATE_TIME, (first, second) -> true)
     );
 
+    public static <R> R getExpectingOk(final TestRestTemplate restTemplate, final String url, final Class<R> resultType) {
+        final ResponseEntity<R> entity = restTemplate.getForEntity(url, resultType);
+        assertSame(OK, entity.getStatusCode());
+        return entity.getBody();
+    }
+
+    public static <R> R getExpectingNotAcceptable(final TestRestTemplate restTemplate, final String url, final Class<R> resultType) {
+        final ResponseEntity<R> entity = restTemplate.getForEntity(url, resultType);
+        assertSame(NOT_ACCEPTABLE, entity.getStatusCode());
+        return entity.getBody();
+    }
+
     public static <B> void postExpectingNoContext(final TestRestTemplate restTemplate, final String url, final B body) {
         postExpectingStatus(restTemplate, url, body, Void.class, NO_CONTENT);
     }
