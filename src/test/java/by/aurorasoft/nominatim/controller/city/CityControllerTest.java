@@ -3,6 +3,7 @@ package by.aurorasoft.nominatim.controller.city;
 import by.aurorasoft.nominatim.base.AbstractJunitSpringBootTest;
 import by.aurorasoft.nominatim.controller.city.factory.CityFactory;
 import by.aurorasoft.nominatim.controller.city.factory.CityResponseFactory;
+import by.aurorasoft.nominatim.controller.city.model.CityRequest;
 import by.aurorasoft.nominatim.controller.city.model.CityResponse;
 import by.aurorasoft.nominatim.crud.model.dto.City;
 import by.aurorasoft.nominatim.crud.service.CityService;
@@ -17,15 +18,16 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.wololo.geojson.Geometry;
 import org.wololo.jts2geojson.GeoJSONWriter;
 
 import java.util.List;
 
-import static by.aurorasoft.nominatim.model.CityType.CAPITAL;
-import static by.aurorasoft.nominatim.model.CityType.CITY;
+import static by.aurorasoft.nominatim.model.CityType.*;
 import static by.aurorasoft.nominatim.testutil.HttpUtil.*;
 import static by.aurorasoft.nominatim.util.PageRequestUtil.createRequestSortingById;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -190,6 +192,80 @@ public final class CityControllerTest extends AbstractJunitSpringBootTest {
         assertEquals(expected, actual, JSON_COMPARATOR_IGNORING_DATE_TIME);
     }
 
+    @Test
+    public void cityShouldBeSaved()
+            throws Exception {
+        final CityRequest givenRequest = new CityRequest(
+                "name",
+                createWololoPolygon("POLYGON((1 1, 2 1, 2 2, 1 1))"),
+                TOWN
+        );
+
+        final City givenCity = mock(City.class);
+        when(mockedCityFactory.create(any(CityRequest.class))).thenReturn(givenCity);
+
+        final City givenSavedCity = City.builder()
+                .id(255L)
+                .name("name")
+                .geometry(createPolygon("POLYGON((1 1, 2 1, 2 2, 1 1))"))
+                .type(TOWN)
+                .build();
+        when(mockedCityService.save(same(givenCity))).thenReturn(givenSavedCity);
+
+        bindResponse(givenSavedCity);
+
+        final String actual = postExpectingOk(restTemplate, URL, givenRequest, String.class);
+        final String expected = """
+                {
+                  "id": 255,
+                  "name": "name",
+                  "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                      [
+                        [
+                          1,
+                          1
+                        ],
+                        [
+                          2,
+                          1
+                        ],
+                        [
+                          2,
+                          2
+                        ],
+                        [
+                          1,
+                          1
+                        ]
+                      ]
+                    ]
+                  },
+                  "type": "TOWN"
+                }""";
+        assertEquals(expected, actual, true);
+    }
+
+    @Test
+    public void cityShouldNotBeSavedBecauseOfNotValidRequest()
+            throws Exception {
+        final CityRequest givenRequest = new CityRequest(
+                "    ",
+                createWololoPolygon("POLYGON((1 1, 2 1, 2 2, 1 1))"),
+                TOWN
+        );
+
+        final String actual = postExpectingNotAcceptable(restTemplate, URL, givenRequest, String.class);
+        final String expected = """
+                {
+                  "status": "NOT_ACCEPTABLE",
+                  "message": "name : не должно быть пустым",
+                  "dateTime": "2024-04-24 10-37-17"
+                }""";
+        assertEquals(expected, actual, JSON_COMPARATOR_IGNORING_DATE_TIME);
+    }
+
     private static String createUrlToFindAllCities(final int pageNumber, final int pageSize) {
         return fromUriString(URL)
                 .queryParam(PARAM_NAME_PAGE_NUMBER, pageNumber)
@@ -202,12 +278,18 @@ public final class CityControllerTest extends AbstractJunitSpringBootTest {
         return GeometryUtil.createPolygon(text, geometryFactory);
     }
 
+    private Geometry createWololoPolygon(final String text) {
+        final Polygon polygon = GeometryUtil.createPolygon(text, geometryFactory);
+        return geoJSONWriter.write(polygon);
+    }
+
     private void bindResponse(final City city) {
         final CityResponse response = createResponse(city);
         when(mockedResponseFactory.create(eq(city))).thenReturn(response);
     }
 
     private CityResponse createResponse(final City city) {
-        return new CityResponse(city.getId(), city.getName(), geoJSONWriter.write(city.getGeometry()), city.getType());
+        final Geometry geometry = geoJSONWriter.write(city.getGeometry());
+        return new CityResponse(city.getId(), city.getName(), geometry, city.getType());
     }
 }
