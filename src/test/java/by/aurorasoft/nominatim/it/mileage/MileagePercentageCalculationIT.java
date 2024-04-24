@@ -41,12 +41,12 @@ public abstract class MileagePercentageCalculationIT extends AbstractIT {
 
     private static Stream<Arguments> provideTrackFileNamesAndExpectedPercentages() {
         return Stream.of(
-                Arguments.of("2907_track-total_10.53_kobrin_2.9_country_7.63.csv", new MileagePercentage(0.2798700315006809, 0.720129968499319)),
-                Arguments.of("track-minsk-8.25_km.csv", new MileagePercentage(1.0, 0)),
-                Arguments.of("track_460_40000.csv", new MileagePercentage(1248.0929696134724, 3428.795708940143)),
-                Arguments.of("track_460_64000.csv", new MileagePercentage(1980.823770078472, 4869.945130974054)),
-                Arguments.of("track_460_131000.csv", new MileagePercentage(4211.268783970594, 9874.045762276834)),
-                Arguments.of("unit_460_13000.csv", new MileagePercentage(439.11730474078814, 1332.0917304848947))
+                Arguments.of("2907_track-total_10.53_kobrin_2.9_country_7.63.csv", new MileagePercentage(27.987003150068087, 72.01299684993191)),
+                Arguments.of("track-minsk-8.25_km.csv", new MileagePercentage(100, 0)),
+                Arguments.of("track_460_40000.csv", new MileagePercentage(26.68639463959746, 73.31360536040255)),
+                Arguments.of("track_460_64000.csv", new MileagePercentage(28.91388979380323, 71.08611020619676)),
+                Arguments.of("track_460_131000.csv", new MileagePercentage(29.898294213760025, 70.10170578623998)),
+                Arguments.of("unit_460_13000.csv", new MileagePercentage(24.791952615849038, 75.20804738415096))
         );
     }
 
