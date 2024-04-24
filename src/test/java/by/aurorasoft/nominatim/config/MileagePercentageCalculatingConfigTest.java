@@ -11,8 +11,8 @@ import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public final class MileageConfigTest {
-    private final MileageConfig config = new MileageConfig();
+public final class MileagePercentageCalculatingConfigTest {
+    private final MileagePercentageCalculatingConfig config = new MileagePercentageCalculatingConfig();
 
     @Test
     public void trackFilterShouldBeCreated() {

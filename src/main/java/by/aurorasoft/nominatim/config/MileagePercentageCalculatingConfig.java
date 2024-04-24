@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class MileageConfig {
+public class MileagePercentageCalculatingConfig {
 
     @Bean
     public TrackFilter trackFilter() {
