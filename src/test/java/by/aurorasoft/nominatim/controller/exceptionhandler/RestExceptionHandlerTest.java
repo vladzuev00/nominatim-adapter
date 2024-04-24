@@ -39,7 +39,7 @@ public final class RestExceptionHandlerTest extends AbstractJunitSpringBootTest 
         final String givenMessage = "exception-message";
         final ConstraintViolationException givenException = new ConstraintViolationException(givenMessage, emptySet());
 
-        final RestErrorResponse actual = doExpectingNotAcceptable(() -> handler.handle(givenException));
+        final RestErrorResponse actual = doExpectingNotAcceptableEntity(() -> handler.handle(givenException));
         final RestErrorResponse expected = createNotAcceptableResponse(givenMessage);
         checkMatch(expected, actual);
     }
@@ -53,7 +53,7 @@ public final class RestExceptionHandlerTest extends AbstractJunitSpringBootTest 
                 givenSecondFieldError
         );
 
-        final RestErrorResponse actual = doExpectingNotAcceptable(() -> handler.handle(givenException));
+        final RestErrorResponse actual = doExpectingNotAcceptableEntity(() -> handler.handle(givenException));
         final RestErrorResponse expected = createNotAcceptableResponse(
                 "first-field : first-message; second-field : second-message"
         );
@@ -65,7 +65,7 @@ public final class RestExceptionHandlerTest extends AbstractJunitSpringBootTest 
         final String givenMessage = "exception-message";
         final CustomValidationException givenException = new CustomValidationException(givenMessage);
 
-        final RestErrorResponse actual = doExpectingNotAcceptable(() -> handler.handle(givenException));
+        final RestErrorResponse actual = doExpectingNotAcceptableEntity(() -> handler.handle(givenException));
         final RestErrorResponse expected = createNotAcceptableResponse(givenMessage);
         checkMatch(expected, actual);
     }
@@ -75,7 +75,7 @@ public final class RestExceptionHandlerTest extends AbstractJunitSpringBootTest 
         final String givenMessage = "exception-message";
         final ConversionFailedException givenException = createConversionFailedExceptionWithObjectTargetType(givenMessage);
 
-        final RestErrorResponse actual = doExpectingNotAcceptable(() -> handler.handle(givenException));
+        final RestErrorResponse actual = doExpectingNotAcceptableEntity(() -> handler.handle(givenException));
         final RestErrorResponse expected = createNotAcceptableResponse(givenMessage);
         checkMatch(expected, actual);
     }
@@ -84,7 +84,7 @@ public final class RestExceptionHandlerTest extends AbstractJunitSpringBootTest 
     public void conversionFailedExceptionWithEnumTargetTypeShouldBeHandled() {
         final ConversionFailedException givenException = createConversionFailedExceptionWithEnumTargetType("exception-value");
 
-        final RestErrorResponse actual = doExpectingNotAcceptable(() -> handler.handle(givenException));
+        final RestErrorResponse actual = doExpectingNotAcceptableEntity(() -> handler.handle(givenException));
         final RestErrorResponse expected = createNotAcceptableResponse("exception-value should be replaced by one of: FIRST, SECOND, THIRD");
         checkMatch(expected, actual);
     }
@@ -108,10 +108,10 @@ public final class RestExceptionHandlerTest extends AbstractJunitSpringBootTest 
         assertEquals(expected, actual, true);
     }
 
-    private RestErrorResponse doExpectingNotAcceptable(final Supplier<ResponseEntity<RestErrorResponse>> operation) {
-        final ResponseEntity<RestErrorResponse> responseEntity = operation.get();
-        assertSame(NOT_ACCEPTABLE, responseEntity.getStatusCode());
-        return responseEntity.getBody();
+    private RestErrorResponse doExpectingNotAcceptableEntity(final Supplier<ResponseEntity<RestErrorResponse>> operation) {
+        final ResponseEntity<RestErrorResponse> entity = operation.get();
+        assertSame(NOT_ACCEPTABLE, entity.getStatusCode());
+        return entity.getBody();
     }
 
     private static RestErrorResponse createNotAcceptableResponse(final String message) {

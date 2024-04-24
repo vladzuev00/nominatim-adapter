@@ -81,8 +81,8 @@ public final class MileageControllerTest extends AbstractJunitSpringBootTest {
         final String actual = findMileageExpectingNotAcceptable(givenRequest);
         final String expected = """
                 {
-                  "httpStatus": "NOT_ACCEPTABLE",
-                  "message": "не должно равняться null",
+                  "status": "NOT_ACCEPTABLE",
+                  "message": "trackPoints : не должно равняться null",
                   "dateTime": "2024-04-17 09-53-51"
                 }""";
         assertEquals(expected, actual, JSON_COMPARATOR_IGNORING_DATE_TIME);
