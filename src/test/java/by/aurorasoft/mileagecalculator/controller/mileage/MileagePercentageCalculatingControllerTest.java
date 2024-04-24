@@ -20,8 +20,6 @@ import java.util.List;
 import static by.aurorasoft.mileagecalculator.testutil.HttpUtil.*;
 import static java.time.Instant.parse;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.*;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;

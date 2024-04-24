@@ -27,7 +27,6 @@ import java.util.List;
 import static by.aurorasoft.mileagecalculator.model.CityType.*;
 import static by.aurorasoft.mileagecalculator.testutil.HttpUtil.*;
 import static by.aurorasoft.mileagecalculator.util.PageRequestUtil.createRequestSortingById;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
