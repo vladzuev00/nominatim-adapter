@@ -23,7 +23,7 @@ spring:
 
 server:
   servlet:
-    context-path: /nominatim
+    context-path: /cityMileage
 
 mileage-calc:
   load-city-geometries-on-start-app: false
