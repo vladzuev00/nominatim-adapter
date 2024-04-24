@@ -3,9 +3,9 @@ package by.aurorasoft.nominatim.controller.mileage;
 import by.aurorasoft.nominatim.controller.mileage.factory.DistanceCalculatorSettingsFactory;
 import by.aurorasoft.nominatim.controller.mileage.factory.TrackFactory;
 import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest;
-import by.aurorasoft.nominatim.model.Mileage;
+import by.aurorasoft.nominatim.model.MileagePercentage;
 import by.aurorasoft.nominatim.model.Track;
-import by.aurorasoft.nominatim.service.mileage.MileageCalculatingService;
+import by.aurorasoft.nominatim.service.mileage.MileagePercentageCalculatingService;
 import by.nhorushko.distancecalculator.DistanceCalculatorSettings;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,16 +23,16 @@ import static org.springframework.http.ResponseEntity.ok;
 @RestController
 @RequestMapping("/api/v1/mileage")
 @RequiredArgsConstructor
-public class MileageController {
+public class MileagePercentageCalculatingController {
     private final TrackFactory trackFactory;
     private final DistanceCalculatorSettingsFactory distanceCalculatorSettingsFactory;
-    private final MileageCalculatingService calculatingService;
+    private final MileagePercentageCalculatingService calculatingService;
 
     @PostMapping
-    public ResponseEntity<Mileage> findMileage(@Valid @RequestBody final MileageRequest request) {
+    public ResponseEntity<MileagePercentage> calculate(@Valid @RequestBody final MileageRequest request) {
         final Track track = trackFactory.create(request);
         final DistanceCalculatorSettings distanceCalculatorSettings = distanceCalculatorSettingsFactory.create(request);
-        final Mileage mileage = calculatingService.calculate(track, distanceCalculatorSettings);
+        final MileagePercentage mileage = calculatingService.calculate(track, distanceCalculatorSettings);
         return ok(mileage);
     }
 }

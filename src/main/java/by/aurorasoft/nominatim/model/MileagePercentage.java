@@ -5,12 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Value;
 
 @Value
-public class Mileage {
+public class MileagePercentage {
     double urban;
     double country;
 
     @JsonCreator
-    public Mileage(@JsonProperty("urban") final double urban, @JsonProperty("country") final double country) {
+    public MileagePercentage(@JsonProperty("urban") final double urban, @JsonProperty("country") final double country) {
         this.urban = urban;
         this.country = country;
     }

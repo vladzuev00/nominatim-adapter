@@ -1,6 +1,6 @@
 package by.aurorasoft.nominatim.service.mileage;
 
-import by.aurorasoft.nominatim.model.Mileage;
+import by.aurorasoft.nominatim.model.MileagePercentage;
 import by.aurorasoft.nominatim.model.Track;
 import by.aurorasoft.nominatim.model.TrackPoint;
 import by.aurorasoft.nominatim.service.geometry.GeometryService;
@@ -33,11 +33,11 @@ public final class MileageCalculatingServiceTest {
     @Mock
     private DistanceCalculator mockedDistanceCalculator;
 
-    private MileageCalculatingService service;
+    private MileagePercentageCalculatingService service;
 
     @Before
     public void initializeService() {
-        service = new MileageCalculatingService(
+        service = new MileagePercentageCalculatingService(
                 mockedTrackCityGeometryLoader,
                 mockedGeometryService,
                 mockedDistanceCalculator
@@ -71,8 +71,8 @@ public final class MileageCalculatingServiceTest {
         final double thirdSliceGivenDistance = 3.3;
         setDistanceBetweenPoint(thirdGivenPoint, fourthGivenPoint, givenSettings, thirdSliceGivenDistance);
 
-        final Mileage actual = service.calculate(givenTrack, givenSettings);
-        final Mileage expected = new Mileage(firstSliceGivenDistance + thirdSliceGivenDistance, secondSliceGivenDistance);
+        final MileagePercentage actual = service.calculate(givenTrack, givenSettings);
+        final MileagePercentage expected = new MileagePercentage(firstSliceGivenDistance + thirdSliceGivenDistance, secondSliceGivenDistance);
         assertEquals(expected, actual);
 
         verify(mockedGeometryService, times(0)).isAnyContain(same(givenCityGeometries), same(firstGivenPoint));
@@ -83,8 +83,8 @@ public final class MileageCalculatingServiceTest {
         final Track givenTrack = new Track(emptyList());
         final DistanceCalculatorSettings givenSettings = mock(DistanceCalculatorSettings.class);
 
-        final Mileage actual = service.calculate(givenTrack, givenSettings);
-        final Mileage expected = new Mileage(0, 0);
+        final MileagePercentage actual = service.calculate(givenTrack, givenSettings);
+        final MileagePercentage expected = new MileagePercentage(0, 0);
         assertEquals(expected, actual);
 
         verifyNoInteractions(mockedTrackCityGeometryLoader);

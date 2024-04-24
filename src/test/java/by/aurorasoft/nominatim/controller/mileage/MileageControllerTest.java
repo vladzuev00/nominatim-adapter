@@ -5,9 +5,9 @@ import by.aurorasoft.nominatim.controller.mileage.factory.DistanceCalculatorSett
 import by.aurorasoft.nominatim.controller.mileage.factory.TrackFactory;
 import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest;
 import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest.TrackPointRequest;
-import by.aurorasoft.nominatim.model.Mileage;
+import by.aurorasoft.nominatim.model.MileagePercentage;
 import by.aurorasoft.nominatim.model.Track;
-import by.aurorasoft.nominatim.service.mileage.MileageCalculatingService;
+import by.aurorasoft.nominatim.service.mileage.MileagePercentageCalculatingService;
 import by.nhorushko.distancecalculator.DistanceCalculatorSettings;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public final class MileageControllerTest extends AbstractJunitSpringBootTest {
     private DistanceCalculatorSettingsFactory mockedDistanceCalculatorSettingsFactory;
 
     @MockBean
-    private MileageCalculatingService mockedMileageCalculatingService;
+    private MileagePercentageCalculatingService mockedMileageCalculatingService;
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -62,11 +62,11 @@ public final class MileageControllerTest extends AbstractJunitSpringBootTest {
         when(mockedDistanceCalculatorSettingsFactory.create(eq(givenRequest)))
                 .thenReturn(givenDistanceCalculatorSettings);
 
-        final Mileage givenMileage = new Mileage(5.5, 6.6);
+        final MileagePercentage givenMileage = new MileagePercentage(5.5, 6.6);
         when(mockedMileageCalculatingService.calculate(same(givenTrack), same(givenDistanceCalculatorSettings)))
                 .thenReturn(givenMileage);
 
-        final Mileage actual = findMileageExpectingOk(givenRequest);
+        final MileagePercentage actual = findMileageExpectingOk(givenRequest);
         assertEquals(givenMileage, actual);
     }
 
@@ -94,8 +94,8 @@ public final class MileageControllerTest extends AbstractJunitSpringBootTest {
         );
     }
 
-    private Mileage findMileageExpectingOk(final MileageRequest request) {
-        return postExpectingOk(restTemplate, URL, request, Mileage.class);
+    private MileagePercentage findMileageExpectingOk(final MileageRequest request) {
+        return postExpectingOk(restTemplate, URL, request, MileagePercentage.class);
     }
 
     private String findMileageExpectingNotAcceptable(final MileageRequest request) {

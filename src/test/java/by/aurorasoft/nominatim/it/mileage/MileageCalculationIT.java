@@ -3,7 +3,7 @@ package by.aurorasoft.nominatim.it.mileage;
 import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest;
 import by.aurorasoft.nominatim.controller.mileage.model.MileageRequest.TrackPointRequest;
 import by.aurorasoft.nominatim.it.base.AbstractIT;
-import by.aurorasoft.nominatim.model.Mileage;
+import by.aurorasoft.nominatim.model.MileagePercentage;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -33,25 +33,25 @@ public abstract class MileageCalculationIT extends AbstractIT {
 
     @ParameterizedTest
     @MethodSource("provideTrackFileNamesAndExpectedMileages")
-    public final void mileageShouldBeFoundForTrackFromFile(final String fileName, final Mileage expected) {
+    public final void mileageShouldBeFoundForTrackFromFile(final String fileName, final MileagePercentage expected) {
         final MileageRequest givenRequest = requestFactory.create(fileName);
-        final Mileage actual = findMileage(givenRequest);
+        final MileagePercentage actual = findMileage(givenRequest);
         assertEquals(expected, actual);
     }
 
     private static Stream<Arguments> provideTrackFileNamesAndExpectedMileages() {
         return Stream.of(
-                Arguments.of("2907_track-total_10.53_kobrin_2.9_country_7.63.csv", new Mileage(2.827594290976988, 7.27564640190909)),
-                Arguments.of("track-minsk-8.25_km.csv", new Mileage(8.241159744065632, 0)),
-                Arguments.of("track_460_40000.csv", new Mileage(1248.0929696134724, 3428.795708940143)),
-                Arguments.of("track_460_64000.csv", new Mileage(1980.823770078472, 4869.945130974054)),
-                Arguments.of("track_460_131000.csv", new Mileage(4211.268783970594, 9874.045762276834)),
-                Arguments.of("unit_460_13000.csv", new Mileage(439.11730474078814, 1332.0917304848947))
+                Arguments.of("2907_track-total_10.53_kobrin_2.9_country_7.63.csv", new MileagePercentage(2.827594290976988, 7.27564640190909)),
+                Arguments.of("track-minsk-8.25_km.csv", new MileagePercentage(8.241159744065632, 0)),
+                Arguments.of("track_460_40000.csv", new MileagePercentage(1248.0929696134724, 3428.795708940143)),
+                Arguments.of("track_460_64000.csv", new MileagePercentage(1980.823770078472, 4869.945130974054)),
+                Arguments.of("track_460_131000.csv", new MileagePercentage(4211.268783970594, 9874.045762276834)),
+                Arguments.of("unit_460_13000.csv", new MileagePercentage(439.11730474078814, 1332.0917304848947))
         );
     }
 
-    private Mileage findMileage(final MileageRequest request) {
-        return postExpectingOk(restTemplate, URL, request, Mileage.class);
+    private MileagePercentage findMileage(final MileageRequest request) {
+        return postExpectingOk(restTemplate, URL, request, MileagePercentage.class);
     }
 
     private static final class MileageRequestFactory {

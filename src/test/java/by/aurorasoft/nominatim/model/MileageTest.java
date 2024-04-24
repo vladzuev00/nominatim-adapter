@@ -16,7 +16,7 @@ public final class MileageTest extends AbstractJunitSpringBootTest {
     @Test
     public void mileageShouldBeConvertedToJson()
             throws Exception {
-        final Mileage givenMileage = new Mileage(5.5, 6.6);
+        final MileagePercentage givenMileage = new MileagePercentage(5.5, 6.6);
 
         final String actual = objectMapper.writeValueAsString(givenMileage);
         final String expected = """
@@ -36,8 +36,8 @@ public final class MileageTest extends AbstractJunitSpringBootTest {
                   "country": 6.6
                 }""";
 
-        final Mileage actual = objectMapper.readValue(givenJson, Mileage.class);
-        final Mileage expected = new Mileage(5.5, 6.6);
+        final MileagePercentage actual = objectMapper.readValue(givenJson, MileagePercentage.class);
+        final MileagePercentage expected = new MileagePercentage(5.5, 6.6);
         assertEquals(expected, actual);
     }
 }
