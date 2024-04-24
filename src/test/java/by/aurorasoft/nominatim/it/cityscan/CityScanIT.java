@@ -1,16 +1,12 @@
 package by.aurorasoft.nominatim.it.cityscan;
 
-import by.aurorasoft.nominatim.base.AbstractSpringBootTest;
 import by.aurorasoft.nominatim.controller.cityscan.model.AreaCoordinateRequest;
 import by.aurorasoft.nominatim.crud.model.entity.CityEntity;
+import by.aurorasoft.nominatim.it.base.AbstractIT;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -21,18 +17,9 @@ import static by.aurorasoft.nominatim.testutil.GeometryUtil.createMultipolygon;
 import static by.aurorasoft.nominatim.testutil.GeometryUtil.createPolygon;
 import static by.aurorasoft.nominatim.testutil.HttpUtil.postExpectingNoContext;
 import static java.util.Comparator.comparing;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
-import static org.springframework.transaction.annotation.Propagation.NOT_SUPPORTED;
 
-@Transactional(propagation = NOT_SUPPORTED)
-@SpringBootTest(webEnvironment = RANDOM_PORT)
-@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
-public class CityScanIT extends AbstractSpringBootTest {
+public final class CityScanIT extends AbstractIT {
     private static final String URL = "/api/v1/cityScan";
-
-    @Autowired
-    private TestRestTemplate restTemplate;
 
     @Autowired
     private GeometryFactory geometryFactory;
