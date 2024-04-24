@@ -8,8 +8,7 @@ import org.locationtech.jts.geom.Geometry;
 import org.springframework.stereotype.Component;
 import org.wololo.jts2geojson.GeoJSONReader;
 
-//TODO: remove bean name
-@Component("controller-city-factory")
+@Component
 @RequiredArgsConstructor
 public final class CityFactory {
     private final GeoJSONReader geoJSONReader;
