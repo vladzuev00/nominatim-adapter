@@ -66,7 +66,7 @@ public final class MileagePercentageCalculatingServiceTest {
         setDistanceBetweenPoint(thirdGivenPoint, fourthGivenPoint, givenSettings, 3.3);
 
         final MileagePercentage actual = service.calculate(givenTrack, givenSettings);
-        final MileagePercentage expected = new MileagePercentage(0.6666666666666666, 0.3333333333333333);
+        final MileagePercentage expected = new MileagePercentage(66.66666666666667, 33.333333333333336);
         assertEquals(expected, actual);
 
         verify(mockedGeometryService, times(0))

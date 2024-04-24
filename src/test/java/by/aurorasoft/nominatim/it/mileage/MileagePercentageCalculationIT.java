@@ -26,32 +26,28 @@ import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public abstract class MileageCalculationIT extends AbstractIT {
-    private static final String URL = "/api/v1/mileage";
+public abstract class MileagePercentageCalculationIT extends AbstractIT {
+    private static final String URL = "/api/v1/mileagePercentage";
 
     private final MileageRequestFactory requestFactory = new MileageRequestFactory();
 
     @ParameterizedTest
-    @MethodSource("provideTrackFileNamesAndExpectedMileages")
-    public final void mileageShouldBeFoundForTrackFromFile(final String fileName, final MileagePercentage expected) {
+    @MethodSource("provideTrackFileNamesAndExpectedPercentages")
+    public final void percentageShouldBeFoundForTrackFromFile(final String fileName, final MileagePercentage expected) {
         final MileageRequest givenRequest = requestFactory.create(fileName);
-        final MileagePercentage actual = findMileage(givenRequest);
+        final MileagePercentage actual = postExpectingOk(restTemplate, URL, givenRequest, MileagePercentage.class);
         assertEquals(expected, actual);
     }
 
-    private static Stream<Arguments> provideTrackFileNamesAndExpectedMileages() {
+    private static Stream<Arguments> provideTrackFileNamesAndExpectedPercentages() {
         return Stream.of(
-                Arguments.of("2907_track-total_10.53_kobrin_2.9_country_7.63.csv", new MileagePercentage(2.827594290976988, 7.27564640190909)),
-                Arguments.of("track-minsk-8.25_km.csv", new MileagePercentage(8.241159744065632, 0)),
+                Arguments.of("2907_track-total_10.53_kobrin_2.9_country_7.63.csv", new MileagePercentage(0.2798700315006809, 0.720129968499319)),
+                Arguments.of("track-minsk-8.25_km.csv", new MileagePercentage(1.0, 0)),
                 Arguments.of("track_460_40000.csv", new MileagePercentage(1248.0929696134724, 3428.795708940143)),
                 Arguments.of("track_460_64000.csv", new MileagePercentage(1980.823770078472, 4869.945130974054)),
                 Arguments.of("track_460_131000.csv", new MileagePercentage(4211.268783970594, 9874.045762276834)),
                 Arguments.of("unit_460_13000.csv", new MileagePercentage(439.11730474078814, 1332.0917304848947))
         );
-    }
-
-    private MileagePercentage findMileage(final MileageRequest request) {
-        return postExpectingOk(restTemplate, URL, request, MileagePercentage.class);
     }
 
     private static final class MileageRequestFactory {

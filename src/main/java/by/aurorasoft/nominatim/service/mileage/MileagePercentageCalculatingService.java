@@ -13,6 +13,7 @@ import org.locationtech.jts.geom.prep.PreparedGeometry;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.function.ToDoubleFunction;
 
 import static java.util.stream.Collectors.*;
 import static java.util.stream.IntStream.range;
@@ -60,10 +61,15 @@ public final class MileagePercentageCalculatingService {
     }
 
     private static MileagePercentage calculate(final Mileage mileage) {
-        final double total = mileage.urban + mileage.country;
-        final double urban = mileage.urban / total;
-        final double country = mileage.country / total;
+        final double urban = calculateValuePercentage(mileage, Mileage::getUrban);
+        final double country = calculateValuePercentage(mileage, Mileage::getCountry);
         return new MileagePercentage(urban, country);
+    }
+
+    private static double calculateValuePercentage(final Mileage mileage, final ToDoubleFunction<Mileage> valueGetter) {
+        final double value = valueGetter.applyAsDouble(mileage);
+        final double total = mileage.urban + mileage.country;
+        return value * 100 / total;
     }
 
     @Value

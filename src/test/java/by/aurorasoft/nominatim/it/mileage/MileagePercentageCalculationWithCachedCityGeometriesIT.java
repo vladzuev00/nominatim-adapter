@@ -6,6 +6,6 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 @SuppressWarnings("SpringBootApplicationProperties")
 @SpringBootTest(webEnvironment = RANDOM_PORT, properties = "mileage-calc.load-city-geometries-on-start-app=true")
-public final class MileageCalculationWithCachedCityGeometriesIT extends MileageCalculationIT {
+public final class MileagePercentageCalculationWithCachedCityGeometriesIT extends MileagePercentageCalculationIT {
 
 }
