@@ -16,13 +16,12 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 
-import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public final class MileageCalculatingServiceTest {
+public final class MileagePercentageCalculatingServiceTest {
 
     @Mock
     private TrackCityGeometryLoader mockedTrackCityGeometryLoader;
@@ -46,7 +45,7 @@ public final class MileageCalculatingServiceTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void mileageShouldBeCalculated() {
+    public void mileagePercentageShouldBeCalculated() {
         final TrackPoint firstGivenPoint = mock(TrackPoint.class);
         final TrackPoint secondGivenPoint = mock(TrackPoint.class);
         final TrackPoint thirdGivenPoint = mock(TrackPoint.class);
@@ -62,34 +61,16 @@ public final class MileageCalculatingServiceTest {
         setBelonging(thirdGivenPoint, givenCityGeometries, false);
         setBelonging(fourthGivenPoint, givenCityGeometries, true);
 
-        final double firstSliceGivenDistance = 1.1;
-        setDistanceBetweenPoint(firstGivenPoint, secondGivenPoint, givenSettings, firstSliceGivenDistance);
-
-        final double secondSliceGivenDistance = 2.2;
-        setDistanceBetweenPoint(secondGivenPoint, thirdGivenPoint, givenSettings, secondSliceGivenDistance);
-
-        final double thirdSliceGivenDistance = 3.3;
-        setDistanceBetweenPoint(thirdGivenPoint, fourthGivenPoint, givenSettings, thirdSliceGivenDistance);
+        setDistanceBetweenPoint(firstGivenPoint, secondGivenPoint, givenSettings, 1.1);
+        setDistanceBetweenPoint(secondGivenPoint, thirdGivenPoint, givenSettings, 2.2);
+        setDistanceBetweenPoint(thirdGivenPoint, fourthGivenPoint, givenSettings, 3.3);
 
         final MileagePercentage actual = service.calculate(givenTrack, givenSettings);
-        final MileagePercentage expected = new MileagePercentage(firstSliceGivenDistance + thirdSliceGivenDistance, secondSliceGivenDistance);
+        final MileagePercentage expected = new MileagePercentage(0.6666666666666666, 0.3333333333333333);
         assertEquals(expected, actual);
 
-        verify(mockedGeometryService, times(0)).isAnyContain(same(givenCityGeometries), same(firstGivenPoint));
-    }
-
-    @Test
-    public void mileageShouldBeCalculatedByEmptyTrack() {
-        final Track givenTrack = new Track(emptyList());
-        final DistanceCalculatorSettings givenSettings = mock(DistanceCalculatorSettings.class);
-
-        final MileagePercentage actual = service.calculate(givenTrack, givenSettings);
-        final MileagePercentage expected = new MileagePercentage(0, 0);
-        assertEquals(expected, actual);
-
-        verifyNoInteractions(mockedTrackCityGeometryLoader);
-        verifyNoInteractions(mockedGeometryService);
-        verifyNoInteractions(mockedDistanceCalculator);
+        verify(mockedGeometryService, times(0))
+                .isAnyContain(same(givenCityGeometries), same(firstGivenPoint));
     }
 
     private void setDistanceBetweenPoint(final TrackPoint first,

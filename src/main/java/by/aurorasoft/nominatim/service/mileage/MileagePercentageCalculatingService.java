@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.*;
 import static java.util.stream.IntStream.range;
 
@@ -26,13 +25,9 @@ public final class MileagePercentageCalculatingService {
     private final DistanceCalculator distanceCalculator;
 
     public MileagePercentage calculate(final Track track, final DistanceCalculatorSettings settings) {
-        final List<PreparedGeometry> cityGeometries = loadCityGeometries(track);
+        final List<PreparedGeometry> cityGeometries = trackCityGeometryLoader.load(track);
         final Mileage mileage = calculateMileage(track, cityGeometries, settings);
         return calculate(mileage);
-    }
-
-    private List<PreparedGeometry> loadCityGeometries(final Track track) {
-        return !track.getPoints().isEmpty() ? trackCityGeometryLoader.load(track) : emptyList();
     }
 
     private Mileage calculateMileage(final Track track,
@@ -66,9 +61,9 @@ public final class MileagePercentageCalculatingService {
 
     private static MileagePercentage calculate(final Mileage mileage) {
         final double total = mileage.urban + mileage.country;
-        final double urbanPercentage = mileage.urban / total;
-        final double countryPercentage = mileage.country / total;
-        return new MileagePercentage(urbanPercentage, countryPercentage / total);
+        final double urban = mileage.urban / total;
+        final double country = mileage.country / total;
+        return new MileagePercentage(urban, country);
     }
 
     @Value
