@@ -27,8 +27,8 @@ import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-public final class MileageControllerTest extends AbstractJunitSpringBootTest {
-    private static final String URL = "/api/v1/mileage";
+public final class MileagePercentageCalculatingControllerTest extends AbstractJunitSpringBootTest {
+    private static final String URL = "/api/v1/mileagePercentage";
 
     @MockBean
     private TrackFactory mockedTrackFactory;
@@ -37,13 +37,13 @@ public final class MileageControllerTest extends AbstractJunitSpringBootTest {
     private DistanceCalculatorSettingsFactory mockedDistanceCalculatorSettingsFactory;
 
     @MockBean
-    private MileagePercentageCalculatingService mockedMileageCalculatingService;
+    private MileagePercentageCalculatingService mockedService;
 
     @Autowired
     private TestRestTemplate restTemplate;
 
     @Test
-    public void mileageShouldBeFound() {
+    public void mileagePercentageShouldBeFound() {
         final MileageRequest givenRequest = MileageRequest.builder()
                 .trackPoints(
                         List.of(
@@ -62,23 +62,23 @@ public final class MileageControllerTest extends AbstractJunitSpringBootTest {
         when(mockedDistanceCalculatorSettingsFactory.create(eq(givenRequest)))
                 .thenReturn(givenDistanceCalculatorSettings);
 
-        final MileagePercentage givenMileage = new MileagePercentage(5.5, 6.6);
-        when(mockedMileageCalculatingService.calculate(same(givenTrack), same(givenDistanceCalculatorSettings)))
-                .thenReturn(givenMileage);
+        final MileagePercentage givenMileagePercentage = new MileagePercentage(0.3, 0.7);
+        when(mockedService.calculate(same(givenTrack), same(givenDistanceCalculatorSettings)))
+                .thenReturn(givenMileagePercentage);
 
-        final MileagePercentage actual = findMileageExpectingOk(givenRequest);
-        assertEquals(givenMileage, actual);
+        final MileagePercentage actual = postExpectingOk(restTemplate, URL, givenRequest, MileagePercentage.class);
+        assertEquals(givenMileagePercentage, actual);
     }
 
     @Test
-    public void mileageShouldNotBeFoundBecauseOfNotValidRequest()
+    public void mileagePercentageShouldNotBeFoundBecauseOfNotValidRequest()
             throws Exception {
         final MileageRequest givenRequest = MileageRequest.builder()
                 .minDetectionSpeed(10)
                 .maxMessageTimeout(11)
                 .build();
 
-        final String actual = findMileageExpectingNotAcceptable(givenRequest);
+        final String actual = postExpectingNotAcceptable(restTemplate, URL, givenRequest, String.class);
         final String expected = """
                 {
                   "status": "NOT_ACCEPTABLE",
@@ -87,18 +87,6 @@ public final class MileageControllerTest extends AbstractJunitSpringBootTest {
                 }""";
         assertEquals(expected, actual, JSON_COMPARATOR_IGNORING_DATE_TIME);
 
-        verifyNoInteractions(
-                mockedTrackFactory,
-                mockedDistanceCalculatorSettingsFactory,
-                mockedMileageCalculatingService
-        );
-    }
-
-    private MileagePercentage findMileageExpectingOk(final MileageRequest request) {
-        return postExpectingOk(restTemplate, URL, request, MileagePercentage.class);
-    }
-
-    private String findMileageExpectingNotAcceptable(final MileageRequest request) {
-        return postExpectingNotAcceptable(restTemplate, URL, request, String.class);
+        verifyNoInteractions(mockedTrackFactory, mockedDistanceCalculatorSettingsFactory, mockedService);
     }
 }

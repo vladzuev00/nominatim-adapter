@@ -32,7 +32,7 @@ public class MileagePercentageCalculatingController {
     public ResponseEntity<MileagePercentage> calculate(@Valid @RequestBody final MileageRequest request) {
         final Track track = trackFactory.create(request);
         final DistanceCalculatorSettings distanceCalculatorSettings = distanceCalculatorSettingsFactory.create(request);
-        final MileagePercentage mileage = calculatingService.calculate(track, distanceCalculatorSettings);
-        return ok(mileage);
+        final MileagePercentage mileagePercentage = calculatingService.calculate(track, distanceCalculatorSettings);
+        return ok(mileagePercentage);
     }
 }
