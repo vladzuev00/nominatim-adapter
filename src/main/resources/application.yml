@@ -2,7 +2,7 @@ spring:
   application:
     name: cities-searcher
   datasource:
-    url: jdbc:postgresql://localhost:5432/nominatim_adapter
+    url: jdbc:postgresql://localhost:5432/city_mileage
     username: postgres
     password: root
     driver-class-name: org.postgresql.Driver
@@ -22,7 +22,7 @@ spring:
 
 server:
   servlet:
-    context-path: /nominatim
+    context-path: /cityMileage
   port: 8081
 
 mileage-calc:

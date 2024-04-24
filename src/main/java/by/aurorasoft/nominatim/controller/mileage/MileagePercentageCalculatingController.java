@@ -21,7 +21,7 @@ import static org.springframework.http.ResponseEntity.ok;
 
 @Validated
 @RestController
-@RequestMapping("/api/v1/mileage")
+@RequestMapping("/api/v1/mileagePercentage")
 @RequiredArgsConstructor
 public class MileagePercentageCalculatingController {
     private final TrackFactory trackFactory;
