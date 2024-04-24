@@ -9,6 +9,8 @@ import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.skyscreamer.jsonassert.Customization.customization;
 import static org.skyscreamer.jsonassert.JSONCompareMode.STRICT;
+import static org.springframework.http.HttpMethod.DELETE;
+import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
@@ -50,6 +52,31 @@ public final class HttpUtil {
                                                       final B body,
                                                       final Class<R> resultType) {
         return postExpectingStatus(restTemplate, url, body, resultType, NOT_ACCEPTABLE);
+    }
+
+    public static <B, R> R putExpectingOk(final TestRestTemplate restTemplate,
+                                          final String url,
+                                          final B body,
+                                          final Class<R> resultType) {
+        final HttpEntity<B> httpEntity = createHttpEntity(body);
+        final ResponseEntity<R> response = restTemplate.exchange(url, PUT, httpEntity, resultType);
+        assertSame(OK, response.getStatusCode());
+        return response.getBody();
+    }
+
+    public static <B, R> R putExpectingNotAcceptable(final TestRestTemplate restTemplate,
+                                                     final String url,
+                                                     final B body,
+                                                     final Class<R> resultType) {
+        final HttpEntity<B> httpEntity = createHttpEntity(body);
+        final ResponseEntity<R> response = restTemplate.exchange(url, PUT, httpEntity, resultType);
+        assertSame(NOT_ACCEPTABLE, response.getStatusCode());
+        return response.getBody();
+    }
+
+    public static void deleteExpectingNoContent(final TestRestTemplate restTemplate, final String url) {
+        final ResponseEntity<Object> response = restTemplate.exchange(url, DELETE, new HttpEntity<>(createHttpHeaders()), Object.class);
+        assertSame(NO_CONTENT, response.getStatusCode());
     }
 
     private static <B, R> R postExpectingStatus(final TestRestTemplate restTemplate,

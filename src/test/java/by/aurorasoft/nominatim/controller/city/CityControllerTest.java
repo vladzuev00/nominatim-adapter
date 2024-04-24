@@ -7,6 +7,7 @@ import by.aurorasoft.nominatim.controller.city.model.CityRequest;
 import by.aurorasoft.nominatim.controller.city.model.CityResponse;
 import by.aurorasoft.nominatim.crud.model.dto.City;
 import by.aurorasoft.nominatim.crud.service.CityService;
+import by.aurorasoft.nominatim.model.CityType;
 import by.aurorasoft.nominatim.testutil.GeometryUtil;
 import org.junit.Test;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -27,8 +28,7 @@ import static by.aurorasoft.nominatim.model.CityType.*;
 import static by.aurorasoft.nominatim.testutil.HttpUtil.*;
 import static by.aurorasoft.nominatim.util.PageRequestUtil.createRequestSortingById;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.web.util.UriComponentsBuilder.fromUriString;
@@ -160,6 +160,8 @@ public final class CityControllerTest extends AbstractJunitSpringBootTest {
                   "empty": false
                 }""";
         assertEquals(expected, actual, true);
+
+        verifyNoInteractions(mockedCityFactory);
     }
 
     @Test
@@ -175,6 +177,8 @@ public final class CityControllerTest extends AbstractJunitSpringBootTest {
                   "dateTime": "2024-04-24 10-05-00"
                 }""";
         assertEquals(expected, actual, JSON_COMPARATOR_IGNORING_DATE_TIME);
+
+        verifyNoInteractions(mockedCityService, mockedResponseFactory, mockedCityFactory);
     }
 
     @Test
@@ -190,25 +194,26 @@ public final class CityControllerTest extends AbstractJunitSpringBootTest {
                   "dateTime": "2024-04-24 10-05-00"
                 }""";
         assertEquals(expected, actual, JSON_COMPARATOR_IGNORING_DATE_TIME);
+
+        verifyNoInteractions(mockedCityService, mockedResponseFactory, mockedCityFactory);
     }
 
     @Test
     public void cityShouldBeSaved()
             throws Exception {
-        final CityRequest givenRequest = new CityRequest(
-                "name",
-                createWololoPolygon("POLYGON((1 1, 2 1, 2 2, 1 1))"),
-                TOWN
-        );
+        final String givenName = "name";
+        final String givenGeometryText = "POLYGON((1 1, 2 1, 2 2, 1 1))";
+        final CityType givenType = TOWN;
+        final CityRequest givenRequest = new CityRequest(givenName, createWololoPolygon(givenGeometryText), givenType);
 
         final City givenCity = mock(City.class);
         when(mockedCityFactory.create(any(CityRequest.class))).thenReturn(givenCity);
 
         final City givenSavedCity = City.builder()
                 .id(255L)
-                .name("name")
-                .geometry(createPolygon("POLYGON((1 1, 2 1, 2 2, 1 1))"))
-                .type(TOWN)
+                .name(givenName)
+                .geometry(createPolygon(givenGeometryText))
+                .type(givenType)
                 .build();
         when(mockedCityService.save(same(givenCity))).thenReturn(givenSavedCity);
 
@@ -252,7 +257,7 @@ public final class CityControllerTest extends AbstractJunitSpringBootTest {
             throws Exception {
         final CityRequest givenRequest = new CityRequest(
                 "    ",
-                createWololoPolygon("POLYGON((1 1, 2 1, 2 2, 1 1))"),
+                createWololoPolygon("POLYGON((1 1, 2 1, 2 3, 1 1))"),
                 TOWN
         );
 
@@ -264,6 +269,97 @@ public final class CityControllerTest extends AbstractJunitSpringBootTest {
                   "dateTime": "2024-04-24 10-37-17"
                 }""";
         assertEquals(expected, actual, JSON_COMPARATOR_IGNORING_DATE_TIME);
+
+        verifyNoInteractions(mockedCityService, mockedResponseFactory, mockedCityFactory);
+    }
+
+    @Test
+    public void cityShouldBeUpdated()
+            throws Exception {
+        final Long givenId = 255L;
+        final String givenName = "name";
+        final String givenGeometryText = "POLYGON((1 1, 2 1, 2 2, 1 1))";
+        final CityType givenType = TOWN;
+        final CityRequest givenRequest = new CityRequest(givenName, createWololoPolygon(givenGeometryText), givenType);
+
+        final City givenCity = mock(City.class);
+        when(mockedCityFactory.create(eq(givenId), any(CityRequest.class))).thenReturn(givenCity);
+
+        final City givenUpdatedCity = City.builder()
+                .id(givenId)
+                .name(givenName)
+                .geometry(createPolygon(givenGeometryText))
+                .type(givenType)
+                .build();
+        when(mockedCityService.update(same(givenCity))).thenReturn(givenUpdatedCity);
+
+        bindResponse(givenUpdatedCity);
+
+        final String url = createUrlWithPathVariable(givenId);
+        final String actual = putExpectingOk(restTemplate, url, givenRequest, String.class);
+        final String expected = """
+                {
+                  "id": 255,
+                  "name": "name",
+                  "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                      [
+                        [
+                          1,
+                          1
+                        ],
+                        [
+                          2,
+                          1
+                        ],
+                        [
+                          2,
+                          2
+                        ],
+                        [
+                          1,
+                          1
+                        ]
+                      ]
+                    ]
+                  },
+                  "type": "TOWN"
+                }""";
+        assertEquals(expected, actual, true);
+    }
+
+    @Test
+    public void cityShouldNotBeUpdatedBecauseOfNotValidRequest()
+            throws Exception {
+        final CityRequest givenRequest = new CityRequest(
+                "   ",
+                createWololoPolygon("POLYGON((1 1, 2 1, 2 2, 1 1))"),
+                TOWN
+        );
+
+        final String url = createUrlWithPathVariable(255L);
+        final String actual = putExpectingNotAcceptable(restTemplate, url, givenRequest, String.class);
+        final String expected = """
+                {
+                  "status": "NOT_ACCEPTABLE",
+                  "message": "name : не должно быть пустым",
+                  "dateTime": "2024-04-24 12-13-19"
+                }""";
+        assertEquals(expected, actual, JSON_COMPARATOR_IGNORING_DATE_TIME);
+
+        verifyNoInteractions(mockedCityService, mockedResponseFactory, mockedCityFactory);
+    }
+
+    @Test
+    public void cityShouldBeDeleted() {
+        final Long givenId = 255L;
+
+        final String url = createUrlWithPathVariable(givenId);
+        deleteExpectingNoContent(restTemplate, url);
+
+        verify(mockedCityService, times(1)).delete(eq(givenId));
+        verifyNoInteractions(mockedResponseFactory, mockedCityFactory);
     }
 
     private static String createUrlToFindAllCities(final int pageNumber, final int pageSize) {
@@ -291,5 +387,9 @@ public final class CityControllerTest extends AbstractJunitSpringBootTest {
     private CityResponse createResponse(final City city) {
         final Geometry geometry = geoJSONWriter.write(city.getGeometry());
         return new CityResponse(city.getId(), city.getName(), geometry, city.getType());
+    }
+
+    private static String createUrlWithPathVariable(final Object value) {
+        return URL + "/" + value;
     }
 }
