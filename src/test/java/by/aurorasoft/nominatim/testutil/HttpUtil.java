@@ -16,12 +16,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @UtilityClass
 public final class HttpUtil {
-    private static final String JSON_PROPERTY_NAME_DATE_TIME = "dateTime";
+    private static final String JSON_PATH_DATE_TIME = "dateTime";
     private static final MediaType MEDIA_TYPE = APPLICATION_JSON;
 
     public static final CustomComparator JSON_COMPARATOR_IGNORING_DATE_TIME = new CustomComparator(
             STRICT,
-            customization(JSON_PROPERTY_NAME_DATE_TIME, (first, second) -> true)
+            customization(JSON_PATH_DATE_TIME, (first, second) -> true)
     );
 
     public static <R> R getExpectingOk(final TestRestTemplate restTemplate, final String url, final Class<R> resultType) {
