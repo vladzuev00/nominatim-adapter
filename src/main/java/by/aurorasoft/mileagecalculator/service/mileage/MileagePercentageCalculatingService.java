@@ -18,6 +18,7 @@ import java.util.function.ToDoubleFunction;
 import static java.util.stream.Collectors.*;
 import static java.util.stream.IntStream.range;
 
+//TODO
 @Service
 @RequiredArgsConstructor
 public final class MileagePercentageCalculatingService {
@@ -25,7 +26,11 @@ public final class MileagePercentageCalculatingService {
     private final GeometryService geometryService;
     private final DistanceCalculator distanceCalculator;
 
-    public MileagePercentage calculate(final Track track, final DistanceCalculatorSettings settings) {
+    public MileagePercentage calculate(final Track track, final int urbanSpeedThreshold) {
+        return null;
+    }
+
+    public MileagePercentage TEMPcalculate(final Track track, final DistanceCalculatorSettings settings) {
         final List<PreparedGeometry> cityGeometries = trackCityGeometryLoader.load(track);
         final Mileage mileage = calculateMileage(track, cityGeometries, settings);
         return calculate(mileage);

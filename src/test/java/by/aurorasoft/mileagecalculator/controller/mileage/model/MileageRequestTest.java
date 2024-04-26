@@ -1,7 +1,6 @@
-package by.aurorasoft.mileagecalculator.controller.mileage;
+package by.aurorasoft.mileagecalculator.controller.mileage.model;
 
 import by.aurorasoft.mileagecalculator.base.AbstractJunitSpringBootTest;
-import by.aurorasoft.mileagecalculator.controller.mileage.model.MileageRequest;
 import by.aurorasoft.mileagecalculator.controller.mileage.model.MileageRequest.DistanceRequest;
 import by.aurorasoft.mileagecalculator.controller.mileage.model.MileageRequest.PointRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;

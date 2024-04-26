@@ -1,14 +1,13 @@
 package by.aurorasoft.mileagecalculator.controller.mileage;
 
 import by.aurorasoft.mileagecalculator.base.AbstractJunitSpringBootTest;
-import by.aurorasoft.mileagecalculator.controller.mileage.factory.TEMPDistanceCalculatorSettingsFactory;
-import by.aurorasoft.mileagecalculator.controller.mileage.factory.TEMPTrackFactory;
-import by.aurorasoft.mileagecalculator.controller.mileage.model.TEMPMileageRequest;
-import by.aurorasoft.mileagecalculator.controller.mileage.model.TEMPMileageRequest.TEMPTrackPointRequest;
+import by.aurorasoft.mileagecalculator.controller.mileage.factory.TrackFactory;
+import by.aurorasoft.mileagecalculator.controller.mileage.model.MileageRequest;
+import by.aurorasoft.mileagecalculator.controller.mileage.model.MileageRequest.DistanceRequest;
+import by.aurorasoft.mileagecalculator.controller.mileage.model.MileageRequest.PointRequest;
 import by.aurorasoft.mileagecalculator.model.MileagePercentage;
 import by.aurorasoft.mileagecalculator.model.Track;
 import by.aurorasoft.mileagecalculator.service.mileage.MileagePercentageCalculatingService;
-import by.nhorushko.distancecalculator.DistanceCalculatorSettings;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,7 +17,6 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import java.util.List;
 
 import static by.aurorasoft.mileagecalculator.testutil.HttpUtil.*;
-import static java.time.Instant.parse;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
@@ -29,10 +27,7 @@ public final class MileagePercentageCalculatingControllerTest extends AbstractJu
     private static final String URL = "/api/v1/mileagePercentage";
 
     @MockBean
-    private TEMPTrackFactory mockedTrackFactory;
-
-    @MockBean
-    private TEMPDistanceCalculatorSettingsFactory mockedDistanceCalculatorSettingsFactory;
+    private TrackFactory mockedTrackFactory;
 
     @MockBean
     private MileagePercentageCalculatingService mockedService;
@@ -41,39 +36,43 @@ public final class MileagePercentageCalculatingControllerTest extends AbstractJu
     private TestRestTemplate restTemplate;
 
     @Test
-    public void mileagePercentageShouldBeFound() {
-        final TEMPMileageRequest givenRequest = TEMPMileageRequest.builder()
-                .trackPoints(
-                        List.of(
-                                new TEMPTrackPointRequest(parse("2023-02-14T12:28:04Z"), 45., 46., 15, 500, true),
-                                new TEMPTrackPointRequest(parse("2023-02-14T12:28:05Z"), 45.001, 46., 15, 500, true)
+    public void percentageShouldBeCalculated() {
+        final int givenUrbanSpeedThreshold = 60;
+        final MileageRequest givenRequest = new MileageRequest(
+                List.of(
+                        new PointRequest(
+                                5.5,
+                                6.6,
+                                50,
+                                new DistanceRequest(10., 11.),
+                                new DistanceRequest(12., 13.)
+                        ),
+                        new PointRequest(
+                                8.8,
+                                9.9,
+                                85,
+                                new DistanceRequest(20., 21.),
+                                new DistanceRequest(22., 23.)
                         )
-                )
-                .minDetectionSpeed(10)
-                .maxMessageTimeout(11)
-                .build();
+                ),
+                givenUrbanSpeedThreshold
+        );
 
         final Track givenTrack = mock(Track.class);
         when(mockedTrackFactory.create(eq(givenRequest))).thenReturn(givenTrack);
 
-        final DistanceCalculatorSettings givenDistanceCalculatorSettings = mock(DistanceCalculatorSettings.class);
-        when(mockedDistanceCalculatorSettingsFactory.create(eq(givenRequest)))
-                .thenReturn(givenDistanceCalculatorSettings);
-
-        final MileagePercentage givenMileagePercentage = new MileagePercentage(0.3, 0.7);
-        when(mockedService.calculate(same(givenTrack), same(givenDistanceCalculatorSettings)))
-                .thenReturn(givenMileagePercentage);
+        final MileagePercentage givenPercentage = new MileagePercentage(0.3, 0.7);
+        when(mockedService.calculate(same(givenTrack), eq(givenUrbanSpeedThreshold))).thenReturn(givenPercentage);
 
         final MileagePercentage actual = postExpectingOk(restTemplate, URL, givenRequest, MileagePercentage.class);
-        assertEquals(givenMileagePercentage, actual);
+        assertEquals(givenPercentage, actual);
     }
 
     @Test
-    public void mileagePercentageShouldNotBeFoundBecauseOfNotValidRequest()
+    public void percentageShouldNotBeCalculatedBecauseOfNotValidRequest()
             throws Exception {
-        final TEMPMileageRequest givenRequest = TEMPMileageRequest.builder()
-                .minDetectionSpeed(10)
-                .maxMessageTimeout(11)
+        final MileageRequest givenRequest = MileageRequest.builder()
+                .urbanSpeedThreshold(60)
                 .build();
 
         final String actual = postExpectingNotAcceptable(restTemplate, URL, givenRequest, String.class);
@@ -85,6 +84,6 @@ public final class MileagePercentageCalculatingControllerTest extends AbstractJu
                 }""";
         assertEquals(expected, actual, JSON_COMPARATOR_IGNORING_DATE_TIME);
 
-        verifyNoInteractions(mockedTrackFactory, mockedDistanceCalculatorSettingsFactory, mockedService);
+        verifyNoInteractions(mockedTrackFactory, mockedService);
     }
 }
