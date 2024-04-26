@@ -9,5 +9,5 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Getter
 public final class CityGeometryCache {
-    private final Set<BoundedPreparedGeometry> boundedGeometries;
+    private final Set<BoundedPreparedGeometry> geometries;
 }

@@ -34,21 +34,21 @@ public final class TrackCityGeometryLoaderFromCacheTest {
     public void geometriesShouldBeLoadedInternally() {
         final LineString givenLine = mock(LineString.class);
 
-        final BoundedPreparedGeometry firstGivenBoundedGeometry = createBoundedGeometry(givenLine, true);
-        final BoundedPreparedGeometry secondGivenBoundedGeometry = createBoundedGeometry(givenLine, true);
-        final Set<BoundedPreparedGeometry> givenBoundedGeometries = Set.of(
-                firstGivenBoundedGeometry,
-                secondGivenBoundedGeometry,
-                createBoundedGeometry(givenLine, false)
+        final BoundedPreparedGeometry firstGivenGeometry = createGeometry(givenLine, true);
+        final BoundedPreparedGeometry secondGivenGeometry = createGeometry(givenLine, true);
+        final Set<BoundedPreparedGeometry> givenGeometries = Set.of(
+                firstGivenGeometry,
+                secondGivenGeometry,
+                createGeometry(givenLine, false)
         );
-        when(mockedCache.getBoundedGeometries()).thenReturn(givenBoundedGeometries);
+        when(mockedCache.getGeometries()).thenReturn(givenGeometries);
 
         final Set<BoundedPreparedGeometry> actual = loader.loadInternal(givenLine);
-        final Set<BoundedPreparedGeometry> expected = Set.of(firstGivenBoundedGeometry, secondGivenBoundedGeometry);
+        final Set<BoundedPreparedGeometry> expected = Set.of(firstGivenGeometry, secondGivenGeometry);
         assertEquals(expected, actual);
     }
 
-    private static BoundedPreparedGeometry createBoundedGeometry(final LineString line, final boolean lineIntersected) {
+    private static BoundedPreparedGeometry createGeometry(final LineString line, final boolean lineIntersected) {
         final PreparedGeometry geometry = mock(PreparedGeometry.class);
         final PreparedGeometry boundingBox = mock(PreparedGeometry.class);
         when(boundingBox.intersects(same(line))).thenReturn(lineIntersected);

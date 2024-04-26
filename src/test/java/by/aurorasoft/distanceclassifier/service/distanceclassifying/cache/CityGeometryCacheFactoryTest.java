@@ -20,28 +20,28 @@ public final class CityGeometryCacheFactoryTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void cacheShouldBeCreatedWithLoadedBoundedGeometries() {
+    public void cacheShouldBeCreatedWithLoadedGeometries() {
         final CityGeometryCacheFactory givenFactory = createFactory(true);
 
-        final Set<BoundedPreparedGeometry> givenBoundedGeometries = mock(Set.class);
-        when(mockedCityService.findBoundedPreparedGeometries()).thenReturn(givenBoundedGeometries);
+        final Set<BoundedPreparedGeometry> givenGeometries = mock(Set.class);
+        when(mockedCityService.findBoundedPreparedGeometries()).thenReturn(givenGeometries);
 
         final CityGeometryCache actual = givenFactory.create();
         assertNotNull(actual);
 
-        final Set<BoundedPreparedGeometry> actualBoundedGeometries = actual.getBoundedGeometries();
-        assertSame(givenBoundedGeometries, actualBoundedGeometries);
+        final Set<BoundedPreparedGeometry> actualGeometries = actual.getGeometries();
+        assertSame(givenGeometries, actualGeometries);
     }
 
     @Test
-    public void cacheShouldBeCreatedWithoutLoadedBoundedGeometries() {
+    public void cacheShouldBeCreatedWithoutLoadedGeometries() {
         final CityGeometryCacheFactory givenFactory = createFactory(false);
 
         final CityGeometryCache actual = givenFactory.create();
         assertNotNull(actual);
 
-        final Set<BoundedPreparedGeometry> actualBoundedGeometries = actual.getBoundedGeometries();
-        assertTrue(actualBoundedGeometries.isEmpty());
+        final Set<BoundedPreparedGeometry> actualGeometries = actual.getGeometries();
+        assertTrue(actualGeometries.isEmpty());
 
         verifyNoInteractions(mockedCityService);
     }
