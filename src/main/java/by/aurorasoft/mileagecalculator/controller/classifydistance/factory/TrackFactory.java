@@ -1,6 +1,6 @@
-package by.aurorasoft.mileagecalculator.controller.mileage.factory;
+package by.aurorasoft.mileagecalculator.controller.classifydistance.factory;
 
-import by.aurorasoft.mileagecalculator.controller.mileage.model.ClassifyDistanceRequest;
+import by.aurorasoft.mileagecalculator.controller.classifydistance.model.ClassifyDistanceRequest;
 import by.aurorasoft.mileagecalculator.model.Track;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

@@ -22,12 +22,12 @@ import static java.util.stream.IntStream.range;
 //TODO
 @Service
 @RequiredArgsConstructor
-public final class MileagePercentageCalculatingService {
+public final class ClassifyingDistanceService {
     private final TrackCityGeometryLoader trackCityGeometryLoader;
     private final GeometryService geometryService;
     private final DistanceCalculator distanceCalculator;
 
-    public ClassifiedDistanceStorage calculate(final Track track, final int urbanSpeedThreshold) {
+    public ClassifiedDistanceStorage classify(final Track track, final int urbanSpeedThreshold) {
         return null;
     }
 

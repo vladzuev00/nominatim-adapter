@@ -1,8 +1,8 @@
-package by.aurorasoft.mileagecalculator.controller.mileage.model;
+package by.aurorasoft.mileagecalculator.controller.classifydistance.model;
 
 import by.aurorasoft.mileagecalculator.base.AbstractJunitSpringBootTest;
-import by.aurorasoft.mileagecalculator.controller.mileage.model.ClassifyDistanceRequest.DistanceRequest;
-import by.aurorasoft.mileagecalculator.controller.mileage.model.ClassifyDistanceRequest.PointRequest;
+import by.aurorasoft.mileagecalculator.controller.classifydistance.model.ClassifyDistanceRequest.DistanceRequest;
+import by.aurorasoft.mileagecalculator.controller.classifydistance.model.ClassifyDistanceRequest.PointRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

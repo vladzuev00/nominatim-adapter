@@ -1,6 +1,5 @@
 package by.aurorasoft.mileagecalculator.service.mileage;
 
-import by.aurorasoft.mileagecalculator.model.MileagePercentage;
 import by.aurorasoft.mileagecalculator.model.Track;
 import by.aurorasoft.mileagecalculator.model.TrackPoint;
 import by.aurorasoft.mileagecalculator.service.geometry.GeometryService;
@@ -32,11 +31,11 @@ public final class MileagePercentageCalculatingServiceTest {
     @Mock
     private DistanceCalculator mockedDistanceCalculator;
 
-    private MileagePercentageCalculatingService service;
+    private ClassifyingDistanceService service;
 
     @Before
     public void initializeService() {
-        service = new MileagePercentageCalculatingService(
+        service = new ClassifyingDistanceService(
                 mockedTrackCityGeometryLoader,
                 mockedGeometryService,
                 mockedDistanceCalculator

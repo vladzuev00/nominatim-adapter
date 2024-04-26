@@ -1,4 +1,4 @@
-package by.aurorasoft.mileagecalculator.controller.mileage.model;
+package by.aurorasoft.mileagecalculator.controller.classifydistance.model;
 
 import by.aurorasoft.mileagecalculator.validation.annotation.Latitude;
 import by.aurorasoft.mileagecalculator.validation.annotation.Longitude;
