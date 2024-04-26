@@ -2,7 +2,7 @@ package by.aurorasoft.mileagecalculator.controller.mileage;
 
 import by.aurorasoft.mileagecalculator.base.AbstractJunitSpringBootTest;
 import by.aurorasoft.mileagecalculator.controller.mileage.factory.TEMPDistanceCalculatorSettingsFactory;
-import by.aurorasoft.mileagecalculator.controller.mileage.factory.TrackFactory;
+import by.aurorasoft.mileagecalculator.controller.mileage.factory.TEMPTrackFactory;
 import by.aurorasoft.mileagecalculator.controller.mileage.model.TEMPMileageRequest;
 import by.aurorasoft.mileagecalculator.controller.mileage.model.TEMPMileageRequest.TEMPTrackPointRequest;
 import by.aurorasoft.mileagecalculator.model.MileagePercentage;
@@ -29,7 +29,7 @@ public final class MileagePercentageCalculatingControllerTest extends AbstractJu
     private static final String URL = "/api/v1/mileagePercentage";
 
     @MockBean
-    private TrackFactory mockedTrackFactory;
+    private TEMPTrackFactory mockedTrackFactory;
 
     @MockBean
     private TEMPDistanceCalculatorSettingsFactory mockedDistanceCalculatorSettingsFactory;

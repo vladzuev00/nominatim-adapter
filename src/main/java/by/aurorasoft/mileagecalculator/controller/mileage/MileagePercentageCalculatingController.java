@@ -1,7 +1,7 @@
 package by.aurorasoft.mileagecalculator.controller.mileage;
 
 import by.aurorasoft.mileagecalculator.controller.mileage.factory.TEMPDistanceCalculatorSettingsFactory;
-import by.aurorasoft.mileagecalculator.controller.mileage.factory.TrackFactory;
+import by.aurorasoft.mileagecalculator.controller.mileage.factory.TEMPTrackFactory;
 import by.aurorasoft.mileagecalculator.controller.mileage.model.TEMPMileageRequest;
 import by.aurorasoft.mileagecalculator.model.MileagePercentage;
 import by.aurorasoft.mileagecalculator.model.Track;
@@ -24,7 +24,7 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequestMapping("/api/v1/mileagePercentage")
 @RequiredArgsConstructor
 public class MileagePercentageCalculatingController {
-    private final TrackFactory trackFactory;
+    private final TEMPTrackFactory trackFactory;
     private final TEMPDistanceCalculatorSettingsFactory distanceCalculatorSettingsFactory;
     private final MileagePercentageCalculatingService calculatingService;
 
