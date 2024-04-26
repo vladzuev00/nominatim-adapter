@@ -4,7 +4,7 @@ import by.aurorasoft.mileagecalculator.controller.mileage.model.MileageRequest.D
 import by.aurorasoft.mileagecalculator.controller.mileage.model.MileageRequest.PointRequest;
 import by.aurorasoft.mileagecalculator.model.Coordinate;
 import by.aurorasoft.mileagecalculator.model.TrackPoint;
-import by.aurorasoft.mileagecalculator.model.TrackPoint.Distance;
+import by.nhorushko.classifieddistance.Distance;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
