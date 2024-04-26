@@ -5,6 +5,7 @@ import by.aurorasoft.mileagecalculator.model.Track;
 import by.aurorasoft.mileagecalculator.model.TrackPoint;
 import by.aurorasoft.mileagecalculator.service.geometry.GeometryService;
 import by.aurorasoft.mileagecalculator.service.mileage.loader.TrackCityGeometryLoader;
+import by.nhorushko.classifieddistance.ClassifiedDistanceStorage;
 import by.nhorushko.distancecalculator.DistanceCalculator;
 import by.nhorushko.distancecalculator.DistanceCalculatorSettings;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public final class MileagePercentageCalculatingService {
     private final GeometryService geometryService;
     private final DistanceCalculator distanceCalculator;
 
-    public MileagePercentage calculate(final Track track, final int urbanSpeedThreshold) {
+    public ClassifiedDistanceStorage calculate(final Track track, final int urbanSpeedThreshold) {
         return null;
     }
 

@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 @Value
-public class MileageRequest {
+public class ClassifyDistanceRequest {
 
     @NotNull
     @Size(min = 2)
@@ -26,8 +26,8 @@ public class MileageRequest {
 
     @Builder
     @JsonCreator
-    public MileageRequest(@JsonProperty("trackPoints") final List<PointRequest> trackPoints,
-                          @JsonProperty("urbanSpeedThreshold") final Integer urbanSpeedThreshold) {
+    public ClassifyDistanceRequest(@JsonProperty("trackPoints") final List<PointRequest> trackPoints,
+                                   @JsonProperty("urbanSpeedThreshold") final Integer urbanSpeedThreshold) {
         this.trackPoints = trackPoints;
         this.urbanSpeedThreshold = urbanSpeedThreshold;
     }

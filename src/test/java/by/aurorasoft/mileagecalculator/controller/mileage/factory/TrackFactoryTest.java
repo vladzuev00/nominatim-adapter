@@ -1,7 +1,7 @@
 package by.aurorasoft.mileagecalculator.controller.mileage.factory;
 
-import by.aurorasoft.mileagecalculator.controller.mileage.model.MileageRequest;
-import by.aurorasoft.mileagecalculator.controller.mileage.model.MileageRequest.PointRequest;
+import by.aurorasoft.mileagecalculator.controller.mileage.model.ClassifyDistanceRequest;
+import by.aurorasoft.mileagecalculator.controller.mileage.model.ClassifyDistanceRequest.PointRequest;
 import by.aurorasoft.mileagecalculator.model.Track;
 import by.aurorasoft.mileagecalculator.model.TrackPoint;
 import org.junit.Before;
@@ -34,7 +34,7 @@ public final class TrackFactoryTest {
     public void trackShouldBeCreated() {
         final PointRequest firstGivenPointRequest = mock(PointRequest.class);
         final PointRequest secondGivenPointRequest = mock(PointRequest.class);
-        final MileageRequest givenRequest = createRequest(List.of(firstGivenPointRequest, secondGivenPointRequest));
+        final ClassifyDistanceRequest givenRequest = createRequest(List.of(firstGivenPointRequest, secondGivenPointRequest));
 
         final TrackPoint firstGivenPoint = bindTrackPoint(firstGivenPointRequest);
         final TrackPoint secondGivenPoint = bindTrackPoint(secondGivenPointRequest);
@@ -44,8 +44,8 @@ public final class TrackFactoryTest {
         assertEquals(expected, actual);
     }
 
-    private static MileageRequest createRequest(final List<PointRequest> trackPoints) {
-        return MileageRequest.builder()
+    private static ClassifyDistanceRequest createRequest(final List<PointRequest> trackPoints) {
+        return ClassifyDistanceRequest.builder()
                 .trackPoints(trackPoints)
                 .build();
     }

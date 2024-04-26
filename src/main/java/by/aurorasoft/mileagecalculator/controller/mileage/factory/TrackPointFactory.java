@@ -1,7 +1,7 @@
 package by.aurorasoft.mileagecalculator.controller.mileage.factory;
 
-import by.aurorasoft.mileagecalculator.controller.mileage.model.MileageRequest.DistanceRequest;
-import by.aurorasoft.mileagecalculator.controller.mileage.model.MileageRequest.PointRequest;
+import by.aurorasoft.mileagecalculator.controller.mileage.model.ClassifyDistanceRequest.DistanceRequest;
+import by.aurorasoft.mileagecalculator.controller.mileage.model.ClassifyDistanceRequest.PointRequest;
 import by.aurorasoft.mileagecalculator.model.Coordinate;
 import by.aurorasoft.mileagecalculator.model.TrackPoint;
 import by.nhorushko.classifieddistance.Distance;

@@ -1,8 +1,8 @@
 package by.aurorasoft.mileagecalculator.controller.mileage.model;
 
 import by.aurorasoft.mileagecalculator.base.AbstractJunitSpringBootTest;
-import by.aurorasoft.mileagecalculator.controller.mileage.model.MileageRequest.DistanceRequest;
-import by.aurorasoft.mileagecalculator.controller.mileage.model.MileageRequest.PointRequest;
+import by.aurorasoft.mileagecalculator.controller.mileage.model.ClassifyDistanceRequest.DistanceRequest;
+import by.aurorasoft.mileagecalculator.controller.mileage.model.ClassifyDistanceRequest.PointRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 
-public final class MileageRequestTest extends AbstractJunitSpringBootTest {
+public final class ClassifyDistanceRequestTest extends AbstractJunitSpringBootTest {
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -261,7 +261,7 @@ public final class MileageRequestTest extends AbstractJunitSpringBootTest {
     @Test
     public void requestShouldBeConvertedToJson()
             throws Exception {
-        final MileageRequest givenRequest = new MileageRequest(
+        final ClassifyDistanceRequest givenRequest = new ClassifyDistanceRequest(
                 List.of(
                         new PointRequest(
                                 5.5,
@@ -353,8 +353,8 @@ public final class MileageRequestTest extends AbstractJunitSpringBootTest {
                   "urbanSpeedThreshold": 60
                 }""";
 
-        final MileageRequest actual = objectMapper.readValue(givenJson, MileageRequest.class);
-        final MileageRequest expected = new MileageRequest(
+        final ClassifyDistanceRequest actual = objectMapper.readValue(givenJson, ClassifyDistanceRequest.class);
+        final ClassifyDistanceRequest expected = new ClassifyDistanceRequest(
                 List.of(
                         new PointRequest(
                                 5.5,
@@ -378,7 +378,7 @@ public final class MileageRequestTest extends AbstractJunitSpringBootTest {
 
     @Test
     public void requestShouldBeValid() {
-        final MileageRequest givenRequest = new MileageRequest(
+        final ClassifyDistanceRequest givenRequest = new ClassifyDistanceRequest(
                 List.of(
                         new PointRequest(
                                 5.5,
@@ -398,24 +398,24 @@ public final class MileageRequestTest extends AbstractJunitSpringBootTest {
                 60
         );
 
-        final Set<ConstraintViolation<MileageRequest>> violations = validator.validate(givenRequest);
+        final Set<ConstraintViolation<ClassifyDistanceRequest>> violations = validator.validate(givenRequest);
         assertTrue(violations.isEmpty());
     }
 
     @Test
     public void requestShouldNotBeValidBecauseOfPointsIsNull() {
-        final MileageRequest givenRequest = MileageRequest.builder()
+        final ClassifyDistanceRequest givenRequest = ClassifyDistanceRequest.builder()
                 .urbanSpeedThreshold(0)
                 .build();
 
-        final Set<ConstraintViolation<MileageRequest>> violations = validator.validate(givenRequest);
+        final Set<ConstraintViolation<ClassifyDistanceRequest>> violations = validator.validate(givenRequest);
         assertEquals(1, violations.size());
         assertEquals("не должно равняться null", findFirstMessage(violations));
     }
 
     @Test
     public void requestShouldNotBeValidBecauseOfPointCountIsLessThanMinimalAllowable() {
-        final MileageRequest givenRequest = new MileageRequest(
+        final ClassifyDistanceRequest givenRequest = new ClassifyDistanceRequest(
                 List.of(
                         new PointRequest(
                                 5.5,
@@ -428,14 +428,14 @@ public final class MileageRequestTest extends AbstractJunitSpringBootTest {
                 60
         );
 
-        final Set<ConstraintViolation<MileageRequest>> violations = validator.validate(givenRequest);
+        final Set<ConstraintViolation<ClassifyDistanceRequest>> violations = validator.validate(givenRequest);
         assertEquals(1, violations.size());
         assertEquals("размер должен находиться в диапазоне от 2 до 2147483647", findFirstMessage(violations));
     }
 
     @Test
     public void requestShouldNotBeValidBecauseOfPointIsNotValid() {
-        final MileageRequest givenRequest = new MileageRequest(
+        final ClassifyDistanceRequest givenRequest = new ClassifyDistanceRequest(
                 List.of(
                         new PointRequest(
                                 90.0000000001,
@@ -455,14 +455,14 @@ public final class MileageRequestTest extends AbstractJunitSpringBootTest {
                 60
         );
 
-        final Set<ConstraintViolation<MileageRequest>> violations = validator.validate(givenRequest);
+        final Set<ConstraintViolation<ClassifyDistanceRequest>> violations = validator.validate(givenRequest);
         assertEquals(1, violations.size());
         assertEquals("Invalid latitude", findFirstMessage(violations));
     }
 
     @Test
     public void requestShouldNotBeValidBecauseOfUrbanSpeedThresholdIsNull() {
-        final MileageRequest givenRequest = MileageRequest.builder()
+        final ClassifyDistanceRequest givenRequest = ClassifyDistanceRequest.builder()
                 .trackPoints(
                         List.of(
                                 new PointRequest(
@@ -483,14 +483,14 @@ public final class MileageRequestTest extends AbstractJunitSpringBootTest {
                 )
                 .build();
 
-        final Set<ConstraintViolation<MileageRequest>> violations = validator.validate(givenRequest);
+        final Set<ConstraintViolation<ClassifyDistanceRequest>> violations = validator.validate(givenRequest);
         assertEquals(1, violations.size());
         assertEquals("не должно равняться null", findFirstMessage(violations));
     }
 
     @Test
     public void requestShouldNotBeValidBecauseOfUrbanSpeedThresholdIsNegative() {
-        final MileageRequest givenRequest = new MileageRequest(
+        final ClassifyDistanceRequest givenRequest = new ClassifyDistanceRequest(
                 List.of(
                         new PointRequest(
                                 5.5,
@@ -510,7 +510,7 @@ public final class MileageRequestTest extends AbstractJunitSpringBootTest {
                 -1
         );
 
-        final Set<ConstraintViolation<MileageRequest>> violations = validator.validate(givenRequest);
+        final Set<ConstraintViolation<ClassifyDistanceRequest>> violations = validator.validate(givenRequest);
         assertEquals(1, violations.size());
         assertEquals("должно быть больше или равно 0", findFirstMessage(violations));
     }
