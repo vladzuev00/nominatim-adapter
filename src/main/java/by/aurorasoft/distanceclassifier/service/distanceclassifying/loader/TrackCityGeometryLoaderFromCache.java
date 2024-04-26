@@ -1,6 +1,6 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassifying.loader;
 
-import by.aurorasoft.distanceclassifier.model.BoundedPreparedGeometry;
+import by.aurorasoft.distanceclassifier.model.PreparedBoundedGeometry;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.cache.CityGeometryCache;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.simplifier.TrackSimplifier;
 import by.aurorasoft.distanceclassifier.service.geometry.GeometryService;
@@ -25,7 +25,7 @@ public final class TrackCityGeometryLoaderFromCache extends TrackCityGeometryLoa
     }
 
     @Override
-    protected Set<BoundedPreparedGeometry> loadInternal(final LineString line) {
+    protected Set<PreparedBoundedGeometry> loadInternal(final LineString line) {
         return cache.getGeometries()
                 .stream()
                 .filter(geometry -> geometry.getBoundingBox().intersects(line))

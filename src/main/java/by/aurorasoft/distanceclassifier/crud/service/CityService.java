@@ -4,7 +4,7 @@ import by.aurorasoft.distanceclassifier.crud.mapper.CityMapper;
 import by.aurorasoft.distanceclassifier.crud.model.dto.City;
 import by.aurorasoft.distanceclassifier.crud.model.entity.CityEntity;
 import by.aurorasoft.distanceclassifier.crud.repository.CityRepository;
-import by.aurorasoft.distanceclassifier.model.BoundedPreparedGeometry;
+import by.aurorasoft.distanceclassifier.model.PreparedBoundedGeometry;
 import by.nhorushko.crudgeneric.v2.service.AbsServiceCRUD;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.LineString;
@@ -38,13 +38,13 @@ public class CityService extends AbsServiceCRUD<Long, CityEntity, City, CityRepo
         return repository.findAll(pageable).map(mapper::toDto);
     }
 
-    //TODO
-    public Set<BoundedPreparedGeometry> findBoundedPreparedGeometries(final LineString line) {
+    //TODO: load just Geometry and prepare in loader
+    public Set<PreparedBoundedGeometry> findBoundedPreparedGeometries(final LineString line) {
         throw new UnsupportedOperationException();
     }
 
-    //TODO
-    public Set<BoundedPreparedGeometry> findBoundedPreparedGeometries() {
+    //TODO load just Geometry and prepare in loader
+    public Set<PreparedBoundedGeometry> findBoundedPreparedGeometries() {
         throw new UnsupportedOperationException();
     }
 

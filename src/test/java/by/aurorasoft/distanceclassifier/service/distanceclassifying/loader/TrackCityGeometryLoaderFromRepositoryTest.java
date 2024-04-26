@@ -1,7 +1,7 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassifying.loader;
 
 import by.aurorasoft.distanceclassifier.crud.service.CityService;
-import by.aurorasoft.distanceclassifier.model.BoundedPreparedGeometry;
+import by.aurorasoft.distanceclassifier.model.PreparedBoundedGeometry;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,10 +34,10 @@ public final class TrackCityGeometryLoaderFromRepositoryTest {
     public void geometriesShouldBeLoadedInternally() {
         final LineString givenLine = mock(LineString.class);
 
-        final Set<BoundedPreparedGeometry> givenGeometries = mock(Set.class);
+        final Set<PreparedBoundedGeometry> givenGeometries = mock(Set.class);
         when(mockedCityService.findBoundedPreparedGeometries(same(givenLine))).thenReturn(givenGeometries);
 
-        final Set<BoundedPreparedGeometry> actual = loader.loadInternal(givenLine);
+        final Set<PreparedBoundedGeometry> actual = loader.loadInternal(givenLine);
         assertSame(givenGeometries, actual);
     }
 }

@@ -1,7 +1,7 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassifying.cache;
 
 import by.aurorasoft.distanceclassifier.crud.service.CityService;
-import by.aurorasoft.distanceclassifier.model.BoundedPreparedGeometry;
+import by.aurorasoft.distanceclassifier.model.PreparedBoundedGeometry;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -23,13 +23,13 @@ public final class CityGeometryCacheFactoryTest {
     public void cacheShouldBeCreatedWithLoadedGeometries() {
         final CityGeometryCacheFactory givenFactory = createFactory(true);
 
-        final Set<BoundedPreparedGeometry> givenGeometries = mock(Set.class);
+        final Set<PreparedBoundedGeometry> givenGeometries = mock(Set.class);
         when(mockedCityService.findBoundedPreparedGeometries()).thenReturn(givenGeometries);
 
         final CityGeometryCache actual = givenFactory.create();
         assertNotNull(actual);
 
-        final Set<BoundedPreparedGeometry> actualGeometries = actual.getGeometries();
+        final Set<PreparedBoundedGeometry> actualGeometries = actual.getGeometries();
         assertSame(givenGeometries, actualGeometries);
     }
 
@@ -40,7 +40,7 @@ public final class CityGeometryCacheFactoryTest {
         final CityGeometryCache actual = givenFactory.create();
         assertNotNull(actual);
 
-        final Set<BoundedPreparedGeometry> actualGeometries = actual.getGeometries();
+        final Set<PreparedBoundedGeometry> actualGeometries = actual.getGeometries();
         assertTrue(actualGeometries.isEmpty());
 
         verifyNoInteractions(mockedCityService);

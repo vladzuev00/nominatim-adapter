@@ -1,6 +1,6 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassifying.loader;
 
-import by.aurorasoft.distanceclassifier.model.BoundedPreparedGeometry;
+import by.aurorasoft.distanceclassifier.model.PreparedBoundedGeometry;
 import by.aurorasoft.distanceclassifier.model.Track;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.simplifier.TrackSimplifier;
 import by.aurorasoft.distanceclassifier.service.geometry.GeometryService;
@@ -46,7 +46,7 @@ public final class TrackCityGeometryLoaderTest {
         final LineString givenSimplifiedLine = mock(LineString.class);
         when(mockedGeometryService.createLine(same(givenSimplifiedTrack))).thenReturn(givenSimplifiedLine);
 
-        final Set<BoundedPreparedGeometry> actual = loader.load(givenTrack);
+        final Set<PreparedBoundedGeometry> actual = loader.load(givenTrack);
         assertTrue(actual.isEmpty());
 
         assertSame(loader.capturedLine, givenSimplifiedLine);
@@ -60,7 +60,7 @@ public final class TrackCityGeometryLoaderTest {
         }
 
         @Override
-        protected Set<BoundedPreparedGeometry> loadInternal(final LineString line) {
+        protected Set<PreparedBoundedGeometry> loadInternal(final LineString line) {
             capturedLine = line;
             return emptySet();
         }

@@ -1,7 +1,7 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassifying.loader;
 
 import by.aurorasoft.distanceclassifier.crud.service.CityService;
-import by.aurorasoft.distanceclassifier.model.BoundedPreparedGeometry;
+import by.aurorasoft.distanceclassifier.model.PreparedBoundedGeometry;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.simplifier.TrackSimplifier;
 import by.aurorasoft.distanceclassifier.service.geometry.GeometryService;
 import org.locationtech.jts.geom.LineString;
@@ -23,7 +23,7 @@ public final class TrackCityGeometryLoaderFromRepository extends TrackCityGeomet
     }
 
     @Override
-    protected Set<BoundedPreparedGeometry> loadInternal(final LineString line) {
+    protected Set<PreparedBoundedGeometry> loadInternal(final LineString line) {
         return cityService.findBoundedPreparedGeometries(line);
     }
 }

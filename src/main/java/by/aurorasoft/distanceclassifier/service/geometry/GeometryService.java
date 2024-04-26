@@ -1,5 +1,6 @@
 package by.aurorasoft.distanceclassifier.service.geometry;
 
+import by.aurorasoft.distanceclassifier.model.PreparedBoundedGeometry;
 import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse;
 import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Bounds;
 import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Relation;
@@ -13,6 +14,7 @@ import org.locationtech.jts.operation.polygonize.Polygonizer;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.ToDoubleFunction;
 import java.util.stream.Stream;
@@ -26,8 +28,33 @@ public final class GeometryService {
         return geometryFactory.createLineString(getJtsCoordinates(track));
     }
 
-    public boolean isAnyContain(final List<PreparedGeometry> geometries, final TrackPoint point) {
+    //TODO: test
+    public boolean isAnyContain(final Set<PreparedBoundedGeometry> geometries, final TrackPoint point) {
         return geometries.stream().anyMatch(geometry -> isContain(geometry, point));
+    }
+
+    public boolean isAnyBoundingBoxContain(final Set<PreparedBoundedGeometry> geometries, final TrackPoint point) {
+        return geometries.stream()
+                .map(PreparedBoundedGeometry::getBoundingBox)
+                .anyMatch(geometry -> geometry.contains(geometryFactory.createPoint(createJtsCoordinate(point))));
+    }
+
+    private boolean isContain(final PreparedBoundedGeometry geometry, final TrackPoint point) {
+        final Coordinate coordinate = createJtsCoordinate(point);
+        final Point jtsPoint = geometryFactory.createPoint(coordinate);
+        return geometry.getGeometry().contains(jtsPoint);
+    }
+
+    //TODO: remove
+    public boolean isAnyContain(final List<PreparedGeometry> geometries, final TrackPoint point) {
+//        return geometries.stream().anyMatch(geometry -> isContain(geometry, point));
+        return false;
+    }
+
+    public boolean isContain(final PreparedGeometry geometry, final TrackPoint point) {
+        final Coordinate coordinate = createJtsCoordinate(point);
+        final Point jtsPoint = geometryFactory.createPoint(coordinate);
+        return geometry.contains(jtsPoint);
     }
 
     public MultiPolygon createMultiPolygon(final Relation relation) {
@@ -36,12 +63,6 @@ public final class GeometryService {
 
     public Polygon createPolygon(final Bounds bounds) {
         return geometryFactory.createPolygon(getJtsCoordinates(bounds));
-    }
-
-    private boolean isContain(final PreparedGeometry geometry, final TrackPoint point) {
-        final Coordinate coordinate = createJtsCoordinate(point);
-        final Point jtsPoint = geometryFactory.createPoint(coordinate);
-        return geometry.contains(jtsPoint);
     }
 
     @SuppressWarnings("unchecked")

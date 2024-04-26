@@ -1,6 +1,6 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassifying.loader;
 
-import by.aurorasoft.distanceclassifier.model.BoundedPreparedGeometry;
+import by.aurorasoft.distanceclassifier.model.PreparedBoundedGeometry;
 import by.aurorasoft.distanceclassifier.model.Track;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.simplifier.TrackSimplifier;
 import by.aurorasoft.distanceclassifier.service.geometry.GeometryService;
@@ -14,11 +14,11 @@ public abstract class TrackCityGeometryLoader {
     private final TrackSimplifier trackSimplifier;
     private final GeometryService geometryService;
 
-    public final Set<BoundedPreparedGeometry> load(final Track track) {
+    public final Set<PreparedBoundedGeometry> load(final Track track) {
         final Track simplifiedTrack = trackSimplifier.simplify(track);
         final LineString line = geometryService.createLine(simplifiedTrack);
         return loadInternal(line);
     }
 
-    protected abstract Set<BoundedPreparedGeometry> loadInternal(final LineString line);
+    protected abstract Set<PreparedBoundedGeometry> loadInternal(final LineString line);
 }

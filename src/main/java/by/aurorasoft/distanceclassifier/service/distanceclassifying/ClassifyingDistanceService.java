@@ -1,6 +1,6 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassifying;
 
-import by.aurorasoft.distanceclassifier.model.BoundedPreparedGeometry;
+import by.aurorasoft.distanceclassifier.model.PreparedBoundedGeometry;
 import by.aurorasoft.distanceclassifier.model.MileagePercentage;
 import by.aurorasoft.distanceclassifier.model.Track;
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
-import java.util.function.ToDoubleFunction;
 
 import static java.util.stream.Collectors.*;
 import static java.util.stream.IntStream.range;
@@ -27,14 +26,28 @@ public final class ClassifyingDistanceService {
     private final GeometryService geometryService;
 
     public ClassifiedDistanceStorage classify(final Track track, final int urbanSpeedThreshold) {
-//        final Set<BoundedPreparedGeometry> cityGeometries = trackCityGeometryLoader.load(track);
+//        final Set<PreparedBoundedGeometry> cityGeometries = trackCityGeometryLoader.load(track);
 //        return range(0, getSliceCount(track))
 //                .mapToObj(i -> getSlice(track, i))
 //                .collect(
-//
-//                )
+//                        collectingAndThen(
+//                                partitioningBy(
+//                                        slice -> isUrbanSlice(slice, cityGeometries, urbanSpeedThreshold),
+//                                        reducing(ClassifiedDistanceStorage::plus)
+//                                ),
+//                                mileagesByUrban -> new Mileage(mileagesByUrban.get(true), mileagesByUrban.get(false))
+//                        )
+//                );
         return null;
     }
+
+//    private boolean isUrban(final TrackPoint point,
+//                            final Set<PreparedBoundedGeometry> cityGeometries,
+//                            final int urbanSpeedThreshold){
+//        PreparedGeometry a;
+//        a.disjoint()
+//        if(geometryService.isAnyContain())
+//    }
 
     public MileagePercentage TEMPcalculate(final Track track, final DistanceCalculatorSettings settings) {
 //        final List<PreparedGeometry> cityGeometries = trackCityGeometryLoader.load(track);
@@ -43,21 +56,21 @@ public final class ClassifyingDistanceService {
         return null;
     }
 
-    private Mileage calculateMileage(final Track track,
-                                     final List<PreparedGeometry> cityGeometries,
-                                     final DistanceCalculatorSettings settings) {
-        return range(0, getSliceCount(track))
-                .mapToObj(i -> getSlice(track, i))
-                .collect(
-                        collectingAndThen(
-                                partitioningBy(
-                                        slice -> geometryService.isAnyContain(cityGeometries, slice.second),
-                                        summingDouble(slice -> findLength(slice, settings))
-                                ),
-                                mileagesByUrban -> new Mileage(mileagesByUrban.get(true), mileagesByUrban.get(false))
-                        )
-                );
-    }
+//    private Mileage calculateMileage(final Track track,
+//                                     final List<PreparedGeometry> cityGeometries,
+//                                     final DistanceCalculatorSettings settings) {
+//        return range(0, getSliceCount(track))
+//                .mapToObj(i -> getSlice(track, i))
+//                .collect(
+//                        collectingAndThen(
+//                                partitioningBy(
+//                                        slice -> geometryService.isAnyContain(cityGeometries, slice.second),
+//                                        summingDouble(slice -> findLength(slice, settings))
+//                                ),
+//                                mileagesByUrban -> new Mileage(mileagesByUrban.get(true), mileagesByUrban.get(false))
+//                        )
+//                );
+//    }
 
     private static int getSliceCount(final Track track) {
         return track.getPoints().size() - 1;
@@ -67,33 +80,9 @@ public final class ClassifyingDistanceService {
         return new TrackSlice(track.getPoint(index), track.getPoint(index + 1));
     }
 
-    private double findLength(final TrackSlice slice, final DistanceCalculatorSettings settings) {
-        //TODO
-        return 0;
-//        return distanceCalculator.calculateDistance(slice.first, slice.second, settings);
-    }
-
-    private static MileagePercentage calculate(final Mileage mileage) {
-        final double urban = calculateValuePercentage(mileage, Mileage::getUrban);
-        final double country = calculateValuePercentage(mileage, Mileage::getCountry);
-        return new MileagePercentage(urban, country);
-    }
-
-    private static double calculateValuePercentage(final Mileage mileage, final ToDoubleFunction<Mileage> valueGetter) {
-        final double value = valueGetter.applyAsDouble(mileage);
-        final double total = mileage.urban + mileage.country;
-        return value * 100 / total;
-    }
-
     @Value
     private static class TrackSlice {
         TrackPoint first;
         TrackPoint second;
-    }
-
-    @Value
-    private static class Mileage {
-        double urban;
-        double country;
     }
 }
