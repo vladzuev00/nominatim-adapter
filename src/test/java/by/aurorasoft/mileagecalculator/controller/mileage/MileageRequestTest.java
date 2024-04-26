@@ -285,7 +285,7 @@ public final class MileageRequestTest extends AbstractJunitSpringBootTest {
         final String actual = objectMapper.writeValueAsString(givenRequest);
         final String expected = """
                 {
-                  "points": [
+                  "trackPoints": [
                     {
                       "latitude": 5.5,
                       "longitude": 6.6,
@@ -323,7 +323,7 @@ public final class MileageRequestTest extends AbstractJunitSpringBootTest {
             throws Exception {
         final String givenJson = """
                 {
-                  "points": [
+                  "trackPoints": [
                     {
                       "latitude": 5.5,
                       "longitude": 6.6,
@@ -464,7 +464,7 @@ public final class MileageRequestTest extends AbstractJunitSpringBootTest {
     @Test
     public void requestShouldNotBeValidBecauseOfUrbanSpeedThresholdIsNull() {
         final MileageRequest givenRequest = MileageRequest.builder()
-                .points(
+                .trackPoints(
                         List.of(
                                 new PointRequest(
                                         5.5,

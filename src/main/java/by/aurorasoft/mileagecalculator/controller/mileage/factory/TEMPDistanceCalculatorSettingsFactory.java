@@ -6,7 +6,7 @@ import by.nhorushko.distancecalculator.DistanceCalculatorSettingsImpl;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class DistanceCalculatorSettingsFactory {
+public final class TEMPDistanceCalculatorSettingsFactory {
 
     public DistanceCalculatorSettings create(final TempMileageRequest request) {
         return new DistanceCalculatorSettingsImpl(request.getMinDetectionSpeed(), request.getMaxMessageTimeout());

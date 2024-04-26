@@ -8,7 +8,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public final class DistanceCalculatorSettingsFactoryTest {
-    private final DistanceCalculatorSettingsFactory factory = new DistanceCalculatorSettingsFactory();
+    private final TEMPDistanceCalculatorSettingsFactory factory = new TEMPDistanceCalculatorSettingsFactory();
 
     @Test
     public void settingsShouldBeCreated() {

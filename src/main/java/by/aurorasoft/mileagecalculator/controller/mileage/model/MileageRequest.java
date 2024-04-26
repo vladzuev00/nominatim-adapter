@@ -18,7 +18,7 @@ public class MileageRequest {
 
     @NotNull
     @Size(min = 2)
-    List<@Valid PointRequest> points;
+    List<@Valid PointRequest> trackPoints;
 
     @NotNull
     @PositiveOrZero
@@ -26,9 +26,9 @@ public class MileageRequest {
 
     @Builder
     @JsonCreator
-    public MileageRequest(@JsonProperty("points") final List<PointRequest> points,
+    public MileageRequest(@JsonProperty("trackPoints") final List<PointRequest> trackPoints,
                           @JsonProperty("urbanSpeedThreshold") final Integer urbanSpeedThreshold) {
-        this.points = points;
+        this.trackPoints = trackPoints;
         this.urbanSpeedThreshold = urbanSpeedThreshold;
     }
 

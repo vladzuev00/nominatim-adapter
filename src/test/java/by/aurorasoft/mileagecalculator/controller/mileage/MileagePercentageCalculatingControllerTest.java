@@ -1,7 +1,7 @@
 package by.aurorasoft.mileagecalculator.controller.mileage;
 
 import by.aurorasoft.mileagecalculator.base.AbstractJunitSpringBootTest;
-import by.aurorasoft.mileagecalculator.controller.mileage.factory.DistanceCalculatorSettingsFactory;
+import by.aurorasoft.mileagecalculator.controller.mileage.factory.TEMPDistanceCalculatorSettingsFactory;
 import by.aurorasoft.mileagecalculator.controller.mileage.factory.TrackFactory;
 import by.aurorasoft.mileagecalculator.controller.mileage.model.TempMileageRequest;
 import by.aurorasoft.mileagecalculator.controller.mileage.model.TempMileageRequest.TempTrackPointRequest;
@@ -32,7 +32,7 @@ public final class MileagePercentageCalculatingControllerTest extends AbstractJu
     private TrackFactory mockedTrackFactory;
 
     @MockBean
-    private DistanceCalculatorSettingsFactory mockedDistanceCalculatorSettingsFactory;
+    private TEMPDistanceCalculatorSettingsFactory mockedDistanceCalculatorSettingsFactory;
 
     @MockBean
     private MileagePercentageCalculatingService mockedService;
