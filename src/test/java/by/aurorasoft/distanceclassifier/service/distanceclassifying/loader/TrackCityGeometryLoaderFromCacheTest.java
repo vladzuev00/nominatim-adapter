@@ -48,7 +48,7 @@ public final class TrackCityGeometryLoaderFromCacheTest {
                 put(thirdGivenBoundingBox, thirdGivenGeometry);
             }
         };
-        when(mockedCache.getBoundedGeometries()).thenReturn(givenGeometriesByBoundingBoxes);
+//        when(mockedCache.getBoundedGeometries()).thenReturn(givenGeometriesByBoundingBoxes);
 
         final List<PreparedGeometry> actual = loader.load(givenLine);
         final List<PreparedGeometry> expected = List.of(firstGivenGeometry, secondGivenGeometry);

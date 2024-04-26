@@ -4,6 +4,7 @@ import by.aurorasoft.distanceclassifier.crud.mapper.CityMapper;
 import by.aurorasoft.distanceclassifier.crud.model.dto.City;
 import by.aurorasoft.distanceclassifier.crud.model.entity.CityEntity;
 import by.aurorasoft.distanceclassifier.crud.repository.CityRepository;
+import by.aurorasoft.distanceclassifier.model.BoundedPreparedGeometry;
 import by.nhorushko.crudgeneric.v2.service.AbsServiceCRUD;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.LineString;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.Tuple;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toMap;
@@ -36,6 +38,12 @@ public class CityService extends AbsServiceCRUD<Long, CityEntity, City, CityRepo
         return repository.findAll(pageable).map(mapper::toDto);
     }
 
+    //TODO
+    public Set<BoundedPreparedGeometry> findBoundedPreparedGeometries() {
+        throw new UnsupportedOperationException();
+    }
+
+    //TODO: remove
     @Transactional(readOnly = true)
     public Map<PreparedGeometry, PreparedGeometry> findPreparedGeometriesByPreparedBoundingBoxes() {
         return repository.findBoundingBoxesWithGeometries()

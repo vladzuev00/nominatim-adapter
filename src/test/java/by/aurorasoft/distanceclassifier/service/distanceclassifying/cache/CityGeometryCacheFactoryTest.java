@@ -1,13 +1,13 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassifying.cache;
 
 import by.aurorasoft.distanceclassifier.crud.service.CityService;
+import by.aurorasoft.distanceclassifier.model.BoundedPreparedGeometry;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.locationtech.jts.geom.prep.PreparedGeometry;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Map;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -20,29 +20,28 @@ public final class CityGeometryCacheFactoryTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void cacheShouldBeCreatedWithLoadedGeometries() {
+    public void cacheShouldBeCreatedWithLoadedBoundedGeometries() {
         final CityGeometryCacheFactory givenFactory = createFactory(true);
 
-        final Map<PreparedGeometry, PreparedGeometry> givenGeometriesByBoundingBoxes = mock(Map.class);
-        when(mockedCityService.findPreparedGeometriesByPreparedBoundingBoxes())
-                .thenReturn(givenGeometriesByBoundingBoxes);
+        final Set<BoundedPreparedGeometry> givenBoundedGeometries = mock(Set.class);
+        when(mockedCityService.findBoundedPreparedGeometries()).thenReturn(givenBoundedGeometries);
 
         final CityGeometryCache actual = givenFactory.create();
         assertNotNull(actual);
 
-        final var actualGeometriesByBoundingBoxes = actual.getBoundedGeometries();
-        assertSame(givenGeometriesByBoundingBoxes, actualGeometriesByBoundingBoxes);
+        final Set<BoundedPreparedGeometry> actualBoundedGeometries = actual.getBoundedGeometries();
+        assertSame(givenBoundedGeometries, actualBoundedGeometries);
     }
 
     @Test
-    public void cacheShouldBeCreatedWithoutLoadedGeometries() {
+    public void cacheShouldBeCreatedWithoutLoadedBoundedGeometries() {
         final CityGeometryCacheFactory givenFactory = createFactory(false);
 
         final CityGeometryCache actual = givenFactory.create();
         assertNotNull(actual);
 
-        final var actualGeometriesByBoundingBoxes = actual.getBoundedGeometries();
-        assertTrue(actualGeometriesByBoundingBoxes.isEmpty());
+        final Set<BoundedPreparedGeometry> actualBoundedGeometries = actual.getBoundedGeometries();
+        assertTrue(actualBoundedGeometries.isEmpty());
 
         verifyNoInteractions(mockedCityService);
     }
