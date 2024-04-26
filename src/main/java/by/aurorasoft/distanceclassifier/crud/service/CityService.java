@@ -39,6 +39,11 @@ public class CityService extends AbsServiceCRUD<Long, CityEntity, City, CityRepo
     }
 
     //TODO
+    public Set<BoundedPreparedGeometry> findBoundedPreparedGeometries(final LineString line) {
+        throw new UnsupportedOperationException();
+    }
+
+    //TODO
     public Set<BoundedPreparedGeometry> findBoundedPreparedGeometries() {
         throw new UnsupportedOperationException();
     }
@@ -51,6 +56,7 @@ public class CityService extends AbsServiceCRUD<Long, CityEntity, City, CityRepo
                 .collect(toMap(CityService::getPreparedBoundingBox, CityService::getPreparedGeometry));
     }
 
+    //TODO: remove
     @Transactional(readOnly = true)
     public List<PreparedGeometry> findIntersectedPreparedGeometries(final LineString line) {
         try (final Stream<CityEntity> entityStream = repository.findIntersectedCities(line)) {
