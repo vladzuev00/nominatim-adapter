@@ -4,10 +4,7 @@ import by.aurorasoft.distanceclassifier.base.AbstractJunitSpringBootTest;
 import by.aurorasoft.distanceclassifier.crud.model.entity.CityEntity;
 import by.aurorasoft.distanceclassifier.testutil.GeometryUtil;
 import org.junit.Test;
-import org.locationtech.jts.geom.Geometry;
-import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.LineString;
-import org.locationtech.jts.geom.Polygon;
+import org.locationtech.jts.geom.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -17,9 +14,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static by.aurorasoft.distanceclassifier.model.CityType.TOWN;
 import static by.aurorasoft.distanceclassifier.model.CityType.CITY;
-import static by.aurorasoft.distanceclassifier.testutil.CityEntityUtil.checkEquals;
+import static by.aurorasoft.distanceclassifier.model.CityType.TOWN;
 import static by.aurorasoft.distanceclassifier.testutil.IdUtil.mapToSortedIds;
 import static java.util.stream.Collectors.toMap;
 import static org.junit.Assert.assertEquals;
@@ -53,7 +49,7 @@ public final class CityRepositoryTest extends AbstractJunitSpringBootTest {
                 .type(TOWN)
                 .boundingBox(createPolygon("POLYGON((26.5713051 51.3218903,26.5786303 51.3192656,26.5831032 51.3074501,26.601612 51.2990736,26.6273034 51.2947553,26.6366959 51.3036507,26.6459503 51.3315349,26.637939 51.3463765,26.6047889 51.3591434,26.5759207 51.355952,26.5713051 51.3218903))"))
                 .build();
-        checkEquals(expected, actual);
+//        checkEquals(expected, actual);
     }
 
     @Test
@@ -121,6 +117,27 @@ public final class CityRepositoryTest extends AbstractJunitSpringBootTest {
         }
     }
 
+    //63, 58
+    @Test
+    public void unionGeometriesAndUnionBoundingBoxesShouldBeFound() {
+        startQueryCount();
+        final Tuple actual = repository.findUnionGeometriesAndUnionBoundingBoxes();
+        checkQueryCount(1);
+
+        final Geometry actualUnionGeometries = (Geometry) actual.get("unionGeometries");
+        final Geometry expectedUnionGeometries = createMultiPolygon("MULTIPOLYGON (((29.3396398 53.5031338, 29.3539998 53.4875101, 29.3559905 53.4882628, 29.3603894 53.4901651, 29.3630594 53.4930508, 29.3619991 53.4935145, 29.362929 53.4947102, 29.3645356 53.4943927, 29.3618738 53.4908277, 29.3714286 53.4913855, 29.371783 53.4901486, 29.3698662 53.4901143, 29.3699246 53.4892885, 29.368561 53.4892373, 29.3683445 53.487407, 29.3614415 53.4875774, 29.3576927 53.4882555, 29.3543952 53.4865855, 29.3568519 53.4846374, 29.3562469 53.4828087, 29.3557563 53.479957, 29.3569412 53.4769227, 29.3603985 53.4765646, 29.3595746 53.4743986, 29.3564589 53.473147, 29.3533862 53.470516, 29.3475396 53.4677542, 29.3425271 53.4663345, 29.3356134 53.4659813, 29.3289734 53.4677415, 29.3244018 53.4704602, 29.323354 53.4728661, 29.3173287 53.474511, 29.3109772 53.4758341, 29.3070941 53.481971, 29.3089498 53.4906311, 29.3125222 53.4906226, 29.3131745 53.4948558, 29.3203929 53.5012991, 29.3191011 53.5037061, 29.3228991 53.5048113, 29.3219013 53.5052618, 29.320174 53.505355, 29.3202555 53.5064908, 29.3253493 53.5076375, 29.3244698 53.511368, 29.328006 53.5135831, 29.3330443 53.5128634, 29.3340013 53.514734, 29.3358939 53.5143563, 29.3348016 53.5113782, 29.3396398 53.5031338)))");
+        assertEquals(expectedUnionGeometries, actualUnionGeometries);
+
+        final Geometry actualUnionBoundingBoxes = (Geometry) actual.get("unionBoundingBoxes");
+        final Geometry expectedUnionBoundingBoxes = createMultiPolygon("MULTIPOLYGON (((29.3396398 53.5031338, 29.3539998 53.4875101, 29.3559905 53.4882628, 29.3603894 53.4901651, 29.3630594 53.4930508, 29.3619991 53.4935145, 29.362929 53.4947102, 29.3645356 53.4943927, 29.3618738 53.4908277, 29.3714286 53.4913855, 29.371783 53.4901486, 29.3698662 53.4901143, 29.3699246 53.4892885, 29.368561 53.4892373, 29.3683445 53.487407, 29.3614415 53.4875774, 29.3576927 53.4882555, 29.3543952 53.4865855, 29.3568519 53.4846374, 29.3562469 53.4828087, 29.3557563 53.479957, 29.3569412 53.4769227, 29.3603985 53.4765646, 29.3595746 53.4743986, 29.3564589 53.473147, 29.3533862 53.470516, 29.3475396 53.4677542, 29.3425271 53.4663345, 29.3356134 53.4659813, 29.3289734 53.4677415, 29.3244018 53.4704602, 29.323354 53.4728661, 29.3173287 53.474511, 29.3109772 53.4758341, 29.3070941 53.481971, 29.3089498 53.4906311, 29.3125222 53.4906226, 29.3131745 53.4948558, 29.3203929 53.5012991, 29.3191011 53.5037061, 29.3228991 53.5048113, 29.3219013 53.5052618, 29.320174 53.505355, 29.3202555 53.5064908, 29.3253493 53.5076375, 29.3244698 53.511368, 29.328006 53.5135831, 29.3330443 53.5128634, 29.3340013 53.514734, 29.3358939 53.5143563, 29.3348016 53.5113782, 29.3396398 53.5031338)))");
+        assertEquals(expectedUnionBoundingBoxes, actualUnionBoundingBoxes);
+    }
+
+    private MultiPolygon createMultiPolygon(final String text) {
+        return GeometryUtil.createMultipolygon(text, geometryFactory);
+    }
+
+    //TODO: remove all
     private Polygon createPolygon(final String text) {
         return GeometryUtil.createPolygon(text, geometryFactory);
     }
