@@ -3,8 +3,8 @@ package by.aurorasoft.mileagecalculator.controller.mileage;
 import by.aurorasoft.mileagecalculator.base.AbstractJunitSpringBootTest;
 import by.aurorasoft.mileagecalculator.controller.mileage.factory.DistanceCalculatorSettingsFactory;
 import by.aurorasoft.mileagecalculator.controller.mileage.factory.TrackFactory;
-import by.aurorasoft.mileagecalculator.controller.mileage.model.MileageRequest;
-import by.aurorasoft.mileagecalculator.controller.mileage.model.MileageRequest.TrackPointRequest;
+import by.aurorasoft.mileagecalculator.controller.mileage.model.TempMileageRequest;
+import by.aurorasoft.mileagecalculator.controller.mileage.model.TempMileageRequest.TempTrackPointRequest;
 import by.aurorasoft.mileagecalculator.model.MileagePercentage;
 import by.aurorasoft.mileagecalculator.model.Track;
 import by.aurorasoft.mileagecalculator.service.mileage.MileagePercentageCalculatingService;
@@ -42,11 +42,11 @@ public final class MileagePercentageCalculatingControllerTest extends AbstractJu
 
     @Test
     public void mileagePercentageShouldBeFound() {
-        final MileageRequest givenRequest = MileageRequest.builder()
+        final TempMileageRequest givenRequest = TempMileageRequest.builder()
                 .trackPoints(
                         List.of(
-                                new TrackPointRequest(parse("2023-02-14T12:28:04Z"), 45., 46., 15, 500, true),
-                                new TrackPointRequest(parse("2023-02-14T12:28:05Z"), 45.001, 46., 15, 500, true)
+                                new TempTrackPointRequest(parse("2023-02-14T12:28:04Z"), 45., 46., 15, 500, true),
+                                new TempTrackPointRequest(parse("2023-02-14T12:28:05Z"), 45.001, 46., 15, 500, true)
                         )
                 )
                 .minDetectionSpeed(10)
@@ -71,7 +71,7 @@ public final class MileagePercentageCalculatingControllerTest extends AbstractJu
     @Test
     public void mileagePercentageShouldNotBeFoundBecauseOfNotValidRequest()
             throws Exception {
-        final MileageRequest givenRequest = MileageRequest.builder()
+        final TempMileageRequest givenRequest = TempMileageRequest.builder()
                 .minDetectionSpeed(10)
                 .maxMessageTimeout(11)
                 .build();

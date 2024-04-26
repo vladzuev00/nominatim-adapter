@@ -1,6 +1,6 @@
 package by.aurorasoft.mileagecalculator.controller.mileage.factory;
 
-import by.aurorasoft.mileagecalculator.controller.mileage.model.MileageRequest.TrackPointRequest;
+import by.aurorasoft.mileagecalculator.controller.mileage.model.TempMileageRequest.TempTrackPointRequest;
 import by.aurorasoft.mileagecalculator.model.Coordinate;
 import by.aurorasoft.mileagecalculator.model.TrackPoint;
 import org.junit.Test;
@@ -21,7 +21,7 @@ public final class TrackPointFactoryTest {
         final int givenAltitude = 10;
         final int givenSpeed = 15;
         final boolean givenValid = true;
-        final TrackPointRequest givenRequest = new TrackPointRequest(
+        final TempTrackPointRequest givenRequest = new TempTrackPointRequest(
                 givenDateTime,
                 givenLatitude,
                 givenLongitude,

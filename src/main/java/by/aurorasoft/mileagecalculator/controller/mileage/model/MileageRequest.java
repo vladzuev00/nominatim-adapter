@@ -8,42 +8,32 @@ import lombok.Builder;
 import lombok.Value;
 
 import javax.validation.Valid;
-import javax.validation.constraints.*;
-import java.time.Instant;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Value
-@Builder
 public class MileageRequest {
 
     @NotNull
     @Size(min = 2)
-    List<@Valid TrackPointRequest> trackPoints;
+    List<@Valid PointRequest> points;
 
     @NotNull
-    @Min(0)
-    Integer minDetectionSpeed;
+    @PositiveOrZero
+    Integer urbanSpeedThreshold;
 
-    @NotNull
-    @Min(0)
-    Integer maxMessageTimeout;
-
+    @Builder
     @JsonCreator
-    public MileageRequest(@JsonProperty("trackPoints") final List<TrackPointRequest> trackPoints,
-                          @JsonProperty("minDetectionSpeed") final Integer minDetectionSpeed,
-                          @JsonProperty("maxMessageTimeout") final Integer maxMessageTimeout) {
-        this.trackPoints = trackPoints;
-        this.minDetectionSpeed = minDetectionSpeed;
-        this.maxMessageTimeout = maxMessageTimeout;
+    public MileageRequest(@JsonProperty("points") final List<PointRequest> points,
+                          @JsonProperty("urbanSpeedThreshold") final Integer urbanSpeedThreshold) {
+        this.points = points;
+        this.urbanSpeedThreshold = urbanSpeedThreshold;
     }
 
     @Value
-    @Builder
-    public static class TrackPointRequest {
-
-        @NotNull
-        @PastOrPresent
-        Instant datetime;
+    public static class PointRequest {
 
         @Latitude
         Double latitude;
@@ -52,29 +42,47 @@ public class MileageRequest {
         Double longitude;
 
         @NotNull
-        Integer altitude;
-
-        @NotNull
-        @Min(0)
-        @Max(1000)
+        @PositiveOrZero
         Integer speed;
 
         @NotNull
-        Boolean valid;
+        DistanceRequest gpsDistance;
 
+        @NotNull
+        DistanceRequest odometerDistance;
+
+        @Builder
         @JsonCreator
-        public TrackPointRequest(@JsonProperty("datetime") final Instant datetime,
-                                 @JsonProperty("latitude") final Double latitude,
-                                 @JsonProperty("longitude") final Double longitude,
-                                 @JsonProperty("altitude") final Integer altitude,
-                                 @JsonProperty("speed") final Integer speed,
-                                 @JsonProperty("valid") final Boolean valid) {
-            this.datetime = datetime;
+        public PointRequest(@JsonProperty("latitude") final Double latitude,
+                            @JsonProperty("longitude") final Double longitude,
+                            @JsonProperty("speed") final Integer speed,
+                            @JsonProperty("gpsDistance") final DistanceRequest gpsDistance,
+                            @JsonProperty("odometerDistance") final DistanceRequest odometerDistance) {
             this.latitude = latitude;
             this.longitude = longitude;
-            this.altitude = altitude;
             this.speed = speed;
-            this.valid = valid;
+            this.gpsDistance = gpsDistance;
+            this.odometerDistance = odometerDistance;
+        }
+    }
+
+    @Value
+    public static class DistanceRequest {
+
+        @NotNull
+        @PositiveOrZero
+        Double relative;
+
+        @NotNull
+        @PositiveOrZero
+        Double absolute;
+
+        @Builder
+        @JsonCreator
+        public DistanceRequest(@JsonProperty("relative") final Double relative,
+                               @JsonProperty("absolute") final Double absolute) {
+            this.relative = relative;
+            this.absolute = absolute;
         }
     }
 }

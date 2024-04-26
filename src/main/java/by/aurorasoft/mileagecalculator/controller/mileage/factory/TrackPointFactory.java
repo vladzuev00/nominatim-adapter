@@ -1,6 +1,6 @@
 package by.aurorasoft.mileagecalculator.controller.mileage.factory;
 
-import by.aurorasoft.mileagecalculator.controller.mileage.model.MileageRequest.TrackPointRequest;
+import by.aurorasoft.mileagecalculator.controller.mileage.model.TempMileageRequest.TempTrackPointRequest;
 import by.aurorasoft.mileagecalculator.model.Coordinate;
 import by.aurorasoft.mileagecalculator.model.TrackPoint;
 import org.springframework.stereotype.Component;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class TrackPointFactory {
 
-    public TrackPoint create(final TrackPointRequest request) {
+    public TrackPoint create(final TempTrackPointRequest request) {
         return new TrackPoint(
                 request.getDatetime(),
                 getCoordinate(request),
@@ -18,7 +18,7 @@ public final class TrackPointFactory {
         );
     }
 
-    private Coordinate getCoordinate(final TrackPointRequest request) {
+    private Coordinate getCoordinate(final TempTrackPointRequest request) {
         return new Coordinate(request.getLatitude(), request.getLongitude());
     }
 }
