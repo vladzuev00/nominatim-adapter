@@ -12,6 +12,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.mock;
@@ -34,7 +35,7 @@ public final class TrackFactoryTest {
     public void trackShouldBeCreated() {
         final PointRequest firstGivenPointRequest = mock(PointRequest.class);
         final PointRequest secondGivenPointRequest = mock(PointRequest.class);
-        final ClassifyDistanceRequest givenRequest = createRequest(List.of(firstGivenPointRequest, secondGivenPointRequest));
+        final ClassifyDistanceRequest givenRequest = createRequest(firstGivenPointRequest, secondGivenPointRequest);
 
         final TrackPoint firstGivenPoint = bindTrackPoint(firstGivenPointRequest);
         final TrackPoint secondGivenPoint = bindTrackPoint(secondGivenPointRequest);
@@ -44,9 +45,9 @@ public final class TrackFactoryTest {
         assertEquals(expected, actual);
     }
 
-    private static ClassifyDistanceRequest createRequest(final List<PointRequest> trackPoints) {
+    private static ClassifyDistanceRequest createRequest(final PointRequest... trackPoints) {
         return ClassifyDistanceRequest.builder()
-                .trackPoints(trackPoints)
+                .trackPoints(asList(trackPoints))
                 .build();
     }
 
