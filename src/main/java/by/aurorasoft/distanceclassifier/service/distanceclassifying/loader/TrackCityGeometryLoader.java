@@ -1,28 +1,24 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassifying.loader;
 
+import by.aurorasoft.distanceclassifier.model.BoundedPreparedGeometry;
 import by.aurorasoft.distanceclassifier.model.Track;
-import by.aurorasoft.distanceclassifier.service.geometry.GeometryService;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.simplifier.TrackSimplifier;
+import by.aurorasoft.distanceclassifier.service.geometry.GeometryService;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.LineString;
-import org.locationtech.jts.geom.prep.PreparedGeometry;
 
-import java.util.List;
+import java.util.Set;
 
 @RequiredArgsConstructor
 public abstract class TrackCityGeometryLoader {
     private final TrackSimplifier trackSimplifier;
     private final GeometryService geometryService;
 
-    public final List<PreparedGeometry> load(final Track track) {
-        final LineString line = createSimplifiedLine(track);
-        return load(line);
-    }
-
-    protected abstract List<PreparedGeometry> load(final LineString line);
-
-    private LineString createSimplifiedLine(final Track track) {
+    public final Set<BoundedPreparedGeometry> load(final Track track) {
         final Track simplifiedTrack = trackSimplifier.simplify(track);
-        return geometryService.createLine(simplifiedTrack);
+        final LineString line = geometryService.createLine(simplifiedTrack);
+        return loadInternal(line);
     }
+
+    protected abstract Set<BoundedPreparedGeometry> loadInternal(final LineString line);
 }

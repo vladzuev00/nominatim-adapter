@@ -31,9 +31,10 @@ public final class ClassifyingDistanceService {
     }
 
     public MileagePercentage TEMPcalculate(final Track track, final DistanceCalculatorSettings settings) {
-        final List<PreparedGeometry> cityGeometries = trackCityGeometryLoader.load(track);
-        final Mileage mileage = calculateMileage(track, cityGeometries, settings);
-        return calculate(mileage);
+//        final List<PreparedGeometry> cityGeometries = trackCityGeometryLoader.load(track);
+//        final Mileage mileage = calculateMileage(track, cityGeometries, settings);
+//        return calculate(mileage);
+        return null;
     }
 
     private Mileage calculateMileage(final Track track,

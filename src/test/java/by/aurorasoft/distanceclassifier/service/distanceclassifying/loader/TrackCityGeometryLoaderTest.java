@@ -1,19 +1,19 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassifying.loader;
 
+import by.aurorasoft.distanceclassifier.model.BoundedPreparedGeometry;
 import by.aurorasoft.distanceclassifier.model.Track;
-import by.aurorasoft.distanceclassifier.service.geometry.GeometryService;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.simplifier.TrackSimplifier;
+import by.aurorasoft.distanceclassifier.service.geometry.GeometryService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.locationtech.jts.geom.LineString;
-import org.locationtech.jts.geom.prep.PreparedGeometry;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.List;
+import java.util.Set;
 
-import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.same;
@@ -38,22 +38,18 @@ public final class TrackCityGeometryLoaderTest {
 
     @Test
     public void geometriesShouldBeLoaded() {
-        final Track givenTrack = createEmptyTrack();
+        final Track givenTrack = mock(Track.class);
 
-        final Track givenSimplifiedTrack = createEmptyTrack();
+        final Track givenSimplifiedTrack = mock(Track.class);
         when(mockedTrackSimplifier.simplify(same(givenTrack))).thenReturn(givenSimplifiedTrack);
 
         final LineString givenSimplifiedLine = mock(LineString.class);
         when(mockedGeometryService.createLine(same(givenSimplifiedTrack))).thenReturn(givenSimplifiedLine);
 
-        final List<PreparedGeometry> actual = loader.load(givenTrack);
+        final Set<BoundedPreparedGeometry> actual = loader.load(givenTrack);
         assertTrue(actual.isEmpty());
 
         assertSame(loader.capturedLine, givenSimplifiedLine);
-    }
-
-    private static Track createEmptyTrack() {
-        return new Track(emptyList());
     }
 
     private static final class TestTrackCityGeometryLoader extends TrackCityGeometryLoader {
@@ -64,9 +60,9 @@ public final class TrackCityGeometryLoaderTest {
         }
 
         @Override
-        protected List<PreparedGeometry> load(final LineString line) {
+        protected Set<BoundedPreparedGeometry> loadInternal(final LineString line) {
             capturedLine = line;
-            return emptyList();
+            return emptySet();
         }
     }
 }
