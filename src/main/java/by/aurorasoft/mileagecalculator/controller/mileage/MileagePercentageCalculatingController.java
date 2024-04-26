@@ -2,7 +2,7 @@ package by.aurorasoft.mileagecalculator.controller.mileage;
 
 import by.aurorasoft.mileagecalculator.controller.mileage.factory.TEMPDistanceCalculatorSettingsFactory;
 import by.aurorasoft.mileagecalculator.controller.mileage.factory.TrackFactory;
-import by.aurorasoft.mileagecalculator.controller.mileage.model.TempMileageRequest;
+import by.aurorasoft.mileagecalculator.controller.mileage.model.TEMPMileageRequest;
 import by.aurorasoft.mileagecalculator.model.MileagePercentage;
 import by.aurorasoft.mileagecalculator.model.Track;
 import by.aurorasoft.mileagecalculator.service.mileage.MileagePercentageCalculatingService;
@@ -29,7 +29,7 @@ public class MileagePercentageCalculatingController {
     private final MileagePercentageCalculatingService calculatingService;
 
     @PostMapping
-    public ResponseEntity<MileagePercentage> calculate(@Valid @RequestBody final TempMileageRequest request) {
+    public ResponseEntity<MileagePercentage> calculate(@Valid @RequestBody final TEMPMileageRequest request) {
         final Track track = trackFactory.create(request);
         final DistanceCalculatorSettings distanceCalculatorSettings = distanceCalculatorSettingsFactory.create(request);
         final MileagePercentage mileagePercentage = calculatingService.calculate(track, distanceCalculatorSettings);

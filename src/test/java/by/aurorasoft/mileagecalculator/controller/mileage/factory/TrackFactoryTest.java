@@ -1,7 +1,7 @@
 package by.aurorasoft.mileagecalculator.controller.mileage.factory;
 
-import by.aurorasoft.mileagecalculator.controller.mileage.model.TempMileageRequest;
-import by.aurorasoft.mileagecalculator.controller.mileage.model.TempMileageRequest.TempTrackPointRequest;
+import by.aurorasoft.mileagecalculator.controller.mileage.model.TEMPMileageRequest;
+import by.aurorasoft.mileagecalculator.controller.mileage.model.TEMPMileageRequest.TEMPTrackPointRequest;
 import by.aurorasoft.mileagecalculator.model.Track;
 import by.aurorasoft.mileagecalculator.model.TrackPoint;
 import org.junit.Before;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 public final class TrackFactoryTest {
 
     @Mock
-    private TrackPointFactory mockedPointFactory;
+    private TEMPTrackPointFactory mockedPointFactory;
 
     private TrackFactory trackFactory;
 
@@ -32,10 +32,10 @@ public final class TrackFactoryTest {
 
     @Test
     public void trackShouldBeCreated() {
-        final TempTrackPointRequest firstGivenRequestPoint = mock(TempTrackPointRequest.class);
-        final TempTrackPointRequest secondGivenRequestPoint = mock(TempTrackPointRequest.class);
-        final List<TempTrackPointRequest> givenRequestPoints = List.of(firstGivenRequestPoint, secondGivenRequestPoint);
-        final TempMileageRequest givenRequest = createRequest(givenRequestPoints);
+        final TEMPTrackPointRequest firstGivenRequestPoint = mock(TEMPTrackPointRequest.class);
+        final TEMPTrackPointRequest secondGivenRequestPoint = mock(TEMPTrackPointRequest.class);
+        final List<TEMPTrackPointRequest> givenRequestPoints = List.of(firstGivenRequestPoint, secondGivenRequestPoint);
+        final TEMPMileageRequest givenRequest = createRequest(givenRequestPoints);
 
         final TrackPoint firstGivenPoint = bindTrackPoint(firstGivenRequestPoint);
         final TrackPoint secondGivenPoint = bindTrackPoint(secondGivenRequestPoint);
@@ -45,13 +45,13 @@ public final class TrackFactoryTest {
         assertEquals(expected, actual);
     }
 
-    private static TempMileageRequest createRequest(final List<TempTrackPointRequest> trackPoints) {
-        return TempMileageRequest.builder()
+    private static TEMPMileageRequest createRequest(final List<TEMPTrackPointRequest> trackPoints) {
+        return TEMPMileageRequest.builder()
                 .trackPoints(trackPoints)
                 .build();
     }
 
-    private TrackPoint bindTrackPoint(final TempTrackPointRequest request) {
+    private TrackPoint bindTrackPoint(final TEMPTrackPointRequest request) {
         final TrackPoint point = mock(TrackPoint.class);
         when(mockedPointFactory.create(same(request))).thenReturn(point);
         return point;

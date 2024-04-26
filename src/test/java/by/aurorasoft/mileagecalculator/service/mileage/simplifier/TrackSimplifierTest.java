@@ -17,6 +17,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.when;
 
+//TODO
 @RunWith(MockitoJUnitRunner.class)
 public final class TrackSimplifierTest {
     private static final double GIVEN_EPSILON = 0.0015;
@@ -45,7 +46,7 @@ public final class TrackSimplifierTest {
                 createPoint(4.4, 5.5),
                 createPoint(8.8, 9.9)
         );
-        when(mockedTrackFilter.filter(same(givenPoints), eq(GIVEN_EPSILON))).thenReturn(givenFilteredPoints);
+//        when(mockedTrackFilter.filter(same(givenPoints), eq(GIVEN_EPSILON))).thenReturn(givenFilteredPoints);
 
         final Track actual = simplifier.simplify(givenTrack);
         final Track expected = new Track(givenFilteredPoints);
@@ -53,8 +54,9 @@ public final class TrackSimplifierTest {
     }
 
     private static TrackPoint createPoint(final double latitude, final double longitude) {
-        return TrackPoint.builder()
-                .coordinate(new Coordinate(latitude, longitude))
-                .build();
+        return null;
+//        return TrackPoint.builder()
+//                .coordinate(new Coordinate(latitude, longitude))
+//                .build();
     }
 }

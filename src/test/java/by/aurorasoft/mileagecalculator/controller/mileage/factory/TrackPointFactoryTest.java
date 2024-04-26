@@ -1,13 +1,12 @@
 package by.aurorasoft.mileagecalculator.controller.mileage.factory;
 
-import by.aurorasoft.mileagecalculator.controller.mileage.model.TempMileageRequest.TempTrackPointRequest;
+import by.aurorasoft.mileagecalculator.controller.mileage.model.MileageRequest.DistanceRequest;
+import by.aurorasoft.mileagecalculator.controller.mileage.model.MileageRequest.PointRequest;
 import by.aurorasoft.mileagecalculator.model.Coordinate;
 import by.aurorasoft.mileagecalculator.model.TrackPoint;
+import by.aurorasoft.mileagecalculator.model.TrackPoint.Distance;
 import org.junit.Test;
 
-import java.time.Instant;
-
-import static java.time.Instant.parse;
 import static org.junit.Assert.assertEquals;
 
 public final class TrackPointFactoryTest {
@@ -15,28 +14,27 @@ public final class TrackPointFactoryTest {
 
     @Test
     public void pointShouldBeCreated() {
-        final Instant givenDateTime = parse("2007-12-03T10:15:30.00Z");
         final double givenLatitude = 5.5;
         final double givenLongitude = 6.6;
-        final int givenAltitude = 10;
-        final int givenSpeed = 15;
-        final boolean givenValid = true;
-        final TempTrackPointRequest givenRequest = new TempTrackPointRequest(
-                givenDateTime,
+        final int givenSpeed = 50;
+        final double givenGpsRelative = 11.1;
+        final double givenGpsAbsolute = 22.2;
+        final double givenOdometerRelative = 33.3;
+        final double givenOdometerAbsolute = 44.4;
+        final PointRequest givenRequest = new PointRequest(
                 givenLatitude,
                 givenLongitude,
-                givenAltitude,
                 givenSpeed,
-                givenValid
+                new DistanceRequest(givenGpsRelative, givenGpsAbsolute),
+                new DistanceRequest(givenOdometerRelative, givenOdometerAbsolute)
         );
 
         final TrackPoint actual = factory.create(givenRequest);
         final TrackPoint expected = new TrackPoint(
-                givenDateTime,
                 new Coordinate(givenLatitude, givenLongitude),
-                givenAltitude,
                 givenSpeed,
-                givenValid
+                new Distance(givenGpsRelative, givenGpsAbsolute),
+                new Distance(givenOdometerRelative, givenOdometerAbsolute)
         );
         assertEquals(expected, actual);
     }

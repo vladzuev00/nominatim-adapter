@@ -3,8 +3,8 @@ package by.aurorasoft.mileagecalculator.controller.mileage;
 import by.aurorasoft.mileagecalculator.base.AbstractJunitSpringBootTest;
 import by.aurorasoft.mileagecalculator.controller.mileage.factory.TEMPDistanceCalculatorSettingsFactory;
 import by.aurorasoft.mileagecalculator.controller.mileage.factory.TrackFactory;
-import by.aurorasoft.mileagecalculator.controller.mileage.model.TempMileageRequest;
-import by.aurorasoft.mileagecalculator.controller.mileage.model.TempMileageRequest.TempTrackPointRequest;
+import by.aurorasoft.mileagecalculator.controller.mileage.model.TEMPMileageRequest;
+import by.aurorasoft.mileagecalculator.controller.mileage.model.TEMPMileageRequest.TEMPTrackPointRequest;
 import by.aurorasoft.mileagecalculator.model.MileagePercentage;
 import by.aurorasoft.mileagecalculator.model.Track;
 import by.aurorasoft.mileagecalculator.service.mileage.MileagePercentageCalculatingService;
@@ -42,11 +42,11 @@ public final class MileagePercentageCalculatingControllerTest extends AbstractJu
 
     @Test
     public void mileagePercentageShouldBeFound() {
-        final TempMileageRequest givenRequest = TempMileageRequest.builder()
+        final TEMPMileageRequest givenRequest = TEMPMileageRequest.builder()
                 .trackPoints(
                         List.of(
-                                new TempTrackPointRequest(parse("2023-02-14T12:28:04Z"), 45., 46., 15, 500, true),
-                                new TempTrackPointRequest(parse("2023-02-14T12:28:05Z"), 45.001, 46., 15, 500, true)
+                                new TEMPTrackPointRequest(parse("2023-02-14T12:28:04Z"), 45., 46., 15, 500, true),
+                                new TEMPTrackPointRequest(parse("2023-02-14T12:28:05Z"), 45.001, 46., 15, 500, true)
                         )
                 )
                 .minDetectionSpeed(10)
@@ -71,7 +71,7 @@ public final class MileagePercentageCalculatingControllerTest extends AbstractJu
     @Test
     public void mileagePercentageShouldNotBeFoundBecauseOfNotValidRequest()
             throws Exception {
-        final TempMileageRequest givenRequest = TempMileageRequest.builder()
+        final TEMPMileageRequest givenRequest = TEMPMileageRequest.builder()
                 .minDetectionSpeed(10)
                 .maxMessageTimeout(11)
                 .build();

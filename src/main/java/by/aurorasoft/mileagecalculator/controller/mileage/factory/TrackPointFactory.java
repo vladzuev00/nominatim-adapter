@@ -1,24 +1,41 @@
 package by.aurorasoft.mileagecalculator.controller.mileage.factory;
 
-import by.aurorasoft.mileagecalculator.controller.mileage.model.TempMileageRequest.TempTrackPointRequest;
+import by.aurorasoft.mileagecalculator.controller.mileage.model.MileageRequest.DistanceRequest;
+import by.aurorasoft.mileagecalculator.controller.mileage.model.MileageRequest.PointRequest;
 import by.aurorasoft.mileagecalculator.model.Coordinate;
 import by.aurorasoft.mileagecalculator.model.TrackPoint;
+import by.aurorasoft.mileagecalculator.model.TrackPoint.Distance;
 import org.springframework.stereotype.Component;
+
+import java.util.function.Function;
 
 @Component
 public final class TrackPointFactory {
 
-    public TrackPoint create(final TempTrackPointRequest request) {
+    public TrackPoint create(final PointRequest request) {
         return new TrackPoint(
-                request.getDatetime(),
                 getCoordinate(request),
-                request.getAltitude(),
                 request.getSpeed(),
-                request.getValid()
+                getGpsDistance(request),
+                getOdometerDistance(request)
         );
     }
 
-    private Coordinate getCoordinate(final TempTrackPointRequest request) {
+    private static Coordinate getCoordinate(final PointRequest request) {
         return new Coordinate(request.getLatitude(), request.getLongitude());
+    }
+
+    private static Distance getGpsDistance(final PointRequest request) {
+        return getDistance(request, PointRequest::getGpsDistance);
+    }
+
+    private static Distance getOdometerDistance(final PointRequest request) {
+        return getDistance(request, PointRequest::getOdometerDistance);
+    }
+
+    private static Distance getDistance(final PointRequest request,
+                                        final Function<PointRequest, DistanceRequest> sourceGetter) {
+        final DistanceRequest source = sourceGetter.apply(request);
+        return new Distance(source.getRelative(), source.getAbsolute());
     }
 }

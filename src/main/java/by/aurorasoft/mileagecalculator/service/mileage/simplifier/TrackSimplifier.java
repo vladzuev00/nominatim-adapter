@@ -25,6 +25,8 @@ public final class TrackSimplifier {
 
     @SuppressWarnings("unchecked")
     private List<TrackPoint> filterPoints(final Track track) {
-        return (List<TrackPoint>) filter.filter(track.getPoints(), epsilon);
+        //TODO
+        return null;
+//        return (List<TrackPoint>) filter.filter(track.getPoints(), epsilon);
     }
 }

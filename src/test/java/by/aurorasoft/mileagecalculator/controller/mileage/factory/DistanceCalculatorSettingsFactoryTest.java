@@ -1,6 +1,6 @@
 package by.aurorasoft.mileagecalculator.controller.mileage.factory;
 
-import by.aurorasoft.mileagecalculator.controller.mileage.model.TempMileageRequest;
+import by.aurorasoft.mileagecalculator.controller.mileage.model.TEMPMileageRequest;
 import by.nhorushko.distancecalculator.DistanceCalculatorSettings;
 import by.nhorushko.distancecalculator.DistanceCalculatorSettingsImpl;
 import org.junit.Test;
@@ -14,7 +14,7 @@ public final class DistanceCalculatorSettingsFactoryTest {
     public void settingsShouldBeCreated() {
         final int givenMinDetectionSpeed = 10;
         final int givenMaxMessageTimeout = 16;
-        final TempMileageRequest givenRequest = createRequest(givenMinDetectionSpeed, givenMaxMessageTimeout);
+        final TEMPMileageRequest givenRequest = createRequest(givenMinDetectionSpeed, givenMaxMessageTimeout);
 
         final DistanceCalculatorSettings actual = factory.create(givenRequest);
         final DistanceCalculatorSettings expected = new DistanceCalculatorSettingsImpl(
@@ -25,8 +25,8 @@ public final class DistanceCalculatorSettingsFactoryTest {
     }
 
     @SuppressWarnings("SameParameterValue")
-    private static TempMileageRequest createRequest(final Integer minDetectionSpeed, final Integer maxMessageTimeout) {
-        return TempMileageRequest.builder()
+    private static TEMPMileageRequest createRequest(final Integer minDetectionSpeed, final Integer maxMessageTimeout) {
+        return TEMPMileageRequest.builder()
                 .minDetectionSpeed(minDetectionSpeed)
                 .maxMessageTimeout(maxMessageTimeout)
                 .build();

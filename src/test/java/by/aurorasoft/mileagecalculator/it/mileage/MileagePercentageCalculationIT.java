@@ -1,7 +1,7 @@
 package by.aurorasoft.mileagecalculator.it.mileage;
 
-import by.aurorasoft.mileagecalculator.controller.mileage.model.TempMileageRequest;
-import by.aurorasoft.mileagecalculator.controller.mileage.model.TempMileageRequest.TempTrackPointRequest;
+import by.aurorasoft.mileagecalculator.controller.mileage.model.TEMPMileageRequest;
+import by.aurorasoft.mileagecalculator.controller.mileage.model.TEMPMileageRequest.TEMPTrackPointRequest;
 import by.aurorasoft.mileagecalculator.it.base.AbstractIT;
 import by.aurorasoft.mileagecalculator.model.MileagePercentage;
 import com.opencsv.CSVReader;
@@ -34,7 +34,7 @@ public abstract class MileagePercentageCalculationIT extends AbstractIT {
     @ParameterizedTest
     @MethodSource("provideTrackFileNamesAndExpectedPercentages")
     public final void percentageShouldBeFoundForTrackFromFile(final String fileName, final MileagePercentage expected) {
-        final TempMileageRequest givenRequest = requestFactory.create(fileName);
+        final TEMPMileageRequest givenRequest = requestFactory.create(fileName);
         final MileagePercentage actual = postExpectingOk(restTemplate, URL, givenRequest, MileagePercentage.class);
         assertEquals(expected, actual);
     }
@@ -59,12 +59,12 @@ public abstract class MileagePercentageCalculationIT extends AbstractIT {
 
         private final TrackPointParser pointParser = new TrackPointParser();
 
-        public TempMileageRequest create(final String fileName) {
-            final List<TempTrackPointRequest> trackPoints = readTrackPoints(fileName);
-            return new TempMileageRequest(trackPoints, MIN_DETECTION_SPEED, MAX_MESSAGE_TIMEOUT);
+        public TEMPMileageRequest create(final String fileName) {
+            final List<TEMPTrackPointRequest> trackPoints = readTrackPoints(fileName);
+            return new TEMPMileageRequest(trackPoints, MIN_DETECTION_SPEED, MAX_MESSAGE_TIMEOUT);
         }
 
-        private List<TempTrackPointRequest> readTrackPoints(final String fileName) {
+        private List<TEMPTrackPointRequest> readTrackPoints(final String fileName) {
             try (final CSVReader csvReader = createReader(fileName)) {
                 return csvReader.readAll()
                         .stream()
@@ -95,8 +95,8 @@ public abstract class MileagePercentageCalculationIT extends AbstractIT {
 
         private static final String VALID_TRUE_ALIAS = "VALID";
 
-        public TempTrackPointRequest parse(final String[] properties) {
-            return TempTrackPointRequest.builder()
+        public TEMPTrackPointRequest parse(final String[] properties) {
+            return TEMPTrackPointRequest.builder()
                     .datetime(parseDateTime(properties))
                     .latitude(parseLatitude(properties))
                     .longitude(parseLongitude(properties))

@@ -76,7 +76,8 @@ public final class MileagePercentageCalculatingServiceTest {
                                          final TrackPoint second,
                                          final DistanceCalculatorSettings settings,
                                          final double distance) {
-        when(mockedDistanceCalculator.calculateDistance(same(first), same(second), same(settings))).thenReturn(distance);
+        //TODO
+//        when(mockedDistanceCalculator.calculateDistance(same(first), same(second), same(settings))).thenReturn(distance);
     }
 
     private void setBelonging(final TrackPoint point, final List<PreparedGeometry> geometries, final boolean belonged) {

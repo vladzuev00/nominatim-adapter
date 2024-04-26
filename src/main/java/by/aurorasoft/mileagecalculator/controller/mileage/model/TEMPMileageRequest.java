@@ -15,11 +15,11 @@ import java.util.List;
 //TODO: remove
 @Value
 @Builder
-public class TempMileageRequest {
+public class TEMPMileageRequest {
 
     @NotNull
     @Size(min = 2)
-    List<@Valid TempTrackPointRequest> trackPoints;
+    List<@Valid TEMPTrackPointRequest> trackPoints;
 
     @NotNull
     @Min(0)
@@ -30,7 +30,7 @@ public class TempMileageRequest {
     Integer maxMessageTimeout;
 
     @JsonCreator
-    public TempMileageRequest(@JsonProperty("trackPoints") final List<TempTrackPointRequest> trackPoints,
+    public TEMPMileageRequest(@JsonProperty("trackPoints") final List<TEMPTrackPointRequest> trackPoints,
                               @JsonProperty("minDetectionSpeed") final Integer minDetectionSpeed,
                               @JsonProperty("maxMessageTimeout") final Integer maxMessageTimeout) {
         this.trackPoints = trackPoints;
@@ -40,7 +40,7 @@ public class TempMileageRequest {
 
     @Value
     @Builder
-    public static class TempTrackPointRequest {
+    public static class TEMPTrackPointRequest {
 
         @NotNull
         @PastOrPresent
@@ -64,7 +64,7 @@ public class TempMileageRequest {
         Boolean valid;
 
         @JsonCreator
-        public TempTrackPointRequest(@JsonProperty("datetime") final Instant datetime,
+        public TEMPTrackPointRequest(@JsonProperty("datetime") final Instant datetime,
                                      @JsonProperty("latitude") final Double latitude,
                                      @JsonProperty("longitude") final Double longitude,
                                      @JsonProperty("altitude") final Integer altitude,

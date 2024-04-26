@@ -1,6 +1,6 @@
 package by.aurorasoft.mileagecalculator.controller.mileage.factory;
 
-import by.aurorasoft.mileagecalculator.controller.mileage.model.TempMileageRequest;
+import by.aurorasoft.mileagecalculator.controller.mileage.model.TEMPMileageRequest;
 import by.aurorasoft.mileagecalculator.model.Track;
 import by.aurorasoft.mileagecalculator.model.TrackPoint;
 import lombok.RequiredArgsConstructor;
@@ -11,14 +11,14 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public final class TrackFactory {
-    private final TrackPointFactory pointFactory;
+    private final TEMPTrackPointFactory pointFactory;
 
-    public Track create(final TempMileageRequest request) {
+    public Track create(final TEMPMileageRequest request) {
         final List<TrackPoint> points = createPoints(request);
         return new Track(points);
     }
 
-    private List<TrackPoint> createPoints(final TempMileageRequest request) {
+    private List<TrackPoint> createPoints(final TEMPMileageRequest request) {
         return request.getTrackPoints()
                 .stream()
                 .map(pointFactory::create)

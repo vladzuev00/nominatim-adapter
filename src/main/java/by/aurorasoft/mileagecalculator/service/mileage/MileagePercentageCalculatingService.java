@@ -56,7 +56,9 @@ public final class MileagePercentageCalculatingService {
     }
 
     private double findLength(final TrackSlice slice, final DistanceCalculatorSettings settings) {
-        return distanceCalculator.calculateDistance(slice.first, slice.second, settings);
+        //TODO
+        return 0;
+//        return distanceCalculator.calculateDistance(slice.first, slice.second, settings);
     }
 
     private static MileagePercentage calculate(final Mileage mileage) {

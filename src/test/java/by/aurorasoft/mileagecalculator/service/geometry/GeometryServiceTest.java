@@ -153,9 +153,10 @@ public final class GeometryServiceTest extends AbstractJunitSpringBootTest {
     }
 
     private static TrackPoint createTrackPoint(final double latitude, final double longitude) {
-        return TrackPoint.builder()
-                .coordinate(new by.aurorasoft.mileagecalculator.model.Coordinate(latitude, longitude))
-                .build();
+//        return TrackPoint.builder()
+//                .coordinate(new by.aurorasoft.mileagecalculator.model.Coordinate(latitude, longitude))
+//                .build();
+        return null;
     }
 
     private LineString createLine(final Coordinate... coordinates) {
