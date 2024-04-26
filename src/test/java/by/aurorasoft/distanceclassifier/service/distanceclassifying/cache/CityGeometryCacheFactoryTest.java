@@ -30,7 +30,7 @@ public final class CityGeometryCacheFactoryTest {
         final CityGeometryCache actual = givenFactory.create();
         assertNotNull(actual);
 
-        final var actualGeometriesByBoundingBoxes = actual.getGeometriesByBoundingBoxes();
+        final var actualGeometriesByBoundingBoxes = actual.getBoundedGeometries();
         assertSame(givenGeometriesByBoundingBoxes, actualGeometriesByBoundingBoxes);
     }
 
@@ -41,7 +41,7 @@ public final class CityGeometryCacheFactoryTest {
         final CityGeometryCache actual = givenFactory.create();
         assertNotNull(actual);
 
-        final var actualGeometriesByBoundingBoxes = actual.getGeometriesByBoundingBoxes();
+        final var actualGeometriesByBoundingBoxes = actual.getBoundedGeometries();
         assertTrue(actualGeometriesByBoundingBoxes.isEmpty());
 
         verifyNoInteractions(mockedCityService);

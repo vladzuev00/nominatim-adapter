@@ -25,7 +25,7 @@ public final class TrackCityGeometryLoaderFromCache extends TrackCityGeometryLoa
 
     @Override
     protected List<PreparedGeometry> load(final LineString line) {
-        return cache.getGeometriesByBoundingBoxes()
+        return cache.getBoundedGeometries()
                 .entrySet()
                 .stream()
                 .filter(geometryByBoundingBox -> geometryByBoundingBox.getKey().intersects(line))
