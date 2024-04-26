@@ -23,7 +23,7 @@
     <javax.validation.version>2.0.1.Final</javax.validation.version>
     <org.hibernate.validator.version>6.2.0.Final</org.hibernate.validator.version>
     <org.orbisgis.version>2.2.0</org.orbisgis.version>
-    <distance-calculator-lib.version>5.9</distance-calculator-lib.version>
+    <distance-calculator-lib.version>6.2</distance-calculator-lib.version>
     <opencsv.version>5.7.1</opencsv.version>
     <org.testcontainers.version>1.17.6</org.testcontainers.version>
     <com.yannbriancon.version>2.0.0</com.yannbriancon.version>
