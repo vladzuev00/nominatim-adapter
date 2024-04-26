@@ -2,7 +2,7 @@ package by.aurorasoft.distanceclassifier.config;
 
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.cache.CityGeometryCache;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.cache.CityGeometryCacheFactory;
-import by.nhorushko.trackfilter.TrackFilter;
+import by.nhorushko.trackfilter.TrackFilterI;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
@@ -15,7 +15,7 @@ public final class ClassifyingDistanceConfigTest {
 
     @Test
     public void trackFilterShouldBeCreated() {
-        final TrackFilter actual = config.trackFilter();
+        final TrackFilterI actual = config.trackFilter();
         assertNotNull(actual);
     }
 
