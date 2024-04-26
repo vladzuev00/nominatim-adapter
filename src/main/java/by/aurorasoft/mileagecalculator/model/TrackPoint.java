@@ -1,29 +1,17 @@
 package by.aurorasoft.mileagecalculator.model;
 
-import by.nhorushko.distancecalculator.LatLngAlt;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Value;
 
-import java.time.Instant;
-
 @Value
-@AllArgsConstructor
-@Builder
-public class TrackPoint implements LatLngAlt {
-    Instant datetime;
+public class TrackPoint {
     Coordinate coordinate;
-    int altitude;
     int speed;
-    boolean valid;
+    Distance gpsDistance;
+    Distance odometerDistance;
 
-    @Override
-    public float getLatitude() {
-        return (float) coordinate.getLatitude();
-    }
-
-    @Override
-    public float getLongitude() {
-        return (float) coordinate.getLongitude();
+    @Value
+    public static class Distance {
+        double relative;
+        double absolute;
     }
 }
