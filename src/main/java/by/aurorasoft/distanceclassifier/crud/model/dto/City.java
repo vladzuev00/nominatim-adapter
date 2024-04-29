@@ -13,7 +13,12 @@ import org.locationtech.jts.geom.Geometry;
 public class City implements AbstractDto<Long> {
     Long id;
     String name;
-    Geometry geometry;
     CityType type;
-    Geometry boundingBox;
+    CityGeometry geometry;
+
+    @Value
+    public static class CityGeometry {
+        Geometry geometry;
+        Geometry boundingBox;
+    }
 }

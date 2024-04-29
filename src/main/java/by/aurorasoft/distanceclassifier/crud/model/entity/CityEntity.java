@@ -47,7 +47,6 @@ public class CityEntity extends BaseEntity<Long> {
     @Getter
     @EqualsAndHashCode
     @ToString
-    @Builder
     public static class CityGeometry {
 
         @Column(name = "geometry")
