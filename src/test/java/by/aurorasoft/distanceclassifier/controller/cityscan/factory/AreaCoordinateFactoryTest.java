@@ -33,7 +33,7 @@ public final class AreaCoordinateFactoryTest {
     }
 
     @Test(expected = CustomValidationException.class)
-    public void coordinateShouldNotBeCreatedBecauseOfNotValidAreaCoordinate() {
+    public void coordinateShouldNotBeCreatedBecauseOfNotValidRequest() {
         final double givenMinLatitude = 9.9;
         final double givenMinLongitude = 6.6;
         final double givenMaxLatitude = 7.7;

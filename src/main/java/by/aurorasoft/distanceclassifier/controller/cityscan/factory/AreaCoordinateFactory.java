@@ -13,25 +13,25 @@ public final class AreaCoordinateFactory {
 
     public AreaCoordinate create(final AreaCoordinateRequest request) {
         validate(request);
-        return new AreaCoordinate(getMinCoordinate(request), getMaxCoordinate(request));
+        return new AreaCoordinate(getMin(request), getMax(request));
     }
 
     private static void validate(final AreaCoordinateRequest request) {
-        if (!isValidAreaCoordinate(request)) {
+        if (!isValid(request)) {
             throw new CustomValidationException("Min coordinate of area should be less than max");
         }
     }
 
-    private static boolean isValidAreaCoordinate(final AreaCoordinateRequest request) {
+    private static boolean isValid(final AreaCoordinateRequest request) {
         return compare(request.getMinLatitude(), request.getMaxLatitude()) <= 0
                 && compare(request.getMinLongitude(), request.getMaxLongitude()) <= 0;
     }
 
-    private Coordinate getMinCoordinate(final AreaCoordinateRequest request) {
+    private Coordinate getMin(final AreaCoordinateRequest request) {
         return new Coordinate(request.getMinLatitude(), request.getMinLongitude());
     }
 
-    private Coordinate getMaxCoordinate(final AreaCoordinateRequest request) {
+    private Coordinate getMax(final AreaCoordinateRequest request) {
         return new Coordinate(request.getMaxLatitude(), request.getMaxLongitude());
     }
 }
