@@ -5,23 +5,15 @@ import by.aurorasoft.distanceclassifier.crud.model.dto.City;
 import by.aurorasoft.distanceclassifier.crud.model.dto.City.CityGeometry;
 import by.aurorasoft.distanceclassifier.crud.model.entity.CityEntity;
 import by.aurorasoft.distanceclassifier.crud.repository.CityRepository;
-import by.aurorasoft.distanceclassifier.model.PreparedBoundedGeometry;
 import by.nhorushko.crudgeneric.v2.service.AbsServiceCRUD;
-import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.LineString;
-import org.locationtech.jts.geom.prep.PreparedGeometry;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Tuple;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
-
-import static org.locationtech.jts.geom.prep.PreparedGeometryFactory.prepare;
 
 @Service
 public class CityService extends AbsServiceCRUD<Long, CityEntity, City, CityRepository> {
@@ -37,53 +29,15 @@ public class CityService extends AbsServiceCRUD<Long, CityEntity, City, CityRepo
 
     @Transactional(readOnly = true)
     public Stream<CityGeometry> findGeometries() {
-        return repository.findGeometries().map(geometry -> new CityGeometry(geometry.getGeometry(), geometry.getBoundingBox()));
+        return findGeometries(repository::findGeometries);
     }
 
-    //TODO: load just Geometry and prepare in loader
-    public Set<PreparedBoundedGeometry> findBoundedPreparedGeometries(final LineString line) {
-        throw new UnsupportedOperationException();
-    }
-
-    //TODO load just Geometry and prepare in loader
-    public Set<PreparedBoundedGeometry> findBoundedPreparedGeometries() {
-        throw new UnsupportedOperationException();
-    }
-
-    //TODO: remove
     @Transactional(readOnly = true)
-    public Map<PreparedGeometry, PreparedGeometry> findPreparedGeometriesByPreparedBoundingBoxes() {
-        return null;
-//        return repository.findBoundingBoxesWithGeometries()
-//                .stream()
-//                .collect(toMap(CityService::getPreparedBoundingBox, CityService::getPreparedGeometry));
+    public Stream<CityGeometry> findIntersectedGeometries(final LineString line) {
+        return findGeometries(() -> repository.findIntersectedGeometries(line));
     }
 
-    //TODO: remove
-    @Transactional(readOnly = true)
-    public List<PreparedGeometry> findIntersectedPreparedGeometries(final LineString line) {
-        return null;
-//        try (final Stream<CityEntity> entityStream = repository.findIntersectedCities(line)) {
-//            return entityStream.map(CityEntity::getGeometry)
-//                    .map(PreparedGeometryFactory::prepare)
-//                    .toList();
-//        }
+    private Stream<CityGeometry> findGeometries(final Supplier<Stream<CityEntity.CityGeometry>> supplier) {
+        return supplier.get().map(geometry -> ((CityMapper) mapper).mapToDtoGeometry(geometry));
     }
-
-//    private City.CityGeometry mapToDtoGeometry(final CityEntity.CityGeometry geometry) {
-//        return new
-//    }
-//
-//    private static PreparedGeometry getPreparedBoundingBox(final Tuple tuple) {
-//        return getPreparedGeometry(tuple, TUPLE_ALIAS_BOUNDING_BOX);
-//    }
-//
-//    private static PreparedGeometry getPreparedGeometry(final Tuple tuple) {
-//        return getPreparedGeometry(tuple, TUPLE_ALIAS_GEOMETRY);
-//    }
-//
-//    private static PreparedGeometry getPreparedGeometry(final Tuple tuple, final String alias) {
-//        final Geometry geometry = (Geometry) tuple.get(alias);
-//        return prepare(geometry);
-//    }
 }

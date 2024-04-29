@@ -21,9 +21,10 @@ public final class CityGeometryCacheFactory {
     }
 
     public CityGeometryCache create() {
-        final Set<PreparedBoundedGeometry> geometries = shouldBeFilled
-                ? cityService.findBoundedPreparedGeometries()
-                : emptySet();
-        return new CityGeometryCache(geometries);
+        return null;
+//        final Set<PreparedBoundedGeometry> geometries = shouldBeFilled
+//                ? cityService.findBoundedPreparedGeometries()
+//                : emptySet();
+//        return new CityGeometryCache(geometries);
     }
 }

@@ -24,6 +24,7 @@ public final class TrackCityGeometryLoaderFromRepository extends TrackCityGeomet
 
     @Override
     protected Set<PreparedBoundedGeometry> loadInternal(final LineString line) {
-        return cityService.findBoundedPreparedGeometries(line);
+        return null;
+//        return cityService.findBoundedPreparedGeometries(line);
     }
 }
