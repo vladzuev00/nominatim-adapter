@@ -1,7 +1,7 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassifying;
 
-import by.aurorasoft.distanceclassifier.model.PreparedBoundedGeometry;
 import by.aurorasoft.distanceclassifier.model.MileagePercentage;
+import by.aurorasoft.distanceclassifier.model.PreparedBoundedGeometry;
 import by.aurorasoft.distanceclassifier.model.Track;
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.loader.TrackCityGeometryLoader;
@@ -10,14 +10,9 @@ import by.nhorushko.classifieddistance.ClassifiedDistanceStorage;
 import by.nhorushko.distancecalculator.DistanceCalculatorSettings;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
-import org.locationtech.jts.geom.prep.PreparedGeometry;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Set;
-
-import static java.util.stream.Collectors.*;
-import static java.util.stream.IntStream.range;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +21,11 @@ public final class ClassifyingDistanceService {
     private final GeometryService geometryService;
 
     public ClassifiedDistanceStorage classify(final Track track, final int urbanSpeedThreshold) {
+        return null;
 //        final Set<PreparedBoundedGeometry> cityGeometries = trackCityGeometryLoader.load(track);
+//        return track.getPoints()
+//                .stream()
+//                .
 //        return range(0, getSliceCount(track))
 //                .mapToObj(i -> getSlice(track, i))
 //                .collect(
@@ -38,7 +37,12 @@ public final class ClassifyingDistanceService {
 //                                mileagesByUrban -> new Mileage(mileagesByUrban.get(true), mileagesByUrban.get(false))
 //                        )
 //                );
-        return null;
+    }
+
+    private boolean isUrbanPoint(final TrackPoint point,
+                                 final Set<PreparedBoundedGeometry> cityGeometries,
+                                 final int urbanSpeedThreshold) {
+        return false;
     }
 
 //    private boolean isUrban(final TrackPoint point,
