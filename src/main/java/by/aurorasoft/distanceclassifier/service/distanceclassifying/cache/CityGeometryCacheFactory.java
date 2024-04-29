@@ -1,16 +1,22 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassifying.cache;
 
+import by.aurorasoft.distanceclassifier.crud.model.dto.City.CityGeometry;
 import by.aurorasoft.distanceclassifier.crud.service.CityService;
-import by.aurorasoft.distanceclassifier.model.PreparedBoundedGeometry;
+import by.aurorasoft.distanceclassifier.model.PreparedCityGeometry;
+import org.locationtech.jts.geom.prep.PreparedGeometry;
+import org.locationtech.jts.geom.prep.PreparedGeometryFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Set;
+import java.util.stream.Stream;
 
-import static java.util.Collections.emptySet;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toUnmodifiableSet;
+import static java.util.stream.Stream.empty;
 
 @Component
-public final class CityGeometryCacheFactory {
+public class CityGeometryCacheFactory {
     private final CityService cityService;
     private final boolean shouldBeFilled;
 
@@ -20,11 +26,22 @@ public final class CityGeometryCacheFactory {
         this.shouldBeFilled = shouldBeFilled;
     }
 
+    @Transactional(readOnly = true)
     public CityGeometryCache create() {
-        return null;
-//        final Set<PreparedBoundedGeometry> geometries = shouldBeFilled
-//                ? cityService.findBoundedPreparedGeometries()
-//                : emptySet();
-//        return new CityGeometryCache(geometries);
+        try (final Stream<CityGeometry> geometries = loadGeometries()) {
+            return geometries
+                    .map(CityGeometryCacheFactory::prepare)
+                    .collect(collectingAndThen(toUnmodifiableSet(), CityGeometryCache::new));
+        }
+    }
+
+    private Stream<CityGeometry> loadGeometries() {
+        return shouldBeFilled ? cityService.findGeometries() : empty();
+    }
+
+    private static PreparedCityGeometry prepare(final CityGeometry cityGeometry) {
+        final PreparedGeometry geometry = PreparedGeometryFactory.prepare(cityGeometry.getGeometry());
+        final PreparedGeometry boundingBox = PreparedGeometryFactory.prepare(cityGeometry.getBoundingBox());
+        return new PreparedCityGeometry(geometry, boundingBox);
     }
 }
