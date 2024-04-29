@@ -1,6 +1,7 @@
 package by.aurorasoft.distanceclassifier.testutil;
 
 import by.aurorasoft.distanceclassifier.controller.city.model.CityResponse;
+import by.aurorasoft.distanceclassifier.controller.city.model.CityResponse.CityGeometryResponse;
 import lombok.experimental.UtilityClass;
 import org.wololo.jts2geojson.GeoJSONReader;
 
@@ -15,8 +16,15 @@ public final class CityResponseUtil {
                                    final GeoJSONReader geoJSONReader) {
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getName(), actual.getName());
-        GeometryUtil.checkEquals(expected.getGeometry().getGeometry(), actual.getGeometry().getGeometry(), geoJSONReader);
-        GeometryUtil.checkEquals(expected.getGeometry().getBoundingBox(), actual.getGeometry().getBoundingBox(), geoJSONReader);
+       checkEquals(expected.getGeometry(), actual.getGeometry(), geoJSONReader);
         assertSame(expected.getType(), actual.getType());
+    }
+
+
+    public static void checkEquals(final CityGeometryResponse expected,
+                                   final CityGeometryResponse actual,
+                                   final GeoJSONReader geoJSONReader) {
+        GeometryUtil.checkEquals(expected.getGeometry(), actual.getGeometry(), geoJSONReader);
+        GeometryUtil.checkEquals(expected.getBoundingBox(), actual.getBoundingBox(), geoJSONReader);
     }
 }

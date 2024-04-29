@@ -30,8 +30,8 @@ public class CityResponse {
         Geometry boundingBox;
 
         @JsonCreator
-        public CityGeometryResponse(@JsonProperty("id") final Geometry geometry,
-                                    @JsonProperty("id") final Geometry boundingBox) {
+        public CityGeometryResponse(@JsonProperty("geometry") final Geometry geometry,
+                                    @JsonProperty("boundingBox") final Geometry boundingBox) {
             this.geometry = geometry;
             this.boundingBox = boundingBox;
         }

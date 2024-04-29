@@ -21,9 +21,13 @@ public final class ClassifyingDistanceService {
     private final GeometryService geometryService;
 
     public ClassifiedDistanceStorage classify(final Track track, final int urbanSpeedThreshold) {
-        final Set<PreparedCityGeometry> cityGeometries = trackCityGeometryLoader.load(track);
-        return null;
+//        final Set<PreparedCityGeometry> cityGeometries = trackCityGeometryLoader.load(track);
+//        return track.getPoints()
+//                .stream()
+//                .map(point -> classifyPoint(point, cityGeometries, urbanSpeedThreshold))
+//                .;
 
+        return null;
 //        final Set<PreparedBoundedGeometry> cityGeometries = trackCityGeometryLoader.load(track);
 //        return track.getPoints()
 //                .stream()
@@ -39,6 +43,12 @@ public final class ClassifyingDistanceService {
 //                                mileagesByUrban -> new Mileage(mileagesByUrban.get(true), mileagesByUrban.get(false))
 //                        )
 //                );
+    }
+
+    private ClassifiedPoint classifyPoint(final TrackPoint point,
+                                          final Set<PreparedCityGeometry> geometries,
+                                          final int speedThreshold) {
+        return new ClassifiedPoint(point, isUrbanPoint(point, geometries, speedThreshold));
     }
 
     private boolean isUrbanPoint(final TrackPoint point,
@@ -92,6 +102,12 @@ public final class ClassifyingDistanceService {
 
     private static TrackSlice getSlice(final Track track, final int index) {
         return new TrackSlice(track.getPoint(index), track.getPoint(index + 1));
+    }
+
+    @Value
+    private static class ClassifiedPoint {
+        TrackPoint point;
+        boolean urban;
     }
 
     @Value
