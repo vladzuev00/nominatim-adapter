@@ -6,10 +6,10 @@ import by.aurorasoft.distanceclassifier.model.Track;
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.loader.TrackCityGeometryLoader;
 import by.aurorasoft.distanceclassifier.service.geometry.GeometryService;
+import by.nhorushko.classifieddistance.ClassifiedDistance;
 import by.nhorushko.classifieddistance.ClassifiedDistanceStorage;
 import by.nhorushko.distancecalculator.DistanceCalculatorSettings;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -22,7 +22,10 @@ public final class ClassifyingDistanceService {
 
     public ClassifiedDistanceStorage classify(final Track track, final int urbanSpeedThreshold) {
         final TrackPointClassifier pointClassifier = createPointClassifier(track, urbanSpeedThreshold);
-
+        return null;
+//        return track.getPoints()
+//                .stream()
+//                .map(point -> new ClassifiedDistance())
 //        return track.getPoints()
 //                .stream()
 //                .collect(
@@ -30,8 +33,6 @@ public final class ClassifyingDistanceService {
 //                                teeing(summingDouble())
 //                        )
 //                );
-
-        return null;
 //        final Set<PreparedBoundedGeometry> cityGeometries = trackCityGeometryLoader.load(track);
 //        return track.getPoints()
 //                .stream()
@@ -84,6 +85,15 @@ public final class ClassifyingDistanceService {
 //                        )
 //                );
 //    }
+
+//    static final class ClassifiedDistanceAccumulator {
+//        private final TrackPointClassifier classifier;
+//        private double
+//    }
+
+    static final class ClassifiedDistanceAccumulator {
+
+    }
 
     @RequiredArgsConstructor
     static final class TrackPointClassifier {

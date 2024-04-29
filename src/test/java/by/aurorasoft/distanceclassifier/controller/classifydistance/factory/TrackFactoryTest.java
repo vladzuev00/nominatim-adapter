@@ -37,8 +37,8 @@ public final class TrackFactoryTest {
         final PointRequest secondGivenPointRequest = mock(PointRequest.class);
         final ClassifyDistanceRequest givenRequest = createRequest(firstGivenPointRequest, secondGivenPointRequest);
 
-        final TrackPoint firstGivenPoint = bindTrackPoint(firstGivenPointRequest);
-        final TrackPoint secondGivenPoint = bindTrackPoint(secondGivenPointRequest);
+        final TrackPoint firstGivenPoint = mockTrackPointFor(firstGivenPointRequest);
+        final TrackPoint secondGivenPoint = mockTrackPointFor(secondGivenPointRequest);
 
         final Track actual = trackFactory.create(givenRequest);
         final Track expected = new Track(List.of(firstGivenPoint, secondGivenPoint));
@@ -51,7 +51,7 @@ public final class TrackFactoryTest {
                 .build();
     }
 
-    private TrackPoint bindTrackPoint(final PointRequest request) {
+    private TrackPoint mockTrackPointFor(final PointRequest request) {
         final TrackPoint point = mock(TrackPoint.class);
         when(mockedPointFactory.create(same(request))).thenReturn(point);
         return point;

@@ -3,7 +3,7 @@ package by.aurorasoft.distanceclassifier.service.distanceclassifying.loader;
 import by.aurorasoft.distanceclassifier.crud.model.dto.City.CityGeometry;
 import by.aurorasoft.distanceclassifier.crud.service.CityService;
 import by.aurorasoft.distanceclassifier.model.PreparedCityGeometry;
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.preparer.CityGeometryPreparer;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.geometrypreparer.CityGeometryPreparer;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.simplifier.TrackSimplifier;
 import by.aurorasoft.distanceclassifier.service.geometry.GeometryService;
 import org.locationtech.jts.geom.LineString;

@@ -1,4 +1,4 @@
-package by.aurorasoft.distanceclassifier.service.distanceclassifying.preparer;
+package by.aurorasoft.distanceclassifier.service.distanceclassifying.geometrypreparer;
 
 import by.aurorasoft.distanceclassifier.crud.model.dto.City.CityGeometry;
 import by.aurorasoft.distanceclassifier.model.PreparedCityGeometry;
