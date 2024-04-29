@@ -19,19 +19,19 @@ public final class ClassifyingDistanceService {
     private final GeometryService geometryService;
 
     public ClassifiedDistanceStorage classify(final Track track, final int urbanSpeedThreshold) {
-        final DistanceAccumulator distanceAccumulator = createDistanceAccumulator(track, urbanSpeedThreshold);
+        final StorageAccumulator distanceAccumulator = createDistanceAccumulator(track, urbanSpeedThreshold);
         track.getPoints().forEach(distanceAccumulator::accumulate);
         return distanceAccumulator.createStorage();
     }
 
-    private DistanceAccumulator createDistanceAccumulator(final Track track, final int urbanSpeedThreshold) {
+    private StorageAccumulator createDistanceAccumulator(final Track track, final int urbanSpeedThreshold) {
         final Set<PreparedCityGeometry> cityGeometries = trackCityGeometryLoader.load(track);
         final PointLocator pointLocator = new PointLocator(geometryService, cityGeometries, urbanSpeedThreshold);
-        return new DistanceAccumulator(pointLocator);
+        return new StorageAccumulator(pointLocator);
     }
 
     @RequiredArgsConstructor
-    static final class DistanceAccumulator {
+    static final class StorageAccumulator {
         private final PointLocator pointLocator;
         private double gpsUrban;
         private double gpsCountry;
