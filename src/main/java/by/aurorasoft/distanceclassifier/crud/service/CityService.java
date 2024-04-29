@@ -4,6 +4,7 @@ import by.aurorasoft.distanceclassifier.crud.mapper.CityMapper;
 import by.aurorasoft.distanceclassifier.crud.model.dto.City;
 import by.aurorasoft.distanceclassifier.crud.model.entity.CityEntity;
 import by.aurorasoft.distanceclassifier.crud.repository.CityRepository;
+import by.aurorasoft.distanceclassifier.model.CityMapView;
 import by.aurorasoft.distanceclassifier.model.PreparedBoundedGeometry;
 import by.nhorushko.crudgeneric.v2.service.AbsServiceCRUD;
 import org.locationtech.jts.geom.Geometry;
@@ -36,6 +37,14 @@ public class CityService extends AbsServiceCRUD<Long, CityEntity, City, CityRepo
     @Transactional(readOnly = true)
     public Page<City> findAll(final Pageable pageable) {
         return repository.findAll(pageable).map(mapper::toDto);
+    }
+
+    public CityMapView loadCityMap() {
+        return null;
+    }
+
+    public CityMapView loadCityMap(final LineString line) {
+        return null;
     }
 
     //TODO: load just Geometry and prepare in loader
