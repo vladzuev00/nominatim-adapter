@@ -1,14 +1,12 @@
 package by.aurorasoft.distanceclassifier.service.geometry;
 
-import by.aurorasoft.distanceclassifier.model.PreparedBoundedGeometry;
-import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse;
+import by.aurorasoft.distanceclassifier.model.*;
 import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Bounds;
 import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Relation;
 import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Way;
-import by.aurorasoft.distanceclassifier.model.Track;
-import by.aurorasoft.distanceclassifier.model.TrackPoint;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.*;
+import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.prep.PreparedGeometry;
 import org.locationtech.jts.operation.polygonize.Polygonizer;
 import org.springframework.stereotype.Service;
@@ -28,15 +26,16 @@ public final class GeometryService {
         return geometryFactory.createLineString(getJtsCoordinates(track));
     }
 
-    //TODO: test
-    public boolean isAnyContain(final Set<PreparedBoundedGeometry> geometries, final TrackPoint point) {
-        return geometries.stream().anyMatch(geometry -> isContain(geometry, point));
+    public boolean isAnyGeometryContain(final Set<PreparedCityGeometry> cityGeometries, final TrackPoint point) {
+        return cityGeometries.stream()
+                .map(PreparedCityGeometry::getGeometry)
+                .anyMatch(geometry -> isContain(geometry, point));
     }
 
-    public boolean isAnyBoundingBoxContain(final Set<PreparedBoundedGeometry> geometries, final TrackPoint point) {
-        return geometries.stream()
-                .map(PreparedBoundedGeometry::getBoundingBox)
-                .anyMatch(geometry -> geometry.contains(geometryFactory.createPoint(createJtsCoordinate(point))));
+    public boolean isAnyBoundingBoxContain(final Set<PreparedCityGeometry> cityGeometries, final TrackPoint point) {
+        return cityGeometries.stream()
+                .map(PreparedCityGeometry::getBoundingBox)
+                .anyMatch(geometry -> isContain(geometry, point));
     }
 
     private boolean isContain(final PreparedBoundedGeometry geometry, final TrackPoint point) {

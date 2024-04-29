@@ -1,7 +1,7 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassifying;
 
 import by.aurorasoft.distanceclassifier.model.MileagePercentage;
-import by.aurorasoft.distanceclassifier.model.PreparedBoundedGeometry;
+import by.aurorasoft.distanceclassifier.model.PreparedCityGeometry;
 import by.aurorasoft.distanceclassifier.model.Track;
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.loader.TrackCityGeometryLoader;
@@ -21,7 +21,9 @@ public final class ClassifyingDistanceService {
     private final GeometryService geometryService;
 
     public ClassifiedDistanceStorage classify(final Track track, final int urbanSpeedThreshold) {
+        final Set<PreparedCityGeometry> cityGeometries = trackCityGeometryLoader.load(track);
         return null;
+
 //        final Set<PreparedBoundedGeometry> cityGeometries = trackCityGeometryLoader.load(track);
 //        return track.getPoints()
 //                .stream()
@@ -40,9 +42,17 @@ public final class ClassifyingDistanceService {
     }
 
     private boolean isUrbanPoint(final TrackPoint point,
-                                 final Set<PreparedBoundedGeometry> cityGeometries,
-                                 final int urbanSpeedThreshold) {
-        return false;
+                                 final Set<PreparedCityGeometry> geometries,
+                                 final int speedThreshold) {
+        return isLocatedInCity(point, geometries) || (isUnknownLocation(point, geometries) && point.getSpeed() <= speedThreshold);
+    }
+
+    private boolean isLocatedInCity(final TrackPoint point, final Set<PreparedCityGeometry> geometries) {
+        return geometryService.isAnyGeometryContain(geometries, point);
+    }
+
+    private boolean isUnknownLocation(final TrackPoint point, final Set<PreparedCityGeometry> geometries) {
+        return !geometryService.isAnyBoundingBoxContain(geometries, point);
     }
 
 //    private boolean isUrban(final TrackPoint point,
