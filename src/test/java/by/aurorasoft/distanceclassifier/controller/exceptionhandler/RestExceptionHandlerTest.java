@@ -119,13 +119,9 @@ public final class RestExceptionHandlerTest extends AbstractSpringBootTest {
     }
 
     private static void checkMatch(final RestErrorResponse expected, final RestErrorResponse actual) {
-        checkEqualsExceptDateTime(expected, actual);
-        assertNotNull(actual.getDateTime());
-    }
-
-    private static void checkEqualsExceptDateTime(final RestErrorResponse expected, final RestErrorResponse actual) {
         assertSame(expected.getStatus(), actual.getStatus());
         Assert.assertEquals(expected.getMessage(), actual.getMessage());
+        assertNotNull(actual.getDateTime());
     }
 
     private static FieldError createFieldError(final String fieldName, final String message) {
