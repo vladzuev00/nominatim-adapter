@@ -24,6 +24,17 @@ public final class CityMapperTest extends AbstractSpringBootTest {
     private GeometryFactory geometryFactory;
 
     @Test
+    public void entityGeometryShouldBeMappedToDtoGeometry() {
+        final Geometry givenGeometry = createPolygon("POLYGON((1 1, 2 1, 2 2, 1 1))");
+        final Geometry givenBoundingBox = createPolygon("POLYGON((1 1, 2 1, 2 2, 1 2, 1 1))");
+        final CityEntity.CityGeometry givenEntityGeometry = new CityEntity.CityGeometry(givenGeometry, givenBoundingBox);
+
+        final City.CityGeometry actual = mapper.mapToDtoGeometry(givenEntityGeometry);
+        final City.CityGeometry expected = new City.CityGeometry(givenGeometry, givenBoundingBox);
+        assertEquals(expected, actual);
+    }
+
+    @Test
     public void dtoShouldBeMappedToEntity() {
         final Long givenId = 255L;
         final String givenName = "city";

@@ -13,13 +13,17 @@ public final class CityMapper extends AbsMapperEntityDto<CityEntity, City> {
         super(modelMapper, CityEntity.class, City.class);
     }
 
-    @Override
-    protected City create(final CityEntity entity) {
-        return new City(entity.getId(), entity.getName(), entity.getType(), getDtoGeometry(entity));
+    public City.CityGeometry mapToDtoGeometry(final CityEntity.CityGeometry source) {
+        return new City.CityGeometry(source.getGeometry(), source.getBoundingBox());
     }
 
-    private static City.CityGeometry getDtoGeometry(final CityEntity entity) {
-        final CityEntity.CityGeometry source = entity.getGeometry();
-        return new City.CityGeometry(source.getGeometry(), source.getBoundingBox());
+    @Override
+    protected City create(final CityEntity entity) {
+        return new City(
+                entity.getId(),
+                entity.getName(),
+                entity.getType(),
+                mapToDtoGeometry(entity.getGeometry())
+        );
     }
 }
