@@ -21,11 +21,15 @@ public final class ClassifyingDistanceService {
     private final GeometryService geometryService;
 
     public ClassifiedDistanceStorage classify(final Track track, final int urbanSpeedThreshold) {
-//        final Set<PreparedCityGeometry> cityGeometries = trackCityGeometryLoader.load(track);
+        final TrackPointClassifier pointClassifier = createPointClassifier(track, urbanSpeedThreshold);
+
 //        return track.getPoints()
 //                .stream()
-//                .map(point -> classifyPoint(point, cityGeometries, urbanSpeedThreshold))
-//                .;
+//                .collect(
+//                        teeing(
+//                                teeing(summingDouble())
+//                        )
+//                );
 
         return null;
 //        final Set<PreparedBoundedGeometry> cityGeometries = trackCityGeometryLoader.load(track);
@@ -45,24 +49,9 @@ public final class ClassifyingDistanceService {
 //                );
     }
 
-    private ClassifiedPoint classifyPoint(final TrackPoint point,
-                                          final Set<PreparedCityGeometry> geometries,
-                                          final int speedThreshold) {
-        return new ClassifiedPoint(point, isUrbanPoint(point, geometries, speedThreshold));
-    }
-
-    private boolean isUrbanPoint(final TrackPoint point,
-                                 final Set<PreparedCityGeometry> geometries,
-                                 final int speedThreshold) {
-        return isLocatedInCity(point, geometries) || (isUnknownLocation(point, geometries) && point.getSpeed() <= speedThreshold);
-    }
-
-    private boolean isLocatedInCity(final TrackPoint point, final Set<PreparedCityGeometry> geometries) {
-        return geometryService.isAnyGeometryContain(geometries, point);
-    }
-
-    private boolean isUnknownLocation(final TrackPoint point, final Set<PreparedCityGeometry> geometries) {
-        return !geometryService.isAnyBoundingBoxContain(geometries, point);
+    private TrackPointClassifier createPointClassifier(final Track track, final int urbanSpeedThreshold) {
+        final Set<PreparedCityGeometry> cityGeometries = trackCityGeometryLoader.load(track);
+        return new TrackPointClassifier(geometryService, cityGeometries, urbanSpeedThreshold);
     }
 
 //    private boolean isUrban(final TrackPoint point,
@@ -96,23 +85,22 @@ public final class ClassifyingDistanceService {
 //                );
 //    }
 
-    private static int getSliceCount(final Track track) {
-        return track.getPoints().size() - 1;
-    }
+    @RequiredArgsConstructor
+    static final class TrackPointClassifier {
+        private final GeometryService geometryService;
+        private final Set<PreparedCityGeometry> cityGeometries;
+        private final int urbanSpeedThreshold;
 
-    private static TrackSlice getSlice(final Track track, final int index) {
-        return new TrackSlice(track.getPoint(index), track.getPoint(index + 1));
-    }
+        public boolean isUrban(final TrackPoint point) {
+            return isLocatedInCity(point) || (isUnknownLocation(point) && point.getSpeed() <= urbanSpeedThreshold);
+        }
 
-    @Value
-    private static class ClassifiedPoint {
-        TrackPoint point;
-        boolean urban;
-    }
+        private boolean isLocatedInCity(final TrackPoint point) {
+            return geometryService.isAnyGeometryContain(cityGeometries, point);
+        }
 
-    @Value
-    private static class TrackSlice {
-        TrackPoint first;
-        TrackPoint second;
+        private boolean isUnknownLocation(final TrackPoint point) {
+            return !geometryService.isAnyBoundingBoxContain(cityGeometries, point);
+        }
     }
 }
