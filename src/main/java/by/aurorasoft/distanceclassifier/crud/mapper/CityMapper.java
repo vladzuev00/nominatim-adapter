@@ -14,14 +14,12 @@ public final class CityMapper extends AbsMapperEntityDto<CityEntity, City> {
     }
 
     @Override
-    protected City create(CityEntity entity) {
-        return new City(
-                entity.getId(),
-                entity.getName(),
-                null,
-                entity.getType(),
-                null
-//                entity.getBoundingBox()
-        );
+    protected City create(final CityEntity entity) {
+        return new City(entity.getId(), entity.getName(), entity.getType(), getDtoGeometry(entity));
+    }
+
+    private static City.CityGeometry getDtoGeometry(final CityEntity entity) {
+        final CityEntity.CityGeometry source = entity.getGeometry();
+        return new City.CityGeometry(source.getGeometry(), source.getBoundingBox());
     }
 }

@@ -17,6 +17,7 @@ public final class CityResponseFactory {
     }
 
     private Geometry getGeometry(final City city) {
-        return geoJSONWriter.write(city.getGeometry());
+        return null;
+//        return geoJSONWriter.write(city.getGeometry());
     }
 }

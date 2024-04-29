@@ -16,12 +16,13 @@ public final class OverpassCityFactory {
     private final GeometryService geometryService;
 
     public City create(final Relation relation) {
-        return City.builder()
-                .type(getType(relation))
-                .name(getName(relation))
-                .geometry(getGeometry(relation))
-                .boundingBox(getBoundingBox(relation))
-                .build();
+        return null;
+//        return City.builder()
+//                .type(getType(relation))
+//                .name(getName(relation))
+//                .geometry(getGeometry(relation))
+//                .boundingBox(getBoundingBox(relation))
+//                .build();
     }
 
     private CityType getType(final Relation relation) {

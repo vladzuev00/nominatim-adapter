@@ -24,12 +24,13 @@ public final class CityFactory {
     }
 
     private CityBuilder createBuilder(final CityRequest request) {
-        final Geometry geometry = getGeometry(request);
-        return City.builder()
-                .name(request.getName())
-                .geometry(getGeometry(request))
-                .type(request.getType())
-                .boundingBox(geometry.getEnvelope());
+        return null;
+//        final Geometry geometry = getGeometry(request);
+//        return City.builder()
+//                .name(request.getName())
+//                .geometry(getGeometry(request))
+//                .type(request.getType())
+//                .boundingBox(geometry.getEnvelope());
     }
 
     private Geometry getGeometry(final CityRequest request) {
