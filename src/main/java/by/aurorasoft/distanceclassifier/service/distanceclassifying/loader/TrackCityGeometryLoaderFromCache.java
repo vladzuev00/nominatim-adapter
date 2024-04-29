@@ -26,9 +26,10 @@ public final class TrackCityGeometryLoaderFromCache extends TrackCityGeometryLoa
 
     @Override
     protected Set<PreparedBoundedGeometry> loadInternal(final LineString line) {
-        return cache.getGeometries()
-                .stream()
-                .filter(geometry -> geometry.getBoundingBox().intersects(line))
-                .collect(toUnmodifiableSet());
+        return null;
+//        return cache.getGeometries()
+//                .stream()
+//                .filter(geometry -> geometry.getBoundingBox().intersects(line))
+//                .collect(toUnmodifiableSet());
     }
 }
