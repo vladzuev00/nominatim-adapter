@@ -1,6 +1,5 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassifying;
 
-import by.aurorasoft.distanceclassifier.model.MileagePercentage;
 import by.aurorasoft.distanceclassifier.model.PreparedCityGeometry;
 import by.aurorasoft.distanceclassifier.model.Track;
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
@@ -8,7 +7,6 @@ import by.aurorasoft.distanceclassifier.service.distanceclassifying.loader.Track
 import by.aurorasoft.distanceclassifier.service.geometry.GeometryService;
 import by.nhorushko.classifieddistance.ClassifiedDistance;
 import by.nhorushko.classifieddistance.ClassifiedDistanceStorage;
-import by.nhorushko.distancecalculator.DistanceCalculatorSettings;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,82 +19,45 @@ public final class ClassifyingDistanceService {
     private final GeometryService geometryService;
 
     public ClassifiedDistanceStorage classify(final Track track, final int urbanSpeedThreshold) {
-        final TrackPointClassifier pointClassifier = createPointClassifier(track, urbanSpeedThreshold);
-        return null;
-//        return track.getPoints()
-//                .stream()
-//                .map(point -> new ClassifiedDistance())
-//        return track.getPoints()
-//                .stream()
-//                .collect(
-//                        teeing(
-//                                teeing(summingDouble())
-//                        )
-//                );
-//        final Set<PreparedBoundedGeometry> cityGeometries = trackCityGeometryLoader.load(track);
-//        return track.getPoints()
-//                .stream()
-//                .
-//        return range(0, getSliceCount(track))
-//                .mapToObj(i -> getSlice(track, i))
-//                .collect(
-//                        collectingAndThen(
-//                                partitioningBy(
-//                                        slice -> isUrbanSlice(slice, cityGeometries, urbanSpeedThreshold),
-//                                        reducing(ClassifiedDistanceStorage::plus)
-//                                ),
-//                                mileagesByUrban -> new Mileage(mileagesByUrban.get(true), mileagesByUrban.get(false))
-//                        )
-//                );
+        final DistanceAccumulator distanceAccumulator = createDistanceAccumulator(track, urbanSpeedThreshold);
+        track.getPoints().forEach(distanceAccumulator::accumulate);
+        return distanceAccumulator.createStorage();
     }
 
-    private TrackPointClassifier createPointClassifier(final Track track, final int urbanSpeedThreshold) {
+    private DistanceAccumulator createDistanceAccumulator(final Track track, final int urbanSpeedThreshold) {
         final Set<PreparedCityGeometry> cityGeometries = trackCityGeometryLoader.load(track);
-        return new TrackPointClassifier(geometryService, cityGeometries, urbanSpeedThreshold);
-    }
-
-//    private boolean isUrban(final TrackPoint point,
-//                            final Set<PreparedBoundedGeometry> cityGeometries,
-//                            final int urbanSpeedThreshold){
-//        PreparedGeometry a;
-//        a.disjoint()
-//        if(geometryService.isAnyContain())
-//    }
-
-    public MileagePercentage TEMPcalculate(final Track track, final DistanceCalculatorSettings settings) {
-//        final List<PreparedGeometry> cityGeometries = trackCityGeometryLoader.load(track);
-//        final Mileage mileage = calculateMileage(track, cityGeometries, settings);
-//        return calculate(mileage);
-        return null;
-    }
-
-//    private Mileage calculateMileage(final Track track,
-//                                     final List<PreparedGeometry> cityGeometries,
-//                                     final DistanceCalculatorSettings settings) {
-//        return range(0, getSliceCount(track))
-//                .mapToObj(i -> getSlice(track, i))
-//                .collect(
-//                        collectingAndThen(
-//                                partitioningBy(
-//                                        slice -> geometryService.isAnyContain(cityGeometries, slice.second),
-//                                        summingDouble(slice -> findLength(slice, settings))
-//                                ),
-//                                mileagesByUrban -> new Mileage(mileagesByUrban.get(true), mileagesByUrban.get(false))
-//                        )
-//                );
-//    }
-
-//    static final class ClassifiedDistanceAccumulator {
-//        private final TrackPointClassifier classifier;
-//        private double
-//    }
-
-    static final class ClassifiedDistanceAccumulator {
-
+        final PointLocator pointLocator = new PointLocator(geometryService, cityGeometries, urbanSpeedThreshold);
+        return new DistanceAccumulator(pointLocator);
     }
 
     @RequiredArgsConstructor
-    static final class TrackPointClassifier {
+    static final class DistanceAccumulator {
+        private final PointLocator pointLocator;
+        private double gpsUrban;
+        private double gpsCountry;
+        private double odometerUrban;
+        private double odometerCountry;
+
+        public void accumulate(final TrackPoint point) {
+            if (pointLocator.isUrban(point)) {
+                gpsUrban += point.getGpsDistance().getRelative();
+                odometerUrban += point.getOdometerDistance().getRelative();
+            } else {
+                gpsCountry += point.getGpsDistance().getRelative();
+                odometerCountry += point.getOdometerDistance().getRelative();
+            }
+        }
+
+        public ClassifiedDistanceStorage createStorage() {
+            return new ClassifiedDistanceStorage(
+                    new ClassifiedDistance(gpsUrban, gpsCountry),
+                    new ClassifiedDistance(odometerUrban, odometerCountry)
+            );
+        }
+    }
+
+    @RequiredArgsConstructor
+    static final class PointLocator {
         private final GeometryService geometryService;
         private final Set<PreparedCityGeometry> cityGeometries;
         private final int urbanSpeedThreshold;
