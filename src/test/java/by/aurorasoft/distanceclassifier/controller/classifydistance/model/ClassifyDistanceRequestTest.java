@@ -1,6 +1,6 @@
 package by.aurorasoft.distanceclassifier.controller.classifydistance.model;
 
-import by.aurorasoft.distanceclassifier.base.AbstractJunitSpringBootTest;
+import by.aurorasoft.distanceclassifier.base.AbstractSpringBootTest;
 import by.aurorasoft.distanceclassifier.controller.classifydistance.model.ClassifyDistanceRequest.DistanceRequest;
 import by.aurorasoft.distanceclassifier.controller.classifydistance.model.ClassifyDistanceRequest.PointRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 
-public final class ClassifyDistanceRequestTest extends AbstractJunitSpringBootTest {
+public final class ClassifyDistanceRequestTest extends AbstractSpringBootTest {
 
     @Autowired
     private ObjectMapper objectMapper;

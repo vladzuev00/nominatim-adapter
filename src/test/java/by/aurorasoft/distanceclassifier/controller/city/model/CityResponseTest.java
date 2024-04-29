@@ -1,6 +1,6 @@
 package by.aurorasoft.distanceclassifier.controller.city.model;
 
-import by.aurorasoft.distanceclassifier.base.AbstractJunitSpringBootTest;
+import by.aurorasoft.distanceclassifier.base.AbstractSpringBootTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.locationtech.jts.geom.Coordinate;
@@ -14,7 +14,7 @@ import static by.aurorasoft.distanceclassifier.model.CityType.CAPITAL;
 import static by.aurorasoft.distanceclassifier.testutil.CityResponseUtil.checkEquals;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 
-public final class CityResponseTest extends AbstractJunitSpringBootTest {
+public final class CityResponseTest extends AbstractSpringBootTest {
 
     @Autowired
     private ObjectMapper objectMapper;

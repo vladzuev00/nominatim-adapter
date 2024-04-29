@@ -1,6 +1,6 @@
 package by.aurorasoft.distanceclassifier.service.geometry;
 
-import by.aurorasoft.distanceclassifier.base.AbstractJunitSpringBootTest;
+import by.aurorasoft.distanceclassifier.base.AbstractSpringBootTest;
 import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse;
 import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Bounds;
 import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Node;
@@ -18,7 +18,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 import static org.locationtech.jts.geom.prep.PreparedGeometryFactory.prepare;
 
-public final class GeometryServiceTest extends AbstractJunitSpringBootTest {
+public final class GeometryServiceTest extends AbstractSpringBootTest {
 
     @Autowired
     private GeometryService service;

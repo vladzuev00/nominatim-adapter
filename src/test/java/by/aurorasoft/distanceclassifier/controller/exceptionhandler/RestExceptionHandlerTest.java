@@ -1,6 +1,6 @@
 package by.aurorasoft.distanceclassifier.controller.exceptionhandler;
 
-import by.aurorasoft.distanceclassifier.base.AbstractJunitSpringBootTest;
+import by.aurorasoft.distanceclassifier.base.AbstractSpringBootTest;
 import by.aurorasoft.distanceclassifier.controller.exception.CustomValidationException;
 import by.aurorasoft.distanceclassifier.controller.exceptionhandler.RestExceptionHandler.RestErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,7 +26,7 @@ import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 import static org.springframework.core.convert.TypeDescriptor.valueOf;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 
-public final class RestExceptionHandlerTest extends AbstractJunitSpringBootTest {
+public final class RestExceptionHandlerTest extends AbstractSpringBootTest {
 
     @Autowired
     private RestExceptionHandler handler;

@@ -1,6 +1,6 @@
 package by.aurorasoft.distanceclassifier.model;
 
-import by.aurorasoft.distanceclassifier.base.AbstractJunitSpringBootTest;
+import by.aurorasoft.distanceclassifier.base.AbstractSpringBootTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import org.junit.Test;
@@ -13,7 +13,7 @@ import static by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.
 import static org.junit.Assert.assertEquals;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 
-public final class OverpassSearchCityResponseTest extends AbstractJunitSpringBootTest {
+public final class OverpassSearchCityResponseTest extends AbstractSpringBootTest {
 
     @Autowired
     private ObjectMapper objectMapper;

@@ -1,13 +1,13 @@
 package by.aurorasoft.distanceclassifier.crud.model.entity;
 
-import by.aurorasoft.distanceclassifier.base.AbstractJunitSpringBootTest;
+import by.aurorasoft.distanceclassifier.base.AbstractSpringBootTest;
 import lombok.Getter;
 import lombok.Setter;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public final class BaseEntityTest extends AbstractJunitSpringBootTest {
+public final class BaseEntityTest extends AbstractSpringBootTest {
 
     @Test
     public void entitiesShouldBeEqual() {

@@ -1,6 +1,6 @@
 package by.aurorasoft.distanceclassifier.config;
 
-import by.aurorasoft.distanceclassifier.base.AbstractJunitSpringBootTest;
+import by.aurorasoft.distanceclassifier.base.AbstractSpringBootTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.Test;
@@ -18,7 +18,7 @@ import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
 import static org.springframework.http.MediaType.ALL;
 
-public final class RestTemplateConfigTest extends AbstractJunitSpringBootTest {
+public final class RestTemplateConfigTest extends AbstractSpringBootTest {
 
     @Autowired
     private JtsModule jtsModule;

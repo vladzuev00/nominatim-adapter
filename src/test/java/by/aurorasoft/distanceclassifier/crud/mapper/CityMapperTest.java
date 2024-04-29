@@ -1,6 +1,6 @@
 package by.aurorasoft.distanceclassifier.crud.mapper;
 
-import by.aurorasoft.distanceclassifier.base.AbstractJunitSpringBootTest;
+import by.aurorasoft.distanceclassifier.base.AbstractSpringBootTest;
 import by.aurorasoft.distanceclassifier.crud.model.dto.City;
 import by.aurorasoft.distanceclassifier.crud.model.entity.CityEntity;
 import by.aurorasoft.distanceclassifier.model.CityType;
@@ -15,7 +15,7 @@ import static by.aurorasoft.distanceclassifier.model.CityType.CAPITAL;
 import static by.aurorasoft.distanceclassifier.testutil.CityEntityUtil.checkEquals;
 import static org.junit.Assert.assertEquals;
 
-public final class CityMapperTest extends AbstractJunitSpringBootTest {
+public final class CityMapperTest extends AbstractSpringBootTest {
 
     @Autowired
     private CityMapper mapper;

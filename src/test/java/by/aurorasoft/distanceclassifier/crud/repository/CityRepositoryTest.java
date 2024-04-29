@@ -1,6 +1,6 @@
 package by.aurorasoft.distanceclassifier.crud.repository;
 
-import by.aurorasoft.distanceclassifier.base.AbstractJunitSpringBootTest;
+import by.aurorasoft.distanceclassifier.base.AbstractSpringBootTest;
 import by.aurorasoft.distanceclassifier.crud.model.entity.CityEntity;
 import by.aurorasoft.distanceclassifier.crud.model.entity.CityEntity.CityGeometry;
 import by.aurorasoft.distanceclassifier.testutil.GeometryUtil;
@@ -22,7 +22,7 @@ import static java.util.stream.Collectors.toUnmodifiableSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public final class CityRepositoryTest extends AbstractJunitSpringBootTest {
+public final class CityRepositoryTest extends AbstractSpringBootTest {
 
     @Autowired
     private CityRepository repository;

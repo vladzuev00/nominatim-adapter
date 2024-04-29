@@ -1,6 +1,6 @@
 package by.aurorasoft.distanceclassifier.model;
 
-import by.aurorasoft.distanceclassifier.base.AbstractJunitSpringBootTest;
+import by.aurorasoft.distanceclassifier.base.AbstractSpringBootTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static org.junit.Assert.assertEquals;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 
-public final class MileagePercentageTest extends AbstractJunitSpringBootTest {
+public final class MileagePercentageTest extends AbstractSpringBootTest {
 
     @Autowired
     private ObjectMapper objectMapper;

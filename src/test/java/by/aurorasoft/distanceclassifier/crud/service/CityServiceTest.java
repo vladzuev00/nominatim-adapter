@@ -1,6 +1,6 @@
 package by.aurorasoft.distanceclassifier.crud.service;
 
-import by.aurorasoft.distanceclassifier.base.AbstractJunitSpringBootTest;
+import by.aurorasoft.distanceclassifier.base.AbstractSpringBootTest;
 import by.aurorasoft.distanceclassifier.crud.model.dto.City;
 import by.aurorasoft.distanceclassifier.testutil.GeometryUtil;
 import org.junit.Test;
@@ -22,7 +22,7 @@ import static java.util.stream.Collectors.toMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public final class CityServiceTest extends AbstractJunitSpringBootTest {
+public final class CityServiceTest extends AbstractSpringBootTest {
 
     @Autowired
     private CityService service;

@@ -1,6 +1,6 @@
 package by.aurorasoft.distanceclassifier.controller.cityscan;
 
-import by.aurorasoft.distanceclassifier.base.AbstractJunitSpringBootTest;
+import by.aurorasoft.distanceclassifier.base.AbstractSpringBootTest;
 import by.aurorasoft.distanceclassifier.controller.cityscan.factory.AreaCoordinateFactory;
 import by.aurorasoft.distanceclassifier.controller.cityscan.model.AreaCoordinateRequest;
 import by.aurorasoft.distanceclassifier.model.AreaCoordinate;
@@ -17,7 +17,7 @@ import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-public final class CityScanningControllerTest extends AbstractJunitSpringBootTest {
+public final class CityScanningControllerTest extends AbstractSpringBootTest {
     private static final String URL = "/api/v1/cityScan";
 
     @MockBean

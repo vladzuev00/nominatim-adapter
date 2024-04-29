@@ -1,6 +1,6 @@
 package by.aurorasoft.distanceclassifier.controller.classifydistance;
 
-import by.aurorasoft.distanceclassifier.base.AbstractJunitSpringBootTest;
+import by.aurorasoft.distanceclassifier.base.AbstractSpringBootTest;
 import by.aurorasoft.distanceclassifier.controller.classifydistance.factory.TrackFactory;
 import by.aurorasoft.distanceclassifier.controller.classifydistance.model.ClassifyDistanceRequest;
 import by.aurorasoft.distanceclassifier.controller.classifydistance.model.ClassifyDistanceRequest.DistanceRequest;
@@ -23,7 +23,7 @@ import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-public final class ClassifyingDistanceControllerTest extends AbstractJunitSpringBootTest {
+public final class ClassifyingDistanceControllerTest extends AbstractSpringBootTest {
     private static final String URL = "/api/v1/classifyDistance";
 
     @MockBean
