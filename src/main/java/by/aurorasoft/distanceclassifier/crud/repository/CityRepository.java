@@ -1,23 +1,18 @@
 package by.aurorasoft.distanceclassifier.crud.repository;
 
 import by.aurorasoft.distanceclassifier.crud.model.entity.CityEntity;
+import by.aurorasoft.distanceclassifier.crud.model.entity.CityEntity.CityGeometry;
 import org.locationtech.jts.geom.LineString;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import javax.persistence.Tuple;
-import java.util.List;
 import java.util.stream.Stream;
 
 public interface CityRepository extends JpaRepository<CityEntity, Long> {
 
-    //TODO: return Stream<CityEntity> and in service union all geometris for CityMap
-    @Query("SELECT e.boundingBox AS boundingBox, e.geometry AS geometry FROM CityEntity e")
-    List<Tuple> findBoundingBoxesWithGeometries();
+    @Query("SELECT e.geometry FROM CityEntity e")
+    Stream<CityGeometry> findGeometries();
 
-    @Query(
-            value = "SELECT id, name, geometry, type, bounding_box FROM city WHERE ST_Intersects(bounding_box, :line)",
-            nativeQuery = true
-    )
-    Stream<CityEntity> findIntersectedCities(final LineString line);
+    @Query(value = "SELECT e.geometry FROM CityEntity e WHERE intersects(e.geometry.boundingBox, :line) = true")
+    Stream<CityGeometry> findIntersectedGeometries(final LineString line);
 }

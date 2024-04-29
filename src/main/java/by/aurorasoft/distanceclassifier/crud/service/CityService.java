@@ -4,7 +4,6 @@ import by.aurorasoft.distanceclassifier.crud.mapper.CityMapper;
 import by.aurorasoft.distanceclassifier.crud.model.dto.City;
 import by.aurorasoft.distanceclassifier.crud.model.entity.CityEntity;
 import by.aurorasoft.distanceclassifier.crud.repository.CityRepository;
-import by.aurorasoft.distanceclassifier.model.CityMapView;
 import by.aurorasoft.distanceclassifier.model.PreparedBoundedGeometry;
 import by.nhorushko.crudgeneric.v2.service.AbsServiceCRUD;
 import org.locationtech.jts.geom.Geometry;
@@ -13,6 +12,7 @@ import org.locationtech.jts.geom.prep.PreparedGeometry;
 import org.locationtech.jts.geom.prep.PreparedGeometryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,14 +39,6 @@ public class CityService extends AbsServiceCRUD<Long, CityEntity, City, CityRepo
         return repository.findAll(pageable).map(mapper::toDto);
     }
 
-    public CityMapView loadCityMap() {
-        return null;
-    }
-
-    public CityMapView loadCityMap(final LineString line) {
-        return null;
-    }
-
     //TODO: load just Geometry and prepare in loader
     public Set<PreparedBoundedGeometry> findBoundedPreparedGeometries(final LineString line) {
         throw new UnsupportedOperationException();
@@ -60,19 +52,21 @@ public class CityService extends AbsServiceCRUD<Long, CityEntity, City, CityRepo
     //TODO: remove
     @Transactional(readOnly = true)
     public Map<PreparedGeometry, PreparedGeometry> findPreparedGeometriesByPreparedBoundingBoxes() {
-        return repository.findBoundingBoxesWithGeometries()
-                .stream()
-                .collect(toMap(CityService::getPreparedBoundingBox, CityService::getPreparedGeometry));
+        return null;
+//        return repository.findBoundingBoxesWithGeometries()
+//                .stream()
+//                .collect(toMap(CityService::getPreparedBoundingBox, CityService::getPreparedGeometry));
     }
 
     //TODO: remove
     @Transactional(readOnly = true)
     public List<PreparedGeometry> findIntersectedPreparedGeometries(final LineString line) {
-        try (final Stream<CityEntity> entityStream = repository.findIntersectedCities(line)) {
-            return entityStream.map(CityEntity::getGeometry)
-                    .map(PreparedGeometryFactory::prepare)
-                    .toList();
-        }
+        return null;
+//        try (final Stream<CityEntity> entityStream = repository.findIntersectedCities(line)) {
+//            return entityStream.map(CityEntity::getGeometry)
+//                    .map(PreparedGeometryFactory::prepare)
+//                    .toList();
+//        }
     }
 
     private static PreparedGeometry getPreparedBoundingBox(final Tuple tuple) {

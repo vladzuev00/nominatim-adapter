@@ -32,14 +32,28 @@ public class CityEntity extends BaseEntity<Long> {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "geometry")
-    private Geometry geometry;
-
     @Enumerated(STRING)
     @Column(name = "type")
     @Type(type = "pgsql_enum")
     private CityType type;
 
-    @Column(name = "bounding_box")
-    private Geometry boundingBox;
+    @Embedded
+    private CityGeometry geometry;
+
+    @Embeddable
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Setter
+    @Getter
+    @EqualsAndHashCode
+    @ToString
+    @Builder
+    public static class CityGeometry {
+
+        @Column(name = "geometry")
+        private Geometry geometry;
+
+        @Column(name = "bounding_box")
+        private Geometry boundingBox;
+    }
 }

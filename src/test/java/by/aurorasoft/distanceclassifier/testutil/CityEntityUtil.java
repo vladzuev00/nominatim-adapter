@@ -1,6 +1,7 @@
 package by.aurorasoft.distanceclassifier.testutil;
 
 import by.aurorasoft.distanceclassifier.crud.model.entity.CityEntity;
+import by.aurorasoft.distanceclassifier.crud.model.entity.CityEntity.CityGeometry;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
@@ -18,13 +19,17 @@ public final class CityEntityUtil {
 
     public static void checkEqualsExceptId(final CityEntity expected, final CityEntity actual) {
         assertEquals(expected.getName(), actual.getName());
-        assertTrue(expected.getGeometry().equalsTopo(actual.getGeometry()));
         assertSame(expected.getType(), actual.getType());
-        assertTrue(expected.getBoundingBox().equalsTopo(actual.getBoundingBox()));
+        checkEquals(expected.getGeometry(), actual.getGeometry());
     }
 
     public static void checkEqualsExceptId(final List<CityEntity> expected, final List<CityEntity> actual) {
         assertEquals(expected.size(), actual.size());
         range(0, expected.size()).forEach(i -> checkEqualsExceptId(expected.get(i), actual.get(i)));
+    }
+
+    public static void checkEquals(final CityGeometry expected, final CityGeometry actual) {
+        assertTrue(expected.getGeometry().equalsTopo(actual.getGeometry()));
+        assertTrue(expected.getBoundingBox().equalsTopo(actual.getBoundingBox()));
     }
 }
