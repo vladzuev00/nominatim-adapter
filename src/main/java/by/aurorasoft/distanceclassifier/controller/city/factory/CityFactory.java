@@ -3,6 +3,7 @@ package by.aurorasoft.distanceclassifier.controller.city.factory;
 import by.aurorasoft.distanceclassifier.controller.city.model.CityRequest;
 import by.aurorasoft.distanceclassifier.crud.model.dto.City;
 import by.aurorasoft.distanceclassifier.crud.model.dto.City.CityBuilder;
+import by.aurorasoft.distanceclassifier.crud.model.dto.City.CityGeometry;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Geometry;
 import org.springframework.stereotype.Component;
@@ -24,16 +25,15 @@ public final class CityFactory {
     }
 
     private CityBuilder createBuilder(final CityRequest request) {
-        return null;
-//        final Geometry geometry = getGeometry(request);
-//        return City.builder()
-//                .name(request.getName())
-//                .geometry(getGeometry(request))
-//                .type(request.getType())
-//                .boundingBox(geometry.getEnvelope());
+        return City.builder()
+                .name(request.getName())
+                .type(request.getType())
+                .geometry(getGeometry(request));
     }
 
-    private Geometry getGeometry(final CityRequest request) {
-        return geoJSONReader.read(request.getGeometry());
+    private CityGeometry getGeometry(final CityRequest request) {
+        final Geometry geometry = geoJSONReader.read(request.getGeometry());
+        final Geometry boundingBox = geometry.getEnvelope();
+        return new CityGeometry(geometry, boundingBox);
     }
 }

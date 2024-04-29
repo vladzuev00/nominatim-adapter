@@ -15,7 +15,8 @@ public final class CityResponseUtil {
                                    final GeoJSONReader geoJSONReader) {
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getName(), actual.getName());
-        GeometryUtil.checkEquals(expected.getGeometry(), actual.getGeometry(), geoJSONReader);
+        GeometryUtil.checkEquals(expected.getGeometry().getGeometry(), actual.getGeometry().getGeometry(), geoJSONReader);
+        GeometryUtil.checkEquals(expected.getGeometry().getBoundingBox(), actual.getGeometry().getBoundingBox(), geoJSONReader);
         assertSame(expected.getType(), actual.getType());
     }
 }

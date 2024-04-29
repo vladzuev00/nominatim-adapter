@@ -13,7 +13,8 @@ public final class CityResponseFactory {
     private final GeoJSONWriter geoJSONWriter;
 
     public CityResponse create(final City city) {
-        return new CityResponse(city.getId(), city.getName(), getGeometry(city), city.getType());
+        return null;
+//        return new CityResponse(city.getId(), city.getName(), getGeometry(city), city.getType());
     }
 
     private Geometry getGeometry(final City city) {
