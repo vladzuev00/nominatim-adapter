@@ -59,12 +59,12 @@ public final class TrackPointLocatorTest {
 
         verify(givenPoint, times(1)).getSpeed();
         verify(mockedGeometryService, times(1)).isAnyGeometryContain(same(mockedCityGeometries), same(givenPoint));
-        verify(mockedGeometryService, times(1)).isAnyBoundingBoxContain(anySet(), any(TrackPoint.class));
+        verify(mockedGeometryService, times(1)).isAnyBoundingBoxContain(same(mockedCityGeometries), same(givenPoint));
     }
 
     @Test
     public void pointShouldNotBeLocatedInCityBecauseOfLocationIsBoundingBox() {
-        final TrackPoint givenPoint = mock(TrackPoint.class);
+        final TrackPoint givenPoint = createPoint(50);
 
         mockLocation(givenPoint, false, true);
 
@@ -72,9 +72,9 @@ public final class TrackPointLocatorTest {
         final boolean expected = false;
         assertEquals(expected, actual);
 
-        verifyNoInteractions(givenPoint);
+        verify(givenPoint, times(1)).getSpeed();
         verify(mockedGeometryService, times(1)).isAnyGeometryContain(same(mockedCityGeometries), same(givenPoint));
-        verify(mockedGeometryService, times(1)).isAnyBoundingBoxContain(anySet(), any(TrackPoint.class));
+        verify(mockedGeometryService, times(1)).isAnyBoundingBoxContain(same(mockedCityGeometries), same(givenPoint));
     }
 
     @Test
@@ -89,7 +89,7 @@ public final class TrackPointLocatorTest {
 
         verify(givenPoint, times(1)).getSpeed();
         verify(mockedGeometryService, times(1)).isAnyGeometryContain(same(mockedCityGeometries), same(givenPoint));
-        verify(mockedGeometryService, times(1)).isAnyBoundingBoxContain(anySet(), any(TrackPoint.class));
+        verify(mockedGeometryService, times(0)).isAnyBoundingBoxContain(anySet(), any(TrackPoint.class));
     }
 
     private void mockLocation(final TrackPoint point, final boolean insideCity, final boolean insideBoundingBox) {

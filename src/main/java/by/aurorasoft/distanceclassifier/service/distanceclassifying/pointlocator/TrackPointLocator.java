@@ -14,7 +14,7 @@ public final class TrackPointLocator {
     private final int citySpeedThreshold;
 
     public boolean isCity(final TrackPoint point) {
-        return isExactCity(point) || (isUnknownLocation(point) && point.getSpeed() <= citySpeedThreshold);
+        return isExactCity(point) || (point.getSpeed() <= citySpeedThreshold && isUnknownLocation(point));
     }
 
     private boolean isExactCity(final TrackPoint point) {
