@@ -23,24 +23,26 @@ public final class ClassifiedDistanceAccumulator {
     }
 
     public ClassifiedDistanceStorage get() {
-        return new ClassifiedDistanceStorage(getGpsDistance(), getOdometerDistance());
+        final ClassifiedDistance gps = new ClassifiedDistance(gpsUrban, gpsCountry);
+        final ClassifiedDistance odometer = new ClassifiedDistance(odometerUrban, odometerCountry);
+        return new ClassifiedDistanceStorage(gps, odometer);
     }
 
     private void accumulateAsUrban(final TrackPoint point) {
-        gpsUrban += point.getGpsDistance().getRelative();
-        odometerUrban += point.getOdometerDistance().getRelative();
+        gpsUrban += getGpsDelta(point);
+        odometerUrban += getOdometerDelta(point);
     }
 
     private void accumulateAsCountry(final TrackPoint point) {
-        gpsCountry += point.getGpsDistance().getRelative();
-        odometerCountry += point.getOdometerDistance().getRelative();
+        gpsCountry += getGpsDelta(point);
+        odometerCountry += getOdometerDelta(point);
     }
 
-    private ClassifiedDistance getGpsDistance() {
-        return new ClassifiedDistance(gpsUrban, gpsCountry);
+    private double getGpsDelta(final TrackPoint point) {
+        return point.getGpsDistance().getRelative();
     }
 
-    private ClassifiedDistance getOdometerDistance() {
-        return new ClassifiedDistance(odometerUrban, odometerCountry);
+    private double getOdometerDelta(final TrackPoint point) {
+        return point.getOdometerDistance().getRelative();
     }
 }
