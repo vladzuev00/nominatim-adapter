@@ -12,9 +12,9 @@ import java.util.List;
 
 public class Runner {
     public static void main(String[] args) {
-        final String filePath = "./src/test/resources/tracks/2907_track-total_10.53_kobrin_2.9_country_7.63.csv";
+        final String filePath = "./src/test/resources/tracks/unit_460_13000.csv";
         final List<Line> lines = readLines(filePath);
-
+        writeWithoutAltitude(lines, filePath);
     }
 
     private static List<Line> readLines(final String filePath) {
