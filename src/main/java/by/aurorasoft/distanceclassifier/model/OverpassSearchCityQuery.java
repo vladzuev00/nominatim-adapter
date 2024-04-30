@@ -8,18 +8,14 @@ public class OverpassSearchCityQuery {
     AreaCoordinate areaCoordinate;
 
     public String asText() {
+        final Coordinate min = areaCoordinate.getMin();
+        final Coordinate max = areaCoordinate.getMax();
         return """
                 [out:json][timeout:%d];
                 (
                   relation[place~"(city)|(town)"](%s, %s, %s, %s);
                 );
                 out geom;"""
-                .formatted(
-                        timeout,
-                        areaCoordinate.getMin().getLatitude(),
-                        areaCoordinate.getMin().getLongitude(),
-                        areaCoordinate.getMax().getLatitude(),
-                        areaCoordinate.getMax().getLongitude()
-                );
+                .formatted(timeout, min.getLatitude(), min.getLongitude(), max.getLatitude(), max.getLongitude());
     }
 }
