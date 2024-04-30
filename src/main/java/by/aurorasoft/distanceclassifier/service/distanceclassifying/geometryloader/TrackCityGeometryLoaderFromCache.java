@@ -1,4 +1,4 @@
-package by.aurorasoft.distanceclassifier.service.distanceclassifying.loader;
+package by.aurorasoft.distanceclassifier.service.distanceclassifying.geometryloader;
 
 import by.aurorasoft.distanceclassifier.model.PreparedCityGeometry;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.cache.CityGeometryCache;

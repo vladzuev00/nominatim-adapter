@@ -1,4 +1,4 @@
-package by.aurorasoft.distanceclassifier.service.distanceclassifying.loader;
+package by.aurorasoft.distanceclassifier.service.distanceclassifying.geometryloader;
 
 import by.aurorasoft.distanceclassifier.crud.model.dto.City.CityGeometry;
 import by.aurorasoft.distanceclassifier.crud.service.CityService;
@@ -18,7 +18,7 @@ import static java.util.stream.Collectors.toUnmodifiableSet;
 
 @Component
 @ConditionalOnProperty(prefix = "distance-classifying", name = "load-city-geometries-on-start-app", havingValue = "false")
-public final class TrackCityGeometryLoaderFromRepository extends TrackCityGeometryLoader {
+public class TrackCityGeometryLoaderFromRepository extends TrackCityGeometryLoader {
     private final CityService cityService;
     private final CityGeometryPreparer geometryPreparer;
 
