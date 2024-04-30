@@ -38,12 +38,6 @@ public final class GeometryService {
                 .anyMatch(geometry -> isContain(geometry, point));
     }
 
-    private boolean isContain(final PreparedBoundedGeometry geometry, final TrackPoint point) {
-        final Coordinate coordinate = createJtsCoordinate(point);
-        final Point jtsPoint = geometryFactory.createPoint(coordinate);
-        return geometry.getGeometry().contains(jtsPoint);
-    }
-
     //TODO: remove
     public boolean isAnyContain(final List<PreparedGeometry> geometries, final TrackPoint point) {
 //        return geometries.stream().anyMatch(geometry -> isContain(geometry, point));

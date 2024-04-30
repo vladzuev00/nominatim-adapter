@@ -2,10 +2,13 @@ package by.aurorasoft.distanceclassifier.model;
 
 import by.nhorushko.classifieddistance.Distance;
 import by.nhorushko.trackfilter.LatLng;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Value;
 
-//TODO: test
 @Value
+@AllArgsConstructor
+@Builder
 public class TrackPoint implements LatLng {
     Coordinate coordinate;
     int speed;
