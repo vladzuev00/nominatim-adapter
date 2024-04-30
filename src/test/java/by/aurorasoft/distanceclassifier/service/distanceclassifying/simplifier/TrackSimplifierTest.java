@@ -1,8 +1,9 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassifying.simplifier;
 
+import by.aurorasoft.distanceclassifier.model.Coordinate;
 import by.aurorasoft.distanceclassifier.model.Track;
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
-import by.nhorushko.trackfilter.TrackFilter;
+import by.nhorushko.trackfilter.TrackFilterI;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,14 +14,15 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.same;
+import static org.mockito.Mockito.when;
 
-//TODO
 @RunWith(MockitoJUnitRunner.class)
 public final class TrackSimplifierTest {
     private static final double GIVEN_EPSILON = 0.0015;
 
     @Mock
-    private TrackFilter mockedTrackFilter;
+    private TrackFilterI mockedTrackFilter;
 
     private TrackSimplifier simplifier;
 
@@ -39,11 +41,8 @@ public final class TrackSimplifierTest {
         );
         final Track givenTrack = new Track(givenPoints);
 
-        final List givenFilteredPoints = List.of(
-                createPoint(4.4, 5.5),
-                createPoint(8.8, 9.9)
-        );
-//        when(mockedTrackFilter.filter(same(givenPoints), eq(GIVEN_EPSILON))).thenReturn(givenFilteredPoints);
+        final List givenFilteredPoints = List.of(createPoint(4.4, 5.5), createPoint(8.8, 9.9));
+        when(mockedTrackFilter.filter(same(givenPoints), eq(GIVEN_EPSILON))).thenReturn(givenFilteredPoints);
 
         final Track actual = simplifier.simplify(givenTrack);
         final Track expected = new Track(givenFilteredPoints);
@@ -51,9 +50,8 @@ public final class TrackSimplifierTest {
     }
 
     private static TrackPoint createPoint(final double latitude, final double longitude) {
-        return null;
-//        return TrackPoint.builder()
-//                .coordinate(new Coordinate(latitude, longitude))
-//                .build();
+        return TrackPoint.builder()
+                .coordinate(new Coordinate(latitude, longitude))
+                .build();
     }
 }
