@@ -108,12 +108,12 @@ public final class GeometryService {
     }
 
     private boolean isAnyGeometryContain(final Set<PreparedCityGeometry> cityGeometries,
-                                         final Function<PreparedCityGeometry, PreparedGeometry> propertyGetter,
+                                         final Function<PreparedCityGeometry, PreparedGeometry> geometryGetter,
                                          final TrackPoint point) {
         final Coordinate jtsCoordinate = new CoordinateXY(point.getLongitude(), point.getLatitude());
         final Point jtsPoint = geometryFactory.createPoint(jtsCoordinate);
         return cityGeometries.stream()
-                .map(propertyGetter)
+                .map(geometryGetter)
                 .anyMatch(geometry -> geometry.contains(jtsPoint));
     }
 }
