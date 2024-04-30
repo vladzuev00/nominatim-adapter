@@ -43,7 +43,7 @@ public final class TrackPointLocatorTest {
         assertEquals(expected, actual);
 
         verifyNoInteractions(givenPoint);
-        verify(mockedGeometryService, times(1)).isAnyGeometryContain(same(mockedCityGeometries), same(givenPoint));
+        verify(mockedGeometryService, times(1)).isAnyContain(same(mockedCityGeometries), same(givenPoint));
         verify(mockedGeometryService, times(0)).isAnyBoundingBoxContain(anySet(), any(TrackPoint.class));
     }
 
@@ -58,7 +58,7 @@ public final class TrackPointLocatorTest {
         assertEquals(expected, actual);
 
         verify(givenPoint, times(1)).getSpeed();
-        verify(mockedGeometryService, times(1)).isAnyGeometryContain(same(mockedCityGeometries), same(givenPoint));
+        verify(mockedGeometryService, times(1)).isAnyContain(same(mockedCityGeometries), same(givenPoint));
         verify(mockedGeometryService, times(1)).isAnyBoundingBoxContain(same(mockedCityGeometries), same(givenPoint));
     }
 
@@ -73,7 +73,7 @@ public final class TrackPointLocatorTest {
         assertEquals(expected, actual);
 
         verify(givenPoint, times(1)).getSpeed();
-        verify(mockedGeometryService, times(1)).isAnyGeometryContain(same(mockedCityGeometries), same(givenPoint));
+        verify(mockedGeometryService, times(1)).isAnyContain(same(mockedCityGeometries), same(givenPoint));
         verify(mockedGeometryService, times(1)).isAnyBoundingBoxContain(same(mockedCityGeometries), same(givenPoint));
     }
 
@@ -88,12 +88,12 @@ public final class TrackPointLocatorTest {
         assertEquals(expected, actual);
 
         verify(givenPoint, times(1)).getSpeed();
-        verify(mockedGeometryService, times(1)).isAnyGeometryContain(same(mockedCityGeometries), same(givenPoint));
+        verify(mockedGeometryService, times(1)).isAnyContain(same(mockedCityGeometries), same(givenPoint));
         verify(mockedGeometryService, times(0)).isAnyBoundingBoxContain(anySet(), any(TrackPoint.class));
     }
 
     private void mockLocation(final TrackPoint point, final boolean insideCity, final boolean insideBoundingBox) {
-        when(mockedGeometryService.isAnyGeometryContain(same(mockedCityGeometries), same(point))).thenReturn(insideCity);
+        when(mockedGeometryService.isAnyContain(same(mockedCityGeometries), same(point))).thenReturn(insideCity);
         when(mockedGeometryService.isAnyBoundingBoxContain(same(mockedCityGeometries), same(point))).thenReturn(insideBoundingBox);
     }
 

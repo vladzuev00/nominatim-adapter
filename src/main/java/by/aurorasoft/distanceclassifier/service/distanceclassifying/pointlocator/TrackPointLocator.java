@@ -18,7 +18,7 @@ public final class TrackPointLocator {
     }
 
     private boolean isExactCity(final TrackPoint point) {
-        return geometryService.isAnyGeometryContain(cityGeometries, point);
+        return geometryService.isAnyContain(cityGeometries, point);
     }
 
     private boolean isUnknownLocation(final TrackPoint point) {

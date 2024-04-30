@@ -4,7 +4,9 @@ import by.aurorasoft.distanceclassifier.model.Track;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.pointlocator.TrackPointLocator;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.pointlocator.TrackPointLocatorFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
 @RequiredArgsConstructor
 public final class ClassifiedDistanceAccumulatorFactory {
     private final TrackPointLocatorFactory pointLocatorFactory;

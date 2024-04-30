@@ -1,12 +1,14 @@
 package by.aurorasoft.distanceclassifier.service.geometry;
 
-import by.aurorasoft.distanceclassifier.model.*;
+import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse;
 import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Bounds;
 import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Relation;
 import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Way;
+import by.aurorasoft.distanceclassifier.model.PreparedCityGeometry;
+import by.aurorasoft.distanceclassifier.model.Track;
+import by.aurorasoft.distanceclassifier.model.TrackPoint;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.*;
-import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.prep.PreparedGeometry;
 import org.locationtech.jts.operation.polygonize.Polygonizer;
 import org.springframework.stereotype.Service;
@@ -26,97 +28,47 @@ public final class GeometryService {
         return geometryFactory.createLineString(getJtsCoordinates(track));
     }
 
-    public boolean isAnyGeometryContain(final Set<PreparedCityGeometry> cityGeometries, final TrackPoint point) {
-        return cityGeometries.stream()
-                .map(PreparedCityGeometry::getGeometry)
-                .anyMatch(geometry -> isContain(geometry, point));
-    }
-
-    public boolean isAnyBoundingBoxContain(final Set<PreparedCityGeometry> cityGeometries, final TrackPoint point) {
-        return cityGeometries.stream()
-                .map(PreparedCityGeometry::getBoundingBox)
-                .anyMatch(geometry -> isContain(geometry, point));
-    }
-
-    //TODO: remove
-    public boolean isAnyContain(final List<PreparedGeometry> geometries, final TrackPoint point) {
-//        return geometries.stream().anyMatch(geometry -> isContain(geometry, point));
-        return false;
-    }
-
-    public boolean isContain(final PreparedGeometry geometry, final TrackPoint point) {
-        final Coordinate coordinate = createJtsCoordinate(point);
-        final Point jtsPoint = geometryFactory.createPoint(coordinate);
-        return geometry.contains(jtsPoint);
-    }
-
     public MultiPolygon createMultiPolygon(final Relation relation) {
-        return geometryFactory.createMultiPolygon(getPolygons(relation));
+        return geometryFactory.createMultiPolygon(getJtsPolygons(relation));
     }
 
     public Polygon createPolygon(final Bounds bounds) {
         return geometryFactory.createPolygon(getJtsCoordinates(bounds));
     }
 
-    @SuppressWarnings("unchecked")
-    private Polygon[] getPolygons(final Relation relation) {
-        final Polygonizer polygonizer = new Polygonizer();
-        relation.getMembers()
-                .stream()
-                .filter(Way.class::isInstance)
-                .map(Way.class::cast)
-                .map(this::createLine)
-                .forEach(polygonizer::add);
-        return (Polygon[]) polygonizer.getPolygons().toArray(Polygon[]::new);
+    public boolean isAnyContain(final Set<PreparedCityGeometry> cityGeometries, final TrackPoint point) {
+        return isAnyPropertyContain(cityGeometries, point, PreparedCityGeometry::getGeometry);
     }
 
-    private LineString createLine(final Way way) {
-        return geometryFactory.createLineString(getJtsCoordinates(way));
+    public boolean isAnyBoundingBoxContain(final Set<PreparedCityGeometry> cityGeometries, final TrackPoint point) {
+        return isAnyPropertyContain(cityGeometries, point, PreparedCityGeometry::getBoundingBox);
     }
 
     private static CoordinateXY[] getJtsCoordinates(final Way way) {
-        return createJtsCoordinates(way.getCoordinates(), GeometryService::createJtsCoordinate);
+        return createJtsCoordinates(way.getCoordinates(), OverpassSearchCityResponse.Coordinate::getLatitude, OverpassSearchCityResponse.Coordinate::getLongitude);
     }
 
     private static CoordinateXY[] getJtsCoordinates(final Track track) {
-        return createJtsCoordinates(track.getPoints(), GeometryService::createJtsCoordinate);
+        return createJtsCoordinates(track.getPoints(), point -> point.getCoordinate().getLatitude(), point -> point.getCoordinate().getLongitude());
     }
 
     private static CoordinateXY[] getJtsCoordinates(final Bounds bounds) {
-        final CoordinateXY leftBottomCoordinate = getLeftBottomJtsCoordinate(bounds);
+        final CoordinateXY leftBottomJtsCoordinate = getLeftBottomJtsCoordinate(bounds);
         return new CoordinateXY[]{
-                leftBottomCoordinate,
+                leftBottomJtsCoordinate,
                 getLeftUpperJtsCoordinate(bounds),
                 getRightUpperJtsCoordinate(bounds),
                 getRightBottomJtsCoordinate(bounds),
-                leftBottomCoordinate
+                leftBottomJtsCoordinate
         };
     }
 
     private static <T> CoordinateXY[] createJtsCoordinates(final List<T> sources,
-                                                           final Function<T, CoordinateXY> factory) {
-        return createJtsCoordinates(sources.stream(), factory);
-    }
-
-    private static <T> CoordinateXY[] createJtsCoordinates(final Stream<T> sources,
-                                                           final Function<T, CoordinateXY> factory) {
-        return sources.map(factory).toArray(CoordinateXY[]::new);
-    }
-
-    private static CoordinateXY createJtsCoordinate(final TrackPoint trackPoint) {
-        return createJtsCoordinate(
-                trackPoint,
-                point -> point.getCoordinate().getLatitude(),
-                point -> point.getCoordinate().getLongitude()
-        );
-    }
-
-    private static CoordinateXY createJtsCoordinate(final OverpassSearchCityResponse.Coordinate coordinate) {
-        return createJtsCoordinate(
-                coordinate,
-                OverpassSearchCityResponse.Coordinate::getLatitude,
-                OverpassSearchCityResponse.Coordinate::getLongitude
-        );
+                                                           final ToDoubleFunction<T> latitudeGetter,
+                                                           final ToDoubleFunction<T> longitudeGetter) {
+        return sources.stream()
+                .map(source -> createJtsCoordinate(source, latitudeGetter, longitudeGetter))
+                .toArray(CoordinateXY[]::new);
     }
 
     private static CoordinateXY getLeftBottomJtsCoordinate(final Bounds bounds) {
@@ -141,5 +93,39 @@ public final class GeometryService {
         final double latitude = latitudeGetter.applyAsDouble(source);
         final double longitude = longitudeGetter.applyAsDouble(source);
         return new CoordinateXY(longitude, latitude);
+    }
+
+    @SuppressWarnings("unchecked")
+    private Polygon[] getJtsPolygons(final Relation relation) {
+        final Polygonizer polygonizer = new Polygonizer();
+        relation.getMembers()
+                .stream()
+                .filter(Way.class::isInstance)
+                .map(Way.class::cast)
+                .map(this::createJtsLine)
+                .forEach(polygonizer::add);
+        return (Polygon[]) polygonizer.getPolygons().toArray(Polygon[]::new);
+    }
+
+    private LineString createJtsLine(final Way way) {
+        return geometryFactory.createLineString(getJtsCoordinates(way));
+    }
+
+    private boolean isAnyPropertyContain(final Set<PreparedCityGeometry> cityGeometries,
+                                         final TrackPoint point,
+                                         final Function<PreparedCityGeometry, PreparedGeometry> propertyGetter) {
+        return cityGeometries.stream()
+                .map(propertyGetter)
+                .anyMatch(geometry -> isContain(geometry, point));
+    }
+
+    private boolean isContain(final PreparedGeometry geometry, final TrackPoint point) {
+        final Coordinate jtsCoordinate = createJtsCoordinate(
+                point,
+                source -> source.getCoordinate().getLatitude(),
+                source -> source.getCoordinate().getLongitude()
+        );
+        final Point jtsPoint = geometryFactory.createPoint(jtsCoordinate);
+        return geometry.contains(jtsPoint);
     }
 }

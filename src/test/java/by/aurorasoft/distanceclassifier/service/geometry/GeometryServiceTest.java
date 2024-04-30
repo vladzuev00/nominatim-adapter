@@ -6,6 +6,7 @@ import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Bounds;
 import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Node;
 import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Relation;
 import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Way;
+import by.aurorasoft.distanceclassifier.model.PreparedCityGeometry;
 import by.aurorasoft.distanceclassifier.model.Track;
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
 import org.junit.Test;
@@ -14,6 +15,7 @@ import org.locationtech.jts.geom.prep.PreparedGeometry;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 import static org.locationtech.jts.geom.prep.PreparedGeometryFactory.prepare;
@@ -53,62 +55,34 @@ public final class GeometryServiceTest extends AbstractSpringBootTest {
     }
 
     @Test
-    public void geometriesShouldContainPoint() {
-        final List<PreparedGeometry> givenGeometries = List.of(
-                createPreparedPolygon(
-                        new CoordinateXY(1, 1),
-                        new CoordinateXY(1, 2),
-                        new CoordinateXY(2, 2),
-                        new CoordinateXY(2, 1),
-                        new CoordinateXY(1, 1)
-                ),
-                createPreparedPolygon(
-                        new CoordinateXY(3, 3),
-                        new CoordinateXY(3, 4),
-                        new CoordinateXY(4, 4),
-                        new CoordinateXY(4, 3),
-                        new CoordinateXY(3, 3)
-                )
-        );
-        final TrackPoint givenPoint = createTrackPoint(4, 4);
-
-        final boolean actual = service.isAnyContain(givenGeometries, givenPoint);
-        assertFalse(actual);
-    }
-
-    @Test
-    public void geometriesShouldNotContainPoint() {
-        final List<PreparedGeometry> givenGeometries = List.of(
-                createPreparedPolygon(
-                        new CoordinateXY(1, 1),
-                        new CoordinateXY(1, 2),
-                        new CoordinateXY(2, 2),
-                        new CoordinateXY(2, 1),
-                        new CoordinateXY(1, 1)
-                ),
-                createPreparedPolygon(
-                        new CoordinateXY(3, 3),
-                        new CoordinateXY(3, 4),
-                        new CoordinateXY(4, 4),
-                        new CoordinateXY(4, 3),
-                        new CoordinateXY(3, 3)
-                )
-        );
-        final TrackPoint givenPoint = createTrackPoint(4.5F, 4.5F);
-
-        final boolean actual = service.isAnyContain(givenGeometries, givenPoint);
-        assertFalse(actual);
-    }
-
-    @Test
-    public void geometryShouldBeCreatedByRelation() {
+    public void multiPolygonShouldBeCreatedByRelation() {
         final Relation givenRelation = Relation.builder()
                 .members(
                         List.of(
                                 new Node(1, 2),
-                                createWay(3, 1, 6, 2, 8, 4),
-                                createWay(8, 4, 5, 5, 2, 4, 3, 1),
-                                createWay(2, 7, 6, 7, 5, 10, 2, 7)
+                                new Way(
+                                        List.of(
+                                                new OverpassSearchCityResponse.Coordinate(3, 1),
+                                                new OverpassSearchCityResponse.Coordinate(6, 2),
+                                                new OverpassSearchCityResponse.Coordinate(8, 4)
+                                        )
+                                ),
+                                new Way(
+                                        List.of(
+                                                new OverpassSearchCityResponse.Coordinate(8, 4),
+                                                new OverpassSearchCityResponse.Coordinate(5, 5),
+                                                new OverpassSearchCityResponse.Coordinate(2, 4),
+                                                new OverpassSearchCityResponse.Coordinate(3, 1)
+                                        )
+                                ),
+                                new Way(
+                                        List.of(
+                                                new OverpassSearchCityResponse.Coordinate(2, 7),
+                                                new OverpassSearchCityResponse.Coordinate(6, 7),
+                                                new OverpassSearchCityResponse.Coordinate(5, 10),
+                                                new OverpassSearchCityResponse.Coordinate(2, 7)
+                                        )
+                                )
                         )
                 )
                 .build();
@@ -152,11 +126,138 @@ public final class GeometryServiceTest extends AbstractSpringBootTest {
         assertEquals(expected, actual);
     }
 
+    @Test
+    public void cityGeometriesShouldContainPoint() {
+        final Set<PreparedCityGeometry> givenGeometries = Set.of(
+                PreparedCityGeometry.builder()
+                        .geometry(
+                                createPreparedPolygon(
+                                        new CoordinateXY(1, 1),
+                                        new CoordinateXY(1, 2),
+                                        new CoordinateXY(2, 2),
+                                        new CoordinateXY(2, 1),
+                                        new CoordinateXY(1, 1)
+                                )
+                        )
+                        .build(),
+                PreparedCityGeometry.builder()
+                        .geometry(
+                                createPreparedPolygon(
+                                        new CoordinateXY(3, 3),
+                                        new CoordinateXY(3, 4),
+                                        new CoordinateXY(4, 4),
+                                        new CoordinateXY(4, 3),
+                                        new CoordinateXY(3, 3)
+                                )
+                        )
+                        .build()
+        );
+        final TrackPoint givenPoint = createTrackPoint(3.5, 3.5);
+
+        final boolean actual = service.isAnyContain(givenGeometries, givenPoint);
+        assertTrue(actual);
+    }
+
+    @Test
+    public void cityGeometriesShouldNotContainPoint() {
+        final Set<PreparedCityGeometry> givenGeometries = Set.of(
+                PreparedCityGeometry.builder()
+                        .geometry(
+                                createPreparedPolygon(
+                                        new CoordinateXY(1, 1),
+                                        new CoordinateXY(1, 2),
+                                        new CoordinateXY(2, 2),
+                                        new CoordinateXY(2, 1),
+                                        new CoordinateXY(1, 1)
+                                )
+                        )
+                        .build(),
+                PreparedCityGeometry.builder()
+                        .geometry(
+                                createPreparedPolygon(
+                                        new CoordinateXY(3, 3),
+                                        new CoordinateXY(3, 4),
+                                        new CoordinateXY(4, 4),
+                                        new CoordinateXY(4, 3),
+                                        new CoordinateXY(3, 3)
+                                )
+                        )
+                        .build()
+        );
+        final TrackPoint givenPoint = createTrackPoint(4.5, 4.5);
+
+        final boolean actual = service.isAnyContain(givenGeometries, givenPoint);
+        assertFalse(actual);
+    }
+
+    @Test
+    public void cityBoundingBoxesShouldContainPoint() {
+        final Set<PreparedCityGeometry> givenGeometries = Set.of(
+                PreparedCityGeometry.builder()
+                        .boundingBox(
+                                createPreparedPolygon(
+                                        new CoordinateXY(1, 1),
+                                        new CoordinateXY(1, 2),
+                                        new CoordinateXY(2, 2),
+                                        new CoordinateXY(2, 1),
+                                        new CoordinateXY(1, 1)
+                                )
+                        )
+                        .build(),
+                PreparedCityGeometry.builder()
+                        .boundingBox(
+                                createPreparedPolygon(
+                                        new CoordinateXY(3, 3),
+                                        new CoordinateXY(3, 4),
+                                        new CoordinateXY(4, 4),
+                                        new CoordinateXY(4, 3),
+                                        new CoordinateXY(3, 3)
+                                )
+                        )
+                        .build()
+        );
+        final TrackPoint givenPoint = createTrackPoint(3.5, 3.5);
+
+        final boolean actual = service.isAnyBoundingBoxContain(givenGeometries, givenPoint);
+        assertTrue(actual);
+    }
+
+    @Test
+    public void cityBoundingBoxesShouldNotContainPoint() {
+        final Set<PreparedCityGeometry> givenGeometries = Set.of(
+                PreparedCityGeometry.builder()
+                        .boundingBox(
+                                createPreparedPolygon(
+                                        new CoordinateXY(1, 1),
+                                        new CoordinateXY(1, 2),
+                                        new CoordinateXY(2, 2),
+                                        new CoordinateXY(2, 1),
+                                        new CoordinateXY(1, 1)
+                                )
+                        )
+                        .build(),
+                PreparedCityGeometry.builder()
+                        .boundingBox(
+                                createPreparedPolygon(
+                                        new CoordinateXY(3, 3),
+                                        new CoordinateXY(3, 4),
+                                        new CoordinateXY(4, 4),
+                                        new CoordinateXY(4, 3),
+                                        new CoordinateXY(3, 3)
+                                )
+                        )
+                        .build()
+        );
+        final TrackPoint givenPoint = createTrackPoint(4.5, 4.5);
+
+        final boolean actual = service.isAnyBoundingBoxContain(givenGeometries, givenPoint);
+        assertFalse(actual);
+    }
+
     private static TrackPoint createTrackPoint(final double latitude, final double longitude) {
-//        return TrackPoint.builder()
-//                .coordinate(new by.aurorasoft.mileagecalculator.model.Coordinate(latitude, longitude))
-//                .build();
-        return null;
+        return TrackPoint.builder()
+                .coordinate(new by.aurorasoft.distanceclassifier.model.Coordinate(latitude, longitude))
+                .build();
     }
 
     private LineString createLine(final Coordinate... coordinates) {
@@ -165,33 +266,6 @@ public final class GeometryServiceTest extends AbstractSpringBootTest {
 
     private PreparedGeometry createPreparedPolygon(final Coordinate... coordinates) {
         return prepare(geometryFactory.createPolygon(coordinates));
-    }
-
-    @SuppressWarnings("SameParameterValue")
-    private static Way createWay(final double firstLatitude, final double firstLongitude,
-                                 final double secondLatitude, final double secondLongitude,
-                                 final double thirdLatitude, final double thirdLongitude) {
-        return new Way(
-                List.of(
-                        new OverpassSearchCityResponse.Coordinate(firstLatitude, firstLongitude),
-                        new OverpassSearchCityResponse.Coordinate(secondLatitude, secondLongitude),
-                        new OverpassSearchCityResponse.Coordinate(thirdLatitude, thirdLongitude)
-                )
-        );
-    }
-
-    private static Way createWay(final double firstLatitude, final double firstLongitude,
-                                 final double secondLatitude, final double secondLongitude,
-                                 final double thirdLatitude, final double thirdLongitude,
-                                 final double fourthLatitude, final double fourthLongitude) {
-        return new Way(
-                List.of(
-                        new OverpassSearchCityResponse.Coordinate(firstLatitude, firstLongitude),
-                        new OverpassSearchCityResponse.Coordinate(secondLatitude, secondLongitude),
-                        new OverpassSearchCityResponse.Coordinate(thirdLatitude, thirdLongitude),
-                        new OverpassSearchCityResponse.Coordinate(fourthLatitude, fourthLongitude)
-                )
-        );
     }
 
     private Polygon createPolygon(final Coordinate... coordinates) {
