@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.ToDoubleFunction;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -37,19 +36,35 @@ public final class GeometryService {
     }
 
     public boolean isAnyContain(final Set<PreparedCityGeometry> cityGeometries, final TrackPoint point) {
-        return isAnyPropertyContain(cityGeometries, point, PreparedCityGeometry::getGeometry);
+        return isAnyGeometryContain(cityGeometries, PreparedCityGeometry::getGeometry, point);
     }
 
     public boolean isAnyBoundingBoxContain(final Set<PreparedCityGeometry> cityGeometries, final TrackPoint point) {
-        return isAnyPropertyContain(cityGeometries, point, PreparedCityGeometry::getBoundingBox);
-    }
-
-    private static CoordinateXY[] getJtsCoordinates(final Way way) {
-        return createJtsCoordinates(way.getCoordinates(), OverpassSearchCityResponse.Coordinate::getLatitude, OverpassSearchCityResponse.Coordinate::getLongitude);
+        return isAnyGeometryContain(cityGeometries, PreparedCityGeometry::getBoundingBox, point);
     }
 
     private static CoordinateXY[] getJtsCoordinates(final Track track) {
-        return createJtsCoordinates(track.getPoints(), point -> point.getCoordinate().getLatitude(), point -> point.getCoordinate().getLongitude());
+        return mapToJtsCoordinates(
+                track.getPoints(),
+                point -> point.getCoordinate().getLatitude(),
+                point -> point.getCoordinate().getLongitude()
+        );
+    }
+
+    private static CoordinateXY[] getJtsCoordinates(final Way way) {
+        return mapToJtsCoordinates(
+                way.getCoordinates(),
+                OverpassSearchCityResponse.Coordinate::getLatitude,
+                OverpassSearchCityResponse.Coordinate::getLongitude
+        );
+    }
+
+    private static <T> CoordinateXY[] mapToJtsCoordinates(final List<T> sources,
+                                                          final ToDoubleFunction<T> latitudeGetter,
+                                                          final ToDoubleFunction<T> longitudeGetter) {
+        return sources.stream()
+                .map(source -> new CoordinateXY(longitudeGetter.applyAsDouble(source), latitudeGetter.applyAsDouble(source)))
+                .toArray(CoordinateXY[]::new);
     }
 
     private static CoordinateXY[] getJtsCoordinates(final Bounds bounds) {
@@ -63,36 +78,20 @@ public final class GeometryService {
         };
     }
 
-    private static <T> CoordinateXY[] createJtsCoordinates(final List<T> sources,
-                                                           final ToDoubleFunction<T> latitudeGetter,
-                                                           final ToDoubleFunction<T> longitudeGetter) {
-        return sources.stream()
-                .map(source -> createJtsCoordinate(source, latitudeGetter, longitudeGetter))
-                .toArray(CoordinateXY[]::new);
-    }
-
     private static CoordinateXY getLeftBottomJtsCoordinate(final Bounds bounds) {
-        return createJtsCoordinate(bounds, Bounds::getMinLatitude, Bounds::getMinLongitude);
+        return new CoordinateXY(bounds.getMinLongitude(), bounds.getMinLatitude());
     }
 
     private static CoordinateXY getLeftUpperJtsCoordinate(final Bounds bounds) {
-        return createJtsCoordinate(bounds, Bounds::getMaxLatitude, Bounds::getMinLongitude);
+        return new CoordinateXY(bounds.getMinLongitude(), bounds.getMaxLatitude());
     }
 
     private static CoordinateXY getRightUpperJtsCoordinate(final Bounds bounds) {
-        return createJtsCoordinate(bounds, Bounds::getMaxLatitude, Bounds::getMaxLongitude);
+        return new CoordinateXY(bounds.getMaxLongitude(), bounds.getMaxLatitude());
     }
 
     private static CoordinateXY getRightBottomJtsCoordinate(final Bounds bounds) {
-        return createJtsCoordinate(bounds, Bounds::getMinLatitude, Bounds::getMaxLongitude);
-    }
-
-    private static <T> CoordinateXY createJtsCoordinate(final T source,
-                                                        final ToDoubleFunction<T> latitudeGetter,
-                                                        final ToDoubleFunction<T> longitudeGetter) {
-        final double latitude = latitudeGetter.applyAsDouble(source);
-        final double longitude = longitudeGetter.applyAsDouble(source);
-        return new CoordinateXY(longitude, latitude);
+        return new CoordinateXY(bounds.getMaxLongitude(), bounds.getMinLatitude());
     }
 
     @SuppressWarnings("unchecked")
@@ -111,20 +110,16 @@ public final class GeometryService {
         return geometryFactory.createLineString(getJtsCoordinates(way));
     }
 
-    private boolean isAnyPropertyContain(final Set<PreparedCityGeometry> cityGeometries,
-                                         final TrackPoint point,
-                                         final Function<PreparedCityGeometry, PreparedGeometry> propertyGetter) {
+    private boolean isAnyGeometryContain(final Set<PreparedCityGeometry> cityGeometries,
+                                         final Function<PreparedCityGeometry, PreparedGeometry> propertyGetter,
+                                         final TrackPoint point) {
         return cityGeometries.stream()
                 .map(propertyGetter)
                 .anyMatch(geometry -> isContain(geometry, point));
     }
 
     private boolean isContain(final PreparedGeometry geometry, final TrackPoint point) {
-        final Coordinate jtsCoordinate = createJtsCoordinate(
-                point,
-                source -> source.getCoordinate().getLatitude(),
-                source -> source.getCoordinate().getLongitude()
-        );
+        final Coordinate jtsCoordinate = new CoordinateXY(point.getLongitude(), point.getLatitude());
         final Point jtsPoint = geometryFactory.createPoint(jtsCoordinate);
         return geometry.contains(jtsPoint);
     }
