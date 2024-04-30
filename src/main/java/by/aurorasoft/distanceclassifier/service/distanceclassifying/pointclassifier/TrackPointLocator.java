@@ -11,10 +11,10 @@ import java.util.Set;
 public final class TrackPointLocator {
     private final GeometryService geometryService;
     private final Set<PreparedCityGeometry> cityGeometries;
-    private final int urbanSpeedThreshold;
+    private final int citySpeedThreshold;
 
     public boolean isCity(final TrackPoint point) {
-        return isExactCity(point) || (isUnknownLocation(point) && point.getSpeed() <= urbanSpeedThreshold);
+        return isExactCity(point) || (isUnknownLocation(point) && point.getSpeed() <= citySpeedThreshold);
     }
 
     private boolean isExactCity(final TrackPoint point) {
