@@ -55,23 +55,4 @@ public final class ClassifyingDistanceService {
             );
         }
     }
-
-    @RequiredArgsConstructor
-    static final class PointLocator {
-        private final GeometryService geometryService;
-        private final Set<PreparedCityGeometry> cityGeometries;
-        private final int urbanSpeedThreshold;
-
-        public boolean isUrban(final TrackPoint point) {
-            return isLocatedInCity(point) || (isUnknownLocation(point) && point.getSpeed() <= urbanSpeedThreshold);
-        }
-
-        private boolean isLocatedInCity(final TrackPoint point) {
-            return geometryService.isAnyGeometryContain(cityGeometries, point);
-        }
-
-        private boolean isUnknownLocation(final TrackPoint point) {
-            return !geometryService.isAnyBoundingBoxContain(cityGeometries, point);
-        }
-    }
 }
