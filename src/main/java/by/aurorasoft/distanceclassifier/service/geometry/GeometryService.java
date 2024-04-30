@@ -101,26 +101,19 @@ public final class GeometryService {
                 .stream()
                 .filter(Way.class::isInstance)
                 .map(Way.class::cast)
-                .map(this::createJtsLine)
+                .map(GeometryService::getJtsCoordinates)
+                .map(geometryFactory::createLineString)
                 .forEach(polygonizer::add);
         return (Polygon[]) polygonizer.getPolygons().toArray(Polygon[]::new);
-    }
-
-    private LineString createJtsLine(final Way way) {
-        return geometryFactory.createLineString(getJtsCoordinates(way));
     }
 
     private boolean isAnyGeometryContain(final Set<PreparedCityGeometry> cityGeometries,
                                          final Function<PreparedCityGeometry, PreparedGeometry> propertyGetter,
                                          final TrackPoint point) {
-        return cityGeometries.stream()
-                .map(propertyGetter)
-                .anyMatch(geometry -> isContain(geometry, point));
-    }
-
-    private boolean isContain(final PreparedGeometry geometry, final TrackPoint point) {
         final Coordinate jtsCoordinate = new CoordinateXY(point.getLongitude(), point.getLatitude());
         final Point jtsPoint = geometryFactory.createPoint(jtsCoordinate);
-        return geometry.contains(jtsPoint);
+        return cityGeometries.stream()
+                .map(propertyGetter)
+                .anyMatch(geometry -> geometry.contains(jtsPoint));
     }
 }
