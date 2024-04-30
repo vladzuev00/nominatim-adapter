@@ -47,8 +47,8 @@ public final class CityScanningServiceTest {
         );
         when(mockedOverpassClient.findCities(same(givenAreaCoordinate))).thenReturn(givenResponse);
 
-        final City firstGivenCity = createCityBoundWithRelation(firstGivenRelation, 255L);
-        final City secondGivenCity = createCityBoundWithRelation(secondGivenRelation, 256L);
+        final City firstGivenCity = createCityForRelation(firstGivenRelation, 255L);
+        final City secondGivenCity = createCityForRelation(secondGivenRelation, 256L);
 
         scanningService.scan(givenAreaCoordinate);
 
@@ -56,7 +56,7 @@ public final class CityScanningServiceTest {
         verify(mockedCityService, times(1)).saveAll(eq(expectedSavedCities));
     }
 
-    private City createCityBoundWithRelation(final Relation relation, final Long id) {
+    private City createCityForRelation(final Relation relation, final Long id) {
         final City city = createCity(id);
         when(mockedCityFactory.create(same(relation))).thenReturn(city);
         return city;
