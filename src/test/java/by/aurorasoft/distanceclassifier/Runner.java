@@ -10,7 +10,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static java.lang.Double.parseDouble;
@@ -19,6 +21,21 @@ import static java.lang.Integer.parseInt;
 import static java.time.Instant.now;
 
 public final class Runner {
+    private static final Iterator<Instant> INSTANT_ITERATOR = new Iterator<>() {
+        private static Instant PREVIOUS = now();
+
+        @Override
+        public boolean hasNext() {
+            return true;
+        }
+
+        @Override
+        public Instant next() {
+            PREVIOUS = PREVIOUS.plus(5, ChronoUnit.MINUTES);
+            return PREVIOUS;
+        }
+    };
+
     private static final String FILE_PATH = "./src/test/resources/tracks/2907_track-total_10.53_kobrin_2.9_country_7.63.csv";
     private static final PointParser POINT_PARSER = new PointParser();
     private static final DistanceCalculator DISTANCE_CALCULATOR = new DistanceCalculatorImpl();
@@ -69,11 +86,11 @@ public final class Runner {
         float latitude;
         float longitude;
         int speed;
-        Instant dateTime = now();
+        Instant dateTime = INSTANT_ITERATOR.next();
 
         @Override
         public Instant getDatetime() {
-            return now();
+            return dateTime;
         }
 
         @Override
