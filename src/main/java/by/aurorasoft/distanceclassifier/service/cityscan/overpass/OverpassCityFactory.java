@@ -1,11 +1,13 @@
 package by.aurorasoft.distanceclassifier.service.cityscan.overpass;
 
 import by.aurorasoft.distanceclassifier.crud.model.dto.City;
+import by.aurorasoft.distanceclassifier.crud.model.dto.City.CityGeometry;
 import by.aurorasoft.distanceclassifier.model.CityType;
 import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Relation;
 import by.aurorasoft.distanceclassifier.service.geometry.GeometryService;
 import lombok.RequiredArgsConstructor;
-import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.MultiPolygon;
+import org.locationtech.jts.geom.Polygon;
 import org.springframework.stereotype.Component;
 
 import static java.util.Arrays.stream;
@@ -16,13 +18,11 @@ public final class OverpassCityFactory {
     private final GeometryService geometryService;
 
     public City create(final Relation relation) {
-        return null;
-//        return City.builder()
-//                .type(getType(relation))
-//                .name(getName(relation))
-//                .geometry(getGeometry(relation))
-//                .boundingBox(getBoundingBox(relation))
-//                .build();
+        return City.builder()
+                .name(getName(relation))
+                .type(getType(relation))
+                .geometry(getGeometry(relation))
+                .build();
     }
 
     private CityType getType(final Relation relation) {
@@ -40,12 +40,10 @@ public final class OverpassCityFactory {
         return relation.getTags().getName();
     }
 
-    private Geometry getGeometry(final Relation relation) {
-        return geometryService.createMultiPolygon(relation);
-    }
-
-    private Geometry getBoundingBox(final Relation relation) {
-        return geometryService.createPolygon(relation.getBounds());
+    private CityGeometry getGeometry(final Relation relation) {
+        final MultiPolygon geometry = geometryService.createMultiPolygon(relation);
+        final Polygon boundingBox = geometryService.createPolygon(relation.getBounds());
+        return new CityGeometry(geometry, boundingBox);
     }
 
     static final class OverpassCityCreatingException extends RuntimeException {
