@@ -63,7 +63,7 @@ public final class Runner {
     }
 
     private static PointWithDistance mapToPointWithDistance(final Point point, final PointWithDistance previous) {
-        final double relative = DISTANCE_CALCULATOR.calculateDistance(point, previous, CALCULATOR_SETTINGS);
+        final double relative = DISTANCE_CALCULATOR.calculateDistance(previous, point, CALCULATOR_SETTINGS);
         return new PointWithDistance(point, relative, previous.absolute + relative);
     }
 
