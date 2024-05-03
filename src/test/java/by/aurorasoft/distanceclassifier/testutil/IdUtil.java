@@ -5,21 +5,23 @@ import lombok.experimental.UtilityClass;
 import org.springframework.data.domain.Page;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toUnmodifiableSet;
 
 @UtilityClass
 public final class IdUtil {
 
-    public static <ID extends Comparable<ID>> List<ID> mapToSortedIds(final Stream<? extends IdEntity<ID>> stream) {
-        return stream.map(IdEntity::getId).sorted().toList();
+    public static <ID> Set<ID> mapToIds(final Stream<? extends IdEntity<ID>> stream) {
+        return stream.map(IdEntity::getId).collect(toUnmodifiableSet());
     }
 
-    public static <ID extends Comparable<ID>> List<ID> mapToSortedIds(final Collection<? extends IdEntity<ID>> entities) {
-        return mapToSortedIds(entities.stream());
+    public static <ID> Set<ID> mapToIds(final Collection<? extends IdEntity<ID>> entities) {
+        return mapToIds(entities.stream());
     }
 
-    public static <ID extends Comparable<ID>> List<ID> mapToSortedIds(final Page<? extends IdEntity<ID>> entities) {
-        return mapToSortedIds(entities.stream());
+    public static <ID> Set<ID> mapToIds(final Page<? extends IdEntity<ID>> entities) {
+        return mapToIds(entities.stream());
     }
 }
