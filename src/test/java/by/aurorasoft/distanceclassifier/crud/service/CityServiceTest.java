@@ -50,16 +50,16 @@ public final class CityServiceTest extends AbstractSpringBootTest {
             final Set<CityGeometry> actual = stream.collect(toUnmodifiableSet());
             final Set<CityGeometry> expected = Set.of(
                     new CityGeometry(
-                            createPolygon("POLYGON((2 3, 5 2.5, 5 6, 3 5, 2 3))"),
-                            createPolygon("POLYGON((2 2.5, 5 2.5, 5 6, 2 6, 2 2.5))")
+                            createPolygon("POLYGON((3 2, 2.5 5, 6 5, 5 3, 3 2))"),
+                            createPolygon("POLYGON((2.5 2, 2.5 5, 6 5, 6 2, 2.5 2))")
                     ),
                     new CityGeometry(
-                            createPolygon("POLYGON((7.5 4, 8 4, 10.5 5, 11.5 7.5, 8.5 6.5, 7.5 4))"),
-                            createPolygon("POLYGON((7.5 4, 11.5 4, 11.5 7.5, 7.5 7.5, 7.5 4))")
+                            createPolygon("POLYGON((4 7.5, 4 8, 5 10.5, 7.5 11.5, 6.5 8.5, 4 7.5))"),
+                            createPolygon("POLYGON((4 7.5, 4 11.5, 7.5 11.5, 7.5 7.5, 4 7.5))")
                     ),
                     new CityGeometry(
-                            createPolygon("POLYGON((3 8, 6 8, 6 11, 3 11, 3 8))"),
-                            createPolygon("POLYGON((3 8, 6 8, 6 11, 3 11, 3 8))")
+                            createPolygon("POLYGON((8 3, 8 6, 11 6, 11 3, 8 3))"),
+                            createPolygon("POLYGON((8 3, 8 6, 11 6, 11 3, 8 3))")
                     )
             );
             assertEquals(expected, actual);
@@ -82,12 +82,12 @@ public final class CityServiceTest extends AbstractSpringBootTest {
             final Set<CityGeometry> actual = stream.collect(toUnmodifiableSet());
             final Set<CityGeometry> expected = Set.of(
                     new CityGeometry(
-                            createPolygon("POLYGON((2 3, 5 2.5, 5 6, 3 5, 2 3))"),
-                            createPolygon("POLYGON((2 2.5, 5 2.5, 5 6, 2 6, 2 2.5))")
+                            createPolygon("POLYGON((3 2, 2.5 5, 6 5, 5 3, 3 2))"),
+                            createPolygon("POLYGON((2.5 2, 2.5 5, 6 5, 6 2, 2.5 2))")
                     ),
                     new CityGeometry(
-                            createPolygon("POLYGON((7.5 4, 8 4, 10.5 5, 11.5 7.5, 8.5 6.5, 7.5 4))"),
-                            createPolygon("POLYGON((7.5 4, 11.5 4, 11.5 7.5, 7.5 7.5, 7.5 4))")
+                            createPolygon("POLYGON((4 7.5, 4 8, 5 10.5, 7.5 11.5, 6.5 8.5, 4 7.5))"),
+                            createPolygon("POLYGON((4 7.5, 4 11.5, 7.5 11.5, 7.5 7.5, 4 7.5))")
                     )
             );
             assertEquals(expected, actual);

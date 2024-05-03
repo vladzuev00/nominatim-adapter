@@ -49,24 +49,24 @@ public final class CityCrudIT extends AbstractIT {
                           "coordinates": [
                             [
                               [
-                                2,
-                                3
-                              ],
-                              [
-                                5,
-                                2.5
-                              ],
-                              [
-                                5,
-                                6
-                              ],
-                              [
                                 3,
+                                2
+                              ],
+                              [
+                                2.5,
                                 5
                               ],
                               [
-                                2,
+                                6,
+                                5
+                              ],
+                              [
+                                5,
                                 3
+                              ],
+                              [
+                                3,
+                                2
                               ]
                             ]
                           ]
@@ -76,24 +76,24 @@ public final class CityCrudIT extends AbstractIT {
                           "coordinates": [
                             [
                               [
-                                2,
-                                2.5
+                                2.5,
+                                2
                               ],
                               [
-                                5,
-                                2.5
+                                2.5,
+                                5
                               ],
                               [
-                                5,
-                                6
+                                6,
+                                5
                               ],
                               [
-                                2,
-                                6
+                                6,
+                                2
                               ],
                               [
-                                2,
-                                2.5
+                                2.5,
+                                2
                               ]
                             ]
                           ]
@@ -110,28 +110,28 @@ public final class CityCrudIT extends AbstractIT {
                           "coordinates": [
                             [
                               [
-                                7.5,
-                                4
-                              ],
-                              [
-                                8,
-                                4
-                              ],
-                              [
-                                10.5,
-                                5
-                              ],
-                              [
-                                11.5,
+                                4,
                                 7.5
                               ],
                               [
-                                8.5,
-                                6.5
+                                4,
+                                8
+                              ],
+                              [
+                                5,
+                                10.5
                               ],
                               [
                                 7.5,
-                                4
+                                11.5
+                              ],
+                              [
+                                6.5,
+                                8.5
+                              ],
+                              [
+                                4,
+                                7.5
                               ]
                             ]
                           ]
@@ -141,24 +141,24 @@ public final class CityCrudIT extends AbstractIT {
                           "coordinates": [
                             [
                               [
-                                7.5,
-                                4
-                              ],
-                              [
-                                11.5,
-                                4
-                              ],
-                              [
-                                11.5,
+                                4,
                                 7.5
                               ],
                               [
+                                4,
+                                11.5
+                              ],
+                              [
+                                7.5,
+                                11.5
+                              ],
+                              [
                                 7.5,
                                 7.5
                               ],
                               [
-                                7.5,
-                                4
+                                4,
+                                7.5
                               ]
                             ]
                           ]
@@ -169,8 +169,8 @@ public final class CityCrudIT extends AbstractIT {
                   "pageable": {
                     "sort": {
                       "empty": false,
-                      "sorted": true,
-                      "unsorted": false
+                      "unsorted": false,
+                      "sorted": true
                     },
                     "offset": 0,
                     "pageSize": 2,
@@ -179,14 +179,14 @@ public final class CityCrudIT extends AbstractIT {
                     "unpaged": false
                   },
                   "last": false,
-                  "totalPages": 2,
                   "totalElements": 3,
+                  "totalPages": 2,
                   "size": 2,
                   "number": 0,
                   "sort": {
                     "empty": false,
-                    "sorted": true,
-                    "unsorted": false
+                    "unsorted": false,
+                    "sorted": true
                   },
                   "first": true,
                   "numberOfElements": 2,
