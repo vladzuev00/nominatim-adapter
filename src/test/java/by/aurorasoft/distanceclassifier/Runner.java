@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static java.lang.Double.parseDouble;
 import static java.lang.Float.parseFloat;
 import static java.lang.Integer.parseInt;
 import static java.time.Instant.now;
