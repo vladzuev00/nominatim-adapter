@@ -29,46 +29,44 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
     private static final String URL = "/api/v1/classifyDistance";
     private static final int URBAN_SPEED_THRESHOLD = 75;
 
-    private final RequestFactory requestFactory = new RequestFactory();
-
     @Test
     public final void distanceShouldBeClassified()
             throws Exception {
         final List<PointRequest> givenPoints = List.of(
-                new PointRequest(4., 1., 74, new DistanceRequest(0., 0.), new DistanceRequest(0., 0.)),
-                new PointRequest(3.5, 2., 76, new DistanceRequest(1.1180, 0.), new DistanceRequest(1.1180, 0.)),
-                new PointRequest(3., 2.5, 76, new DistanceRequest(0.7071, 0.), new DistanceRequest(0.7071, 0.)),
-                new PointRequest(3.5, 3.5, 74, new DistanceRequest(1.1180, 0.), new DistanceRequest(1.1180, 0.)),
-                new PointRequest(4., 4., 76, new DistanceRequest(0.7071, 0.), new DistanceRequest(0.7071, 0.)),
-                new PointRequest(5., 5., 74, new DistanceRequest(1.4142, 0.), new DistanceRequest(1.4142, 0.)),
-                new PointRequest(6., 4., 75, new DistanceRequest(1.4142, 0.), new DistanceRequest(1.4142, 0.)),
-                new PointRequest(6.5, 5.5, 75, new DistanceRequest(1.5811, 0.), new DistanceRequest(1.5811, 0.)),
-                new PointRequest(8., 7., 74, new DistanceRequest(2.1213, 0.), new DistanceRequest(2.1213, 0.)),
-                new PointRequest(8.5, 5., 74, new DistanceRequest(2.0615, 0.), new DistanceRequest(2.0615, 0.)),
-                new PointRequest(11., 5.5, 74, new DistanceRequest(2.5495, 0.), new DistanceRequest(2.5495, 0.)),
-                new PointRequest(10.5, 6.5, 75, new DistanceRequest(1.1180, 0.), new DistanceRequest(1.1180, 0.)),
-                new PointRequest(9., 7., 75, new DistanceRequest(1.5811, 0.), new DistanceRequest(1.5811, 0.)),
-                new PointRequest(10.5, 8.5, 74, new DistanceRequest(2.1213, 0.), new DistanceRequest(2.1213, 0.)),
-                new PointRequest(7.5, 10., 76, new DistanceRequest(3.3541, 0.), new DistanceRequest(3.3541, 0.)),
-                new PointRequest(5.5, 10., 76, new DistanceRequest(2., 0.), new DistanceRequest(2., 0.)),
-                new PointRequest(3.5, 10., 74, new DistanceRequest(2., 0.), new DistanceRequest(2., 0.)),
-                new PointRequest(2., 10., 76, new DistanceRequest(1.5, 0.), new DistanceRequest(1.5, 0.)),
-                new PointRequest(1., 11., 74, new DistanceRequest(1.4142, 0.), new DistanceRequest(1.4142, 0.))
+                createPoint(4., 1., 74, 0.),
+                createPoint(3.5, 2., 76, 1.1180),
+                createPoint(3., 2.5, 76, 0.7071),
+                createPoint(3.5, 3.5, 74, 1.1180),
+                createPoint(4., 4., 76, 0.7071),
+                createPoint(5., 5., 74, 1.4142),
+                createPoint(6., 4., 75, 1.4142),
+                createPoint(6.5, 5.5, 75, 1.5811),
+                createPoint(8., 7., 74, 2.1213),
+                createPoint(8.5, 5., 74, 2.0615),
+                createPoint(11., 5.5, 74, 2.5495),
+                createPoint(10.5, 6.5, 75, 1.1180),
+                createPoint(9., 7., 75, 1.5811),
+                createPoint(10.5, 8.5, 74, 2.1213),
+                createPoint(7.5, 10., 76, 3.3541),
+                createPoint(5.5, 10., 76, 2.),
+                createPoint(3.5, 10., 74, 2.),
+                createPoint(2., 10., 76, 1.5),
+                createPoint(1., 11., 74, 1.4142)
         );
         final ClassifyDistanceRequest givenRequest = new ClassifyDistanceRequest(givenPoints, URBAN_SPEED_THRESHOLD);
         final String actual = postExpectingOk(restTemplate, URL, givenRequest, String.class);
         final String expected = """
                 {
-                  "gpsDistance": {
-                    "urban": 23.908600000000003,
-                    "country": 5.9721,
-                    "total": 29.880700000000004
-                  },
-                  "odoDistance": {
-                    "urban": 23.908600000000003,
-                    "country": 5.9721,
-                    "total": 29.880700000000004
-                  }
+                   "gpsDistance": {
+                     "urban": 16.9496,
+                     "country": 12.9311,
+                     "total": 29.8807
+                   },
+                   "odoDistance": {
+                     "urban": 16.9496,
+                     "country": 12.9311,
+                     "total": 29.8807
+                   }
                 }""";
         assertEquals(expected, actual, true);
     }
@@ -79,9 +77,23 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
     @MethodSource("provideBelarusTrackFileNamesAndExpectedResponses")
     public final void distanceShouldBeClassifiedForBelarusTrackFromFile(final String fileName, final String expected)
             throws Exception {
-        final ClassifyDistanceRequest givenRequest = requestFactory.create(fileName);
+        final RequestReader requestFactory = new RequestReader();
+        final ClassifyDistanceRequest givenRequest = requestFactory.read(fileName);
         final String actual = postExpectingOk(restTemplate, URL, givenRequest, String.class);
         assertEquals(expected, actual, true);
+    }
+
+    private static PointRequest createPoint(final Double latitude,
+                                            final Double longitude,
+                                            final Integer speed,
+                                            final Double relative) {
+        final DistanceRequest gpsDistance = createDistance(relative);
+        final DistanceRequest odometerDistance = createDistance(relative);
+        return new PointRequest(latitude, longitude, speed, gpsDistance, odometerDistance);
+    }
+
+    private static DistanceRequest createDistance(final Double relative) {
+        return new DistanceRequest(relative, 0.);
     }
 
     private static Stream<Arguments> provideBelarusTrackFileNamesAndExpectedResponses() {
@@ -185,13 +197,13 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
         );
     }
 
-    private static final class RequestFactory {
+    private static final class RequestReader {
         private static final String FOLDER_PATH = "./src/test/resources/tracks";
 
         private final PointParser pointParser = new PointParser();
 
-        public ClassifyDistanceRequest create(final String fileName) {
-            try (final CSVReader csvReader = createReader(fileName)) {
+        public ClassifyDistanceRequest read(final String fileName) {
+            try (final CSVReader csvReader = createCSVReader(fileName)) {
                 return csvReader.readAll()
                         .stream()
                         .map(pointParser::parse)
@@ -206,7 +218,7 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
             }
         }
 
-        private static CSVReader createReader(final String fileName)
+        private static CSVReader createCSVReader(final String fileName)
                 throws FileNotFoundException {
             final String filePath = FOLDER_PATH + "/" + fileName;
             return new CSVReader(new FileReader(filePath));
@@ -218,9 +230,7 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
         private static final int LONGITUDE_INDEX = 1;
         private static final int SPEED_INDEX = 2;
         private static final int GPS_RELATIVE_INDEX = 3;
-        private static final int GPS_ABSOLUTE_INDEX = 4;
         private static final int ODOMETER_RELATIVE_INDEX = 5;
-        private static final int ODOMETER_ABSOLUTE_INDEX = 6;
 
         public PointRequest parse(final String[] properties) {
             return new PointRequest(
@@ -245,19 +255,16 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
         }
 
         private static DistanceRequest parseGpsDistance(final String[] properties) {
-            return parseDistance(properties, GPS_RELATIVE_INDEX, GPS_ABSOLUTE_INDEX);
+            return parseDistance(properties, GPS_RELATIVE_INDEX);
         }
 
         private static DistanceRequest parseOdometerDistance(final String[] properties) {
-            return parseDistance(properties, ODOMETER_RELATIVE_INDEX, ODOMETER_ABSOLUTE_INDEX);
+            return parseDistance(properties, ODOMETER_RELATIVE_INDEX);
         }
 
-        private static DistanceRequest parseDistance(final String[] properties,
-                                                     final int relativeIndex,
-                                                     final int absoluteIndex) {
+        private static DistanceRequest parseDistance(final String[] properties, final int relativeIndex) {
             final double relative = parseDouble(properties[relativeIndex]);
-            final double absolute = parseDouble(properties[absoluteIndex]);
-            return new DistanceRequest(relative, absolute);
+            return createDistance(relative);
         }
     }
 }
