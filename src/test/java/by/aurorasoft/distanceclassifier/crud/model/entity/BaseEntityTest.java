@@ -30,7 +30,7 @@ public final class BaseEntityTest extends AbstractSpringBootTest {
 
     @Test
     public void notProxyEntityShouldBeEqualProxyEntity() {
-        final Long givenId = 24L;
+        final Long givenId = 255L;
         final BaseEntity<Long> firstGivenEntity = createCity(givenId);
         final BaseEntity<Long> secondGivenEntity = getProxyCity(givenId);
 
@@ -49,7 +49,7 @@ public final class BaseEntityTest extends AbstractSpringBootTest {
 
     @Test
     public void entitiesShouldNotBeEqualBecauseOfDifferentNotProxyTypes() {
-        final Long givenId = 24L;
+        final Long givenId = 255L;
         final BaseEntity<Long> firstGivenEntity = createEntity(givenId);
         final BaseEntity<Long> secondGivenEntity = getProxyCity(givenId);
 
