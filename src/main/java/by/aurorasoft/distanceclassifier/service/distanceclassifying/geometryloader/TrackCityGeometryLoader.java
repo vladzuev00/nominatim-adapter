@@ -6,6 +6,7 @@ import by.aurorasoft.distanceclassifier.service.distanceclassifying.simplifier.T
 import by.aurorasoft.distanceclassifier.service.geometry.GeometryService;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.LineString;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 
@@ -14,7 +15,8 @@ public abstract class TrackCityGeometryLoader {
     private final TrackSimplifier trackSimplifier;
     private final GeometryService geometryService;
 
-    public final Set<PreparedCityGeometry> load(final Track track) {
+    @Transactional(readOnly = true)
+    public Set<PreparedCityGeometry> load(final Track track) {
         final Track simplifiedTrack = trackSimplifier.simplify(track);
         final LineString line = geometryService.createLine(simplifiedTrack);
         return loadInternal(line);

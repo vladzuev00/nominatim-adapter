@@ -9,7 +9,6 @@ import by.aurorasoft.distanceclassifier.service.geometry.GeometryService;
 import org.locationtech.jts.geom.LineString;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 import java.util.stream.Stream;
@@ -32,7 +31,6 @@ public class TrackCityGeometryLoaderFromRepository extends TrackCityGeometryLoad
     }
 
     @Override
-    @Transactional(readOnly = true)
     protected Set<PreparedCityGeometry> loadInternal(final LineString line) {
         try (final Stream<CityGeometry> geometries = cityService.findIntersectedGeometries(line)) {
             return geometries.map(geometryPreparer::prepare).collect(toUnmodifiableSet());

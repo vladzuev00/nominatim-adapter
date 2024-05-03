@@ -14,7 +14,7 @@ import static java.util.stream.Collectors.toUnmodifiableSet;
 
 @Component
 @ConditionalOnProperty(prefix = "distance-classifying", name = "load-city-geometries-on-start-app", havingValue = "true")
-public final class TrackCityGeometryLoaderFromCache extends TrackCityGeometryLoader {
+public class TrackCityGeometryLoaderFromCache extends TrackCityGeometryLoader {
     private final CityGeometryCache cache;
 
     public TrackCityGeometryLoaderFromCache(final TrackSimplifier trackSimplifier,
