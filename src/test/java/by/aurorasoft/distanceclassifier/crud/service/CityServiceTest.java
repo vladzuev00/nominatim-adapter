@@ -76,7 +76,7 @@ public final class CityServiceTest extends AbstractSpringBootTest {
 
     @Test
     public void intersectedGeometriesShouldBeFound() {
-        final LineString givenLine = createLine("LINESTRING(1 4, 4 4, 7 5, 8 7)");
+        final LineString givenLine = createLine("LINESTRING(4 1, 4 4, 5 7, 7 8)");
 
         try (final Stream<CityGeometry> stream = service.findIntersectedGeometries(givenLine)) {
             final Set<CityGeometry> actual = stream.collect(toUnmodifiableSet());
@@ -96,7 +96,7 @@ public final class CityServiceTest extends AbstractSpringBootTest {
 
     @Test
     public void intersectedGeometriesShouldNotBeFound() {
-        final LineString givenLine = createLine("LINESTRING(1 7, 5 7.5, 7 7.5, 8 9)");
+        final LineString givenLine = createLine("LINESTRING(7 1, 7.5 5, 7.5 7, 9 8)");
 
         try (final Stream<CityGeometry> stream = service.findIntersectedGeometries(givenLine)) {
             assertTrue(stream.findAny().isEmpty());

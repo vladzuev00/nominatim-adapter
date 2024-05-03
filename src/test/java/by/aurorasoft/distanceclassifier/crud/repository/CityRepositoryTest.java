@@ -110,7 +110,7 @@ public final class CityRepositoryTest extends AbstractSpringBootTest {
 
     @Test
     public void intersectedGeometriesShouldBeFound() {
-        final LineString givenLine = createLine("LINESTRING(1 4, 4 4, 7 5, 8 7)");
+        final LineString givenLine = createLine("LINESTRING(4 1, 4 4, 5 7, 7 8)");
 
         startQueryCount();
         try (final Stream<CityGeometry> stream = repository.findIntersectedGeometries(givenLine)) {
@@ -133,7 +133,7 @@ public final class CityRepositoryTest extends AbstractSpringBootTest {
 
     @Test
     public void intersectedGeometriesShouldNotBeFound() {
-        final LineString givenLine = createLine("LINESTRING(1 7, 5 7.5, 7 7.5, 8 9)");
+        final LineString givenLine = createLine("LINESTRING(7 1, 7.5 5, 7.5 7, 9 8)");
 
         startQueryCount();
         try (final Stream<CityGeometry> actual = repository.findIntersectedGeometries(givenLine)) {
