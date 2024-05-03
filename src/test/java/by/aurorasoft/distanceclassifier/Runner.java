@@ -10,31 +10,18 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
+import static java.lang.Boolean.parseBoolean;
 import static java.lang.Float.parseFloat;
 import static java.lang.Integer.parseInt;
-import static java.time.Instant.now;
+import static java.time.ZoneOffset.UTC;
+import static java.time.format.DateTimeFormatter.ofPattern;
 
 public final class Runner {
-    private static final Iterator<Instant> INSTANT_ITERATOR = new Iterator<>() {
-        private static Instant PREVIOUS = now();
-
-        @Override
-        public boolean hasNext() {
-            return true;
-        }
-
-        @Override
-        public Instant next() {
-            PREVIOUS = PREVIOUS.plus(5, ChronoUnit.MINUTES);
-            return PREVIOUS;
-        }
-    };
-
     private static final String FILE_PATH = "./src/test/resources/tracks/2907_track-total_10.53_kobrin_2.9_country_7.63.csv";
     private static final PointParser POINT_PARSER = new PointParser();
     private static final DistanceCalculator DISTANCE_CALCULATOR = new DistanceCalculatorImpl();
@@ -42,7 +29,7 @@ public final class Runner {
 
     public static void main(final String[] args) throws Exception {
         final List<Point> points = readPoints();
-        final List<PointWithDistance> result = calculate(points);
+        final List<PointWithDistance> result = mapToPointsWithDistance(points);
         write(result);
     }
 
@@ -64,89 +51,105 @@ public final class Runner {
         }
     }
 
-    private static List<PointWithDistance> calculate(final List<Point> points) {
+    private static List<PointWithDistance> mapToPointsWithDistance(final List<Point> points) {
         final List<PointWithDistance> result = new ArrayList<>();
-        result.add(new PointWithDistance(points.get(0).latitude, points.get(0).longitude, points.get(0).speed, 0, 0, points.get(0).dateTime));
+        result.add(new PointWithDistance(points.get(0), 0, 0));
         for (int i = 1; i < points.size(); i++) {
             final PointWithDistance previous = result.get(result.size() - 1);
-            final double relative = DISTANCE_CALCULATOR.calculateDistance(points.get(i), previous, CALCULATOR_SETTINGS);
-            result.add(new PointWithDistance(points.get(i).latitude, points.get(i).longitude, points.get(i).speed, (float) relative, (float) (previous.absolute + relative), points.get(i).dateTime));
+            final PointWithDistance pointWithDistance = mapToPointWithDistance(points.get(i), previous);
+            result.add(pointWithDistance);
         }
         return result;
     }
 
-    private static PointWithDistance calculate(final Point point, final PointWithDistance previousPoint) {
-        final double relative = DISTANCE_CALCULATOR.calculateDistance(point, previousPoint, CALCULATOR_SETTINGS);
-        return new PointWithDistance(point.latitude, point.longitude, point.speed, (float) relative, (float) (previousPoint.absolute + relative), point.dateTime);
+    private static PointWithDistance mapToPointWithDistance(final Point point, final PointWithDistance previous) {
+        final double relative = DISTANCE_CALCULATOR.calculateDistance(point, previous, CALCULATOR_SETTINGS);
+        return new PointWithDistance(point, relative, previous.absolute + relative);
     }
 
     @Value
     private static class Point implements LatLngAlt {
+        Instant datetime;
         float latitude;
         float longitude;
+        int altitude;
         int speed;
-        Instant dateTime = INSTANT_ITERATOR.next();
-
-        @Override
-        public Instant getDatetime() {
-            return dateTime;
-        }
-
-        @Override
-        public int getAltitude() {
-            return 10;
-        }
-
-        @Override
-        public boolean isValid() {
-            return true;
-        }
+        boolean valid;
     }
 
     @Value
     private static class PointWithDistance implements LatLngAlt {
-        float latitude;
-        float longitude;
-        int speed;
-        float relative;
-        float absolute;
-        Instant dateTime;
+        Point point;
+        double relative;
+        double absolute;
+
+        @Override
+        public Instant getDatetime() {
+            return point.datetime;
+        }
+
+        @Override
+        public int getAltitude() {
+            return point.altitude;
+        }
+
+        @Override
+        public int getSpeed() {
+            return point.speed;
+        }
+
+        @Override
+        public boolean isValid() {
+            return point.valid;
+        }
+
+        @Override
+        public float getLatitude() {
+            return point.latitude;
+        }
+
+        @Override
+        public float getLongitude() {
+            return point.longitude;
+        }
 
         public String[] getCsvValues() {
             return new String[]{
-                    String.valueOf(latitude),
-                    String.valueOf(longitude),
-                    String.valueOf(speed),
+                    String.valueOf(getLatitude()),
+                    String.valueOf(getLongitude()),
+                    String.valueOf(getSpeed()),
                     String.valueOf(relative),
                     String.valueOf(absolute),
                     String.valueOf(relative * 1.1),
                     String.valueOf(absolute * 1.1)
             };
         }
-
-        @Override
-        public Instant getDatetime() {
-            return dateTime;
-        }
-
-        @Override
-        public int getAltitude() {
-            return 10;
-        }
-
-        @Override
-        public boolean isValid() {
-            return true;
-        }
     }
 
     private static final class PointParser {
-        private static final int LATITUDE_INDEX = 0;
-        private static final int LONGITUDE_INDEX = 1;
-        private static final int SPEED_INDEX = 2;
+        private static final int DATE_TIME_INDEX = 1;
+        private static final int LATITUDE_INDEX = 2;
+        private static final int LONGITUDE_INDEX = 3;
+        private static final int ALTITUDE_INDEX = 4;
+        private static final int SPEED_INDEX = 5;
+        private static final int VALID_INDEX = 6;
+
+        private static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+        private static final DateTimeFormatter DATE_TIME_FORMATTER = ofPattern(DATE_TIME_PATTERN);
 
         public Point parse(final String[] properties) {
-            return new Point(parseLatitude(properties), parseLongitude(properties), parseSpeed(properties));
+            return new Point(
+                    parseDateTime(properties),
+                    parseLatitude(properties),
+                    parseLongitude(properties),
+                    parseAltitude(properties),
+                    parseSpeed(properties),
+                    parseValid(properties)
+            );
+        }
+
+        private static Instant parseDateTime(final String[] properties) {
+            return LocalDateTime.parse(properties[DATE_TIME_INDEX], DATE_TIME_FORMATTER).toInstant(UTC);
         }
 
         private static float parseLatitude(final String[] properties) {
@@ -157,8 +160,16 @@ public final class Runner {
             return parseFloat(properties[LONGITUDE_INDEX]);
         }
 
+        private static int parseAltitude(final String[] properties) {
+            return parseInt(properties[ALTITUDE_INDEX]);
+        }
+
         private static int parseSpeed(final String[] properties) {
             return parseInt(properties[SPEED_INDEX]);
+        }
+
+        private static boolean parseValid(final String[] properties) {
+            return parseBoolean(properties[VALID_INDEX]);
         }
     }
 }
