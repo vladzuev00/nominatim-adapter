@@ -6,6 +6,7 @@ import by.aurorasoft.distanceclassifier.controller.classifydistance.model.Classi
 import by.aurorasoft.distanceclassifier.it.base.AbstractIT;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -14,6 +15,7 @@ import org.springframework.test.context.jdbc.Sql;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static by.aurorasoft.distanceclassifier.testutil.HttpUtil.postExpectingOk;
@@ -25,8 +27,51 @@ import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 
 public abstract class ClassifyingDistanceIT extends AbstractIT {
     private static final String URL = "/api/v1/classifyDistance";
+    private static final int URBAN_SPEED_THRESHOLD = 75;
 
     private final RequestFactory requestFactory = new RequestFactory();
+
+    @Test
+    public final void distanceShouldBeClassified()
+            throws Exception {
+        final List<PointRequest> givenPoints = List.of(
+                new PointRequest(4., 1., 74, new DistanceRequest(0., 0.), new DistanceRequest(0., 0.)),
+                new PointRequest(3.5, 2., 76, new DistanceRequest(1.1180, 0.), new DistanceRequest(1.1180, 0.)),
+                new PointRequest(3., 2.5, 76, new DistanceRequest(0.7071, 0.), new DistanceRequest(0.7071, 0.)),
+                new PointRequest(3.5, 3.5, 74, new DistanceRequest(1.1180, 0.), new DistanceRequest(1.1180, 0.)),
+                new PointRequest(4., 4., 76, new DistanceRequest(0.7071, 0.), new DistanceRequest(0.7071, 0.)),
+                new PointRequest(5., 5., 74, new DistanceRequest(1.4142, 0.), new DistanceRequest(1.4142, 0.)),
+                new PointRequest(6., 4., 75, new DistanceRequest(1.4142, 0.), new DistanceRequest(1.4142, 0.)),
+                new PointRequest(6.5, 5.5, 75, new DistanceRequest(1.5811, 0.), new DistanceRequest(1.5811, 0.)),
+                new PointRequest(8., 7., 74, new DistanceRequest(2.1213, 0.), new DistanceRequest(2.1213, 0.)),
+                new PointRequest(8.5, 5., 74, new DistanceRequest(2.0615, 0.), new DistanceRequest(2.0615, 0.)),
+                new PointRequest(11., 5.5, 74, new DistanceRequest(2.5495, 0.), new DistanceRequest(2.5495, 0.)),
+                new PointRequest(10.5, 6.5, 75, new DistanceRequest(1.1180, 0.), new DistanceRequest(1.1180, 0.)),
+                new PointRequest(9., 7., 75, new DistanceRequest(1.5811, 0.), new DistanceRequest(1.5811, 0.)),
+                new PointRequest(10.5, 8.5, 74, new DistanceRequest(2.1213, 0.), new DistanceRequest(2.1213, 0.)),
+                new PointRequest(7.5, 10., 76, new DistanceRequest(3.3541, 0.), new DistanceRequest(3.3541, 0.)),
+                new PointRequest(5.5, 10., 76, new DistanceRequest(2., 0.), new DistanceRequest(2., 0.)),
+                new PointRequest(3.5, 10., 74, new DistanceRequest(2., 0.), new DistanceRequest(2., 0.)),
+                new PointRequest(2., 10., 76, new DistanceRequest(1.5, 0.), new DistanceRequest(1.5, 0.)),
+                new PointRequest(1., 11., 74, new DistanceRequest(1.4142, 0.), new DistanceRequest(1.4142, 0.))
+        );
+        final ClassifyDistanceRequest givenRequest = new ClassifyDistanceRequest(givenPoints, URBAN_SPEED_THRESHOLD);
+        final String actual = postExpectingOk(restTemplate, URL, givenRequest, String.class);
+        final String expected = """
+                {
+                  "gpsDistance": {
+                    "urban": 23.908600000000003,
+                    "country": 5.9721,
+                    "total": 29.880700000000004
+                  },
+                  "odoDistance": {
+                    "urban": 23.908600000000003,
+                    "country": 5.9721,
+                    "total": 29.880700000000004
+                  }
+                }""";
+        assertEquals(expected, actual, true);
+    }
 
     @ParameterizedTest
     @Sql(statements = "DELETE FROM city")
@@ -142,7 +187,6 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
 
     private static final class RequestFactory {
         private static final String FOLDER_PATH = "./src/test/resources/tracks";
-        private static final int URBAN_SPEED_THRESHOLD = 75;
 
         private final PointParser pointParser = new PointParser();
 

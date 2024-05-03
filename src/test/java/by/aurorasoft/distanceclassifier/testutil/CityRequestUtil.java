@@ -10,7 +10,9 @@ import static org.junit.Assert.assertSame;
 @UtilityClass
 public final class CityRequestUtil {
 
-    public static void checkEquals(final CityRequest expected, final CityRequest actual, final GeoJSONReader geoJSONReader) {
+    public static void checkEquals(final CityRequest expected,
+                                   final CityRequest actual,
+                                   final GeoJSONReader geoJSONReader) {
         assertEquals(expected.getName(), actual.getName());
         GeometryUtil.checkEquals(expected.getGeometry(), actual.getGeometry(), geoJSONReader);
         assertSame(expected.getType(), actual.getType());
