@@ -74,7 +74,11 @@ public final class Runner {
         float longitude;
         int altitude;
         int speed;
-        boolean valid;
+
+        @Override
+        public boolean isValid() {
+            return true;
+        }
     }
 
     @Value
@@ -100,7 +104,7 @@ public final class Runner {
 
         @Override
         public boolean isValid() {
-            return point.valid;
+            return point.isValid();
         }
 
         @Override
@@ -132,7 +136,6 @@ public final class Runner {
         private static final int LONGITUDE_INDEX = 3;
         private static final int ALTITUDE_INDEX = 4;
         private static final int SPEED_INDEX = 5;
-        private static final int VALID_INDEX = 6;
 
         private static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
         private static final DateTimeFormatter DATE_TIME_FORMATTER = ofPattern(DATE_TIME_PATTERN);
@@ -143,8 +146,7 @@ public final class Runner {
                     parseLatitude(properties),
                     parseLongitude(properties),
                     parseAltitude(properties),
-                    parseSpeed(properties),
-                    parseValid(properties)
+                    parseSpeed(properties)
             );
         }
 
@@ -166,10 +168,6 @@ public final class Runner {
 
         private static int parseSpeed(final String[] properties) {
             return parseInt(properties[SPEED_INDEX]);
-        }
-
-        private static boolean parseValid(final String[] properties) {
-            return parseBoolean(properties[VALID_INDEX]);
         }
     }
 }
