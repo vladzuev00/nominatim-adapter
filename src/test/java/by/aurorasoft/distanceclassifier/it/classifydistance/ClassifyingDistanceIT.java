@@ -6,16 +6,13 @@ import by.aurorasoft.distanceclassifier.controller.classifydistance.model.Classi
 import by.aurorasoft.distanceclassifier.it.base.AbstractIT;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
 import java.util.stream.Stream;
 
 import static by.aurorasoft.distanceclassifier.testutil.HttpUtil.postExpectingOk;
@@ -27,79 +24,38 @@ import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 
 public abstract class ClassifyingDistanceIT extends AbstractIT {
     private static final String URL = "/api/v1/classifyDistance";
-    private static final int URBAN_SPEED_THRESHOLD = 75;
 
-    @Test
-    public final void distanceShouldBeClassified()
-            throws Exception {
-        final List<PointRequest> givenPoints = List.of(
-                createPoint(4., 1., 74, 0.),
-                createPoint(3.5, 2., 76, 1.1180),
-                createPoint(3., 2.5, 76, 0.7071),
-                createPoint(3.5, 3.5, 74, 1.1180),
-                createPoint(4., 4., 76, 0.7071),
-                createPoint(5., 5., 74, 1.4142),
-                createPoint(6., 4., 75, 1.4142),
-                createPoint(6.5, 5.5, 75, 1.5811),
-                createPoint(8., 7., 74, 2.1213),
-                createPoint(8.5, 5., 74, 2.0615),
-                createPoint(11., 5.5, 74, 2.5495),
-                createPoint(10.5, 6.5, 75, 1.1180),
-                createPoint(9., 7., 75, 1.5811),
-                createPoint(10.5, 8.5, 74, 2.1213),
-                createPoint(7.5, 10., 76, 3.3541),
-                createPoint(5.5, 10., 76, 2.),
-                createPoint(3.5, 10., 74, 2.),
-                createPoint(2., 10., 76, 1.5),
-                createPoint(1., 11., 74, 1.4142)
-        );
-        final ClassifyDistanceRequest givenRequest = new ClassifyDistanceRequest(givenPoints, URBAN_SPEED_THRESHOLD);
-        final String actual = postExpectingOk(restTemplate, URL, givenRequest, String.class);
-        final String expected = """
-                {
-                   "gpsDistance": {
-                     "urban": 16.9496,
-                     "country": 12.9311,
-                     "total": 29.8807
-                   },
-                   "odoDistance": {
-                     "urban": 16.9496,
-                     "country": 12.9311,
-                     "total": 29.8807
-                   }
-                }""";
-        assertEquals(expected, actual, true);
-    }
+    private final RequestReader requestFactory = new RequestReader();
 
     @ParameterizedTest
-    @Sql(statements = "DELETE FROM city")
-    @Sql("classpath:sql/insert-belarus-cities.sql")
-    @MethodSource("provideBelarusTrackFileNamesAndExpectedResponses")
-    public final void distanceShouldBeClassifiedForBelarusTrackFromFile(final String fileName, final String expected)
+    @MethodSource("provideTrackFileNamesAndExpectedResponses")
+    public final void distanceShouldBeClassifiedForTrackFromFile(final String fileName, final String expected)
             throws Exception {
-        final RequestReader requestFactory = new RequestReader();
         final ClassifyDistanceRequest givenRequest = requestFactory.read(fileName);
         final String actual = postExpectingOk(restTemplate, URL, givenRequest, String.class);
         assertEquals(expected, actual, true);
     }
 
-    private static PointRequest createPoint(final Double latitude,
-                                            final Double longitude,
-                                            final Integer speed,
-                                            final Double relative) {
-        final DistanceRequest gpsDistance = createDistance(relative);
-        final DistanceRequest odometerDistance = createDistance(relative);
-        return new PointRequest(latitude, longitude, speed, gpsDistance, odometerDistance);
-    }
-
-    private static DistanceRequest createDistance(final Double relative) {
-        return new DistanceRequest(relative, 0.);
-    }
-
-    private static Stream<Arguments> provideBelarusTrackFileNamesAndExpectedResponses() {
+    private static Stream<Arguments> provideTrackFileNamesAndExpectedResponses() {
         return Stream.of(
                 Arguments.of(
-                        "2907_track-total_10.53_kobrin_2.9_country_7.63.csv",
+                        "track-1.csv",
+                        """
+                                {
+                                   "gpsDistance": {
+                                     "urban": 16.9496,
+                                     "country": 12.9311,
+                                     "total": 29.8807
+                                   },
+                                   "odoDistance": {
+                                     "urban": 16.9496,
+                                     "country": 12.9311,
+                                     "total": 29.8807
+                                   }
+                                }"""
+                ),
+                Arguments.of(
+                        "track-2.csv",
                         """
                                 {
                                   "gpsDistance": {
@@ -115,7 +71,7 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
                                 }"""
                 ),
                 Arguments.of(
-                        "track-minsk-8.25_km.csv",
+                        "track-3.csv",
                         """
                                 {
                                   "gpsDistance": {
@@ -131,7 +87,7 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
                                 }"""
                 ),
                 Arguments.of(
-                        "track_460_40000.csv",
+                        "track-4.csv",
                         """
                                 {
                                   "gpsDistance": {
@@ -147,7 +103,7 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
                                 }"""
                 ),
                 Arguments.of(
-                        "track_460_64000.csv",
+                        "track-5.csv",
                         """
                                 {
                                   "gpsDistance": {
@@ -163,7 +119,7 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
                                 }"""
                 ),
                 Arguments.of(
-                        "track_460_131000.csv",
+                        "track-6.csv",
                         """
                                 {
                                   "gpsDistance": {
@@ -179,7 +135,7 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
                                 }"""
                 ),
                 Arguments.of(
-                        "unit_460_13000.csv",
+                        "track-7.csv",
                         """
                                 {
                                   "gpsDistance": {
@@ -199,6 +155,7 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
 
     private static final class RequestReader {
         private static final String FOLDER_PATH = "./src/test/resources/tracks";
+        private static final int URBAN_SPEED_THRESHOLD = 75;
 
         private final PointParser pointParser = new PointParser();
 
@@ -264,7 +221,7 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
 
         private static DistanceRequest parseDistance(final String[] properties, final int relativeIndex) {
             final double relative = parseDouble(properties[relativeIndex]);
-            return createDistance(relative);
+            return new DistanceRequest(relative, 0.);
         }
     }
 }
