@@ -43,7 +43,7 @@ public class CityScanningService {
     }
 
     private Set<Geometry> findExistingCityGeometries() {
-        try (final Stream<CityGeometry> geometries = cityService.findGeometries()) {
+        try (final Stream<CityGeometry> geometries = cityService.findCityGeometries()) {
             return geometries.map(CityGeometry::getGeometry).collect(toUnmodifiableSet());
         }
     }

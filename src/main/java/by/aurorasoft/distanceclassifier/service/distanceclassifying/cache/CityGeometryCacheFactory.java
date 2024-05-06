@@ -37,6 +37,6 @@ public class CityGeometryCacheFactory {
     }
 
     private Stream<CityGeometry> loadGeometries() {
-        return shouldBeFilled ? cityService.findGeometries() : empty();
+        return shouldBeFilled ? cityService.findCityGeometries() : empty();
     }
 }

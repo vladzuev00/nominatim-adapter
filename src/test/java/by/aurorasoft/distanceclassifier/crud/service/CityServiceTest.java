@@ -5,6 +5,7 @@ import by.aurorasoft.distanceclassifier.crud.model.dto.City;
 import by.aurorasoft.distanceclassifier.crud.model.dto.City.CityGeometry;
 import by.aurorasoft.distanceclassifier.testutil.GeometryUtil;
 import org.junit.Test;
+import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.Polygon;
@@ -45,8 +46,8 @@ public final class CityServiceTest extends AbstractSpringBootTest {
     }
 
     @Test
-    public void geometriesShouldBeFound() {
-        try (final Stream<CityGeometry> stream = service.findGeometries()) {
+    public void cityGeometriesShouldBeFound() {
+        try (final Stream<CityGeometry> stream = service.findCityGeometries()) {
             final Set<CityGeometry> actual = stream.collect(toUnmodifiableSet());
             final Set<CityGeometry> expected = Set.of(
                     new CityGeometry(
@@ -68,17 +69,17 @@ public final class CityServiceTest extends AbstractSpringBootTest {
 
     @Test
     @Sql(statements = "DELETE FROM city")
-    public void geometriesShouldNotBeFound() {
-        try (final Stream<CityGeometry> actual = service.findGeometries()) {
+    public void cityGeometriesShouldNotBeFound() {
+        try (final Stream<CityGeometry> actual = service.findCityGeometries()) {
             assertTrue(actual.findAny().isEmpty());
         }
     }
 
     @Test
-    public void intersectedGeometriesShouldBeFound() {
+    public void intersectedCityGeometriesShouldBeFound() {
         final LineString givenLine = createLine("LINESTRING(4 1, 4 4, 5 7, 7 8)");
 
-        try (final Stream<CityGeometry> stream = service.findIntersectedGeometries(givenLine)) {
+        try (final Stream<CityGeometry> stream = service.findIntersectedCityGeometries(givenLine)) {
             final Set<CityGeometry> actual = stream.collect(toUnmodifiableSet());
             final Set<CityGeometry> expected = Set.of(
                     new CityGeometry(
@@ -95,12 +96,30 @@ public final class CityServiceTest extends AbstractSpringBootTest {
     }
 
     @Test
-    public void intersectedGeometriesShouldNotBeFound() {
+    public void intersectedCityGeometriesShouldNotBeFound() {
         final LineString givenLine = createLine("LINESTRING(7 1, 7.5 5, 7.5 7, 9 8)");
 
-        try (final Stream<CityGeometry> stream = service.findIntersectedGeometries(givenLine)) {
+        try (final Stream<CityGeometry> stream = service.findIntersectedCityGeometries(givenLine)) {
             assertTrue(stream.findAny().isEmpty());
         }
+    }
+
+    @Test
+    public void geometriesShouldBeFound() {
+        final Set<Geometry> actual = service.findGeometries();
+        final Set<Geometry> expected = Set.of(
+                createPolygon("POLYGON((3 2, 2.5 5, 6 5, 5 3, 3 2))"),
+                createPolygon("POLYGON((4 7.5, 4 8, 5 10.5, 7.5 11.5, 6.5 8.5, 4 7.5))"),
+                createPolygon("POLYGON((8 3, 8 6, 11 6, 11 3, 8 3))")
+        );
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @Sql(statements = "DELETE FROM city")
+    public void geometriesShouldNotBeFound() {
+        final Set<Geometry> actual = service.findGeometries();
+        assertTrue(actual.isEmpty());
     }
 
     private Polygon createPolygon(final String text) {

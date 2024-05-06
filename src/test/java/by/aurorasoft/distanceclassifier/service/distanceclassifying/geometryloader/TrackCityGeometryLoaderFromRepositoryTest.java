@@ -50,7 +50,7 @@ public final class TrackCityGeometryLoaderFromRepositoryTest {
         final CityGeometry firstGivenGeometry = mock(CityGeometry.class);
         final CityGeometry secondGivenGeometry = mock(CityGeometry.class);
         final Stream<CityGeometry> givenGeometries = createStreamCapturingClose(firstGivenGeometry, secondGivenGeometry);
-        when(mockedCityService.findIntersectedGeometries(same(givenLine))).thenReturn(givenGeometries);
+        when(mockedCityService.findIntersectedCityGeometries(same(givenLine))).thenReturn(givenGeometries);
 
         final PreparedCityGeometry firstGivenPreparedGeometry = mockPreparedGeometryFor(firstGivenGeometry);
         final PreparedCityGeometry secondGivenPreparedGeometry = mockPreparedGeometryFor(secondGivenGeometry);

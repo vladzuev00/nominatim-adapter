@@ -40,7 +40,7 @@ public final class CityGeometryCacheFactoryTest {
         final CityGeometry firstGivenGeometry = mock(CityGeometry.class);
         final CityGeometry secondGivenGeometry = mock(CityGeometry.class);
         final Stream<CityGeometry> givenGeometries = createStreamCapturingClose(firstGivenGeometry, secondGivenGeometry);
-        when(mockedCityService.findGeometries()).thenReturn(givenGeometries);
+        when(mockedCityService.findCityGeometries()).thenReturn(givenGeometries);
 
         final PreparedCityGeometry firstGivenPreparedGeometry = mockPreparedGeometryFor(firstGivenGeometry);
         final PreparedCityGeometry secondGivenPreparedGeometry = mockPreparedGeometryFor(secondGivenGeometry);

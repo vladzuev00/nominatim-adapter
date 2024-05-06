@@ -32,7 +32,7 @@ public class TrackCityGeometryLoaderFromRepository extends TrackCityGeometryLoad
 
     @Override
     protected Set<PreparedCityGeometry> loadInternal(final LineString line) {
-        try (final Stream<CityGeometry> geometries = cityService.findIntersectedGeometries(line)) {
+        try (final Stream<CityGeometry> geometries = cityService.findIntersectedCityGeometries(line)) {
             return geometries.map(geometryPreparer::prepare).collect(toUnmodifiableSet());
         }
     }
