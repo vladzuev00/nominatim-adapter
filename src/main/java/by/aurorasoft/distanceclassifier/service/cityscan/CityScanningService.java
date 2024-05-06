@@ -30,16 +30,16 @@ public final class CityScanningService {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private void saveNotExistingCities(final AreaCoordinate areaCoordinate) {
-        final Set<Geometry> existingCityGeometries = cityService.findGeometries();
+        final Set<Geometry> existingGeometries = cityService.findGeometries();
         overpassClient.findCities(areaCoordinate)
                 .getRelations()
                 .stream()
                 .map(cityFactory::create)
-                .filter(city -> !isContainCityGeometry(existingCityGeometries, city))
+                .filter(city -> !isContainGeometry(existingGeometries, city))
                 .collect(collectingAndThen(toList(), cityService::saveAll));
     }
 
-    private boolean isContainCityGeometry(final Set<Geometry> geometries, final City city) {
+    private boolean isContainGeometry(final Set<Geometry> geometries, final City city) {
         return geometries.stream().anyMatch(geometry -> geometry.equalsTopo(city.getGeometry().getGeometry()));
     }
 }

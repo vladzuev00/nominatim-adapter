@@ -17,6 +17,8 @@ public class City implements AbstractDto<Long> {
     CityGeometry geometry;
 
     @Value
+    @AllArgsConstructor
+    @Builder
     public static class CityGeometry {
         Geometry geometry;
         Geometry boundingBox;
