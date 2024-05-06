@@ -38,7 +38,7 @@ public final class CityScanningControllerTest extends AbstractSpringBootTest {
 
         postExpectingNoContext(restTemplate, URL, givenRequest);
 
-        verify(mockedService, times(1)).scan(same(givenAreaCoordinate));
+        verify(mockedService, times(1)).scanAsync(same(givenAreaCoordinate));
     }
 
     @Test

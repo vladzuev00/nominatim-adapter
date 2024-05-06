@@ -11,12 +11,24 @@ import static org.springframework.util.ReflectionUtils.findField;
 @UtilityClass
 public final class ReflectionUtil {
 
-    public static <V, T> V getFieldValue(final T target, final String fieldName, final Class<V> valueType) {
+    public static <V> V getFieldValue(final Object target, final String fieldName, final Class<V> valueType) {
         final Field field = getField(target, fieldName);
         field.setAccessible(true);
         try {
             final Object value = getFieldValue(field, target);
             return valueType.cast(value);
+        } finally {
+            field.setAccessible(false);
+        }
+    }
+
+    public static void setFieldValue(final Object target, final String fieldName, final Object value) {
+        final Field field = getField(target, fieldName);
+        field.setAccessible(true);
+        try {
+            field.set(target, value);
+        } catch (final IllegalAccessException cause) {
+            throw new RuntimeException(cause);
         } finally {
             field.setAccessible(false);
         }

@@ -27,7 +27,7 @@ public class CityScanningController {
     @PostMapping
     public ResponseEntity<?> scan(@Valid @RequestBody final AreaCoordinateRequest request) {
         final AreaCoordinate areaCoordinate = areaCoordinateFactory.create(request);
-        service.scan(areaCoordinate);
+        service.scanAsync(areaCoordinate);
         return noContent().build();
     }
 }
