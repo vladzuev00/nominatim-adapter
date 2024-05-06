@@ -66,11 +66,11 @@ public final class CityScanningServiceTest extends AbstractSpringBootTest {
                 fifthGivenRelation
         );
 
-        mockCityForRelation(firstGivenRelation, 255L, "POLYGON((3 2, 2.5 5, 6 5, 5 3, 3 2))");
-        mockCityForRelation(secondGivenRelation, 256L, "POLYGON((8 3, 8 6, 11 6, 11 3, 8 3))");
-        final City thirdGivenCity = mockCityForRelation(thirdGivenRelation, 257L, "POLYGON((4 7.5, 4 8, 5 10.5, 7.5 11.5, 6.5 8.5, 4 7.5))");
-        mockCityForRelation(fourthGivenRelation, 258L, "POLYGON((6 5, 5 3, 3 2, 2.5 5, 6 5))");
-        final City fifthGivenCity = mockCityForRelation(fifthGivenRelation, 259L, "POLYGON((1 1, 2 1, 2 2, 1 2, 1 1))");
+        mockCityForRelation(firstGivenRelation, "POLYGON((3 2, 2.5 5, 6 5, 5 3, 3 2))");
+        mockCityForRelation(secondGivenRelation, "POLYGON((8 3, 8 6, 11 6, 11 3, 8 3))");
+        final City thirdGivenCity = mockCityForRelation(thirdGivenRelation, "POLYGON((4 7.5, 4 8, 5 10.5, 7.5 11.5, 6.5 8.5, 4 7.5))");
+        mockCityForRelation(fourthGivenRelation, "POLYGON((6 5, 5 3, 3 2, 2.5 5, 6 5))");
+        final City fifthGivenCity = mockCityForRelation(fifthGivenRelation, "POLYGON((1 1, 2 1, 2 2, 1 2, 1 1))");
 
         scanningService.scan(givenAreaCoordinate);
 
@@ -89,16 +89,15 @@ public final class CityScanningServiceTest extends AbstractSpringBootTest {
         when(mockedOverpassClient.findCities(same(areaCoordinate))).thenReturn(response);
     }
 
-    private City mockCityForRelation(final Relation relation, final Long id, final String polygonText) {
-        final City city = createCity(id, polygonText);
+    private City mockCityForRelation(final Relation relation, final String polygonText) {
+        final City city = createCity(polygonText);
         when(mockedCityFactory.create(same(relation))).thenReturn(city);
         return city;
     }
 
-    private City createCity(final Long id, final String polygonText) {
+    private City createCity(final String polygonText) {
         final Geometry geometry = createPolygon(polygonText);
         return City.builder()
-                .id(id)
                 .geometry(
                         CityGeometry.builder()
                                 .geometry(geometry)
