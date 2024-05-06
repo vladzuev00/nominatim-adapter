@@ -3,7 +3,7 @@ package by.aurorasoft.distanceclassifier.controller.cityscan;
 import by.aurorasoft.distanceclassifier.controller.cityscan.factory.AreaCoordinateFactory;
 import by.aurorasoft.distanceclassifier.controller.cityscan.model.AreaCoordinateRequest;
 import by.aurorasoft.distanceclassifier.model.AreaCoordinate;
-import by.aurorasoft.distanceclassifier.service.cityscan.CityScanningService;
+import by.aurorasoft.distanceclassifier.service.cityscan.CityAsyncScanningService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -22,7 +22,7 @@ import static org.springframework.http.ResponseEntity.noContent;
 @RequiredArgsConstructor
 public class CityScanningController {
     private final AreaCoordinateFactory areaCoordinateFactory;
-    private final CityScanningService service;
+    private final CityAsyncScanningService service;
 
     @PostMapping
     public ResponseEntity<?> scan(@Valid @RequestBody final AreaCoordinateRequest request) {
