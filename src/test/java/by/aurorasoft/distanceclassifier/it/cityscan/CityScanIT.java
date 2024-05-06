@@ -4,12 +4,18 @@ import by.aurorasoft.distanceclassifier.controller.cityscan.model.AreaCoordinate
 import by.aurorasoft.distanceclassifier.crud.model.entity.CityEntity;
 import by.aurorasoft.distanceclassifier.crud.model.entity.CityEntity.CityGeometry;
 import by.aurorasoft.distanceclassifier.it.base.AbstractIT;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 import org.junit.Test;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
+import org.springframework.stereotype.Component;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.stream.Stream;
 
 import static by.aurorasoft.distanceclassifier.model.CityType.TOWN;
@@ -17,30 +23,47 @@ import static by.aurorasoft.distanceclassifier.testutil.CityEntityUtil.checkEqua
 import static by.aurorasoft.distanceclassifier.testutil.GeometryUtil.createMultipolygon;
 import static by.aurorasoft.distanceclassifier.testutil.GeometryUtil.createPolygon;
 import static by.aurorasoft.distanceclassifier.testutil.HttpUtil.postExpectingNoContext;
+import static java.util.Arrays.stream;
 import static java.util.Comparator.comparing;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
+@Import(CityScanIT.ScannedLocationAppendingBarrier.class)
 public final class CityScanIT extends AbstractIT {
     private static final String URL = "/api/v1/cityScan";
 
     @Autowired
     private GeometryFactory geometryFactory;
 
-    //TODO: send several requests
+    @Autowired
+    private ScannedLocationAppendingBarrier scannedLocationAppendingBarrier;
+
     @Test
     @Sql(statements = "DELETE FROM city")
     public void citiesShouldBeScanned() {
-        final AreaCoordinateRequest givenRequest = new AreaCoordinateRequest(
+        final AreaCoordinateRequest firstGivenRequest = new AreaCoordinateRequest(
                 53.276930,
                 29.073363,
                 54.109940,
                 30.180785
         );
+        final AreaCoordinateRequest secondGivenRequest = new AreaCoordinateRequest(
+                54.138632,
+                30.234380,
+                54.144590,
+                30.246525
+        );
 
-        postExpectingNoContext(restTemplate, URL, givenRequest);
+        sendWaitingExecution(firstGivenRequest, secondGivenRequest);
 
         final List<CityEntity> actual = findCitiesOrderedByGeometry();
         final List<CityEntity> expected = getExpectedCitiesOrderedByGeometry();
         checkEqualsExceptId(expected, actual);
+    }
+
+    private void sendWaitingExecution(final AreaCoordinateRequest... requests) {
+        scannedLocationAppendingBarrier.expect(requests.length);
+        stream(requests).forEach(request -> postExpectingNoContext(restTemplate, URL, request));
+        scannedLocationAppendingBarrier.await();
     }
 
     private List<CityEntity> findCitiesOrderedByGeometry() {
@@ -95,5 +118,48 @@ public final class CityScanIT extends AbstractIT {
                         )
                         .build()
         );
+    }
+
+    @Aspect
+    @Component
+    public static class ScannedLocationAppendingBarrier {
+        private static final long TIMEOUT_MS = 20000;
+        private static final CountDownLatch DEFAULT_LATCH = new CountDownLatch(0);
+
+        private volatile CountDownLatch latch;
+
+        public ScannedLocationAppendingBarrier() {
+            latch = DEFAULT_LATCH;
+        }
+
+        public final void expect(final int expectedCalls) {
+            latch = new CountDownLatch(expectedCalls);
+        }
+
+        @AfterReturning("appendMethod()")
+        public void onAppend() {
+            latch.countDown();
+        }
+
+        public final void await() {
+            try {
+                awaitInterrupted();
+            } catch (final InterruptedException cause) {
+                throw new IllegalStateException(cause);
+            }
+        }
+
+        private void awaitInterrupted()
+                throws InterruptedException {
+            final boolean timeoutExceeded = !latch.await(TIMEOUT_MS, MILLISECONDS);
+            if (timeoutExceeded) {
+                throw new IllegalStateException("Latch timeout was exceeded");
+            }
+        }
+
+        @Pointcut("execution(int by.aurorasoft.distanceclassifier.crud.repository.ScannedLocationRepository.append(org.locationtech.jts.geom.Geometry))")
+        private void appendMethod() {
+
+        }
     }
 }

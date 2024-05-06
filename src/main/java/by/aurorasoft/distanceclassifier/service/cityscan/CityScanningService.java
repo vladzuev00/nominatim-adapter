@@ -17,6 +17,7 @@ import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 
+//TODO: do CityScanningService and CityAsyncScanningService and do saveNotExistingCities and append in @Transactional
 @Service
 @RequiredArgsConstructor
 public final class CityScanningService {
