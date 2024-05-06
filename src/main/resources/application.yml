@@ -25,8 +25,8 @@ server:
     context-path: /cityMileage
   port: 8081
 
-mileage-calc:
-  load-city-geometries-on-start-app: false
+distance-classifying:
+  load-city-geometries-on-start-app: true
 
 track-simplifier:
   epsilon: 0.00015

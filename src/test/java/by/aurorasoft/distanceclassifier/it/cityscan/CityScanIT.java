@@ -25,6 +25,7 @@ public final class CityScanIT extends AbstractIT {
     @Autowired
     private GeometryFactory geometryFactory;
 
+    //TODO: send several requests
     @Test
     @Sql(statements = "DELETE FROM city")
     public void citiesShouldBeScanned() {
