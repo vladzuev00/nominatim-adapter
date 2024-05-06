@@ -1,15 +1,13 @@
 package by.aurorasoft.distanceclassifier.service.geometry;
 
 import by.aurorasoft.distanceclassifier.base.AbstractSpringBootTest;
-import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse;
+import by.aurorasoft.distanceclassifier.model.*;
 import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Bounds;
 import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Node;
 import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Relation;
 import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Way;
-import by.aurorasoft.distanceclassifier.model.PreparedCityGeometry;
-import by.aurorasoft.distanceclassifier.model.Track;
-import by.aurorasoft.distanceclassifier.model.TrackPoint;
 import org.junit.Test;
+import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.*;
 import org.locationtech.jts.geom.prep.PreparedGeometry;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,7 +106,7 @@ public final class GeometryServiceTest extends AbstractSpringBootTest {
     }
 
     @Test
-    public void polygonShouldBeCreated() {
+    public void polygonShouldBeCreatedByBounds() {
         final double givenMinLatitude = 5.5;
         final double givenMinLongitude = 6.6;
         final double givenMaxLatitude = 7.7;
@@ -116,6 +114,28 @@ public final class GeometryServiceTest extends AbstractSpringBootTest {
         final Bounds givenBounds = new Bounds(givenMinLatitude, givenMinLongitude, givenMaxLatitude, givenMaxLongitude);
 
         final Polygon actual = service.createPolygon(givenBounds);
+        final Polygon expected = createPolygon(
+                new CoordinateXY(givenMinLongitude, givenMinLatitude),
+                new CoordinateXY(givenMinLongitude, givenMaxLatitude),
+                new CoordinateXY(givenMaxLongitude, givenMaxLatitude),
+                new CoordinateXY(givenMaxLongitude, givenMinLatitude),
+                new CoordinateXY(givenMinLongitude, givenMinLatitude)
+        );
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void polygonShouldBeCreatedByAreaCoordinate() {
+        final double givenMinLatitude = 5.5;
+        final double givenMinLongitude = 6.6;
+        final double givenMaxLatitude = 7.7;
+        final double givenMaxLongitude = 8.8;
+        final AreaCoordinate givenAreaCoordinate = new AreaCoordinate(
+                new by.aurorasoft.distanceclassifier.model.Coordinate(givenMinLatitude, givenMinLongitude),
+                new by.aurorasoft.distanceclassifier.model.Coordinate(givenMaxLatitude, givenMaxLongitude)
+        );
+
+        final Polygon actual = service.createPolygon(givenAreaCoordinate);
         final Polygon expected = createPolygon(
                 new CoordinateXY(givenMinLongitude, givenMinLatitude),
                 new CoordinateXY(givenMinLongitude, givenMaxLatitude),
@@ -254,7 +274,7 @@ public final class GeometryServiceTest extends AbstractSpringBootTest {
         assertFalse(actual);
     }
 
-    private static TrackPoint createTrackPoint(final double latitude, final double longitude) {
+    private TrackPoint createTrackPoint(final double latitude, final double longitude) {
         return TrackPoint.builder()
                 .coordinate(new by.aurorasoft.distanceclassifier.model.Coordinate(latitude, longitude))
                 .build();

@@ -5,8 +5,8 @@ import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Bounds;
 import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Relation;
 import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Way;
 import lombok.RequiredArgsConstructor;
-import org.locationtech.jts.geom.*;
 import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.*;
 import org.locationtech.jts.geom.prep.PreparedGeometry;
 import org.locationtech.jts.operation.polygonize.Polygonizer;
 import org.springframework.stereotype.Service;
@@ -30,12 +30,18 @@ public final class GeometryService {
     }
 
     public Polygon createPolygon(final Bounds bounds) {
-        return geometryFactory.createPolygon(getJtsCoordinates(bounds));
+        return createRectangle(
+                bounds.getMinLatitude(),
+                bounds.getMinLongitude(),
+                bounds.getMaxLatitude(),
+                bounds.getMaxLongitude()
+        );
     }
 
-    //TODO:
     public Polygon createPolygon(final AreaCoordinate areaCoordinate) {
-        return null;
+        final var min = areaCoordinate.getMin();
+        final var max = areaCoordinate.getMax();
+        return createRectangle(min.getLatitude(), min.getLongitude(), max.getLatitude(), max.getLongitude());
     }
 
     public boolean isAnyContain(final Set<PreparedCityGeometry> cityGeometries, final TrackPoint point) {
@@ -46,7 +52,7 @@ public final class GeometryService {
         return isAnyGeometryContain(cityGeometries, PreparedCityGeometry::getBoundingBox, point);
     }
 
-    private static CoordinateXY[] getJtsCoordinates(final Track track) {
+    private CoordinateXY[] getJtsCoordinates(final Track track) {
         return mapToJtsCoordinates(
                 track.getPoints(),
                 point -> point.getCoordinate().getLatitude(),
@@ -54,7 +60,7 @@ public final class GeometryService {
         );
     }
 
-    private static CoordinateXY[] getJtsCoordinates(final Way way) {
+    private CoordinateXY[] getJtsCoordinates(final Way way) {
         return mapToJtsCoordinates(
                 way.getCoordinates(),
                 OverpassSearchCityResponse.Coordinate::getLatitude,
@@ -62,39 +68,31 @@ public final class GeometryService {
         );
     }
 
-    private static <T> CoordinateXY[] mapToJtsCoordinates(final List<T> sources,
-                                                          final ToDoubleFunction<T> latitudeGetter,
-                                                          final ToDoubleFunction<T> longitudeGetter) {
+    private <T> CoordinateXY[] mapToJtsCoordinates(final List<T> sources,
+                                                   final ToDoubleFunction<T> latitudeGetter,
+                                                   final ToDoubleFunction<T> longitudeGetter) {
         return sources.stream()
                 .map(source -> new CoordinateXY(longitudeGetter.applyAsDouble(source), latitudeGetter.applyAsDouble(source)))
                 .toArray(CoordinateXY[]::new);
     }
 
-    private static CoordinateXY[] getJtsCoordinates(final Bounds bounds) {
-        final CoordinateXY leftBottomJtsCoordinate = getLeftBottomJtsCoordinate(bounds);
-        return new CoordinateXY[]{
-                leftBottomJtsCoordinate,
-                getLeftUpperJtsCoordinate(bounds),
-                getRightUpperJtsCoordinate(bounds),
-                getRightBottomJtsCoordinate(bounds),
-                leftBottomJtsCoordinate
-        };
-    }
-
-    private static CoordinateXY getLeftBottomJtsCoordinate(final Bounds bounds) {
-        return new CoordinateXY(bounds.getMinLongitude(), bounds.getMinLatitude());
-    }
-
-    private static CoordinateXY getLeftUpperJtsCoordinate(final Bounds bounds) {
-        return new CoordinateXY(bounds.getMinLongitude(), bounds.getMaxLatitude());
-    }
-
-    private static CoordinateXY getRightUpperJtsCoordinate(final Bounds bounds) {
-        return new CoordinateXY(bounds.getMaxLongitude(), bounds.getMaxLatitude());
-    }
-
-    private static CoordinateXY getRightBottomJtsCoordinate(final Bounds bounds) {
-        return new CoordinateXY(bounds.getMaxLongitude(), bounds.getMinLatitude());
+    private Polygon createRectangle(final double minLatitude,
+                                    final double minLongitude,
+                                    final double maxLatitude,
+                                    final double maxLongitude) {
+        final CoordinateXY leftBottomJtsCoordinate = new CoordinateXY(minLongitude, minLatitude);
+        final CoordinateXY leftUpperJtsCoordinate = new CoordinateXY(minLongitude, maxLatitude);
+        final CoordinateXY rightUpperJtsCoordinate = new CoordinateXY(maxLongitude, maxLatitude);
+        final CoordinateXY rightBottomJtsCoordinate = new CoordinateXY(maxLongitude, minLatitude);
+        return geometryFactory.createPolygon(
+                new CoordinateXY[]{
+                        leftBottomJtsCoordinate,
+                        leftUpperJtsCoordinate,
+                        rightUpperJtsCoordinate,
+                        rightBottomJtsCoordinate,
+                        leftBottomJtsCoordinate
+                }
+        );
     }
 
     @SuppressWarnings("unchecked")
@@ -104,7 +102,7 @@ public final class GeometryService {
                 .stream()
                 .filter(Way.class::isInstance)
                 .map(Way.class::cast)
-                .map(GeometryService::getJtsCoordinates)
+                .map(this::getJtsCoordinates)
                 .map(geometryFactory::createLineString)
                 .forEach(polygonizer::add);
         return (Polygon[]) polygonizer.getPolygons().toArray(Polygon[]::new);
