@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ScannedLocationService extends AbsServiceCRUD<Long, ScannedLocationEntity, ScannedLocation, ScannedLocationRepository> {
+
     public ScannedLocationService(final ScannedLocationMapper mapper, final ScannedLocationRepository repository) {
         super(mapper, repository);
     }
