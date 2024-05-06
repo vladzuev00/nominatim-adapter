@@ -34,10 +34,10 @@ public final class ScannedLocationRepositoryTest extends AbstractSpringBootTest 
 
         assertTrue(optionalActual.isPresent());
         final ScannedLocationEntity actual = optionalActual.get();
-        final ScannedLocationEntity expected = ScannedLocationEntity.builder()
-                .id(givenId)
-                .geometry(createPolygon("POLYGON((1 1, 1 15, 12 15, 12 1, 1 1))"))
-                .build();
+        final ScannedLocationEntity expected = new ScannedLocationEntity(
+                givenId,
+                createPolygon("POLYGON((1 1, 1 15, 12 15, 12 1, 1 1))")
+        );
         checkEquals(expected, actual);
     }
 
@@ -57,10 +57,10 @@ public final class ScannedLocationRepositoryTest extends AbstractSpringBootTest 
         assertTrue(optionalActual.isPresent());
 
         final ScannedLocationEntity actual = optionalActual.get();
-        final ScannedLocationEntity expected = ScannedLocationEntity.builder()
-                .id(expectedId)
-                .geometry(createMultiPolygon("MULTIPOLYGON (((1 1, 1 15, 12 15, 12 1, 1 1)), ((13 16, 13 17, 15 17, 15 13, 13 16)))"))
-                .build();
+        final ScannedLocationEntity expected = new ScannedLocationEntity(
+                expectedId,
+                createMultiPolygon("MULTIPOLYGON (((1 1, 1 15, 12 15, 12 1, 1 1)), ((13 16, 13 17, 15 17, 15 13, 13 16)))")
+        );
         checkEquals(expected, actual);
     }
 
@@ -70,10 +70,10 @@ public final class ScannedLocationRepositoryTest extends AbstractSpringBootTest 
         final ScannedLocationEntity actual = repository.get();
         checkQueryCount(1);
 
-        final ScannedLocationEntity expected = ScannedLocationEntity.builder()
-                .id(1L)
-                .geometry(createPolygon("POLYGON((1 1, 1 15, 12 15, 12 1, 1 1))"))
-                .build();
+        final ScannedLocationEntity expected = new ScannedLocationEntity(
+                1L,
+                createPolygon("POLYGON((1 1, 1 15, 12 15, 12 1, 1 1))")
+        );
         checkEquals(expected, actual);
     }
 
