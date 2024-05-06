@@ -43,7 +43,9 @@ public class CityService extends AbsServiceCRUD<Long, CityEntity, City, CityRepo
 
     @Transactional(readOnly = true)
     public Set<Geometry> findGeometries() {
-        return findCityGeometries().map(CityGeometry::getGeometry).collect(toUnmodifiableSet());
+        try (final Stream<CityGeometry> cityGeometries = findCityGeometries()) {
+            return cityGeometries.map(CityGeometry::getGeometry).collect(toUnmodifiableSet());
+        }
     }
 
     private Stream<CityGeometry> findCityGeometries(final Supplier<Stream<CityEntity.CityGeometry>> supplier) {
