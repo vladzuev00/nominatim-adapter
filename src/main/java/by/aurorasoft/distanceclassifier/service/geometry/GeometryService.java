@@ -1,14 +1,12 @@
 package by.aurorasoft.distanceclassifier.service.geometry;
 
-import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse;
+import by.aurorasoft.distanceclassifier.model.*;
 import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Bounds;
 import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Relation;
 import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Way;
-import by.aurorasoft.distanceclassifier.model.PreparedCityGeometry;
-import by.aurorasoft.distanceclassifier.model.Track;
-import by.aurorasoft.distanceclassifier.model.TrackPoint;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.*;
+import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.prep.PreparedGeometry;
 import org.locationtech.jts.operation.polygonize.Polygonizer;
 import org.springframework.stereotype.Service;
@@ -33,6 +31,11 @@ public final class GeometryService {
 
     public Polygon createPolygon(final Bounds bounds) {
         return geometryFactory.createPolygon(getJtsCoordinates(bounds));
+    }
+
+    //TODO:
+    public Polygon createPolygon(final AreaCoordinate areaCoordinate) {
+        return null;
     }
 
     public boolean isAnyContain(final Set<PreparedCityGeometry> cityGeometries, final TrackPoint point) {

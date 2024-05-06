@@ -33,7 +33,7 @@ public final class CityScanningServiceTest {
 
     @Before
     public void initializeScanningService() {
-        scanningService = new CityScanningService(mockedOverpassClient, mockedCityFactory, mockedCityService);
+//        scanningService = new CityScanningService(mockedOverpassClient, mockedCityFactory, mockedCityService);
     }
 
     @Test
