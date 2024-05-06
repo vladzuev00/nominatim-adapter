@@ -9,8 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 public interface ScannedLocationRepository extends JpaRepository<ScannedLocationEntity, Long> {
 
     @Modifying
-    @Query("UPDATE ScannedLocationEntity e SET e.geometry = union(e.geometry, :geometry)")
-    void append(final Geometry geometry);
+    @Query("UPDATE ScannedLocationEntity e SET e.geometry = geomunion(e.geometry, :geometry)")
+    int append(final Geometry geometry);
 
     @Query("SELECT e FROM ScannedLocationEntity e")
     ScannedLocationEntity get();
