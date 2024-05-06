@@ -1,4 +1,4 @@
-package by.aurorasoft.distanceclassifier.service.distanceclassifying.geometryloader;
+package by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader;
 
 import by.aurorasoft.distanceclassifier.crud.model.dto.City.CityGeometry;
 import by.aurorasoft.distanceclassifier.crud.service.CityService;
@@ -7,6 +7,7 @@ import by.aurorasoft.distanceclassifier.service.distanceclassifying.geometryprep
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.simplifier.TrackSimplifier;
 import by.aurorasoft.distanceclassifier.service.geometry.GeometryService;
 import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.prep.PreparedGeometry;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +18,7 @@ import static java.util.stream.Collectors.toUnmodifiableSet;
 
 @Component
 @ConditionalOnProperty(prefix = "distance-classifying", name = "load-city-geometries-on-start-app", havingValue = "false")
-public class TrackCityGeometryLoaderFromRepository extends TrackCityGeometryLoader {
+public class TrackCityGeometryLoaderFromRepository extends TrackCityMapLoader {
     private final CityService cityService;
     private final CityGeometryPreparer geometryPreparer;
 
@@ -31,9 +32,14 @@ public class TrackCityGeometryLoaderFromRepository extends TrackCityGeometryLoad
     }
 
     @Override
-    protected Set<PreparedCityGeometry> loadInternal(final LineString line) {
+    protected Set<PreparedCityGeometry> loadCityGeometries(final LineString line) {
         try (final Stream<CityGeometry> geometries = cityService.findIntersectedCityGeometries(line)) {
             return geometries.map(geometryPreparer::prepare).collect(toUnmodifiableSet());
         }
+    }
+
+    @Override
+    protected PreparedGeometry loadScannedLocation() {
+        return null;
     }
 }

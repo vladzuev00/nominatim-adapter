@@ -1,4 +1,4 @@
-package by.aurorasoft.distanceclassifier.service.distanceclassifying.geometryloader;
+package by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader;
 
 import by.aurorasoft.distanceclassifier.model.PreparedCityGeometry;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.cache.CityGeometryCache;
@@ -43,7 +43,7 @@ public final class TrackCityGeometryLoaderFromCacheTest {
         );
         when(mockedCache.getGeometries()).thenReturn(givenGeometries);
 
-        final Set<PreparedCityGeometry> actual = loader.loadInternal(givenLine);
+        final Set<PreparedCityGeometry> actual = loader.loadCityGeometries(givenLine);
         final Set<PreparedCityGeometry> expected = Set.of(firstGivenGeometry, secondGivenGeometry);
         assertEquals(expected, actual);
     }

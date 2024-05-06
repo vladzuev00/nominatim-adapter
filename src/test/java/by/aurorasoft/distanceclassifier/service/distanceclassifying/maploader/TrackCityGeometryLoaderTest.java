@@ -1,4 +1,4 @@
-package by.aurorasoft.distanceclassifier.service.distanceclassifying.geometryloader;
+package by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader;
 
 import by.aurorasoft.distanceclassifier.model.PreparedCityGeometry;
 import by.aurorasoft.distanceclassifier.model.Track;
@@ -52,7 +52,7 @@ public final class TrackCityGeometryLoaderTest {
         assertSame(loader.capturedLine, givenSimplifiedLine);
     }
 
-    private static final class TestTrackCityGeometryLoader extends TrackCityGeometryLoader {
+    private static final class TestTrackCityGeometryLoader extends TrackCityMapLoader {
         private LineString capturedLine;
 
         public TestTrackCityGeometryLoader(final TrackSimplifier trackSimplifier, final GeometryService geometryService) {
@@ -60,7 +60,7 @@ public final class TrackCityGeometryLoaderTest {
         }
 
         @Override
-        protected Set<PreparedCityGeometry> loadInternal(final LineString line) {
+        protected Set<PreparedCityGeometry> loadCityGeometries(final LineString line) {
             capturedLine = line;
             return emptySet();
         }

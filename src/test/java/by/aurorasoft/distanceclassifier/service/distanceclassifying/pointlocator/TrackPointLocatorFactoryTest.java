@@ -2,7 +2,7 @@ package by.aurorasoft.distanceclassifier.service.distanceclassifying.pointlocato
 
 import by.aurorasoft.distanceclassifier.model.PreparedCityGeometry;
 import by.aurorasoft.distanceclassifier.model.Track;
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.geometryloader.TrackCityGeometryLoader;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.TrackCityMapLoader;
 import by.aurorasoft.distanceclassifier.service.geometry.GeometryService;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +26,7 @@ public final class TrackPointLocatorFactoryTest {
     private static final String FIELD_NAME_CITY_SPEED_THRESHOLD = "citySpeedThreshold";
 
     @Mock
-    private TrackCityGeometryLoader mockedTrackCityGeometryLoader;
+    private TrackCityMapLoader mockedTrackCityGeometryLoader;
 
     @Mock
     private GeometryService mockedGeometryService;

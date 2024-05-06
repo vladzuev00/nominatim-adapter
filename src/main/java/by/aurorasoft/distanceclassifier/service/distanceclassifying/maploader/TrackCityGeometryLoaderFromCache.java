@@ -1,4 +1,4 @@
-package by.aurorasoft.distanceclassifier.service.distanceclassifying.geometryloader;
+package by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader;
 
 import by.aurorasoft.distanceclassifier.model.PreparedCityGeometry;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.cache.CityGeometryCache;
@@ -14,7 +14,7 @@ import static java.util.stream.Collectors.toUnmodifiableSet;
 
 @Component
 @ConditionalOnProperty(prefix = "distance-classifying", name = "load-city-geometries-on-start-app", havingValue = "true")
-public class TrackCityGeometryLoaderFromCache extends TrackCityGeometryLoader {
+public class TrackCityGeometryLoaderFromCache extends TrackCityMapLoader {
     private final CityGeometryCache cache;
 
     public TrackCityGeometryLoaderFromCache(final TrackSimplifier trackSimplifier,
@@ -25,7 +25,7 @@ public class TrackCityGeometryLoaderFromCache extends TrackCityGeometryLoader {
     }
 
     @Override
-    protected Set<PreparedCityGeometry> loadInternal(final LineString line) {
+    protected Set<PreparedCityGeometry> loadCityGeometries(final LineString line) {
         return cache.getGeometries()
                 .stream()
                 .filter(geometry -> geometry.getBoundingBox().intersects(line))

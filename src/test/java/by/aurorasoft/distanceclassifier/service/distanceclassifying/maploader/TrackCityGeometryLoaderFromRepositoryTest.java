@@ -1,4 +1,4 @@
-package by.aurorasoft.distanceclassifier.service.distanceclassifying.geometryloader;
+package by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader;
 
 import by.aurorasoft.distanceclassifier.crud.model.dto.City.CityGeometry;
 import by.aurorasoft.distanceclassifier.crud.service.CityService;
@@ -55,7 +55,7 @@ public final class TrackCityGeometryLoaderFromRepositoryTest {
         final PreparedCityGeometry firstGivenPreparedGeometry = mockPreparedGeometryFor(firstGivenGeometry);
         final PreparedCityGeometry secondGivenPreparedGeometry = mockPreparedGeometryFor(secondGivenGeometry);
 
-        final Set<PreparedCityGeometry> actual = loader.loadInternal(givenLine);
+        final Set<PreparedCityGeometry> actual = loader.loadCityGeometries(givenLine);
         final Set<PreparedCityGeometry> expected = Set.of(firstGivenPreparedGeometry, secondGivenPreparedGeometry);
         assertEquals(expected, actual);
 
