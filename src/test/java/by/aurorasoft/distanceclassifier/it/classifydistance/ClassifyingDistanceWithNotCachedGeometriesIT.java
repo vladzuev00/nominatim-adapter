@@ -8,10 +8,10 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @SpringBootTest(
         webEnvironment = RANDOM_PORT,
         properties = {
-                "distance-classifying.load-city-map-on-start-app=false",
+                "distance-classifying.cache-geometries=false",
                 "spring.jpa.properties.hibernate.hbm2ddl.import_files=data.sql,classpath:sql/insert-belarus-cities.sql"
         }
 )
-public final class ClassifyingDistanceWithNotCachedCityGeometriesIT extends ClassifyingDistanceIT {
+public final class ClassifyingDistanceWithNotCachedGeometriesIT extends ClassifyingDistanceIT {
 
 }
