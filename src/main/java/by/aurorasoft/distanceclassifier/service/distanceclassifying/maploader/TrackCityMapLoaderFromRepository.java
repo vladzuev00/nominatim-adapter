@@ -1,8 +1,8 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader;
 
+import by.aurorasoft.distanceclassifier.crud.model.dto.City.CityGeometry;
 import by.aurorasoft.distanceclassifier.crud.service.CityService;
 import by.aurorasoft.distanceclassifier.crud.service.ScannedLocationService;
-import by.aurorasoft.distanceclassifier.model.PreparedCityGeometry;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.preparer.GeometryPreparer;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.simplifier.TrackSimplifier;
 import by.aurorasoft.distanceclassifier.service.geometry.GeometryService;
@@ -33,8 +33,10 @@ public class TrackCityMapLoaderFromRepository extends TrackCityMapLoader {
     }
 
     @Override
-    protected Stream<PreparedCityGeometry> loadCityGeometries(LineString line) {
-        return cityService.findIntersectedCityGeometries(line).map(geometryPreparer::prepare);
+    protected Stream<PreparedGeometry> loadCityGeometries(final LineString line) {
+        return cityService.findIntersectedCityGeometries(line)
+                .map(CityGeometry::getGeometry)
+                .map(geometryPreparer::prepare);
     }
 
     @Override

@@ -24,10 +24,11 @@ public class TrackCityMapLoaderFromCache extends TrackCityMapLoader {
     }
 
     @Override
-    protected Stream<PreparedCityGeometry> loadCityGeometries(final LineString line) {
+    protected Stream<PreparedGeometry> loadCityGeometries(final LineString line) {
         return cache.getCityGeometries()
                 .stream()
-                .filter(geometry -> geometry.getBoundingBox().intersects(line));
+                .filter(geometry -> geometry.getBoundingBox().intersects(line))
+                .map(PreparedCityGeometry::getGeometry);
     }
 
     @Override

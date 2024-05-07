@@ -1,7 +1,6 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader;
 
 import by.aurorasoft.distanceclassifier.model.CityMap;
-import by.aurorasoft.distanceclassifier.model.PreparedCityGeometry;
 import by.aurorasoft.distanceclassifier.model.Track;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.simplifier.TrackSimplifier;
 import by.aurorasoft.distanceclassifier.service.geometry.GeometryService;
@@ -22,19 +21,19 @@ public abstract class TrackCityMapLoader {
 
     @Transactional(readOnly = true)
     public CityMap load(final Track track) {
-        final Set<PreparedCityGeometry> cityGeometries = loadCityGeometries(track);
+        final Set<PreparedGeometry> cityGeometries = loadCityGeometries(track);
         final PreparedGeometry scannedGeometry = loadScannedGeometry();
         return new CityMap(cityGeometries, scannedGeometry);
     }
 
-    protected abstract Stream<PreparedCityGeometry> loadCityGeometries(final LineString line);
+    protected abstract Stream<PreparedGeometry> loadCityGeometries(final LineString line);
 
     protected abstract PreparedGeometry loadScannedGeometry();
 
-    private Set<PreparedCityGeometry> loadCityGeometries(final Track track) {
+    private Set<PreparedGeometry> loadCityGeometries(final Track track) {
         final Track simplifiedTrack = trackSimplifier.simplify(track);
         final LineString line = geometryService.createLine(simplifiedTrack);
-        try (final Stream<PreparedCityGeometry> geometries = loadCityGeometries(line)) {
+        try (final Stream<PreparedGeometry> geometries = loadCityGeometries(line)) {
             return geometries.collect(toUnmodifiableSet());
         }
     }
