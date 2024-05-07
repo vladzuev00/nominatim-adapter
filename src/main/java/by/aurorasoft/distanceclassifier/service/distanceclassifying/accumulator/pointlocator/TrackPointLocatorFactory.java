@@ -1,5 +1,6 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassifying.accumulator.pointlocator;
 
+import by.aurorasoft.distanceclassifier.model.CityMap;
 import by.aurorasoft.distanceclassifier.model.Track;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.TrackCityMapLoader;
 import by.aurorasoft.distanceclassifier.service.geometry.GeometryService;
@@ -9,12 +10,11 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public final class TrackPointLocatorFactory {
-    private final TrackCityMapLoader trackCityGeometryLoader;
+    private final TrackCityMapLoader trackCityMapLoader;
     private final GeometryService geometryService;
 
     public TrackPointLocator create(final Track track, final int citySpeedThreshold) {
-//        final Set<PreparedCityGeometry> cityGeometries = trackCityGeometryLoader.load(track);
-//        return new TrackPointLocator(geometryService, cityGeometries, citySpeedThreshold);
-        return null;
+        final CityMap cityMap = trackCityMapLoader.load(track);
+        return new TrackPointLocator(geometryService, cityMap, citySpeedThreshold);
     }
 }
