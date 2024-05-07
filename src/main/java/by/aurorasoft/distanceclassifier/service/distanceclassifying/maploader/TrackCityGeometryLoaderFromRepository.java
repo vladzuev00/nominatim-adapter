@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 import static java.util.stream.Collectors.toUnmodifiableSet;
 
 @Component
-@ConditionalOnProperty(prefix = "distance-classifying", name = "load-city-geometries-on-start-app", havingValue = "false")
+@ConditionalOnProperty(prefix = "distance-classifying", name = "load-city-map-on-start-app", havingValue = "false")
 public class TrackCityGeometryLoaderFromRepository extends TrackCityMapLoader {
     private final CityService cityService;
     private final CityGeometryPreparer geometryPreparer;

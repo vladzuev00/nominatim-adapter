@@ -16,7 +16,8 @@ public final class TrackPointLocatorFactory {
     private final GeometryService geometryService;
 
     public TrackPointLocator create(final Track track, final int citySpeedThreshold) {
-        final Set<PreparedCityGeometry> cityGeometries = trackCityGeometryLoader.load(track);
-        return new TrackPointLocator(geometryService, cityGeometries, citySpeedThreshold);
+//        final Set<PreparedCityGeometry> cityGeometries = trackCityGeometryLoader.load(track);
+//        return new TrackPointLocator(geometryService, cityGeometries, citySpeedThreshold);
+        return null;
     }
 }

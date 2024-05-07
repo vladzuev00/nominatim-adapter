@@ -21,7 +21,7 @@ public class CityGeometryCacheFactory {
 
     public CityGeometryCacheFactory(final CityService cityService,
                                     final CityGeometryPreparer geometryPreparer,
-                                    @Value("${distance-classifying.load-city-geometries-on-start-app}") final boolean shouldBeFilled) {
+                                    @Value("${distance-classifying.load-city-map-on-start-app}") final boolean shouldBeFilled) {
         this.cityService = cityService;
         this.geometryPreparer = geometryPreparer;
         this.shouldBeFilled = shouldBeFilled;

@@ -8,7 +8,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @SpringBootTest(
         webEnvironment = RANDOM_PORT,
         properties = {
-                "distance-classifying.load-city-geometries-on-start-app=true",
+                "distance-classifying.load-city-map-on-start-app=true",
                 "spring.jpa.properties.hibernate.hbm2ddl.import_files=data.sql,classpath:sql/insert-belarus-cities.sql"
         }
 )

@@ -3,12 +3,15 @@ package by.aurorasoft.distanceclassifier.it.cityscan;
 import by.aurorasoft.distanceclassifier.controller.cityscan.model.AreaCoordinateRequest;
 import by.aurorasoft.distanceclassifier.crud.model.entity.CityEntity;
 import by.aurorasoft.distanceclassifier.crud.model.entity.CityEntity.CityGeometry;
+import by.aurorasoft.distanceclassifier.crud.model.entity.ScannedLocationEntity;
 import by.aurorasoft.distanceclassifier.it.base.AbstractIT;
+import by.aurorasoft.distanceclassifier.testutil.GeometryUtil;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.junit.Test;
 import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.MultiPolygon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Component;
@@ -23,6 +26,7 @@ import static by.aurorasoft.distanceclassifier.testutil.CityEntityUtil.checkEqua
 import static by.aurorasoft.distanceclassifier.testutil.GeometryUtil.createMultipolygon;
 import static by.aurorasoft.distanceclassifier.testutil.GeometryUtil.createPolygon;
 import static by.aurorasoft.distanceclassifier.testutil.HttpUtil.postExpectingNoContext;
+import static by.aurorasoft.distanceclassifier.testutil.ScannedLocationEntityUtil.checkEquals;
 import static java.util.Arrays.stream;
 import static java.util.Comparator.comparing;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -55,9 +59,16 @@ public final class CityScanIT extends AbstractIT {
 
         sendWaitingExecution(firstGivenRequest, secondGivenRequest);
 
-        final List<CityEntity> actual = findCitiesOrderedByGeometry();
-        final List<CityEntity> expected = getExpectedCitiesOrderedByGeometry();
-        checkEqualsExceptId(expected, actual);
+        final List<CityEntity> actualCities = findCitiesOrderedByGeometry();
+        final List<CityEntity> expectedCities = getExpectedCitiesOrderedByGeometry();
+        checkEqualsExceptId(expectedCities, actualCities);
+
+        final ScannedLocationEntity actualScannedLocation = findScannedLocation();
+        final ScannedLocationEntity expectedScannedLocation = new ScannedLocationEntity(
+                1L,
+                createMultiPolygon("MULTIPOLYGON (((1 1, 1 15, 12 15, 12 1, 1 1)), ((29.073363 53.27693, 29.073363 54.10994, 30.180785 54.10994, 30.180785 53.27693, 29.073363 53.27693)), ((30.23438 54.138632, 30.23438 54.14459, 30.246525 54.14459, 30.246525 54.138632, 30.23438 54.138632)))")
+        );
+        checkEquals(expectedScannedLocation, actualScannedLocation);
     }
 
     private void sendWaitingExecution(final AreaCoordinateRequest... requests) {
@@ -118,6 +129,15 @@ public final class CityScanIT extends AbstractIT {
                         )
                         .build()
         );
+    }
+
+    private ScannedLocationEntity findScannedLocation() {
+        return entityManager.find(ScannedLocationEntity.class, 1L);
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private MultiPolygon createMultiPolygon(final String text) {
+        return GeometryUtil.createMultipolygon(text, geometryFactory);
     }
 
     @Aspect
