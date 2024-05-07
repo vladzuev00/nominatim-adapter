@@ -8,5 +8,5 @@ import java.util.Set;
 @Value
 public class CityMap {
     Set<PreparedCityGeometry> cityGeometries;
-    PreparedGeometry scannedLocation;
+    PreparedGeometry scannedGeometry;
 }
