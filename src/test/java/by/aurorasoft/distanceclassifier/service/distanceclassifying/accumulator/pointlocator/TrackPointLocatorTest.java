@@ -1,4 +1,4 @@
-package by.aurorasoft.distanceclassifier.service.distanceclassifying.pointlocator;
+package by.aurorasoft.distanceclassifier.service.distanceclassifying.accumulator.pointlocator;
 
 import by.aurorasoft.distanceclassifier.model.PreparedCityGeometry;
 import by.aurorasoft.distanceclassifier.model.TrackPoint;

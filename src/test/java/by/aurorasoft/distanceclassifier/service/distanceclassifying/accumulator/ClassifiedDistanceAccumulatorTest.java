@@ -1,7 +1,7 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassifying.accumulator;
 
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.pointlocator.TrackPointLocator;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.accumulator.pointlocator.TrackPointLocator;
 import by.nhorushko.classifieddistance.ClassifiedDistance;
 import by.nhorushko.classifieddistance.ClassifiedDistanceStorage;
 import by.nhorushko.classifieddistance.Distance;

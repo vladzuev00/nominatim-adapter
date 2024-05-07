@@ -1,8 +1,8 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassifying.accumulator;
 
 import by.aurorasoft.distanceclassifier.model.Track;
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.pointlocator.TrackPointLocator;
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.pointlocator.TrackPointLocatorFactory;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.accumulator.pointlocator.TrackPointLocator;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.accumulator.pointlocator.TrackPointLocatorFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -4,7 +4,7 @@ import by.aurorasoft.distanceclassifier.crud.service.CityService;
 import by.aurorasoft.distanceclassifier.crud.service.ScannedLocationService;
 import by.aurorasoft.distanceclassifier.model.PreparedCityGeometry;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.preparer.GeometryPreparer;
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.simplifier.TrackSimplifier;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.simplifier.TrackSimplifier;
 import by.aurorasoft.distanceclassifier.service.geometry.GeometryService;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.LineString;

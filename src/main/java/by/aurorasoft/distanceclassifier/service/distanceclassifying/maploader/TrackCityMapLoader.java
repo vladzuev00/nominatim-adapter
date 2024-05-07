@@ -3,7 +3,7 @@ package by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.map.CityMap;
 import by.aurorasoft.distanceclassifier.model.PreparedCityGeometry;
 import by.aurorasoft.distanceclassifier.model.Track;
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.simplifier.TrackSimplifier;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.simplifier.TrackSimplifier;
 import by.aurorasoft.distanceclassifier.service.geometry.GeometryService;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.LineString;

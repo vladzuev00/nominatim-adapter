@@ -1,4 +1,4 @@
-package by.aurorasoft.distanceclassifier.service.distanceclassifying.simplifier;
+package by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.simplifier;
 
 import by.aurorasoft.distanceclassifier.model.Track;
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
