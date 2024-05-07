@@ -1,7 +1,7 @@
 package by.aurorasoft.distanceclassifier.config;
 
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.cache.CityMapCache;
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.cache.CityMapCacheFactory;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.cache.GeometryCache;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.cache.factory.GeometryCacheFactory;
 import by.nhorushko.trackfilter.TrackFilterI;
 import by.nhorushko.trackfilter.TrackFilterImpr;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +16,7 @@ public class ClassifyingDistanceConfig {
     }
 
     @Bean
-    public CityMapCache cityGeometryCache(final CityMapCacheFactory factory) {
+    public GeometryCache geometryCache(final GeometryCacheFactory factory) {
         return factory.create();
     }
 }
