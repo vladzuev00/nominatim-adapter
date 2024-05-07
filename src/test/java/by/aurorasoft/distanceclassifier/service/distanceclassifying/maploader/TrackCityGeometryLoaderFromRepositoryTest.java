@@ -55,7 +55,7 @@ public final class TrackCityGeometryLoaderFromRepositoryTest {
         final PreparedCityGeometry firstGivenPreparedGeometry = mockPreparedGeometryFor(firstGivenGeometry);
         final PreparedCityGeometry secondGivenPreparedGeometry = mockPreparedGeometryFor(secondGivenGeometry);
 
-        final Set<PreparedCityGeometry> actual = loader.loadCityGeometries(givenLine);
+        final Set<PreparedCityGeometry> actual = loader.loadInternal(givenLine);
         final Set<PreparedCityGeometry> expected = Set.of(firstGivenPreparedGeometry, secondGivenPreparedGeometry);
         assertEquals(expected, actual);
 

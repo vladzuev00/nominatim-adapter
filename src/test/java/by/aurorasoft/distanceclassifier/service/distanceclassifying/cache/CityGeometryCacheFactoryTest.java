@@ -4,6 +4,8 @@ import by.aurorasoft.distanceclassifier.crud.model.dto.City.CityGeometry;
 import by.aurorasoft.distanceclassifier.crud.service.CityService;
 import by.aurorasoft.distanceclassifier.model.PreparedCityGeometry;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.geometrypreparer.CityGeometryPreparer;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.cache.CityMapCache;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.cache.CityMapCacheFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +37,7 @@ public final class CityGeometryCacheFactoryTest {
 
     @Test
     public void cacheShouldBeCreatedWithLoadedGeometries() {
-        final CityGeometryCacheFactory givenFactory = createFactory(true);
+        final CityMapCacheFactory givenFactory = createFactory(true);
 
         final CityGeometry firstGivenGeometry = mock(CityGeometry.class);
         final CityGeometry secondGivenGeometry = mock(CityGeometry.class);
@@ -45,10 +47,10 @@ public final class CityGeometryCacheFactoryTest {
         final PreparedCityGeometry firstGivenPreparedGeometry = mockPreparedGeometryFor(firstGivenGeometry);
         final PreparedCityGeometry secondGivenPreparedGeometry = mockPreparedGeometryFor(secondGivenGeometry);
 
-        final CityGeometryCache actual = givenFactory.create();
+        final CityMapCache actual = givenFactory.create();
         assertNotNull(actual);
 
-        final Set<PreparedCityGeometry> actualGeometries = actual.getGeometries();
+        final Set<PreparedCityGeometry> actualGeometries = actual.getMap();
         final Set<PreparedCityGeometry> expectedGeometries = Set.of(
                 firstGivenPreparedGeometry,
                 secondGivenPreparedGeometry
@@ -60,19 +62,19 @@ public final class CityGeometryCacheFactoryTest {
 
     @Test
     public void cacheShouldBeCreatedWithoutLoadedGeometries() {
-        final CityGeometryCacheFactory givenFactory = createFactory(false);
+        final CityMapCacheFactory givenFactory = createFactory(false);
 
-        final CityGeometryCache actual = givenFactory.create();
+        final CityMapCache actual = givenFactory.create();
         assertNotNull(actual);
 
-        final Set<PreparedCityGeometry> actualGeometries = actual.getGeometries();
+        final Set<PreparedCityGeometry> actualGeometries = actual.getMap();
         assertTrue(actualGeometries.isEmpty());
 
         verifyNoInteractions(mockedCityService, mockedGeometryPreparer);
     }
 
-    private CityGeometryCacheFactory createFactory(final boolean shouldBeFilled) {
-        return new CityGeometryCacheFactory(mockedCityService, mockedGeometryPreparer, shouldBeFilled);
+    private CityMapCacheFactory createFactory(final boolean shouldBeFilled) {
+        return new CityMapCacheFactory(mockedCityService, mockedGeometryPreparer, shouldBeFilled);
     }
 
     private PreparedCityGeometry mockPreparedGeometryFor(final CityGeometry geometry) {

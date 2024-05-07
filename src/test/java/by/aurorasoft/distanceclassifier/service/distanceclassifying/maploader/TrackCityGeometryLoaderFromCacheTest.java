@@ -1,7 +1,7 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader;
 
 import by.aurorasoft.distanceclassifier.model.PreparedCityGeometry;
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.cache.CityGeometryCache;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.cache.CityMapCache;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 public final class TrackCityGeometryLoaderFromCacheTest {
 
     @Mock
-    private CityGeometryCache mockedCache;
+    private CityMapCache mockedCache;
 
     private TrackCityGeometryLoaderFromCache loader;
 
@@ -41,9 +41,9 @@ public final class TrackCityGeometryLoaderFromCacheTest {
                 secondGivenGeometry,
                 createGeometry(givenLine, false)
         );
-        when(mockedCache.getGeometries()).thenReturn(givenGeometries);
+        when(mockedCache.getMap()).thenReturn(givenGeometries);
 
-        final Set<PreparedCityGeometry> actual = loader.loadCityGeometries(givenLine);
+        final Set<PreparedCityGeometry> actual = loader.loadInternal(givenLine);
         final Set<PreparedCityGeometry> expected = Set.of(firstGivenGeometry, secondGivenGeometry);
         assertEquals(expected, actual);
     }

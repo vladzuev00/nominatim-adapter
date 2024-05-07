@@ -1,7 +1,7 @@
 package by.aurorasoft.distanceclassifier.config;
 
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.cache.CityGeometryCache;
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.cache.CityGeometryCacheFactory;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.cache.CityMapCache;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.cache.CityMapCacheFactory;
 import by.nhorushko.trackfilter.TrackFilterI;
 import org.junit.Test;
 
@@ -21,12 +21,12 @@ public final class ClassifyingDistanceConfigTest {
 
     @Test
     public void cityGeometryCacheShouldBeCreated() {
-        final CityGeometryCacheFactory givenFactory = mock(CityGeometryCacheFactory.class);
+        final CityMapCacheFactory givenFactory = mock(CityMapCacheFactory.class);
 
-        final CityGeometryCache givenCache = mock(CityGeometryCache.class);
+        final CityMapCache givenCache = mock(CityMapCache.class);
         when(givenFactory.create()).thenReturn(givenCache);
 
-        final CityGeometryCache actual = config.cityGeometryCache(givenFactory);
+        final CityMapCache actual = config.cityGeometryCache(givenFactory);
         assertSame(givenCache, actual);
     }
 }
