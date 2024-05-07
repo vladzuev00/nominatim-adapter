@@ -1,8 +1,7 @@
-package by.aurorasoft.distanceclassifier.service.distanceclassifying.geometrypreparer;
+package by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.preparer;
 
 import by.aurorasoft.distanceclassifier.crud.model.dto.City.CityGeometry;
 import by.aurorasoft.distanceclassifier.model.PreparedCityGeometry;
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.preparer.GeometryPreparer;
 import org.junit.Test;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.prep.PreparedGeometry;
@@ -10,16 +9,29 @@ import org.locationtech.jts.geom.prep.PreparedGeometryFactory;
 import org.mockito.MockedStatic;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.locationtech.jts.geom.prep.PreparedGeometryFactory.prepare;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 
-public final class CityGeometryPreparerTest {
+public final class GeometryPreparerTest {
     private final GeometryPreparer preparer = new GeometryPreparer();
 
     @Test
     public void geometryShouldBePrepared() {
+        try (final MockedStatic<PreparedGeometryFactory> mockedFactory = mockStatic(PreparedGeometryFactory.class)) {
+            final Geometry givenGeometry = mock(Geometry.class);
+
+            final PreparedGeometry givenPreparedGeometry = mockPreparedGeometryFor(givenGeometry, mockedFactory);
+
+            final PreparedGeometry actual = preparer.prepare(givenGeometry);
+            assertSame(givenPreparedGeometry, actual);
+        }
+    }
+
+    @Test
+    public void cityGeometryShouldBePrepared() {
         try (final MockedStatic<PreparedGeometryFactory> mockedFactory = mockStatic(PreparedGeometryFactory.class)) {
             final Geometry givenGeometry = mock(Geometry.class);
             final Geometry givenBoundingBox = mock(Geometry.class);
