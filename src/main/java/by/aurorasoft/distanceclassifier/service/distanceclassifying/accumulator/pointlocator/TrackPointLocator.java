@@ -16,12 +16,10 @@ public final class TrackPointLocator {
     }
 
     private boolean anyCityContain(final TrackPoint point) {
-        return false;
-//        return geometryService.isAnyContain(cityMap.getCityGeometries(), point);
+        return geometryService.isAnyContain(cityMap.getCityGeometries(), point);
     }
 
     private boolean isUnknownLocation(final TrackPoint point) {
-        return false;
-//        return geometryService
+        return !geometryService.isContain(cityMap.getScannedGeometry(), point);
     }
 }
