@@ -1,27 +1,26 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassifying.accumulator.pointlocator;
 
-import by.aurorasoft.distanceclassifier.model.PreparedCityGeometry;
+import by.aurorasoft.distanceclassifier.model.CityMap;
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
 import by.aurorasoft.distanceclassifier.service.geometry.GeometryService;
 import lombok.RequiredArgsConstructor;
 
-import java.util.Set;
-
 @RequiredArgsConstructor
 public final class TrackPointLocator {
     private final GeometryService geometryService;
-    private final Set<PreparedCityGeometry> cityGeometries;
+    private final CityMap cityMap;
     private final int citySpeedThreshold;
 
     public boolean isCity(final TrackPoint point) {
-        return isExactCity(point) || (point.getSpeed() <= citySpeedThreshold && isUnknownLocation(point));
+        return anyCityContain(point) || (point.getSpeed() <= citySpeedThreshold && isUnknownLocation(point));
     }
 
-    private boolean isExactCity(final TrackPoint point) {
-        return geometryService.isAnyContain(cityGeometries, point);
+    private boolean anyCityContain(final TrackPoint point) {
+        return geometryService.isAnyContain(cityMap.getCityGeometries(), point);
     }
 
     private boolean isUnknownLocation(final TrackPoint point) {
-        return !geometryService.isAnyBoundingBoxContain(cityGeometries, point);
+        return false;
+//        return geometryService
     }
 }

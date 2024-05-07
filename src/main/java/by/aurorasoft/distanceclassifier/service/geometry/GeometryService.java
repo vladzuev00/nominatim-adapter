@@ -44,16 +44,24 @@ public final class GeometryService {
         return createRectangle(min.getLatitude(), min.getLongitude(), max.getLatitude(), max.getLongitude());
     }
 
+    //TODO: test and refactor
     public boolean isAnyContain(final Set<PreparedCityGeometry> cityGeometries, final TrackPoint point) {
-        return isAnyGeometryContain(cityGeometries, PreparedCityGeometry::getGeometry, point);
-    }
-
-    public boolean isAnyBoundingBoxContain(final Set<PreparedCityGeometry> cityGeometries, final TrackPoint point) {
-        return isAnyGeometryContain(cityGeometries, PreparedCityGeometry::getBoundingBox, point);
+        final Coordinate jtsCoordinate = new CoordinateXY(point.getLongitude(), point.getLatitude());
+        final Point jtsPoint = geometryFactory.createPoint(jtsCoordinate);
+        return cityGeometries.stream()
+                .map(PreparedCityGeometry::getGeometry)
+                .anyMatch(geometry -> geometry.contains(jtsPoint));
     }
 
     public Polygon createEmptyPolygon() {
         return geometryFactory.createPolygon();
+    }
+
+    //TODO: test and refactor
+    public boolean isContain(final PreparedGeometry geometry, final TrackPoint point) {
+        final Coordinate jtsCoordinate = new CoordinateXY(point.getLongitude(), point.getLatitude());
+        final Point jtsPoint = geometryFactory.createPoint(jtsCoordinate);
+        return geometry.contains(jtsPoint);
     }
 
     private CoordinateXY[] getJtsCoordinates(final Track track) {

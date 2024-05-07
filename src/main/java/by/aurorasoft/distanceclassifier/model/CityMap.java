@@ -7,6 +7,6 @@ import java.util.Set;
 
 @Value
 public class CityMap {
-    Set<PreparedCityGeometry> cityGeometries;
+    Set<PreparedGeometry> cityGeometries;
     PreparedGeometry scannedGeometry;
 }
