@@ -43,6 +43,7 @@ public final class CityScanIT extends AbstractIT {
 
     @Test
     @Sql(statements = "DELETE FROM city")
+    @Sql(statements = "UPDATE scanned_location SET geometry = ST_GeomFromText('POLYGON EMPTY', 4326);")
     public void citiesShouldBeScanned() {
         final AreaCoordinateRequest firstGivenRequest = new AreaCoordinateRequest(
                 53.276930,
@@ -66,7 +67,7 @@ public final class CityScanIT extends AbstractIT {
         final ScannedLocationEntity actualScannedLocation = findScannedLocation();
         final ScannedLocationEntity expectedScannedLocation = new ScannedLocationEntity(
                 1L,
-                createMultiPolygon("MULTIPOLYGON (((1 1, 1 15, 12 15, 12 1, 1 1)), ((29.073363 53.27693, 29.073363 54.10994, 30.180785 54.10994, 30.180785 53.27693, 29.073363 53.27693)), ((30.23438 54.138632, 30.23438 54.14459, 30.246525 54.14459, 30.246525 54.138632, 30.23438 54.138632)))")
+                createMultiPolygon("MULTIPOLYGON (((29.073363 53.27693, 29.073363 54.10994, 30.180785 54.10994, 30.180785 53.27693, 29.073363 53.27693)), ((30.23438 54.138632, 30.23438 54.14459, 30.246525 54.14459, 30.246525 54.138632, 30.23438 54.138632)))")
         );
         checkEquals(expectedScannedLocation, actualScannedLocation);
     }

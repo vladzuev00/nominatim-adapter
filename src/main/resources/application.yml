@@ -26,7 +26,7 @@ server:
   port: 8081
 
 distance-classifying:
-  load-city-map-on-start-app: true
+  cache-geometries: true
 
 track-simplifier:
   epsilon: 0.00015

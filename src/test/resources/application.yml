@@ -26,7 +26,7 @@ server:
     context-path: /cityMileage
 
 distance-classifying:
-  load-city-map-on-start-app: false
+  cache-geometries: false
 
 track-simplifier:
   epsilon: 0.00015
