@@ -20,13 +20,13 @@ public abstract class TrackCityMapLoader {
     @Transactional(readOnly = true)
     public CityMap load(final Track track) {
         final Set<PreparedCityGeometry> cityGeometries = loadCityGeometries(track);
-        final PreparedGeometry scannedLocation = loadScannedLocation();
-        return new CityMap(cityGeometries, scannedLocation);
+        final PreparedGeometry scannedGeometry = loadScannedGeometry();
+        return new CityMap(cityGeometries, scannedGeometry);
     }
 
     protected abstract Set<PreparedCityGeometry> loadCityGeometries(final LineString line);
 
-    protected abstract PreparedGeometry loadScannedLocation();
+    protected abstract PreparedGeometry loadScannedGeometry();
 
     private Set<PreparedCityGeometry> loadCityGeometries(final Track track) {
         final Track simplifiedTrack = trackSimplifier.simplify(track);

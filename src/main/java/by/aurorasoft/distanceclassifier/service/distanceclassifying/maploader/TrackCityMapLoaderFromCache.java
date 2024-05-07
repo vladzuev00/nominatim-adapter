@@ -1,7 +1,7 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader;
 
 import by.aurorasoft.distanceclassifier.model.PreparedCityGeometry;
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.cache.CityMapCache;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.cache.GeometryCache;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.simplifier.TrackSimplifier;
 import by.aurorasoft.distanceclassifier.service.geometry.GeometryService;
 import org.locationtech.jts.geom.LineString;
@@ -14,27 +14,27 @@ import java.util.Set;
 import static java.util.stream.Collectors.toUnmodifiableSet;
 
 @Component
-@ConditionalOnProperty(prefix = "distance-classifying", name = "load-city-map-on-start-app", havingValue = "true")
-public class TrackCityGeometryLoaderFromCache extends TrackCityMapLoader {
-    private final CityMapCache cache;
+@ConditionalOnProperty(prefix = "distance-classifying", name = "cache-geometries", havingValue = "true")
+public class TrackCityMapLoaderFromCache extends TrackCityMapLoader {
+    private final GeometryCache cache;
 
-    public TrackCityGeometryLoaderFromCache(final TrackSimplifier trackSimplifier,
-                                            final GeometryService geometryService,
-                                            final CityMapCache cache) {
+    public TrackCityMapLoaderFromCache(final TrackSimplifier trackSimplifier,
+                                       final GeometryService geometryService,
+                                       final GeometryCache cache) {
         super(trackSimplifier, geometryService);
         this.cache = cache;
     }
 
     @Override
-    protected Set<PreparedCityGeometry> loadInternal(final LineString line) {
-        return cache.getMap()
+    protected Set<PreparedCityGeometry> loadCityGeometries(final LineString line) {
+        return cache.getCityGeometries()
                 .stream()
                 .filter(geometry -> geometry.getBoundingBox().intersects(line))
                 .collect(toUnmodifiableSet());
     }
 
     @Override
-    protected PreparedGeometry loadScannedLocation() {
-        return null;
+    protected PreparedGeometry loadScannedGeometry() {
+        return cache.getScannedGeometry();
     }
 }

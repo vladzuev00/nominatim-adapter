@@ -39,7 +39,7 @@ public class TrackCityGeometryLoaderFromRepository extends TrackCityMapLoader {
     }
 
     @Override
-    protected PreparedGeometry loadScannedLocation() {
+    protected PreparedGeometry loadScannedGeometry() {
         return null;
     }
 }

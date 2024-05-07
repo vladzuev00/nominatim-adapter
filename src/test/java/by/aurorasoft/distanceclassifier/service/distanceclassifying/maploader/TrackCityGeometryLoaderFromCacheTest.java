@@ -23,11 +23,11 @@ public final class TrackCityGeometryLoaderFromCacheTest {
     @Mock
     private CityMapCache mockedCache;
 
-    private TrackCityGeometryLoaderFromCache loader;
+    private TrackCityMapLoaderFromCache loader;
 
     @Before
     public void initializeLoader() {
-        loader = new TrackCityGeometryLoaderFromCache(null, null, mockedCache);
+        loader = new TrackCityMapLoaderFromCache(null, null, mockedCache);
     }
 
     @Test
