@@ -1,7 +1,6 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader;
 
 import by.aurorasoft.distanceclassifier.model.CityMap;
-import by.aurorasoft.distanceclassifier.model.PreparedCityGeometry;
 import by.aurorasoft.distanceclassifier.model.Track;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.simplifier.TrackSimplifier;
 import by.aurorasoft.distanceclassifier.service.geometry.GeometryService;
@@ -66,9 +65,9 @@ public final class TrackCityMapLoaderTest {
         }
 
         @Override
-        protected Stream<PreparedCityGeometry> loadCityGeometries(final LineString line) {
+        protected Stream<PreparedGeometry> loadCityGeometries(final LineString line) {
             capturedLine = line;
-            return Stream.<PreparedCityGeometry>empty().onClose(() -> streamWasClosed = true);
+            return Stream.<PreparedGeometry>empty().onClose(() -> streamWasClosed = true);
         }
 
         @Override
