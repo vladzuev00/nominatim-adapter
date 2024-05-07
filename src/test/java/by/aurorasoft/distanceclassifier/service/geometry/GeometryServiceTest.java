@@ -274,6 +274,12 @@ public final class GeometryServiceTest extends AbstractSpringBootTest {
         assertFalse(actual);
     }
 
+    @Test
+    public void emptyPolygonShouldBeCreated() {
+        final Polygon actual = service.createEmptyPolygon();
+        assertTrue(actual.isEmpty());
+    }
+
     private TrackPoint createTrackPoint(final double latitude, final double longitude) {
         return TrackPoint.builder()
                 .coordinate(new by.aurorasoft.distanceclassifier.model.Coordinate(latitude, longitude))
