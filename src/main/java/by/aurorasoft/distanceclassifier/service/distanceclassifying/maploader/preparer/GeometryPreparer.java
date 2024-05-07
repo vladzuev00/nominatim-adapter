@@ -8,7 +8,7 @@ import org.locationtech.jts.geom.prep.PreparedGeometryFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class CityGeometryPreparer {
+public final class GeometryPreparer {
 
     public PreparedGeometry prepare(final Geometry source) {
         return PreparedGeometryFactory.prepare(source);

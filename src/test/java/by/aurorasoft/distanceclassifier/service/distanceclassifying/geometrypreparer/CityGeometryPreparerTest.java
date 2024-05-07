@@ -2,7 +2,7 @@ package by.aurorasoft.distanceclassifier.service.distanceclassifying.geometrypre
 
 import by.aurorasoft.distanceclassifier.crud.model.dto.City.CityGeometry;
 import by.aurorasoft.distanceclassifier.model.PreparedCityGeometry;
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.preparer.CityGeometryPreparer;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.preparer.GeometryPreparer;
 import org.junit.Test;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.prep.PreparedGeometry;
@@ -16,7 +16,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 
 public final class CityGeometryPreparerTest {
-    private final CityGeometryPreparer preparer = new CityGeometryPreparer();
+    private final GeometryPreparer preparer = new GeometryPreparer();
 
     @Test
     public void geometryShouldBePrepared() {
