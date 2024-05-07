@@ -1,11 +1,13 @@
 package by.aurorasoft.distanceclassifier.service.geometry;
 
-import by.aurorasoft.distanceclassifier.model.*;
+import by.aurorasoft.distanceclassifier.model.AreaCoordinate;
+import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse;
 import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Bounds;
 import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Relation;
 import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Way;
+import by.aurorasoft.distanceclassifier.model.Track;
+import by.aurorasoft.distanceclassifier.model.TrackPoint;
 import lombok.RequiredArgsConstructor;
-import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.*;
 import org.locationtech.jts.geom.prep.PreparedGeometry;
 import org.locationtech.jts.operation.polygonize.Polygonizer;
@@ -13,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.ToDoubleFunction;
 
 @Service
@@ -44,24 +45,18 @@ public final class GeometryService {
         return createRectangle(min.getLatitude(), min.getLongitude(), max.getLatitude(), max.getLongitude());
     }
 
-    //TODO: test and refactor
-    public boolean isAnyContain(final Set<PreparedCityGeometry> cityGeometries, final TrackPoint point) {
-        final Coordinate jtsCoordinate = new CoordinateXY(point.getLongitude(), point.getLatitude());
-        final Point jtsPoint = geometryFactory.createPoint(jtsCoordinate);
-        return cityGeometries.stream()
-                .map(PreparedCityGeometry::getGeometry)
-                .anyMatch(geometry -> geometry.contains(jtsPoint));
-    }
-
     public Polygon createEmptyPolygon() {
         return geometryFactory.createPolygon();
     }
 
-    //TODO: test and refactor
-    public boolean isContain(final PreparedGeometry geometry, final TrackPoint point) {
+    public boolean isAnyContain(final Set<PreparedGeometry> cityGeometries, final TrackPoint point) {
         final Coordinate jtsCoordinate = new CoordinateXY(point.getLongitude(), point.getLatitude());
         final Point jtsPoint = geometryFactory.createPoint(jtsCoordinate);
-        return geometry.contains(jtsPoint);
+        return cityGeometries.stream().anyMatch(geometry -> geometry.contains(jtsPoint));
+    }
+
+    public boolean isContain(final PreparedGeometry geometry, final TrackPoint point) {
+        return isAnyContain(Set.of(geometry), point);
     }
 
     private CoordinateXY[] getJtsCoordinates(final Track track) {
@@ -118,15 +113,5 @@ public final class GeometryService {
                 .map(geometryFactory::createLineString)
                 .forEach(polygonizer::add);
         return (Polygon[]) polygonizer.getPolygons().toArray(Polygon[]::new);
-    }
-
-    private boolean isAnyGeometryContain(final Set<PreparedCityGeometry> cityGeometries,
-                                         final Function<PreparedCityGeometry, PreparedGeometry> geometryGetter,
-                                         final TrackPoint point) {
-        final Coordinate jtsCoordinate = new CoordinateXY(point.getLongitude(), point.getLatitude());
-        final Point jtsPoint = geometryFactory.createPoint(jtsCoordinate);
-        return cityGeometries.stream()
-                .map(geometryGetter)
-                .anyMatch(geometry -> geometry.contains(jtsPoint));
     }
 }
