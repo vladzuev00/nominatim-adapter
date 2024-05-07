@@ -3,7 +3,7 @@ package by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader;
 import by.aurorasoft.distanceclassifier.crud.model.dto.City.CityGeometry;
 import by.aurorasoft.distanceclassifier.crud.service.CityService;
 import by.aurorasoft.distanceclassifier.model.PreparedCityGeometry;
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.geometrypreparer.CityGeometryPreparer;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.preparer.CityGeometryPreparer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,13 +29,13 @@ public final class TrackCityGeometryLoaderFromRepositoryTest {
     @Mock
     private CityGeometryPreparer mockedGeometryPreparer;
 
-    private TrackCityGeometryLoaderFromRepository loader;
+    private TrackCityMapLoaderFromRepository loader;
 
     private boolean streamWasClosed;
 
     @Before
     public void initializeLoader() {
-        loader = new TrackCityGeometryLoaderFromRepository(null, null, mockedCityService, mockedGeometryPreparer);
+        loader = new TrackCityMapLoaderFromRepository(null, null, mockedCityService, mockedGeometryPreparer);
     }
 
     @Before

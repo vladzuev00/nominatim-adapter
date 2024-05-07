@@ -2,6 +2,7 @@ package by.aurorasoft.distanceclassifier.service.distanceclassifying.geometrypre
 
 import by.aurorasoft.distanceclassifier.crud.model.dto.City.CityGeometry;
 import by.aurorasoft.distanceclassifier.model.PreparedCityGeometry;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.preparer.CityGeometryPreparer;
 import org.junit.Test;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.prep.PreparedGeometry;

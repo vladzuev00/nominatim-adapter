@@ -3,7 +3,7 @@ package by.aurorasoft.distanceclassifier.service.distanceclassifying.cache;
 import by.aurorasoft.distanceclassifier.crud.model.dto.City.CityGeometry;
 import by.aurorasoft.distanceclassifier.crud.service.CityService;
 import by.aurorasoft.distanceclassifier.model.PreparedCityGeometry;
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.geometrypreparer.CityGeometryPreparer;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.preparer.CityGeometryPreparer;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.cache.CityMapCache;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.cache.CityMapCacheFactory;
 import org.junit.Before;
