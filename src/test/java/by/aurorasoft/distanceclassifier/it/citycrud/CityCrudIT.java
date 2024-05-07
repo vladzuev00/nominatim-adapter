@@ -38,159 +38,159 @@ public final class CityCrudIT extends AbstractIT {
         final String actual = getExpectingOk(restTemplate, url, String.class);
         final String expected = """
                 {
-                  "content": [
-                    {
-                      "id": 255,
-                      "name": "First",
-                      "type": "CAPITAL",
-                      "geometry": {
-                        "geometry": {
-                          "type": "Polygon",
-                          "coordinates": [
-                            [
-                              [
-                                3,
-                                2
-                              ],
-                              [
-                                2.5,
-                                5
-                              ],
-                              [
-                                6,
-                                5
-                              ],
-                              [
-                                5,
-                                3
-                              ],
-                              [
-                                3,
-                                2
-                              ]
-                            ]
-                          ]
-                        },
-                        "boundingBox": {
-                          "type": "Polygon",
-                          "coordinates": [
-                            [
-                              [
-                                2.5,
-                                2
-                              ],
-                              [
-                                2.5,
-                                5
-                              ],
-                              [
-                                6,
-                                5
-                              ],
-                              [
-                                6,
-                                2
-                              ],
-                              [
-                                2.5,
-                                2
-                              ]
-                            ]
-                          ]
-                        }
-                      }
-                    },
-                    {
-                      "id": 256,
-                      "name": "Second",
-                      "type": "CITY",
-                      "geometry": {
-                        "geometry": {
-                          "type": "Polygon",
-                          "coordinates": [
-                            [
-                              [
-                                4,
-                                7.5
-                              ],
-                              [
-                                4,
-                                8
-                              ],
-                              [
-                                5,
-                                10.5
-                              ],
-                              [
-                                7.5,
-                                11.5
-                              ],
-                              [
-                                6.5,
-                                8.5
-                              ],
-                              [
-                                4,
-                                7.5
-                              ]
-                            ]
-                          ]
-                        },
-                        "boundingBox": {
-                          "type": "Polygon",
-                          "coordinates": [
-                            [
-                              [
-                                4,
-                                7.5
-                              ],
-                              [
-                                4,
-                                11.5
-                              ],
-                              [
-                                7.5,
-                                11.5
-                              ],
-                              [
-                                7.5,
-                                7.5
-                              ],
-                              [
-                                4,
-                                7.5
-                              ]
-                            ]
-                          ]
-                        }
-                      }
-                    }
-                  ],
-                  "pageable": {
-                    "sort": {
-                      "empty": false,
-                      "unsorted": false,
-                      "sorted": true
-                    },
-                    "offset": 0,
-                    "pageSize": 2,
-                    "pageNumber": 0,
-                    "paged": true,
-                    "unpaged": false
-                  },
-                  "last": false,
-                  "totalElements": 3,
-                  "totalPages": 2,
-                  "size": 2,
-                  "number": 0,
-                  "sort": {
-                    "empty": false,
-                    "unsorted": false,
-                    "sorted": true
-                  },
-                  "first": true,
-                  "numberOfElements": 2,
-                  "empty": false
+                   "content": [
+                     {
+                       "id": 255,
+                       "name": "First",
+                       "type": "CAPITAL",
+                       "geometry": {
+                         "geometry": {
+                           "type": "Polygon",
+                           "coordinates": [
+                             [
+                               [
+                                 3,
+                                 2
+                               ],
+                               [
+                                 2.5,
+                                 5
+                               ],
+                               [
+                                 6,
+                                 5
+                               ],
+                               [
+                                 5,
+                                 3
+                               ],
+                               [
+                                 3,
+                                 2
+                               ]
+                             ]
+                           ]
+                         },
+                         "boundingBox": {
+                           "type": "Polygon",
+                           "coordinates": [
+                             [
+                               [
+                                 2.5,
+                                 2
+                               ],
+                               [
+                                 2.5,
+                                 5
+                               ],
+                               [
+                                 6,
+                                 5
+                               ],
+                               [
+                                 6,
+                                 2
+                               ],
+                               [
+                                 2.5,
+                                 2
+                               ]
+                             ]
+                           ]
+                         }
+                       }
+                     },
+                     {
+                       "id": 256,
+                       "name": "Second",
+                       "type": "CITY",
+                       "geometry": {
+                         "geometry": {
+                           "type": "Polygon",
+                           "coordinates": [
+                             [
+                               [
+                                 4,
+                                 7.5
+                               ],
+                               [
+                                 4,
+                                 8
+                               ],
+                               [
+                                 5,
+                                 10.5
+                               ],
+                               [
+                                 7.5,
+                                 11.5
+                               ],
+                               [
+                                 6.5,
+                                 8.5
+                               ],
+                               [
+                                 4,
+                                 7.5
+                               ]
+                             ]
+                           ]
+                         },
+                         "boundingBox": {
+                           "type": "Polygon",
+                           "coordinates": [
+                             [
+                               [
+                                 4,
+                                 7.5
+                               ],
+                               [
+                                 4,
+                                 11.5
+                               ],
+                               [
+                                 7.5,
+                                 11.5
+                               ],
+                               [
+                                 7.5,
+                                 7.5
+                               ],
+                               [
+                                 4,
+                                 7.5
+                               ]
+                             ]
+                           ]
+                         }
+                       }
+                     }
+                   ],
+                   "pageable": {
+                     "sort": {
+                       "empty": false,
+                       "unsorted": false,
+                       "sorted": true
+                     },
+                     "offset": 0,
+                     "pageSize": 2,
+                     "pageNumber": 0,
+                     "unpaged": false,
+                     "paged": true
+                   },
+                   "last": false,
+                   "totalPages": 2,
+                   "totalElements": 4,
+                   "size": 2,
+                   "number": 0,
+                   "sort": {
+                     "empty": false,
+                     "unsorted": false,
+                     "sorted": true
+                   },
+                   "first": true,
+                   "numberOfElements": 2,
+                   "empty": false
                 }""";
         assertEquals(expected, actual, true);
     }

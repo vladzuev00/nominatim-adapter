@@ -61,6 +61,10 @@ public final class CityServiceTest extends AbstractSpringBootTest {
                     new CityGeometry(
                             createPolygon("POLYGON((8 3, 8 6, 11 6, 11 3, 8 3))"),
                             createPolygon("POLYGON((8 3, 8 6, 11 6, 11 3, 8 3))")
+                    ),
+                    new CityGeometry(
+                            createPolygon("POLYGON((11 9.5, 11 12, 13 12, 13 9.5, 11 9.5))"),
+                            createPolygon("POLYGON((11 9.5, 11 12, 13 12, 13 9.5, 11 9.5))")
                     )
             );
             assertEquals(expected, actual);
@@ -110,7 +114,8 @@ public final class CityServiceTest extends AbstractSpringBootTest {
         final Set<Geometry> expected = Set.of(
                 createPolygon("POLYGON((3 2, 2.5 5, 6 5, 5 3, 3 2))"),
                 createPolygon("POLYGON((4 7.5, 4 8, 5 10.5, 7.5 11.5, 6.5 8.5, 4 7.5))"),
-                createPolygon("POLYGON((8 3, 8 6, 11 6, 11 3, 8 3))")
+                createPolygon("POLYGON((8 3, 8 6, 11 6, 11 3, 8 3))"),
+                createPolygon("POLYGON((11 9.5, 11 12, 13 12, 13 9.5, 11 9.5))")
         );
         assertEquals(expected, actual);
     }

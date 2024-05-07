@@ -91,6 +91,10 @@ public final class CityRepositoryTest extends AbstractSpringBootTest {
                     new CityGeometry(
                             createPolygon("POLYGON((8 3, 8 6, 11 6, 11 3, 8 3))"),
                             createPolygon("POLYGON((8 3, 8 6, 11 6, 11 3, 8 3))")
+                    ),
+                    new CityGeometry(
+                            createPolygon("POLYGON((11 9.5, 11 12, 13 12, 13 9.5, 11 9.5))"),
+                            createPolygon("POLYGON((11 9.5, 11 12, 13 12, 13 9.5, 11 9.5))")
                     )
             );
             assertEquals(expected, actual);
