@@ -4,6 +4,7 @@ import by.aurorasoft.distanceclassifier.crud.model.dto.City.CityGeometry;
 import by.aurorasoft.distanceclassifier.model.PreparedCityGeometry;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.cache.GeometryCache;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.preparer.GeometryPreparer;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.locationtech.jts.geom.Geometry;
@@ -14,9 +15,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static java.util.Arrays.stream;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -26,6 +25,13 @@ public final class GeometryCacheFactoryTest {
 
     @Mock
     private GeometryPreparer mockedGeometryPreparer;
+
+    private boolean streamWasClosed;
+
+    @Before
+    public void resetStreamWasClosed() {
+        streamWasClosed = false;
+    }
 
     @Test
     public void cacheShouldBeCreated() {
@@ -48,10 +54,17 @@ public final class GeometryCacheFactoryTest {
                 givenPreparedScannedLocation
         );
         checkEquals(expected, actual);
+
+        assertTrue(streamWasClosed);
     }
 
     private GeometryCacheFactory createFactory(final Geometry scannedGeometry, final CityGeometry... cityGeometries) {
-        return new TestGeometryCacheFactory(mockedGeometryPreparer, stream(cityGeometries), scannedGeometry);
+        final Stream<CityGeometry> streamCapturingClose = createStreamCapturingClose(cityGeometries);
+        return new TestGeometryCacheFactory(mockedGeometryPreparer, streamCapturingClose, scannedGeometry);
+    }
+
+    private Stream<CityGeometry> createStreamCapturingClose(final CityGeometry... geometries) {
+        return Stream.of(geometries).onClose(() -> streamWasClosed = true);
     }
 
     private PreparedCityGeometry mockPreparedGeometryFor(final CityGeometry geometry) {
