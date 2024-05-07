@@ -42,16 +42,16 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
                         "track-1.csv",
                         """
                                 {
-                                   "gpsDistance": {
-                                     "urban": 16.9496,
-                                     "country": 12.9311,
-                                     "total": 29.8807
-                                   },
-                                   "odoDistance": {
-                                     "urban": 16.9496,
-                                     "country": 12.9311,
-                                     "total": 29.8807
-                                   }
+                                  "gpsDistance": {
+                                    "urban": 24.775799999999997,
+                                    "country": 17.2471,
+                                    "total": 42.02289999999999
+                                  },
+                                  "odoDistance": {
+                                    "urban": 25.975800000000003,
+                                    "country": 18.2471,
+                                    "total": 44.2229
+                                  }
                                 }"""
                 ),
                 Arguments.of(
@@ -139,14 +139,14 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
                         """
                                 {
                                   "gpsDistance": {
-                                    "urban": 588.1970860851806,
-                                    "country": 1183.0119491405042,
-                                    "total": 1771.2090352256846
+                                    "urban": 4757.130587495315,
+                                    "country": 9328.18395875217,
+                                    "total": 14085.314546247486
                                   },
                                   "odoDistance": {
-                                    "urban": 647.0167946936974,
-                                    "country": 1301.3131440545535,
-                                    "total": 1948.329938748251
+                                    "urban": 5232.84364624481,
+                                    "country": 10261.002354627271,
+                                    "total": 15493.846000872081
                                   }
                                 }"""
                 )
