@@ -52,6 +52,11 @@ public final class GeometryService {
         return isAnyGeometryContain(cityGeometries, PreparedCityGeometry::getBoundingBox, point);
     }
 
+    //TODO: test
+    public Polygon createEmptyPolygon() {
+        return geometryFactory.createPolygon();
+    }
+
     private CoordinateXY[] getJtsCoordinates(final Track track) {
         return mapToJtsCoordinates(
                 track.getPoints(),
