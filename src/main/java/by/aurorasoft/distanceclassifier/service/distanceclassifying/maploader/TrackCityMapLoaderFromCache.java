@@ -9,9 +9,7 @@ import org.locationtech.jts.geom.prep.PreparedGeometry;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
-
-import static java.util.stream.Collectors.toUnmodifiableSet;
+import java.util.stream.Stream;
 
 @Component
 @ConditionalOnProperty(prefix = "distance-classifying", name = "cache-geometries", havingValue = "true")
@@ -26,11 +24,10 @@ public class TrackCityMapLoaderFromCache extends TrackCityMapLoader {
     }
 
     @Override
-    protected Set<PreparedCityGeometry> loadCityGeometries(final LineString line) {
+    protected Stream<PreparedCityGeometry> loadCityGeometries(final LineString line) {
         return cache.getCityGeometries()
                 .stream()
-                .filter(geometry -> geometry.getBoundingBox().intersects(line))
-                .collect(toUnmodifiableSet());
+                .filter(geometry -> geometry.getBoundingBox().intersects(line));
     }
 
     @Override

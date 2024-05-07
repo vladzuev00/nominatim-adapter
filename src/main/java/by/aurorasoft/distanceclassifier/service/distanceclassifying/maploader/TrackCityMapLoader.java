@@ -11,6 +11,9 @@ import org.locationtech.jts.geom.prep.PreparedGeometry;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toUnmodifiableSet;
 
 @RequiredArgsConstructor
 public abstract class TrackCityMapLoader {
@@ -24,13 +27,15 @@ public abstract class TrackCityMapLoader {
         return new CityMap(cityGeometries, scannedGeometry);
     }
 
-    protected abstract Set<PreparedCityGeometry> loadCityGeometries(final LineString line);
+    protected abstract Stream<PreparedCityGeometry> loadCityGeometries(final LineString line);
 
     protected abstract PreparedGeometry loadScannedGeometry();
 
     private Set<PreparedCityGeometry> loadCityGeometries(final Track track) {
         final Track simplifiedTrack = trackSimplifier.simplify(track);
         final LineString line = geometryService.createLine(simplifiedTrack);
-        return loadCityGeometries(line);
+        try (final Stream<PreparedCityGeometry> geometries = loadCityGeometries(line)) {
+            return geometries.collect(toUnmodifiableSet());
+        }
     }
 }
