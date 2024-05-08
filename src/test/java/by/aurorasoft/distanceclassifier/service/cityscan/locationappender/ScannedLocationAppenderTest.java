@@ -10,7 +10,6 @@ import org.locationtech.jts.geom.Polygon;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
