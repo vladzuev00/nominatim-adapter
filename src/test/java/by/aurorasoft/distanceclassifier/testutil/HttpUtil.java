@@ -53,6 +53,7 @@ public final class HttpUtil {
         postExpectingStatus(restTemplate, url, body, Void.class, NO_CONTENT);
     }
 
+    @SuppressWarnings("unused")
     public static <B, R> R putExpectingOk(final TestRestTemplate restTemplate,
                                           final String url,
                                           final B body,
@@ -60,6 +61,7 @@ public final class HttpUtil {
         return putExpectingStatus(restTemplate, url, body, responseType, OK);
     }
 
+    @SuppressWarnings("unused")
     public static <B, R> R putExpectingNotAcceptable(final TestRestTemplate restTemplate,
                                                      final String url,
                                                      final B body,
@@ -67,6 +69,7 @@ public final class HttpUtil {
         return putExpectingStatus(restTemplate, url, body, responseType, NOT_ACCEPTABLE);
     }
 
+    @SuppressWarnings("unused")
     public static void deleteExpectingNoContent(final TestRestTemplate restTemplate, final String url) {
         exchangeExpectingStatus(restTemplate, url, DELETE, Void.class, NO_CONTENT);
     }
