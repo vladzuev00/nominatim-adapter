@@ -1,15 +1,12 @@
 package by.aurorasoft.distanceclassifier.controller.city;
 
 import by.aurorasoft.distanceclassifier.base.AbstractSpringBootTest;
-import by.aurorasoft.distanceclassifier.controller.city.factory.CityFactory;
 import by.aurorasoft.distanceclassifier.controller.city.factory.CityResponseFactory;
-import by.aurorasoft.distanceclassifier.controller.city.model.CityRequest;
 import by.aurorasoft.distanceclassifier.controller.city.model.CityResponse;
 import by.aurorasoft.distanceclassifier.controller.city.model.CityResponse.CityGeometryResponse;
 import by.aurorasoft.distanceclassifier.crud.model.dto.City;
 import by.aurorasoft.distanceclassifier.crud.model.dto.City.CityGeometry;
 import by.aurorasoft.distanceclassifier.crud.service.CityService;
-import by.aurorasoft.distanceclassifier.model.CityType;
 import by.aurorasoft.distanceclassifier.testutil.GeometryUtil;
 import org.junit.Test;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -26,7 +23,8 @@ import org.wololo.jts2geojson.GeoJSONWriter;
 
 import java.util.List;
 
-import static by.aurorasoft.distanceclassifier.model.CityType.*;
+import static by.aurorasoft.distanceclassifier.model.CityType.CAPITAL;
+import static by.aurorasoft.distanceclassifier.model.CityType.CITY;
 import static by.aurorasoft.distanceclassifier.testutil.HttpUtil.*;
 import static by.aurorasoft.distanceclassifier.util.PageRequestUtil.createRequestSortingById;
 import static org.mockito.Mockito.*;
@@ -45,9 +43,6 @@ public final class CityControllerTest extends AbstractSpringBootTest {
 
     @MockBean
     private CityResponseFactory mockedResponseFactory;
-
-    @MockBean
-    private CityFactory mockedCityFactory;
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -219,8 +214,6 @@ public final class CityControllerTest extends AbstractSpringBootTest {
                    "empty": false
                 }""";
         assertEquals(expected, actual, true);
-
-        verifyNoInteractions(mockedCityFactory);
     }
 
     @Test
@@ -237,11 +230,11 @@ public final class CityControllerTest extends AbstractSpringBootTest {
                 }""";
         assertEquals(expected, actual, JSON_COMPARATOR_IGNORING_DATE_TIME);
 
-        verifyNoInteractions(mockedCityService, mockedResponseFactory, mockedCityFactory);
+        verifyNoInteractions(mockedCityService, mockedResponseFactory);
     }
 
     @Test
-    public void allCitiesShouldNotBeFoundBecauseOfPageSizeIsThanMinimalAllowable()
+    public void allCitiesShouldNotBeFoundBecauseOfPageSizeIsLessThanMinimalAllowable()
             throws Exception {
         final String url = createUrlToFindAllCities(0, 0);
 
@@ -254,242 +247,10 @@ public final class CityControllerTest extends AbstractSpringBootTest {
                 }""";
         assertEquals(expected, actual, JSON_COMPARATOR_IGNORING_DATE_TIME);
 
-        verifyNoInteractions(mockedCityService, mockedResponseFactory, mockedCityFactory);
+        verifyNoInteractions(mockedCityService, mockedResponseFactory);
     }
 
-    @Test
-    public void cityShouldBeSaved()
-            throws Exception {
-        final String givenName = "name";
-        final String givenGeometryText = "POLYGON((1 1, 2 1, 2 2, 1 1))";
-        final CityType givenType = TOWN;
-        final CityRequest givenRequest = new CityRequest(givenName, createWololoPolygon(givenGeometryText), givenType);
-
-        final City givenCity = mock(City.class);
-        when(mockedCityFactory.create(any(CityRequest.class))).thenReturn(givenCity);
-
-        final City givenSavedCity = City.builder()
-                .id(255L)
-                .name(givenName)
-                .type(givenType)
-                .geometry(
-                        new CityGeometry(
-                                createPolygon(givenGeometryText),
-                                createPolygon("POLYGON((1 1, 2 1, 2 2, 1 2, 1 1))")
-                        )
-                )
-                .build();
-        when(mockedCityService.save(same(givenCity))).thenReturn(givenSavedCity);
-
-        mockResponseFor(givenSavedCity);
-
-        final String actual = postExpectingOk(restTemplate, URL, givenRequest, String.class);
-        final String expected = """
-                {
-                   "id": 255,
-                   "name": "name",
-                   "type": "TOWN",
-                   "geometry": {
-                     "geometry": {
-                       "type": "Polygon",
-                       "coordinates": [
-                         [
-                           [
-                             1,
-                             1
-                           ],
-                           [
-                             2,
-                             1
-                           ],
-                           [
-                             2,
-                             2
-                           ],
-                           [
-                             1,
-                             1
-                           ]
-                         ]
-                       ]
-                     },
-                     "boundingBox": {
-                       "type": "Polygon",
-                       "coordinates": [
-                         [
-                           [
-                             1,
-                             1
-                           ],
-                           [
-                             2,
-                             1
-                           ],
-                           [
-                             2,
-                             2
-                           ],
-                           [
-                             1,
-                             2
-                           ],
-                           [
-                             1,
-                             1
-                           ]
-                         ]
-                       ]
-                     }
-                   }
-                }""";
-        assertEquals(expected, actual, true);
-    }
-
-    @Test
-    public void cityShouldNotBeSavedBecauseOfNotValidRequest()
-            throws Exception {
-        final CityRequest givenRequest = new CityRequest(
-                "    ",
-                createWololoPolygon("POLYGON((1 1, 2 1, 2 3, 1 1))"),
-                TOWN
-        );
-
-        final String actual = postExpectingNotAcceptable(restTemplate, URL, givenRequest, String.class);
-        final String expected = """
-                {
-                  "status": "NOT_ACCEPTABLE",
-                  "message": "name : не должно быть пустым",
-                  "dateTime": "2024-04-24 10-37-17"
-                }""";
-        assertEquals(expected, actual, JSON_COMPARATOR_IGNORING_DATE_TIME);
-
-        verifyNoInteractions(mockedCityService, mockedResponseFactory, mockedCityFactory);
-    }
-
-    @Test
-    public void cityShouldBeUpdated()
-            throws Exception {
-        final Long givenId = 255L;
-        final String givenName = "name";
-        final String givenGeometryText = "POLYGON((1 1, 2 1, 2 2, 1 1))";
-        final CityType givenType = TOWN;
-        final CityRequest givenRequest = new CityRequest(givenName, createWololoPolygon(givenGeometryText), givenType);
-
-        final City givenCity = mock(City.class);
-        when(mockedCityFactory.create(eq(givenId), any(CityRequest.class))).thenReturn(givenCity);
-
-        final City givenUpdatedCity = City.builder()
-                .id(givenId)
-                .name(givenName)
-                .type(givenType)
-                .geometry(
-                        new CityGeometry(
-                                createPolygon(givenGeometryText),
-                                createPolygon("POLYGON((1 1, 2 1, 2 2, 1 2, 1 1))")
-                        )
-                )
-                .build();
-        when(mockedCityService.update(same(givenCity))).thenReturn(givenUpdatedCity);
-
-        mockResponseFor(givenUpdatedCity);
-
-        final String url = createUrlWithPathVariable(givenId);
-        final String actual = putExpectingOk(restTemplate, url, givenRequest, String.class);
-        final String expected = """
-                {
-                   "id": 255,
-                   "name": "name",
-                   "type": "TOWN",
-                   "geometry": {
-                     "geometry": {
-                       "type": "Polygon",
-                       "coordinates": [
-                         [
-                           [
-                             1,
-                             1
-                           ],
-                           [
-                             2,
-                             1
-                           ],
-                           [
-                             2,
-                             2
-                           ],
-                           [
-                             1,
-                             1
-                           ]
-                         ]
-                       ]
-                     },
-                     "boundingBox": {
-                       "type": "Polygon",
-                       "coordinates": [
-                         [
-                           [
-                             1,
-                             1
-                           ],
-                           [
-                             2,
-                             1
-                           ],
-                           [
-                             2,
-                             2
-                           ],
-                           [
-                             1,
-                             2
-                           ],
-                           [
-                             1,
-                             1
-                           ]
-                         ]
-                       ]
-                     }
-                   }
-                }""";
-        assertEquals(expected, actual, true);
-    }
-
-    @Test
-    public void cityShouldNotBeUpdatedBecauseOfNotValidRequest()
-            throws Exception {
-        final CityRequest givenRequest = new CityRequest(
-                "   ",
-                createWololoPolygon("POLYGON((1 1, 2 1, 2 2, 1 1))"),
-                TOWN
-        );
-
-        final String url = createUrlWithPathVariable(255L);
-        final String actual = putExpectingNotAcceptable(restTemplate, url, givenRequest, String.class);
-        final String expected = """
-                {
-                  "status": "NOT_ACCEPTABLE",
-                  "message": "name : не должно быть пустым",
-                  "dateTime": "2024-04-24 12-13-19"
-                }""";
-        assertEquals(expected, actual, JSON_COMPARATOR_IGNORING_DATE_TIME);
-
-        verifyNoInteractions(mockedCityService, mockedResponseFactory, mockedCityFactory);
-    }
-
-    @Test
-    public void cityShouldBeDeleted() {
-        final Long givenId = 255L;
-
-        final String url = createUrlWithPathVariable(givenId);
-        deleteExpectingNoContent(restTemplate, url);
-
-        verify(mockedCityService, times(1)).delete(eq(givenId));
-        verifyNoInteractions(mockedResponseFactory, mockedCityFactory);
-    }
-
-    private static String createUrlToFindAllCities(final int pageNumber, final int pageSize) {
+    private String createUrlToFindAllCities(final int pageNumber, final int pageSize) {
         return fromUriString(URL)
                 .queryParam(PARAM_NAME_PAGE_NUMBER, pageNumber)
                 .queryParam(PARAM_NAME_PAGE_SIZE, pageSize)
@@ -499,11 +260,6 @@ public final class CityControllerTest extends AbstractSpringBootTest {
 
     private Polygon createPolygon(final String text) {
         return GeometryUtil.createPolygon(text, geometryFactory);
-    }
-
-    private Geometry createWololoPolygon(final String text) {
-        final Polygon polygon = GeometryUtil.createPolygon(text, geometryFactory);
-        return geoJSONWriter.write(polygon);
     }
 
     private void mockResponseFor(final City city) {
@@ -524,9 +280,5 @@ public final class CityControllerTest extends AbstractSpringBootTest {
         final Geometry geometry = geoJSONWriter.write(source.getGeometry());
         final Geometry boundingBox = geoJSONWriter.write(source.getBoundingBox());
         return new CityGeometryResponse(geometry, boundingBox);
-    }
-
-    private static String createUrlWithPathVariable(final Object value) {
-        return URL + "/" + value;
     }
 }
