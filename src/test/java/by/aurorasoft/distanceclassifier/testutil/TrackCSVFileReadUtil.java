@@ -1,6 +1,8 @@
 package by.aurorasoft.distanceclassifier.testutil;
 
 import by.aurorasoft.distanceclassifier.model.Coordinate;
+import by.aurorasoft.distanceclassifier.model.Track;
+import by.aurorasoft.distanceclassifier.model.TrackPoint;
 import by.nhorushko.classifieddistance.Distance;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
@@ -24,15 +26,23 @@ public final class TrackCSVFileReadUtil {
     private static final String FOLDER_PATH = "./src/test/resources/tracks";
     private static final LineFactory LINE_FACTORY = new LineFactory();
 
+    public static Track read(final String fileName) {
+        return read(
+                fileName,
+                line -> new TrackPoint(line.getCoordinate(), line.getSpeed(), line.getGpsDistance(), line.getOdometerDistance()),
+                Track::new
+        );
+    }
+
     @SneakyThrows({IOException.class, CsvException.class})
-    public static <C, T> T read(final String fileName,
-                                final Function<Line, C> componentFactory,
-                                final Function<List<C>, T> objectFactory) {
+    public static <P, T> T read(final String fileName,
+                                final Function<Line, P> pointFactory,
+                                final Function<List<P>, T> objectFactory) {
         try (final CSVReader csvReader = createCSVReader(fileName)) {
             return csvReader.readAll()
                     .stream()
                     .map(LINE_FACTORY::create)
-                    .map(componentFactory)
+                    .map(pointFactory)
                     .collect(collectingAndThen(toList(), objectFactory));
         }
     }
@@ -43,6 +53,11 @@ public final class TrackCSVFileReadUtil {
         return new CSVReader(new FileReader(filePath));
     }
 
+    private static TrackPoint createTrackPoint(final Line line) {
+
+    }
+
+    //TODO: remove
     @Value
     public static class Line {
         Coordinate coordinate;
@@ -51,6 +66,7 @@ public final class TrackCSVFileReadUtil {
         Distance odometerDistance;
     }
 
+    //TODO: TrackPointFactory
     private static final class LineFactory {
         private static final int LATITUDE_INDEX = 0;
         private static final int LONGITUDE_INDEX = 1;
