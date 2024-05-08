@@ -30,6 +30,7 @@
     <liquibase.version>4.8.0</liquibase.version>
     <springdoc-openapi.version>1.6.4</springdoc-openapi.version>
     <hibernate-spatial.version>6.4.7.Final</hibernate-spatial.version>
+    <jmh.version>1.37</jmh.version>
     <imageLabel>DEV</imageLabel>
   </properties>
 
@@ -163,6 +164,18 @@
       <groupId>org.liquibase</groupId>
       <artifactId>liquibase-core</artifactId>
       <version>${liquibase.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.openjdk.jmh</groupId>
+      <artifactId>jmh-core</artifactId>
+      <version>${jmh.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.openjdk.jmh</groupId>
+      <artifactId>jmh-generator-annprocess</artifactId>
+      <version>${jmh.version}</version>
     </dependency>
 
     <dependency>
