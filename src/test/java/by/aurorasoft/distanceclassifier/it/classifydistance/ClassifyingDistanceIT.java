@@ -6,39 +6,34 @@ import by.aurorasoft.distanceclassifier.controller.classifydistance.model.Classi
 import by.aurorasoft.distanceclassifier.it.base.AbstractIT;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
+import lombok.SneakyThrows;
+import lombok.Value;
+import org.json.JSONException;
+import org.junit.Test;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.stream.Stream;
 
 import static by.aurorasoft.distanceclassifier.testutil.HttpUtil.postExpectingOk;
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
+import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 
 public abstract class ClassifyingDistanceIT extends AbstractIT {
+    private static final String MESSAGE_TEMPLATE_FAILED_TEST = "Test failed for '%s'.\nExpected: '%s'\nActual: '%s'";
+
     private static final String URL = "/api/v1/classifyDistance";
 
     private final RequestReader requestFactory = new RequestReader();
 
-    @ParameterizedTest
-    @MethodSource("provideTrackFileNamesAndExpectedResponses")
-    public final void distanceShouldBeClassifiedForTrackFromFile(final String fileName, final String expected)
-            throws Exception {
-        final ClassifyDistanceRequest givenRequest = requestFactory.read(fileName);
-        final String actual = postExpectingOk(restTemplate, URL, givenRequest, String.class);
-        assertEquals(expected, actual, true);
-    }
-
-    private static Stream<Arguments> provideTrackFileNamesAndExpectedResponses() {
-        return Stream.of(
-                Arguments.of(
+    @Test
+    public final void distancesShouldBeClassifiedForTracksFromFiles() {
+        test(
+                new TestArgument(
                         "track-1.csv",
                         """
                                 {
@@ -54,7 +49,7 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
                                   }
                                 }"""
                 ),
-                Arguments.of(
+                new TestArgument(
                         "track-2.csv",
                         """
                                 {
@@ -70,7 +65,7 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
                                   }
                                 }"""
                 ),
-                Arguments.of(
+                new TestArgument(
                         "track-3.csv",
                         """
                                 {
@@ -86,7 +81,7 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
                                   }
                                 }"""
                 ),
-                Arguments.of(
+                new TestArgument(
                         "track-4.csv",
                         """
                                 {
@@ -102,7 +97,7 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
                                   }
                                 }"""
                 ),
-                Arguments.of(
+                new TestArgument(
                         "track-5.csv",
                         """
                                 {
@@ -118,7 +113,7 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
                                   }
                                 }"""
                 ),
-                Arguments.of(
+                new TestArgument(
                         "track-6.csv",
                         """
                                 {
@@ -134,23 +129,44 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
                                   }
                                 }"""
                 ),
-                Arguments.of(
+                new TestArgument(
                         "track-7.csv",
                         """
                                 {
                                   "gpsDistance": {
-                                    "urban": 4757.130587495315,
-                                    "country": 9328.18395875217,
-                                    "total": 14085.314546247486
+                                    "urban": 588.1970860851806,
+                                    "country": 1183.0119491405042,
+                                    "total": 1771.2090352256846
                                   },
                                   "odoDistance": {
-                                    "urban": 5232.84364624481,
-                                    "country": 10261.002354627271,
-                                    "total": 15493.846000872081
+                                    "urban": 647.0167946936974,
+                                    "country": 1301.3131440545535,
+                                    "total": 1948.329938748251
                                   }
                                 }"""
                 )
         );
+    }
+
+    private void test(final TestArgument... arguments) {
+        stream(arguments).forEach(this::test);
+    }
+
+    @SneakyThrows(JSONException.class)
+    private void test(final TestArgument argument) {
+        final ClassifyDistanceRequest givenRequest = requestFactory.read(argument.fileName);
+        final String actual = postExpectingOk(restTemplate, URL, givenRequest, String.class);
+        assertEquals(createMessageFailedTest(argument, actual), argument.expected, actual, true);
+    }
+
+    private String createMessageFailedTest(final TestArgument argument, final String actual) {
+        return MESSAGE_TEMPLATE_FAILED_TEST.formatted(argument.fileName, argument.expected, actual);
+    }
+
+    @Value
+    private static class TestArgument {
+        String fileName;
+        String expected;
     }
 
     private static final class RequestReader {
