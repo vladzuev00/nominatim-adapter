@@ -4,31 +4,26 @@ import by.aurorasoft.distanceclassifier.controller.classifydistance.model.Classi
 import by.aurorasoft.distanceclassifier.controller.classifydistance.model.ClassifyDistanceRequest.DistanceRequest;
 import by.aurorasoft.distanceclassifier.controller.classifydistance.model.ClassifyDistanceRequest.PointRequest;
 import by.aurorasoft.distanceclassifier.it.base.AbstractIT;
-import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvException;
+import by.aurorasoft.distanceclassifier.model.Coordinate;
+import by.aurorasoft.distanceclassifier.testutil.TrackCSVFileReadUtil.Line;
+import by.nhorushko.classifieddistance.Distance;
 import lombok.SneakyThrows;
 import lombok.Value;
 import org.json.JSONException;
 import org.junit.Test;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.util.List;
+import java.util.function.Function;
 
 import static by.aurorasoft.distanceclassifier.testutil.HttpUtil.postExpectingOk;
-import static java.lang.Double.parseDouble;
-import static java.lang.Integer.parseInt;
+import static by.aurorasoft.distanceclassifier.testutil.TrackCSVFileReadUtil.read;
 import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toList;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 
 public abstract class ClassifyingDistanceIT extends AbstractIT {
     private static final String MESSAGE_TEMPLATE_FAILED_TEST = "Test failed for '%s'.\nExpected: '%s'\nActual: '%s'";
-
     private static final String URL = "/api/v1/classifyDistance";
-
-    private final RequestReader requestFactory = new RequestReader();
+    private static final int URBAN_SPEED_THRESHOLD = 75;
 
     @Test
     public final void distancesShouldBeClassifiedForTracksFromFiles() {
@@ -154,9 +149,41 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
 
     @SneakyThrows(JSONException.class)
     private void test(final TestArgument argument) {
-        final ClassifyDistanceRequest givenRequest = requestFactory.read(argument.fileName);
+        final ClassifyDistanceRequest givenRequest = readRequest(argument.fileName);
         final String actual = postExpectingOk(restTemplate, URL, givenRequest, String.class);
         assertEquals(createMessageFailedTest(argument, actual), argument.expected, actual, true);
+    }
+
+    private ClassifyDistanceRequest readRequest(final String fileName) {
+        return read(fileName, this::createPoint, this::createRequest);
+    }
+
+    private PointRequest createPoint(final Line line) {
+        final Coordinate coordinate = line.getCoordinate();
+        return new PointRequest(
+                coordinate.getLatitude(),
+                coordinate.getLongitude(),
+                line.getSpeed(),
+                getGpsDistance(line),
+                getOdometerDistance(line)
+        );
+    }
+
+    private DistanceRequest getGpsDistance(final Line line) {
+        return getDistance(line, Line::getGpsDistance);
+    }
+
+    private DistanceRequest getOdometerDistance(final Line line) {
+        return getDistance(line, Line::getOdometerDistance);
+    }
+
+    private DistanceRequest getDistance(final Line line, final Function<Line, Distance> getter) {
+        final Distance source = getter.apply(line);
+        return new DistanceRequest(source.getRelative(), source.getAbsolute());
+    }
+
+    private ClassifyDistanceRequest createRequest(final List<PointRequest> points) {
+        return new ClassifyDistanceRequest(points, URBAN_SPEED_THRESHOLD);
     }
 
     private String createMessageFailedTest(final TestArgument argument, final String actual) {
@@ -167,78 +194,6 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
     private static class TestArgument {
         String fileName;
         String expected;
-    }
-
-    private static final class RequestReader {
-        private static final String FOLDER_PATH = "./src/test/resources/tracks";
-        private static final int URBAN_SPEED_THRESHOLD = 75;
-
-        private final PointParser pointParser = new PointParser();
-
-        public ClassifyDistanceRequest read(final String fileName) {
-            try (final CSVReader csvReader = createCSVReader(fileName)) {
-                return csvReader.readAll()
-                        .stream()
-                        .map(pointParser::parse)
-                        .collect(
-                                collectingAndThen(
-                                        toList(),
-                                        points -> new ClassifyDistanceRequest(points, URBAN_SPEED_THRESHOLD)
-                                )
-                        );
-            } catch (final IOException | CsvException cause) {
-                throw new RuntimeException(cause);
-            }
-        }
-
-        private static CSVReader createCSVReader(final String fileName)
-                throws FileNotFoundException {
-            final String filePath = FOLDER_PATH + "/" + fileName;
-            return new CSVReader(new FileReader(filePath));
-        }
-    }
-
-    private static final class PointParser {
-        private static final int LATITUDE_INDEX = 0;
-        private static final int LONGITUDE_INDEX = 1;
-        private static final int SPEED_INDEX = 2;
-        private static final int GPS_RELATIVE_INDEX = 3;
-        private static final int ODOMETER_RELATIVE_INDEX = 5;
-
-        public PointRequest parse(final String[] properties) {
-            return new PointRequest(
-                    parseLatitude(properties),
-                    parseLongitude(properties),
-                    parseSpeed(properties),
-                    parseGpsDistance(properties),
-                    parseOdometerDistance(properties)
-            );
-        }
-
-        private static double parseLatitude(final String[] properties) {
-            return parseDouble(properties[LATITUDE_INDEX]);
-        }
-
-        private static double parseLongitude(final String[] properties) {
-            return parseDouble(properties[LONGITUDE_INDEX]);
-        }
-
-        private static int parseSpeed(final String[] properties) {
-            return parseInt(properties[SPEED_INDEX]);
-        }
-
-        private static DistanceRequest parseGpsDistance(final String[] properties) {
-            return parseDistance(properties, GPS_RELATIVE_INDEX);
-        }
-
-        private static DistanceRequest parseOdometerDistance(final String[] properties) {
-            return parseDistance(properties, ODOMETER_RELATIVE_INDEX);
-        }
-
-        private static DistanceRequest parseDistance(final String[] properties, final int relativeIndex) {
-            final double relative = parseDouble(properties[relativeIndex]);
-            return new DistanceRequest(relative, 0.);
-        }
     }
 }
 
