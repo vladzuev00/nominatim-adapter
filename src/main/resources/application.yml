@@ -27,9 +27,8 @@ server:
 
 distance-classifying:
   cache-geometries: true
-
-track-simplifier:
-  epsilon: 0.00015
+  track-simplify-epsilon: 0.00015
+  significant-point-gps-absolute-threshold: 0
 
 overpass:
   timeout: 50
