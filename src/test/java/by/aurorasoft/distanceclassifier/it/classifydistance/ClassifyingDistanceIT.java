@@ -5,7 +5,6 @@ import by.aurorasoft.distanceclassifier.controller.classifydistance.model.Classi
 import by.aurorasoft.distanceclassifier.controller.classifydistance.model.ClassifyDistanceRequest.PointRequest;
 import by.aurorasoft.distanceclassifier.it.base.AbstractIT;
 import by.aurorasoft.distanceclassifier.model.Coordinate;
-import by.aurorasoft.distanceclassifier.testutil.TrackCSVFileReadUtil.Line;
 import by.nhorushko.classifieddistance.Distance;
 import lombok.SneakyThrows;
 import lombok.Value;
@@ -13,7 +12,6 @@ import org.json.JSONException;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.function.Function;
 
 import static by.aurorasoft.distanceclassifier.testutil.HttpUtil.postExpectingOk;
 import static by.aurorasoft.distanceclassifier.testutil.TrackCSVFileReadUtil.read;

@@ -7,14 +7,11 @@ import by.nhorushko.classifieddistance.Distance;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import lombok.SneakyThrows;
-import lombok.Value;
 import lombok.experimental.UtilityClass;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
-import java.util.function.Function;
 
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
@@ -24,26 +21,15 @@ import static java.util.stream.Collectors.toList;
 @UtilityClass
 public final class TrackCSVFileReadUtil {
     private static final String FOLDER_PATH = "./src/test/resources/tracks";
-    private static final LineFactory LINE_FACTORY = new LineFactory();
-
-    public static Track read(final String fileName) {
-        return read(
-                fileName,
-                line -> new TrackPoint(line.getCoordinate(), line.getSpeed(), line.getGpsDistance(), line.getOdometerDistance()),
-                Track::new
-        );
-    }
+    private static final PointFactory POINT_FACTORY = new PointFactory();
 
     @SneakyThrows({IOException.class, CsvException.class})
-    public static <P, T> T read(final String fileName,
-                                final Function<Line, P> pointFactory,
-                                final Function<List<P>, T> objectFactory) {
+    public static Track read(final String fileName) {
         try (final CSVReader csvReader = createCSVReader(fileName)) {
             return csvReader.readAll()
                     .stream()
-                    .map(LINE_FACTORY::create)
-                    .map(pointFactory)
-                    .collect(collectingAndThen(toList(), objectFactory));
+                    .map(POINT_FACTORY::create)
+                    .collect(collectingAndThen(toList(), Track::new));
         }
     }
 
@@ -53,21 +39,7 @@ public final class TrackCSVFileReadUtil {
         return new CSVReader(new FileReader(filePath));
     }
 
-    private static TrackPoint createTrackPoint(final Line line) {
-
-    }
-
-    //TODO: remove
-    @Value
-    public static class Line {
-        Coordinate coordinate;
-        int speed;
-        Distance gpsDistance;
-        Distance odometerDistance;
-    }
-
-    //TODO: TrackPointFactory
-    private static final class LineFactory {
+    private static final class PointFactory {
         private static final int LATITUDE_INDEX = 0;
         private static final int LONGITUDE_INDEX = 1;
         private static final int SPEED_INDEX = 2;
@@ -76,8 +48,8 @@ public final class TrackCSVFileReadUtil {
         private static final int ODOMETER_RELATIVE_INDEX = 5;
         private static final int ODOMETER_ABSOLUTE_INDEX = 6;
 
-        public Line create(final String[] properties) {
-            return new Line(
+        public TrackPoint create(final String[] properties) {
+            return new TrackPoint(
                     getCoordinate(properties),
                     getSpeed(properties),
                     getGpsDistance(properties),
