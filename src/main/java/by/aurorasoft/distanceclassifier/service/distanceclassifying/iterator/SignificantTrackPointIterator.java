@@ -28,14 +28,26 @@ public final class SignificantTrackPointIterator implements Iterator<TrackPoint>
     }
 
     private void shiftNextIndex() {
-        nextIndex = range(nextIndex + 1, points.size())
-                .filter(this::isGpsThresholdExceeded)
-                .findFirst()
-                .orElseGet(() -> !isNextLast() ? points.size() - 1 : points.size());
+        if (!isNextLast()) {
+            putNextIndexBeforeNextPoint();
+        } else {
+            putNextIndexToTheEnd();
+        }
     }
 
     private boolean isNextLast() {
         return nextIndex == points.size() - 1;
+    }
+
+    private void putNextIndexBeforeNextPoint() {
+        nextIndex = range(nextIndex + 1, points.size())
+                .filter(this::isGpsThresholdExceeded)
+                .findFirst()
+                .orElse(points.size() - 1);
+    }
+
+    private void putNextIndexToTheEnd() {
+        nextIndex = points.size();
     }
 
     private boolean isGpsThresholdExceeded(final int index) {
@@ -46,4 +58,6 @@ public final class SignificantTrackPointIterator implements Iterator<TrackPoint>
     private double getPointGpsAbsolute(final int index) {
         return points.get(index).getGpsDistance().getAbsolute();
     }
+
+
 }
