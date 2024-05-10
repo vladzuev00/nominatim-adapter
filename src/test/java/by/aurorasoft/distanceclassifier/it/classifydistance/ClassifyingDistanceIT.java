@@ -161,12 +161,7 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
                 .getPoints()
                 .stream()
                 .map(this::createPointRequest)
-                .collect(
-                        collectingAndThen(
-                                toList(),
-                                points -> new ClassifyDistanceRequest(points, GIVEN_URBAN_SPEED_THRESHOLD)
-                        )
-                );
+                .collect(collectingAndThen(toList(), this::createRequest));
     }
 
     private PointRequest createPointRequest(final TrackPoint point) {
