@@ -15,6 +15,7 @@ import java.io.IOException;
 
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
+import static java.nio.file.Paths.get;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 
@@ -35,7 +36,7 @@ public final class TrackCSVFileReadUtil {
 
     private static CSVReader createCSVReader(final String fileName)
             throws FileNotFoundException {
-        final String filePath = FOLDER_PATH + "/" + fileName;
+        final String filePath = get(FOLDER_PATH, fileName).toString();
         return new CSVReader(new FileReader(filePath));
     }
 
