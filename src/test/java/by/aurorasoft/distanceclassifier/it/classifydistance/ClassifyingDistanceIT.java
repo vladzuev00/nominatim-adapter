@@ -5,6 +5,7 @@ import by.aurorasoft.distanceclassifier.controller.classifydistance.model.Classi
 import by.aurorasoft.distanceclassifier.controller.classifydistance.model.ClassifyDistanceRequest.PointRequest;
 import by.aurorasoft.distanceclassifier.it.base.AbstractIT;
 import by.aurorasoft.distanceclassifier.model.Coordinate;
+import by.aurorasoft.distanceclassifier.model.TrackPoint;
 import by.nhorushko.classifieddistance.Distance;
 import lombok.SneakyThrows;
 import lombok.Value;
@@ -12,16 +13,19 @@ import org.json.JSONException;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.function.Function;
 
 import static by.aurorasoft.distanceclassifier.testutil.HttpUtil.postExpectingOk;
 import static by.aurorasoft.distanceclassifier.testutil.TrackCSVFileReadUtil.read;
 import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toList;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 
 public abstract class ClassifyingDistanceIT extends AbstractIT {
     private static final String MESSAGE_TEMPLATE_FAILED_TEST = "Test failed for '%s'.\nExpected: '%s'\nActual: '%s'";
     private static final String URL = "/api/v1/classifyDistance";
-    private static final int URBAN_SPEED_THRESHOLD = 75;
+    private static final int GIVEN_URBAN_SPEED_THRESHOLD = 75;
 
     @Test
     public final void distancesShouldBeClassifiedForTracksFromFiles() {
@@ -153,35 +157,44 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
     }
 
     private ClassifyDistanceRequest readRequest(final String fileName) {
-        return read(fileName, this::createPoint, this::createRequest);
+        return read(fileName)
+                .getPoints()
+                .stream()
+                .map(this::createPointRequest)
+                .collect(
+                        collectingAndThen(
+                                toList(),
+                                points -> new ClassifyDistanceRequest(points, GIVEN_URBAN_SPEED_THRESHOLD)
+                        )
+                );
     }
 
-    private PointRequest createPoint(final Line line) {
-        final Coordinate coordinate = line.getCoordinate();
+    private PointRequest createPointRequest(final TrackPoint point) {
+        final Coordinate coordinate = point.getCoordinate();
         return new PointRequest(
                 coordinate.getLatitude(),
                 coordinate.getLongitude(),
-                line.getSpeed(),
-                getGpsDistance(line),
-                getOdometerDistance(line)
+                point.getSpeed(),
+                getGpsDistance(point),
+                getOdometerDistance(point)
         );
     }
 
-    private DistanceRequest getGpsDistance(final Line line) {
-        return getDistance(line, Line::getGpsDistance);
+    private DistanceRequest getGpsDistance(final TrackPoint point) {
+        return getDistance(point, TrackPoint::getGpsDistance);
     }
 
-    private DistanceRequest getOdometerDistance(final Line line) {
-        return getDistance(line, Line::getOdometerDistance);
+    private DistanceRequest getOdometerDistance(final TrackPoint point) {
+        return getDistance(point, TrackPoint::getOdometerDistance);
     }
 
-    private DistanceRequest getDistance(final Line line, final Function<Line, Distance> getter) {
-        final Distance source = getter.apply(line);
+    private DistanceRequest getDistance(final TrackPoint point, final Function<TrackPoint, Distance> getter) {
+        final Distance source = getter.apply(point);
         return new DistanceRequest(source.getRelative(), source.getAbsolute());
     }
 
     private ClassifyDistanceRequest createRequest(final List<PointRequest> points) {
-        return new ClassifyDistanceRequest(points, URBAN_SPEED_THRESHOLD);
+        return new ClassifyDistanceRequest(points, GIVEN_URBAN_SPEED_THRESHOLD);
     }
 
     private String createMessageFailedTest(final TestArgument argument, final String actual) {
