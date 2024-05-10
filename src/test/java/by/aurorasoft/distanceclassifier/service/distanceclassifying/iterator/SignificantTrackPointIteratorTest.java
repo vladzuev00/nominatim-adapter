@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static java.lang.Double.MIN_VALUE;
+import static java.util.Collections.emptyList;
 import static org.apache.commons.collections4.IteratorUtils.toList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -66,7 +67,41 @@ public final class SignificantTrackPointIteratorTest {
                                 createPoint(new Coordinate(26, 26), 1500),
                                 createPoint(new Coordinate(27, 27), 1550)
                         )
-                )
+                ),
+                Arguments.of(
+                        List.of(
+                                createPoint(new Coordinate(1, 1), 100),
+                                createPoint(new Coordinate(2, 2), 150),
+                                createPoint(new Coordinate(3, 3), 185),
+                                createPoint(new Coordinate(4, 4), 190),
+                                createPoint(new Coordinate(5, 5), 250),
+                                createPoint(new Coordinate(6, 6), 335),
+                                createPoint(new Coordinate(7, 7), 380),
+                                createPoint(new Coordinate(8, 8), 390),
+                                createPoint(new Coordinate(10, 10), 480),
+                                createPoint(new Coordinate(11, 11), 550),
+                                createPoint(new Coordinate(12, 12), 560),
+                                createPoint(new Coordinate(13, 13), 570),
+                                createPoint(new Coordinate(14, 14), 580)
+                        ),
+                        0,
+                        List.of(
+                                createPoint(new Coordinate(1, 1), 100),
+                                createPoint(new Coordinate(2, 2), 150),
+                                createPoint(new Coordinate(3, 3), 185),
+                                createPoint(new Coordinate(4, 4), 190),
+                                createPoint(new Coordinate(5, 5), 250),
+                                createPoint(new Coordinate(6, 6), 335),
+                                createPoint(new Coordinate(7, 7), 380),
+                                createPoint(new Coordinate(8, 8), 390),
+                                createPoint(new Coordinate(10, 10), 480),
+                                createPoint(new Coordinate(11, 11), 550),
+                                createPoint(new Coordinate(12, 12), 560),
+                                createPoint(new Coordinate(13, 13), 570),
+                                createPoint(new Coordinate(14, 14), 580)
+                        )
+                ),
+                Arguments.of(emptyList(), 100, emptyList())
         );
     }
 

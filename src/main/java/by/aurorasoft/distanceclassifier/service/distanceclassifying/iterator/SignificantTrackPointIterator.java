@@ -46,10 +46,6 @@ public final class SignificantTrackPointIterator implements Iterator<TrackPoint>
                 .orElse(points.size() - 1);
     }
 
-    private void putNextIndexToTheEnd() {
-        nextIndex = points.size();
-    }
-
     private boolean isGpsThresholdExceeded(final int index) {
         final double gpsDistance = getPointGpsAbsolute(index) - getPointGpsAbsolute(nextIndex);
         return compare(gpsDistance, gpsThreshold) >= 0;
@@ -59,5 +55,7 @@ public final class SignificantTrackPointIterator implements Iterator<TrackPoint>
         return points.get(index).getGpsDistance().getAbsolute();
     }
 
-
+    private void putNextIndexToTheEnd() {
+        nextIndex = points.size();
+    }
 }
