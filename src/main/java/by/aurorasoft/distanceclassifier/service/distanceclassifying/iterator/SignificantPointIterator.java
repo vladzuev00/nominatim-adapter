@@ -13,30 +13,30 @@ import static java.util.stream.IntStream.rangeClosed;
 public final class SignificantPointIterator implements Iterator<TrackPoint> {
     private final List<TrackPoint> trackPoints;
     private final double gpsDistanceThreshold;
-    private int currentIndex;
+    private int nextIndex;
 
     @Override
     public boolean hasNext() {
-        return currentIndex < trackPoints.size();
+        return nextIndex < trackPoints.size();
     }
 
     @Override
     public TrackPoint next() {
-        final TrackPoint point = trackPoints.get(currentIndex);
-        currentIndex = findNextIndex();
+        final TrackPoint point = trackPoints.get(nextIndex);
+        nextIndex = findShiftedNextIndex();
         return point;
     }
 
-    private int findNextIndex() {
+    private int findShiftedNextIndex() {
         final int lastIndex = trackPoints.size() - 1;
-        return rangeClosed(currentIndex + 1, lastIndex)
+        return rangeClosed(nextIndex + 1, lastIndex)
                 .filter(this::isThresholdExceeded)
                 .findFirst()
                 .orElse(lastIndex);
     }
 
     private boolean isThresholdExceeded(final int pointIndex) {
-        final double distance = getPointGpsAbsolute(pointIndex) - getPointGpsAbsolute(currentIndex);
+        final double distance = getPointGpsAbsolute(pointIndex) - getPointGpsAbsolute(nextIndex);
         return compare(distance, gpsDistanceThreshold) >= 0;
     }
 
