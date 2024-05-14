@@ -17,7 +17,7 @@ public final class SignificantTrackPointIterator implements Iterator<TrackPoint>
 
     @Override
     public boolean hasNext() {
-        return nextIndex != points.size();
+        return nextIndex < points.size();
     }
 
     @Override

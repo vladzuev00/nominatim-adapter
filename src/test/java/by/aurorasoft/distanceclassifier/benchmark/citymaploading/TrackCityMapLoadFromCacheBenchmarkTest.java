@@ -1,4 +1,4 @@
-package by.aurorasoft.distanceclassifier.benchmark.cityloading;
+package by.aurorasoft.distanceclassifier.benchmark.citymaploading;
 
 import org.springframework.boot.test.context.SpringBootTest;
 
