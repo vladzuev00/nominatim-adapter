@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 public final class OverpassSearchCityQueryFactory {
     private final int timeout;
 
+    //TODO: validate
     public OverpassSearchCityQueryFactory(@Value("${overpass.timeout}") final int timeout) {
         this.timeout = timeout;
     }
