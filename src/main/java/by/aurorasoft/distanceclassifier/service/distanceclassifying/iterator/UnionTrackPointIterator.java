@@ -27,7 +27,7 @@ public final class UnionTrackPointIterator implements Iterator<TrackPoint> {
     @Override
     public TrackPoint next() {
         checkNext();
-        final TrackPoint point = unionCursorPoints();
+        final var point = !isCursorPointAtOnePoint() ? getCursorLastPointThrowingInnerPoints() : getCursorLastPoint();
         shiftCursor();
         return point;
     }
@@ -38,30 +38,26 @@ public final class UnionTrackPointIterator implements Iterator<TrackPoint> {
         }
     }
 
-    private TrackPoint unionCursorPoints() {
-        return !isCursorPointAtOnePoint() ? getCursorLastPointRecalculatingRelative() : getCursorLastPoint();
-    }
-
     private boolean isCursorPointAtOnePoint() {
         return cursor.firstIndex == cursor.nextLastIndex - 1;
     }
 
-    private TrackPoint getCursorLastPointRecalculatingRelative() {
+    private TrackPoint getCursorLastPointThrowingInnerPoints() {
         final TrackPoint lastPoint = getCursorLastPoint();
-        final Distance gpsDistance = findCursorLastPointGpsDistanceSkippingCursorInnerPoints();
-        final Distance odometerDistance = findCursorLastPointOdometerDistanceSkippingCursorInnerPoints();
+        final Distance gpsDistance = getCursorLastPointGpsDistanceThrowingInnerPoints();
+        final Distance odometerDistance = getCursorLastPointOdometerDistanceThrowingInnerPoints();
         return new TrackPoint(lastPoint.getCoordinate(), lastPoint.getSpeed(), gpsDistance, odometerDistance);
     }
 
-    private Distance findCursorLastPointGpsDistanceSkippingCursorInnerPoints() {
-        return findCursorLastPointDistanceSkippingCursorInnerPoints(TrackPoint::getGpsDistance);
+    private Distance getCursorLastPointGpsDistanceThrowingInnerPoints() {
+        return findCursorLastPointDistanceThrowingInnerPoints(TrackPoint::getGpsDistance);
     }
 
-    private Distance findCursorLastPointOdometerDistanceSkippingCursorInnerPoints() {
-        return findCursorLastPointDistanceSkippingCursorInnerPoints(TrackPoint::getOdometerDistance);
+    private Distance getCursorLastPointOdometerDistanceThrowingInnerPoints() {
+        return findCursorLastPointDistanceThrowingInnerPoints(TrackPoint::getOdometerDistance);
     }
 
-    private Distance findCursorLastPointDistanceSkippingCursorInnerPoints(final Function<TrackPoint, Distance> distanceGetter) {
+    private Distance findCursorLastPointDistanceThrowingInnerPoints(final Function<TrackPoint, Distance> distanceGetter) {
         final TrackPoint firstPoint = getCursorFirstPoint();
         final TrackPoint lastPoint = getCursorLastPoint();
         final Distance firstPointDistance = distanceGetter.apply(firstPoint);
@@ -91,15 +87,16 @@ public final class UnionTrackPointIterator implements Iterator<TrackPoint> {
     }
 
     private void pickOutNextPoints() {
-        final int newCursorNextLastIndex = range(cursor.nextLastIndex - 1, points.size())
-                .filter(i -> isGpsThresholdExceeded(cursor.nextLastIndex - 1, i))
-                .findFirst()
-                .orElse(0);
+        cursor.firstIndex = cursor.nextLastIndex - 1;
+        cursor.nextLastIndex = findNextCursorNextLastIndex();
+    }
 
-//                .stream()
-//                .mapToObj(i -> new Cursor(cursor.nextLastIndex - 1, i))
-//                .findFirst()
-//                .orElseGet(() -> new Cursor(cursor.nextLastIndex - 1, points.size()));
+    private int findNextCursorNextLastIndex() {
+        final int cursorLastIndex = cursor.nextLastIndex - 1;
+        return range(cursorLastIndex, points.size())
+                .filter(i -> isGpsThresholdExceeded(cursorLastIndex, i))
+                .findFirst()
+                .orElse(points.size());
     }
 
     private boolean isGpsThresholdExceeded(final int firstPointIndex, final int secondPointIndex) {
