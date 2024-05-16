@@ -2,10 +2,12 @@ package by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator;
 
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
 import by.nhorushko.classifieddistance.Distance;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.function.Function;
 
 import static java.lang.Double.compare;
@@ -15,7 +17,7 @@ import static java.util.stream.IntStream.range;
 public final class UnionTrackPointIterator implements Iterator<TrackPoint> {
     private final List<TrackPoint> points;
     private final double gpsRelativeThreshold;
-    private final Cursor cursor = new Cursor();
+    private final Cursor cursor = new Cursor(0, 1);
 
     @Override
     public boolean hasNext() {
@@ -24,65 +26,71 @@ public final class UnionTrackPointIterator implements Iterator<TrackPoint> {
 
     @Override
     public TrackPoint next() {
-        final TrackPoint point = getNextUnion();
+        checkNext();
+        final TrackPoint point = unionCursorPoints();
         shiftCursor();
         return point;
     }
 
-    private TrackPoint getNextUnion() {
-        return !isNextUnionContainOnePoint() ? getNextUnionLastPointRecalculatingRelative() : getNextUnionLastPoint();
+    private void checkNext() {
+        if (!hasNext()) {
+            throw new NoSuchElementException();
+        }
     }
 
-    private boolean isNextUnionContainOnePoint() {
+    private TrackPoint unionCursorPoints() {
+        return !isCursorPointAtOnePoint() ? getCursorLastPointRecalculatingRelative() : getCursorLastPoint();
+    }
+
+    private boolean isCursorPointAtOnePoint() {
         return cursor.firstIndex == cursor.nextLastIndex - 1;
     }
 
-    private TrackPoint getNextUnionLastPointRecalculatingRelative() {
-        final TrackPoint first = getNextUnionFirstPoint();
-        final TrackPoint last = getNextUnionLastPoint();
-        final Distance gpsDistance = findGpsDistanceRecalculatingRelative(first, last);
-        final Distance odometerDistance = findOdometerDistanceRecalculatingRelative(first, last);
-        return new TrackPoint(last.getCoordinate(), last.getSpeed(), gpsDistance, odometerDistance);
+    private TrackPoint getCursorLastPointRecalculatingRelative() {
+        final TrackPoint lastPoint = getCursorLastPoint();
+        final Distance gpsDistance = findCursorGpsDistance();
+        final Distance odometerDistance = findCursorOdometerDistance();
+        return new TrackPoint(lastPoint.getCoordinate(), lastPoint.getSpeed(), gpsDistance, odometerDistance);
     }
 
-    private Distance findGpsDistanceRecalculatingRelative(final TrackPoint first, final TrackPoint second) {
-        return findDistanceRecalculatingRelative(first, second, TrackPoint::getGpsDistance);
+    private Distance findCursorGpsDistance() {
+        return findCursorDistance(TrackPoint::getGpsDistance);
     }
 
-    private Distance findOdometerDistanceRecalculatingRelative(final TrackPoint first, final TrackPoint second) {
-        return findDistanceRecalculatingRelative(first, second, TrackPoint::getOdometerDistance);
+    private Distance findCursorOdometerDistance() {
+        return findCursorDistance(TrackPoint::getOdometerDistance);
     }
 
-    private Distance findDistanceRecalculatingRelative(final TrackPoint first,
-                                                       final TrackPoint second,
-                                                       final Function<TrackPoint, Distance> distanceGetter) {
-        final Distance firstDistance = distanceGetter.apply(first);
-        final Distance secondDistance = distanceGetter.apply(second);
-        final double relative = secondDistance.getAbsolute() - firstDistance.getAbsolute();
-        return new Distance(relative, secondDistance.getAbsolute());
+    private Distance findCursorDistance(final Function<TrackPoint, Distance> distanceGetter) {
+        final TrackPoint firstPoint = getCursorFirstPoint();
+        final TrackPoint lastPoint = getCursorLastPoint();
+        final Distance firstPointDistance = distanceGetter.apply(firstPoint);
+        final Distance lastPointDistance = distanceGetter.apply(lastPoint);
+        final double relative = lastPointDistance.getAbsolute() - firstPointDistance.getAbsolute();
+        return new Distance(relative, lastPointDistance.getAbsolute());
     }
 
-    private TrackPoint getNextUnionFirstPoint() {
+    private TrackPoint getCursorFirstPoint() {
         return points.get(cursor.firstIndex);
     }
 
-    private TrackPoint getNextUnionLastPoint() {
+    private TrackPoint getCursorLastPoint() {
         return points.get(cursor.nextLastIndex - 1);
     }
 
     private void shiftCursor() {
-        if (!isNextUnionLast()) {
-            shiftCursorToNextUnion();
+        if (!isNoMorePoints()) {
+            pickOutNextPoints();
         } else {
             shiftCursorToEnd();
         }
     }
 
-    private boolean isNextUnionLast() {
+    private boolean isNoMorePoints() {
         return cursor.nextLastIndex == points.size();
     }
 
-    private void shiftCursorToNextUnion() {
+    private void pickOutNextPoints() {
         final int nextLastNextUnionIndex = range(cursor.nextLastIndex - 1, points.size())
                 .filter(i -> isGpsThresholdExceeded(cursor.nextLastIndex - 1, i))
                 .findFirst()
@@ -105,6 +113,7 @@ public final class UnionTrackPointIterator implements Iterator<TrackPoint> {
         cursor.nextLastIndex = points.size();
     }
 
+    @AllArgsConstructor
     private static final class Cursor {
         private int firstIndex;
         private int nextLastIndex;
