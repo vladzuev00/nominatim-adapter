@@ -48,20 +48,20 @@ public final class UnionTrackPointIterator implements Iterator<TrackPoint> {
 
     private TrackPoint getCursorLastPointRecalculatingRelative() {
         final TrackPoint lastPoint = getCursorLastPoint();
-        final Distance gpsDistance = findCursorGpsDistance();
-        final Distance odometerDistance = findCursorOdometerDistance();
+        final Distance gpsDistance = findCursorLastPointGpsDistanceSkippingCursorInnerPoints();
+        final Distance odometerDistance = findCursorLastPointOdometerDistanceSkippingCursorInnerPoints();
         return new TrackPoint(lastPoint.getCoordinate(), lastPoint.getSpeed(), gpsDistance, odometerDistance);
     }
 
-    private Distance findCursorGpsDistance() {
-        return findCursorDistance(TrackPoint::getGpsDistance);
+    private Distance findCursorLastPointGpsDistanceSkippingCursorInnerPoints() {
+        return findCursorLastPointDistanceSkippingCursorInnerPoints(TrackPoint::getGpsDistance);
     }
 
-    private Distance findCursorOdometerDistance() {
-        return findCursorDistance(TrackPoint::getOdometerDistance);
+    private Distance findCursorLastPointOdometerDistanceSkippingCursorInnerPoints() {
+        return findCursorLastPointDistanceSkippingCursorInnerPoints(TrackPoint::getOdometerDistance);
     }
 
-    private Distance findCursorDistance(final Function<TrackPoint, Distance> distanceGetter) {
+    private Distance findCursorLastPointDistanceSkippingCursorInnerPoints(final Function<TrackPoint, Distance> distanceGetter) {
         final TrackPoint firstPoint = getCursorFirstPoint();
         final TrackPoint lastPoint = getCursorLastPoint();
         final Distance firstPointDistance = distanceGetter.apply(firstPoint);
@@ -91,12 +91,15 @@ public final class UnionTrackPointIterator implements Iterator<TrackPoint> {
     }
 
     private void pickOutNextPoints() {
-        final int nextLastNextUnionIndex = range(cursor.nextLastIndex - 1, points.size())
+        final int newCursorNextLastIndex = range(cursor.nextLastIndex - 1, points.size())
                 .filter(i -> isGpsThresholdExceeded(cursor.nextLastIndex - 1, i))
                 .findFirst()
-                .orElse(points.size());
-        cursor.firstIndex = cursor.nextLastIndex - 1;
-        cursor.nextLastIndex = nextLastNextUnionIndex;
+                .orElse(0);
+
+//                .stream()
+//                .mapToObj(i -> new Cursor(cursor.nextLastIndex - 1, i))
+//                .findFirst()
+//                .orElseGet(() -> new Cursor(cursor.nextLastIndex - 1, points.size()));
     }
 
     private boolean isGpsThresholdExceeded(final int firstPointIndex, final int secondPointIndex) {
@@ -114,7 +117,7 @@ public final class UnionTrackPointIterator implements Iterator<TrackPoint> {
     }
 
     @AllArgsConstructor
-    private static final class Cursor {
+    private static class Cursor {
         private int firstIndex;
         private int nextLastIndex;
     }
