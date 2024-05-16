@@ -4,7 +4,7 @@ import by.aurorasoft.distanceclassifier.base.AbstractSpringBootTest;
 import by.aurorasoft.distanceclassifier.controller.cityscan.factory.AreaCoordinateFactory;
 import by.aurorasoft.distanceclassifier.controller.cityscan.model.AreaCoordinateRequest;
 import by.aurorasoft.distanceclassifier.model.AreaCoordinate;
-import by.aurorasoft.distanceclassifier.service.cityscan.CityAsyncScanningService;
+import by.aurorasoft.distanceclassifier.service.cityscan.CityScanningService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,7 +24,7 @@ public final class CityScanningControllerTest extends AbstractSpringBootTest {
     private AreaCoordinateFactory mockedAreaCoordinateFactory;
 
     @MockBean
-    private CityAsyncScanningService mockedService;
+    private CityScanningService mockedService;
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -38,7 +38,7 @@ public final class CityScanningControllerTest extends AbstractSpringBootTest {
 
         postExpectingNoContext(restTemplate, URL, givenRequest);
 
-        verify(mockedService, times(1)).scanAsync(same(givenAreaCoordinate));
+        verify(mockedService, times(1)).scan(same(givenAreaCoordinate));
     }
 
     @Test

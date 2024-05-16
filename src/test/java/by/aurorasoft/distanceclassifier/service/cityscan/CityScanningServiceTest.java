@@ -16,23 +16,23 @@ import static by.aurorasoft.distanceclassifier.testutil.ReflectionUtil.setFieldV
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public final class CityAsyncScanningServiceTest {
+public final class CityScanningServiceTest {
     private static final String FIELD_NAME_EXECUTOR_SERVICE = "executorService";
 
     @Mock
-    private CityScanner mockedScanningService;
+    private CityScanner mockedScanner;
 
     @Mock
     private ExecutorService mockedExecutorService;
 
-    private CityAsyncScanningService asyncScanningService;
+    private CityScanningService scanningService;
 
     @Captor
     private ArgumentCaptor<Runnable> taskArgumentCaptor;
 
     @Before
-    public void initializeAsyncScanningService() {
-        asyncScanningService = new CityAsyncScanningService(mockedScanningService);
+    public void initializeScanningService() {
+        scanningService = new CityScanningService(mockedScanner);
         injectMockedExecutorService();
     }
 
@@ -40,14 +40,14 @@ public final class CityAsyncScanningServiceTest {
     public void scanningShouldBeStarted() {
         final AreaCoordinate givenAreaCoordinate = mock(AreaCoordinate.class);
 
-        asyncScanningService.scanAsync(givenAreaCoordinate);
+        scanningService.scan(givenAreaCoordinate);
 
         verify(mockedExecutorService, times(1)).execute(taskArgumentCaptor.capture());
         taskArgumentCaptor.getValue().run();
-        verify(mockedScanningService, times(1)).scan(same(givenAreaCoordinate));
+        verify(mockedScanner, times(1)).scan(same(givenAreaCoordinate));
     }
 
     private void injectMockedExecutorService() {
-        setFieldValue(asyncScanningService, FIELD_NAME_EXECUTOR_SERVICE, mockedExecutorService);
+        setFieldValue(scanningService, FIELD_NAME_EXECUTOR_SERVICE, mockedExecutorService);
     }
 }

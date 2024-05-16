@@ -11,11 +11,11 @@ import static java.util.concurrent.Executors.newSingleThreadExecutor;
 
 @Service
 @RequiredArgsConstructor
-public final class CityAsyncScanningService {
-    private final CityScanner scanningService;
+public final class CityScanningService {
+    private final CityScanner scanner;
     private final ExecutorService executorService = newSingleThreadExecutor();
 
-    public void scanAsync(final AreaCoordinate areaCoordinate) {
-        executorService.execute(() -> scanningService.scan(areaCoordinate));
+    public void scan(final AreaCoordinate areaCoordinate) {
+        executorService.execute(() -> scanner.scan(areaCoordinate));
     }
 }
