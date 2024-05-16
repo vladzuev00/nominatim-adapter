@@ -1,4 +1,4 @@
-package by.aurorasoft.distanceclassifier.service.cityscan;
+package by.aurorasoft.distanceclassifier.service.cityscan.scanner;
 
 import by.aurorasoft.distanceclassifier.base.AbstractSpringBootTest;
 import by.aurorasoft.distanceclassifier.crud.model.dto.City;
@@ -23,7 +23,7 @@ import java.util.Set;
 
 import static org.mockito.Mockito.*;
 
-public final class CityScanningServiceTest extends AbstractSpringBootTest {
+public final class CityScannerTest extends AbstractSpringBootTest {
 
     @MockBean
     private OverpassClient mockedOverpassClient;
@@ -38,7 +38,7 @@ public final class CityScanningServiceTest extends AbstractSpringBootTest {
     private ScannedLocationAppender mockedScannedLocationAppender;
 
     @Autowired
-    private CityScanningService scanningService;
+    private CityScanner scanner;
 
     @Autowired
     private GeometryFactory geometryFactory;
@@ -72,7 +72,7 @@ public final class CityScanningServiceTest extends AbstractSpringBootTest {
         mockCityForRelation(fourthGivenRelation, "POLYGON((6 5, 5 3, 3 2, 2.5 5, 6 5))");
         final City fifthGivenCity = mockCityForRelation(fifthGivenRelation, "POLYGON((1 1, 2 1, 2 2, 1 2, 1 1))");
 
-        scanningService.scan(givenAreaCoordinate);
+        scanner.scan(givenAreaCoordinate);
 
         final List<City> expectedSavedCities = List.of(thirdGivenCity, fifthGivenCity);
         verify(mockedCityService, times(1)).saveAll(eq(expectedSavedCities));

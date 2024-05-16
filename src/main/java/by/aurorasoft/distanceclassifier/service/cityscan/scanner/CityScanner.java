@@ -1,4 +1,4 @@
-package by.aurorasoft.distanceclassifier.service.cityscan;
+package by.aurorasoft.distanceclassifier.service.cityscan.scanner;
 
 import by.aurorasoft.distanceclassifier.crud.model.dto.City;
 import by.aurorasoft.distanceclassifier.crud.service.CityService;
@@ -18,7 +18,7 @@ import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
-public class CityScanningService {
+public class CityScanner {
     private final OverpassClient overpassClient;
     private final OverpassCityFactory cityFactory;
     private final CityService cityService;

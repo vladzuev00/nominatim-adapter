@@ -1,6 +1,7 @@
 package by.aurorasoft.distanceclassifier.service.cityscan;
 
 import by.aurorasoft.distanceclassifier.model.AreaCoordinate;
+import by.aurorasoft.distanceclassifier.service.cityscan.scanner.CityScanner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +20,7 @@ public final class CityAsyncScanningServiceTest {
     private static final String FIELD_NAME_EXECUTOR_SERVICE = "executorService";
 
     @Mock
-    private CityScanningService mockedScanningService;
+    private CityScanner mockedScanningService;
 
     @Mock
     private ExecutorService mockedExecutorService;
