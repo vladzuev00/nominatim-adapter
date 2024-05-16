@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-//TODO: refactor with test
 @Component
 @RequiredArgsConstructor
 public final class TrackSimplifier {
