@@ -13,6 +13,7 @@ import java.util.function.Function;
 import static java.lang.Double.compare;
 import static java.util.stream.IntStream.range;
 
+//TODO: возможно переименовать в ThrowingTrackPointIterator что-то такое
 @RequiredArgsConstructor
 public final class UnionTrackPointIterator implements Iterator<TrackPoint> {
     private final List<TrackPoint> points;
