@@ -38,24 +38,24 @@ public final class ClassifyingDistancePropertyTest extends AbstractSpringBootTes
     public void propertyShouldNotBeValidBecauseOfCacheGeometriesIsNull() {
         final ClassifyingDistanceProperty givenProperty = ClassifyingDistanceProperty.builder()
                 .trackSimplifyEpsilon(0.00015)
-                .significantGpsDistanceThreshold(500.)
+                .pointUnionGpsRelativeThreshold(500.)
                 .build();
 
         final Set<ConstraintViolation<ClassifyingDistanceProperty>> violations = validator.validate(givenProperty);
         assertEquals(1, violations.size());
-        assertEquals("must not be null", findFirstMessage(violations));
+        assertEquals("не должно равняться null", findFirstMessage(violations));
     }
 
     @Test
     public void propertyShouldNotBeValidBecauseOfTrackSimplifyEpsilonIsNull() {
         final ClassifyingDistanceProperty givenProperty = ClassifyingDistanceProperty.builder()
                 .cacheGeometries(true)
-                .significantGpsDistanceThreshold(500.)
+                .pointUnionGpsRelativeThreshold(500.)
                 .build();
 
         final Set<ConstraintViolation<ClassifyingDistanceProperty>> violations = validator.validate(givenProperty);
         assertEquals(1, violations.size());
-        assertEquals("must not be null", findFirstMessage(violations));
+        assertEquals("не должно равняться null", findFirstMessage(violations));
     }
 
     @Test
@@ -64,11 +64,11 @@ public final class ClassifyingDistancePropertyTest extends AbstractSpringBootTes
 
         final Set<ConstraintViolation<ClassifyingDistanceProperty>> violations = validator.validate(givenProperty);
         assertEquals(1, violations.size());
-        assertEquals("must be greater than or equal to 0", findFirstMessage(violations));
+        assertEquals("должно быть больше, чем или равно 0", findFirstMessage(violations));
     }
 
     @Test
-    public void propertyShouldNotBeValidBecauseOfSignificantGpsDistanceThresholdIsNull() {
+    public void propertyShouldNotBeValidBecauseOfPointUnionGpsRelativeThresholdIsNull() {
         final ClassifyingDistanceProperty givenProperty = ClassifyingDistanceProperty.builder()
                 .cacheGeometries(true)
                 .trackSimplifyEpsilon(0.001)
@@ -76,15 +76,15 @@ public final class ClassifyingDistancePropertyTest extends AbstractSpringBootTes
 
         final Set<ConstraintViolation<ClassifyingDistanceProperty>> violations = validator.validate(givenProperty);
         assertEquals(1, violations.size());
-        assertEquals("must not be null", findFirstMessage(violations));
+        assertEquals("не должно равняться null", findFirstMessage(violations));
     }
 
     @Test
-    public void propertyShouldNotBeValidBecauseOfSignificantGpsDistanceThresholdIsLessThanMinimalAllowable() {
+    public void propertyShouldNotBeValidBecauseOfPointUnionGpsRelativeThresholdIsLessThanMinimalAllowable() {
         final ClassifyingDistanceProperty givenProperty = new ClassifyingDistanceProperty(false, 0.00015, -0.001);
 
         final Set<ConstraintViolation<ClassifyingDistanceProperty>> violations = validator.validate(givenProperty);
         assertEquals(1, violations.size());
-        assertEquals("must be greater than or equal to 0", findFirstMessage(violations));
+        assertEquals("должно быть больше, чем или равно 0", findFirstMessage(violations));
     }
 }

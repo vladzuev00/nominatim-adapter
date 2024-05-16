@@ -26,9 +26,9 @@ server:
   port: 8081
 
 distance-classifying:
-  cache-geometries: false
+  cache-geometries: true
   track-simplify-epsilon: 0.00015
-  significant-gps-distance-threshold: 500
+  point-union-gps-relative-threshold: 500
 
 overpass:
   timeout: 50
