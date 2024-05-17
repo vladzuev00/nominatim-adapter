@@ -16,14 +16,14 @@ public final class TrackPointConnectorTest {
         final TrackPoint firstGivenPoint = new TrackPoint(
                 new Coordinate(5.5, 6.6),
                 60,
-                new Distance(40, 170),
-                new Distance(50, 180)
+                new Distance(80, 130),
+                new Distance(90, 150)
         );
 
         final Coordinate secondGivenPointCoordinate = new Coordinate(7.7, 8.8);
         final int secondGivenPointSpeed = 70;
         final double secondGivenPointGpsAbsolute = 220;
-        final double secondGivenPointOdometerAbsolute = 230;
+        final double secondGivenPointOdometerAbsolute = 270;
         final TrackPoint secondGivenPoint = new TrackPoint(
                 secondGivenPointCoordinate,
                 secondGivenPointSpeed,
@@ -36,7 +36,7 @@ public final class TrackPointConnectorTest {
                 secondGivenPointCoordinate,
                 secondGivenPointSpeed,
                 new Distance(90, secondGivenPointGpsAbsolute),
-                new Distance(100, secondGivenPointOdometerAbsolute)
+                new Distance(120, secondGivenPointOdometerAbsolute)
         );
         assertEquals(expected, actual);
     }

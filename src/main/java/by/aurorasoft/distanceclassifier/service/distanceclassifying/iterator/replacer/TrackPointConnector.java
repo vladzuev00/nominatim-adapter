@@ -37,9 +37,7 @@ public final class TrackPointConnector {
                                          final Function<TrackPoint, Distance> getter) {
         final Distance firstDistance = getter.apply(first);
         final Distance secondDistance = getter.apply(second);
-        final double newRelative = secondDistance.getAbsolute()
-                - firstDistance.getAbsolute()
-                + firstDistance.getRelative();
+        final double newRelative = secondDistance.getAbsolute() - firstDistance.getAbsolute();
         return new Distance(newRelative, secondDistance.getAbsolute());
     }
 }
