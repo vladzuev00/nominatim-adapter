@@ -2,6 +2,7 @@ package by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator;
 
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.connector.TrackPointConnector;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Iterator;
@@ -16,7 +17,7 @@ public final class ConnectingTrackPointIterator implements Iterator<TrackPoint> 
     private final TrackPointConnector pointConnector;
     private final List<TrackPoint> points;
     private final double pointMinGpsRelative;
-    private final PointSequenceCursor cursor = new PointSequenceCursor();
+    private final PointSequenceCursor cursor = new PointSequenceCursor(0, 1);
 
     @Override
     public boolean hasNext() {
@@ -87,7 +88,8 @@ public final class ConnectingTrackPointIterator implements Iterator<TrackPoint> 
         cursor.end = points.size();
     }
 
-    private static class PointSequenceCursor {
+    @AllArgsConstructor
+    private static final class PointSequenceCursor {
         private int start;
         private int end;
     }
