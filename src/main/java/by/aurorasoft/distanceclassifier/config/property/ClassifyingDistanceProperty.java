@@ -25,5 +25,5 @@ public final class ClassifyingDistanceProperty {
 
     @NotNull
     @DecimalMin("0")
-    private final Double pointUnionGpsRelativeThreshold;
+    private final Double pointMinGpsRelative;
 }

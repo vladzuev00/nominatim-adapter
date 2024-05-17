@@ -26,11 +26,11 @@ public final class UnionTrackPointIteratorFactoryTest {
     @Mock
     private ClassifyingDistanceProperty mockedProperty;
 
-    private ThrowingTrackPointIteratorFactory factory;
+    private ConnectingTrackPointIteratorFactory factory;
 
     @Before
     public void initializeFactory() {
-        factory = new ThrowingTrackPointIteratorFactory(mockedProperty);
+        factory = new ConnectingTrackPointIteratorFactory(mockedProperty);
     }
 
     @Test
@@ -42,7 +42,7 @@ public final class UnionTrackPointIteratorFactoryTest {
         when(givenTrack.getPoints()).thenReturn(givenPoints);
 
         final double givenPointUnionGpsRelativeThreshold = 500.;
-        when(mockedProperty.getPointUnionGpsRelativeThreshold()).thenReturn(givenPointUnionGpsRelativeThreshold);
+        when(mockedProperty.getPointMinGpsRelative()).thenReturn(givenPointUnionGpsRelativeThreshold);
 
         final ConnectingTrackPointIterator actual = factory.create(givenTrack);
 

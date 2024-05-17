@@ -4,9 +4,11 @@ import by.aurorasoft.distanceclassifier.config.property.ClassifyingDistancePrope
 import by.aurorasoft.distanceclassifier.model.Track;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.ConnectingTrackPointIterator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
 @RequiredArgsConstructor
-public final class ThrowingTrackPointIteratorFactory {
+public final class ConnectingTrackPointIteratorFactory {
     private final ClassifyingDistanceProperty property;
 
     public ConnectingTrackPointIterator create(final Track track) {

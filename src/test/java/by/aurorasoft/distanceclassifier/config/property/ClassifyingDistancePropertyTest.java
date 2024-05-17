@@ -38,7 +38,7 @@ public final class ClassifyingDistancePropertyTest extends AbstractSpringBootTes
     public void propertyShouldNotBeValidBecauseOfCacheGeometriesIsNull() {
         final ClassifyingDistanceProperty givenProperty = ClassifyingDistanceProperty.builder()
                 .trackSimplifyEpsilon(0.00015)
-                .pointUnionGpsRelativeThreshold(500.)
+                .pointMinGpsRelative(500.)
                 .build();
 
         final Set<ConstraintViolation<ClassifyingDistanceProperty>> violations = validator.validate(givenProperty);
@@ -50,7 +50,7 @@ public final class ClassifyingDistancePropertyTest extends AbstractSpringBootTes
     public void propertyShouldNotBeValidBecauseOfTrackSimplifyEpsilonIsNull() {
         final ClassifyingDistanceProperty givenProperty = ClassifyingDistanceProperty.builder()
                 .cacheGeometries(true)
-                .pointUnionGpsRelativeThreshold(500.)
+                .pointMinGpsRelative(500.)
                 .build();
 
         final Set<ConstraintViolation<ClassifyingDistanceProperty>> violations = validator.validate(givenProperty);
@@ -68,7 +68,7 @@ public final class ClassifyingDistancePropertyTest extends AbstractSpringBootTes
     }
 
     @Test
-    public void propertyShouldNotBeValidBecauseOfPointUnionGpsRelativeThresholdIsNull() {
+    public void propertyShouldNotBeValidBecauseOfPointMinGpsRelativeIsNull() {
         final ClassifyingDistanceProperty givenProperty = ClassifyingDistanceProperty.builder()
                 .cacheGeometries(true)
                 .trackSimplifyEpsilon(0.001)
@@ -80,7 +80,7 @@ public final class ClassifyingDistancePropertyTest extends AbstractSpringBootTes
     }
 
     @Test
-    public void propertyShouldNotBeValidBecauseOfPointUnionGpsRelativeThresholdIsLessThanMinimalAllowable() {
+    public void propertyShouldNotBeValidBecauseOfPointMinGpsRelativeIsLessThanMinimalAllowable() {
         final ClassifyingDistanceProperty givenProperty = new ClassifyingDistanceProperty(false, 0.00015, -0.001);
 
         final Set<ConstraintViolation<ClassifyingDistanceProperty>> violations = validator.validate(givenProperty);
