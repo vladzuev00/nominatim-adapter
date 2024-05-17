@@ -3,7 +3,7 @@ package by.aurorasoft.distanceclassifier.service.distanceclassifying;
 import by.aurorasoft.distanceclassifier.model.Track;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.accumulator.ClassifiedDistanceAccumulator;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.accumulator.ClassifiedDistanceAccumulatorFactory;
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.UnionTrackPointIteratorFactory;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.ThrowingTrackPointIteratorFactory;
 import by.nhorushko.classifieddistance.ClassifiedDistanceStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public final class ClassifyingDistanceService {
     private final ClassifiedDistanceAccumulatorFactory distanceAccumulatorFactory;
-    private final UnionTrackPointIteratorFactory unionPointIteratorFactory;
+    private final ThrowingTrackPointIteratorFactory unionPointIteratorFactory;
 
     public ClassifiedDistanceStorage classify(final Track track, final int urbanSpeedThreshold) {
         final ClassifiedDistanceAccumulator accumulator = distanceAccumulatorFactory.create(track, urbanSpeedThreshold);

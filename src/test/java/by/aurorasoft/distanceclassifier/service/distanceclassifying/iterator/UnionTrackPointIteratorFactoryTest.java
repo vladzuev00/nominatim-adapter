@@ -25,11 +25,11 @@ public final class UnionTrackPointIteratorFactoryTest {
     @Mock
     private ClassifyingDistanceProperty mockedProperty;
 
-    private UnionTrackPointIteratorFactory factory;
+    private ThrowingTrackPointIteratorFactory factory;
 
     @Before
     public void initializeFactory() {
-        factory = new UnionTrackPointIteratorFactory(mockedProperty);
+        factory = new ThrowingTrackPointIteratorFactory(mockedProperty);
     }
 
     @Test
@@ -43,7 +43,7 @@ public final class UnionTrackPointIteratorFactoryTest {
         final double givenPointUnionGpsRelativeThreshold = 500.;
         when(mockedProperty.getPointUnionGpsRelativeThreshold()).thenReturn(givenPointUnionGpsRelativeThreshold);
 
-        final UnionTrackPointIterator actual = factory.create(givenTrack);
+        final ThrowingTrackPointIterator actual = factory.create(givenTrack);
 
         final List<TrackPoint> actualPoints = getPoints(actual);
         assertSame(givenPoints, actualPoints);
@@ -53,11 +53,11 @@ public final class UnionTrackPointIteratorFactoryTest {
     }
 
     @SuppressWarnings("unchecked")
-    private List<TrackPoint> getPoints(final UnionTrackPointIterator iterator) {
+    private List<TrackPoint> getPoints(final ThrowingTrackPointIterator iterator) {
         return getFieldValue(iterator, FIELD_NAME_POINTS, List.class);
     }
 
-    private double getGpsRelativeThreshold(final UnionTrackPointIterator iterator) {
+    private double getGpsRelativeThreshold(final ThrowingTrackPointIterator iterator) {
         return getFieldValue(iterator, FIELD_NAME_GPS_RELATIVE_THRESHOLD, Double.class);
     }
 }

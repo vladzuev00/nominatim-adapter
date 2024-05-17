@@ -5,10 +5,10 @@ import by.aurorasoft.distanceclassifier.model.Track;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public final class UnionTrackPointIteratorFactory {
+public final class ThrowingTrackPointIteratorFactory {
     private final ClassifyingDistanceProperty property;
 
-    public UnionTrackPointIterator create(final Track track) {
-        return new UnionTrackPointIterator(track.getPoints(), property.getPointUnionGpsRelativeThreshold());
+    public ThrowingTrackPointIterator create(final Track track) {
+        return new ThrowingTrackPointIterator(track.getPoints(), property.getPointUnionGpsRelativeThreshold());
     }
 }
