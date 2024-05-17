@@ -4,12 +4,21 @@ import by.aurorasoft.distanceclassifier.model.TrackPoint;
 import by.nhorushko.classifieddistance.Distance;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 @Component
 public final class TrackPointReplacer {
 
     public TrackPoint replace(final TrackPoint existing, final TrackPoint replacement) {
+        return !isSamePoint(existing, replacement) ? replaceDifferentPoints(existing, replacement) : replacement;
+    }
+
+    private boolean isSamePoint(final TrackPoint existing, final TrackPoint replacement) {
+        return existing == replacement || Objects.equals(existing.getCoordinate(), replacement.getCoordinate());
+    }
+
+    private TrackPoint replaceDifferentPoints(final TrackPoint existing, final TrackPoint replacement) {
         final Distance newGpsDistance = recalculateGpsDistance(existing, replacement);
         final Distance newOdometerDistance = recalculateOdometerDistance(existing, replacement);
         return new TrackPoint(replacement.getCoordinate(), replacement.getSpeed(), newGpsDistance, newOdometerDistance);

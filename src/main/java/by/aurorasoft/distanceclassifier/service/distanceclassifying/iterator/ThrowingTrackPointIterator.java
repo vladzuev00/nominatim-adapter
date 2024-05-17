@@ -27,7 +27,7 @@ public final class ThrowingTrackPointIterator implements Iterator<TrackPoint> {
     @Override
     public TrackPoint next() {
         checkNext();
-        final TrackPoint point = !isSelectedOnePoint() ? replaceSequenceByLastPoint() : getFirstSelectedPoint();
+        final TrackPoint point = replaceSequenceByLastPoint();
         trySelectNextSequence();
         return point;
     }
@@ -36,10 +36,6 @@ public final class ThrowingTrackPointIterator implements Iterator<TrackPoint> {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-    }
-
-    private boolean isSelectedOnePoint() {
-        return cursor.start == cursor.end - 1;
     }
 
     private TrackPoint replaceSequenceByLastPoint() {
