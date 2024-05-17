@@ -2,14 +2,12 @@ package by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator;
 
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.replacer.TrackPointReplacer;
-import by.nhorushko.classifieddistance.Distance;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.function.Function;
 
 import static java.lang.Double.compare;
 import static java.util.stream.IntStream.range;
@@ -30,7 +28,7 @@ public final class ThrowingTrackPointIterator implements Iterator<TrackPoint> {
     public TrackPoint next() {
         checkNext();
         final TrackPoint point = !isSelectedOnePoint() ? replaceSequenceByLastPoint() : getFirstSelectedPoint();
-        selectNextSequence();
+        trySelectNextSequence();
         return point;
     }
 
@@ -58,9 +56,9 @@ public final class ThrowingTrackPointIterator implements Iterator<TrackPoint> {
         return points.get(cursor.end - 1);
     }
 
-    private void selectNextSequence() {
+    private void trySelectNextSequence() {
         if (!isNoMorePoints()) {
-            pickOutNextPoints();
+            selectNextSequence();
         } else {
             shiftCursorToEnd();
         }
@@ -70,15 +68,18 @@ public final class ThrowingTrackPointIterator implements Iterator<TrackPoint> {
         return cursor.end == points.size();
     }
 
-    private void pickOutNextPoints() {
-        cursor.start = cursor.end;
-        cursor.end = findNextCursorNextLastIndex();
+    private void selectNextSequence() {
+        selectStartNextSequence();
+        selectEndNextSequence();
     }
 
-    private int findNextCursorNextLastIndex() {
-        final int cursorLastIndex = cursor.end - 1;
-        return range(cursorLastIndex, points.size())
-                .filter(i -> isGpsThresholdExceeded(cursorLastIndex, i))
+    private void selectStartNextSequence() {
+        cursor.start = cursor.end;
+    }
+
+    private void selectEndNextSequence() {
+        cursor.end = range(cursor.end, points.size())
+                .filter(i -> isGpsThresholdExceeded(cursor.end, i))
                 .findFirst()
                 .orElse(points.size());
     }

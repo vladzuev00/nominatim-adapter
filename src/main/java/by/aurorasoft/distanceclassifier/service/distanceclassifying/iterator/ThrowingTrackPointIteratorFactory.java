@@ -9,6 +9,7 @@ public final class ThrowingTrackPointIteratorFactory {
     private final ClassifyingDistanceProperty property;
 
     public ThrowingTrackPointIterator create(final Track track) {
-        return new ThrowingTrackPointIterator(track.getPoints(), property.getPointUnionGpsRelativeThreshold());
+        return null;
+//        return new ThrowingTrackPointIterator(track.getPoints(), property.getPointUnionGpsRelativeThreshold());
     }
 }
