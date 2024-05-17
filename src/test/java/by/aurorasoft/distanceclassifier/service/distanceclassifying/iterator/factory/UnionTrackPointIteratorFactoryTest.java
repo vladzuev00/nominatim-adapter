@@ -3,8 +3,7 @@ package by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.fa
 import by.aurorasoft.distanceclassifier.config.property.ClassifyingDistanceProperty;
 import by.aurorasoft.distanceclassifier.model.Track;
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.ThrowingTrackPointIterator;
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.factory.ThrowingTrackPointIteratorFactory;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.ConnectingTrackPointIterator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,7 +44,7 @@ public final class UnionTrackPointIteratorFactoryTest {
         final double givenPointUnionGpsRelativeThreshold = 500.;
         when(mockedProperty.getPointUnionGpsRelativeThreshold()).thenReturn(givenPointUnionGpsRelativeThreshold);
 
-        final ThrowingTrackPointIterator actual = factory.create(givenTrack);
+        final ConnectingTrackPointIterator actual = factory.create(givenTrack);
 
         final List<TrackPoint> actualPoints = getPoints(actual);
         assertSame(givenPoints, actualPoints);
@@ -55,11 +54,11 @@ public final class UnionTrackPointIteratorFactoryTest {
     }
 
     @SuppressWarnings("unchecked")
-    private List<TrackPoint> getPoints(final ThrowingTrackPointIterator iterator) {
+    private List<TrackPoint> getPoints(final ConnectingTrackPointIterator iterator) {
         return getFieldValue(iterator, FIELD_NAME_POINTS, List.class);
     }
 
-    private double getGpsRelativeThreshold(final ThrowingTrackPointIterator iterator) {
+    private double getGpsRelativeThreshold(final ConnectingTrackPointIterator iterator) {
         return getFieldValue(iterator, FIELD_NAME_GPS_RELATIVE_THRESHOLD, Double.class);
     }
 }

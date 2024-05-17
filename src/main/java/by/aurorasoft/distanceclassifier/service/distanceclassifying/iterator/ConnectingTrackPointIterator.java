@@ -12,10 +12,10 @@ import static java.lang.Double.compare;
 import static java.util.stream.IntStream.range;
 
 @RequiredArgsConstructor
-public final class ThrowingTrackPointIterator implements Iterator<TrackPoint> {
+public final class ConnectingTrackPointIterator implements Iterator<TrackPoint> {
     private final TrackPointConnector pointConnector;
     private final List<TrackPoint> points;
-    private final double gpsRelativeThreshold;
+    private final double pointMinGpsRelative;
     private final PointSequenceCursor cursor = new PointSequenceCursor();
 
     @Override
@@ -26,7 +26,7 @@ public final class ThrowingTrackPointIterator implements Iterator<TrackPoint> {
     @Override
     public TrackPoint next() {
         checkNext();
-        final TrackPoint point = replaceSequenceByLastPoint();
+        final TrackPoint point = connectBoundarySequencePoints();
         trySelectNextSequence();
         return point;
     }
@@ -37,29 +37,21 @@ public final class ThrowingTrackPointIterator implements Iterator<TrackPoint> {
         }
     }
 
-    private TrackPoint replaceSequenceByLastPoint() {
-        final TrackPoint first = getFirstSequencePoint();
-        final TrackPoint last = getLastSequencePoint();
+    private TrackPoint connectBoundarySequencePoints() {
+        final TrackPoint first = points.get(cursor.start);
+        final TrackPoint last = points.get(cursor.end);
         return pointConnector.connect(first, last);
     }
 
-    private TrackPoint getFirstSequencePoint() {
-        return points.get(cursor.start);
-    }
-
-    private TrackPoint getLastSequencePoint() {
-        return points.get(cursor.end);
-    }
-
     private void trySelectNextSequence() {
-        if (!isNoMorePoints()) {
+        if (!isNoMoreSequences()) {
             selectNextSequence();
         } else {
             shiftCursorToEnd();
         }
     }
 
-    private boolean isNoMorePoints() {
+    private boolean isNoMoreSequences() {
         return cursor.end == points.size() - 1;
     }
 
@@ -73,15 +65,15 @@ public final class ThrowingTrackPointIterator implements Iterator<TrackPoint> {
     }
 
     private void selectEndNextSequence() {
-        cursor.end = range(cursor.end, points.size())
-                .filter(i -> isGpsThresholdExceeded(cursor.end, i))
+        cursor.end = range(cursor.start, points.size())
+                .filter(i -> isSuitableGpsRelativeToBeSequence(cursor.start, i))
                 .findFirst()
                 .orElse(points.size() - 1);
     }
 
-    private boolean isGpsThresholdExceeded(final int firstPointIndex, final int secondPointIndex) {
-        final double gpsDistance = getPointGpsAbsolute(secondPointIndex) - getPointGpsAbsolute(firstPointIndex);
-        return compare(gpsDistance, gpsRelativeThreshold) >= 0;
+    private boolean isSuitableGpsRelativeToBeSequence(final int fromIndex, final int toIndex) {
+        final double gpsRelative = getPointGpsAbsolute(toIndex) - getPointGpsAbsolute(fromIndex);
+        return compare(gpsRelative, pointMinGpsRelative) >= 0;
     }
 
     private double getPointGpsAbsolute(final int pointIndex) {

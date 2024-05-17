@@ -4,7 +4,7 @@ import by.aurorasoft.distanceclassifier.model.Track;
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.accumulator.ClassifiedDistanceAccumulator;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.accumulator.ClassifiedDistanceAccumulatorFactory;
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.ThrowingTrackPointIterator;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.ConnectingTrackPointIterator;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.factory.ThrowingTrackPointIteratorFactory;
 import by.nhorushko.classifieddistance.ClassifiedDistanceStorage;
 import org.junit.Before;
@@ -72,8 +72,8 @@ public final class ClassifyingDistanceServiceTest {
     }
 
     @SuppressWarnings("unchecked")
-    private ThrowingTrackPointIterator createUnionPointIterator(final TrackPoint first, final TrackPoint second) {
-        final ThrowingTrackPointIterator iterator = mock(ThrowingTrackPointIterator.class);
+    private ConnectingTrackPointIterator createUnionPointIterator(final TrackPoint first, final TrackPoint second) {
+        final ConnectingTrackPointIterator iterator = mock(ConnectingTrackPointIterator.class);
         doCallRealMethod().when(iterator).forEachRemaining(any(Consumer.class));
         when(iterator.hasNext()).thenReturn(true, true, false);
         when(iterator.next()).thenReturn(first, second);
