@@ -1,6 +1,7 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator;
 
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.replacer.TrackPointReplacer;
 import by.nhorushko.classifieddistance.Distance;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import static java.util.stream.IntStream.range;
 
 @RequiredArgsConstructor
 public final class ThrowingTrackPointIterator implements Iterator<TrackPoint> {
+    private final TrackPointReplacer pointReplacer;
     private final List<TrackPoint> points;
     private final double gpsRelativeThreshold;
     private final PointSequenceCursor cursor = new PointSequenceCursor(0, 1);
@@ -27,7 +29,7 @@ public final class ThrowingTrackPointIterator implements Iterator<TrackPoint> {
     @Override
     public TrackPoint next() {
         checkNext();
-        final var point = !isSelectedOnePoint() ? getLastSelectedPointThrowingRemaining() : getFirstSelectedPoint();
+        final TrackPoint point = !isSelectedOnePoint() ? replaceSequenceByLastPoint() : getFirstSelectedPoint();
         selectNextSequence();
         return point;
     }
@@ -42,33 +44,10 @@ public final class ThrowingTrackPointIterator implements Iterator<TrackPoint> {
         return cursor.start == cursor.end - 1;
     }
 
-    private TrackPoint getLastSelectedPointThrowingRemaining() {
-        final TrackPoint pointBeforeCursor = getPointBeforeCursor();
-        final TrackPoint lastPoint = getLastSelectedPoint();
-        final Distance newGpsDistance = recalculateGpsDistance(pointBeforeCursor, lastPoint);
-        final Distance newOdometerDistance = recalculateOdometerDistance(pointBeforeCursor, lastPoint);
-        return new TrackPoint(lastPoint.getCoordinate(), lastPoint.getSpeed(), newGpsDistance, newOdometerDistance);
-    }
-
-    private Distance recalculateGpsDistance(final TrackPoint first, final TrackPoint second) {
-        return recalculateDistance(first, second, TrackPoint::getGpsDistance);
-    }
-
-    private Distance recalculateOdometerDistance(final TrackPoint first, final TrackPoint second) {
-        return recalculateDistance(first, second, TrackPoint::getOdometerDistance);
-    }
-
-    private Distance recalculateDistance(final TrackPoint first,
-                                         final TrackPoint second,
-                                         final Function<TrackPoint, Distance> getter) {
-        final Distance firstDistance = getter.apply(first);
-        final Distance secondDistance = getter.apply(second);
-        final double newRelative = secondDistance.getAbsolute() - firstDistance.getAbsolute();
-        return new Distance(newRelative, secondDistance.getAbsolute());
-    }
-
-    private TrackPoint getPointBeforeCursor() {
-        return points.get(cursor.start - 1);
+    private TrackPoint replaceSequenceByLastPoint() {
+        final TrackPoint first = getFirstSelectedPoint();
+        final TrackPoint last = getLastSelectedPoint();
+        return pointReplacer.replace(first, last);
     }
 
     private TrackPoint getFirstSelectedPoint() {
