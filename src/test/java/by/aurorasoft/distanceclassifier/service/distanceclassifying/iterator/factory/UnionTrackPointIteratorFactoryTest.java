@@ -1,8 +1,10 @@
-package by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator;
+package by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.factory;
 
 import by.aurorasoft.distanceclassifier.config.property.ClassifyingDistanceProperty;
 import by.aurorasoft.distanceclassifier.model.Track;
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.ThrowingTrackPointIterator;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.factory.ThrowingTrackPointIteratorFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

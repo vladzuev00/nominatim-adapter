@@ -5,7 +5,7 @@ import by.aurorasoft.distanceclassifier.model.TrackPoint;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.accumulator.ClassifiedDistanceAccumulator;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.accumulator.ClassifiedDistanceAccumulatorFactory;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.ThrowingTrackPointIterator;
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.ThrowingTrackPointIteratorFactory;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.factory.ThrowingTrackPointIteratorFactory;
 import by.nhorushko.classifieddistance.ClassifiedDistanceStorage;
 import org.junit.Before;
 import org.junit.Test;

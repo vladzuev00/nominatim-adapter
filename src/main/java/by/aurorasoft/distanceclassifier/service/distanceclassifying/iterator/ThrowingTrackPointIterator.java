@@ -1,8 +1,7 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator;
 
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.replacer.TrackPointReplacer;
-import lombok.AllArgsConstructor;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.replacer.TrackPointConnector;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Iterator;
@@ -14,10 +13,10 @@ import static java.util.stream.IntStream.range;
 
 @RequiredArgsConstructor
 public final class ThrowingTrackPointIterator implements Iterator<TrackPoint> {
-    private final TrackPointReplacer pointReplacer;
+    private final TrackPointConnector pointConnector;
     private final List<TrackPoint> points;
     private final double gpsRelativeThreshold;
-    private final PointSequenceCursor cursor = new PointSequenceCursor(0, 1);
+    private final PointSequenceCursor cursor = new PointSequenceCursor();
 
     @Override
     public boolean hasNext() {
@@ -39,17 +38,17 @@ public final class ThrowingTrackPointIterator implements Iterator<TrackPoint> {
     }
 
     private TrackPoint replaceSequenceByLastPoint() {
-        final TrackPoint first = getFirstSelectedPoint();
-        final TrackPoint last = getLastSelectedPoint();
-        return pointReplacer.replace(first, last);
+        final TrackPoint first = getFirstSequencePoint();
+        final TrackPoint last = getLastSequencePoint();
+        return pointConnector.connect(first, last);
     }
 
-    private TrackPoint getFirstSelectedPoint() {
+    private TrackPoint getFirstSequencePoint() {
         return points.get(cursor.start);
     }
 
-    private TrackPoint getLastSelectedPoint() {
-        return points.get(cursor.end - 1);
+    private TrackPoint getLastSequencePoint() {
+        return points.get(cursor.end);
     }
 
     private void trySelectNextSequence() {
@@ -61,7 +60,7 @@ public final class ThrowingTrackPointIterator implements Iterator<TrackPoint> {
     }
 
     private boolean isNoMorePoints() {
-        return cursor.end == points.size();
+        return cursor.end == points.size() - 1;
     }
 
     private void selectNextSequence() {
@@ -77,7 +76,7 @@ public final class ThrowingTrackPointIterator implements Iterator<TrackPoint> {
         cursor.end = range(cursor.end, points.size())
                 .filter(i -> isGpsThresholdExceeded(cursor.end, i))
                 .findFirst()
-                .orElse(points.size());
+                .orElse(points.size() - 1);
     }
 
     private boolean isGpsThresholdExceeded(final int firstPointIndex, final int secondPointIndex) {
@@ -85,8 +84,10 @@ public final class ThrowingTrackPointIterator implements Iterator<TrackPoint> {
         return compare(gpsDistance, gpsRelativeThreshold) >= 0;
     }
 
-    private double getPointGpsAbsolute(final int index) {
-        return points.get(index).getGpsDistance().getAbsolute();
+    private double getPointGpsAbsolute(final int pointIndex) {
+        return points.get(pointIndex)
+                .getGpsDistance()
+                .getAbsolute();
     }
 
     private void shiftCursorToEnd() {
@@ -94,7 +95,6 @@ public final class ThrowingTrackPointIterator implements Iterator<TrackPoint> {
         cursor.end = points.size();
     }
 
-    @AllArgsConstructor
     private static class PointSequenceCursor {
         private int start;
         private int end;

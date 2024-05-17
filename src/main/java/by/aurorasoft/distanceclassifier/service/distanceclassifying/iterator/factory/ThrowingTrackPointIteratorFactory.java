@@ -1,7 +1,8 @@
-package by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator;
+package by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.factory;
 
 import by.aurorasoft.distanceclassifier.config.property.ClassifyingDistanceProperty;
 import by.aurorasoft.distanceclassifier.model.Track;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.ThrowingTrackPointIterator;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
