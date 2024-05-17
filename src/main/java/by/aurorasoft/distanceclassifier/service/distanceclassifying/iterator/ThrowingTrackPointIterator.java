@@ -43,27 +43,32 @@ public final class ThrowingTrackPointIterator implements Iterator<TrackPoint> {
     }
 
     private TrackPoint getLastSelectedPointThrowingRemaining() {
+        final TrackPoint pointBeforeCursor = getPointBeforeCursor();
         final TrackPoint lastPoint = getLastSelectedPoint();
-        final Distance gpsDistance = recalculateGpsDistanceLastSelectedPointThrowingRemaining();
-        final Distance odometerDistance = recalculateOdometerDistanceLastSelectedPointThrowingRemaining();
-        return new TrackPoint(lastPoint.getCoordinate(), lastPoint.getSpeed(), gpsDistance, odometerDistance);
+        final Distance newGpsDistance = recalculateGpsDistance(pointBeforeCursor, lastPoint);
+        final Distance newOdometerDistance = recalculateOdometerDistance(pointBeforeCursor, lastPoint);
+        return new TrackPoint(lastPoint.getCoordinate(), lastPoint.getSpeed(), newGpsDistance, newOdometerDistance);
     }
 
-    private Distance recalculateGpsDistanceLastSelectedPointThrowingRemaining() {
-        return recalculateDistanceLastSelectedPointThrowingRemaining(TrackPoint::getGpsDistance);
+    private Distance recalculateGpsDistance(final TrackPoint first, final TrackPoint second) {
+        return recalculateDistance(first, second, TrackPoint::getGpsDistance);
     }
 
-    private Distance recalculateOdometerDistanceLastSelectedPointThrowingRemaining() {
-        return recalculateDistanceLastSelectedPointThrowingRemaining(TrackPoint::getOdometerDistance);
+    private Distance recalculateOdometerDistance(final TrackPoint first, final TrackPoint second) {
+        return recalculateDistance(first, second, TrackPoint::getOdometerDistance);
     }
 
-    private Distance recalculateDistanceLastSelectedPointThrowingRemaining(final Function<TrackPoint, Distance> getter) {
-        final TrackPoint firstPoint = getFirstSelectedPoint();
-        final TrackPoint lastPoint = getLastSelectedPoint();
-        final Distance firstPointDistance = getter.apply(firstPoint);
-        final Distance lastPointDistance = getter.apply(lastPoint);
-        final double relative = lastPointDistance.getAbsolute() - firstPointDistance.getAbsolute() - firstPointDistance.getRelative();
-        return new Distance(relative, lastPointDistance.getAbsolute());
+    private Distance recalculateDistance(final TrackPoint first,
+                                         final TrackPoint second,
+                                         final Function<TrackPoint, Distance> getter) {
+        final Distance firstDistance = getter.apply(first);
+        final Distance secondDistance = getter.apply(second);
+        final double newRelative = secondDistance.getAbsolute() - firstDistance.getAbsolute();
+        return new Distance(newRelative, secondDistance.getAbsolute());
+    }
+
+    private TrackPoint getPointBeforeCursor() {
+        return points.get(cursor.start - 1);
     }
 
     private TrackPoint getFirstSelectedPoint() {
