@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public final class ClassifyingDistanceService {
     private final ClassifiedDistanceAccumulatorFactory distanceAccumulatorFactory;
-    private final ConnectingTrackPointIteratorFactory unionPointIteratorFactory;
+    private final ConnectingTrackPointIteratorFactory pointIteratorFactory;
 
     public ClassifiedDistanceStorage classify(final Track track, final int urbanSpeedThreshold) {
         final ClassifiedDistanceAccumulator accumulator = distanceAccumulatorFactory.create(track, urbanSpeedThreshold);
-        unionPointIteratorFactory.create(track).forEachRemaining(accumulator::accumulate);
+        pointIteratorFactory.create(track).forEachRemaining(accumulator::accumulate);
         return accumulator.get();
     }
 }

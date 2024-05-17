@@ -29,7 +29,7 @@ public final class ClassifyingDistanceServiceTest {
     private ClassifiedDistanceAccumulatorFactory mockedDistanceAccumulatorFactory;
 
     @Mock
-    private ConnectingTrackPointIteratorFactory mockedUnionPointIteratorFactory;
+    private ConnectingTrackPointIteratorFactory mockedPointIteratorFactory;
 
     private ClassifyingDistanceService service;
 
@@ -38,7 +38,7 @@ public final class ClassifyingDistanceServiceTest {
 
     @Before
     public void initializeService() {
-        service = new ClassifyingDistanceService(mockedDistanceAccumulatorFactory, mockedUnionPointIteratorFactory);
+        service = new ClassifyingDistanceService(mockedDistanceAccumulatorFactory, mockedPointIteratorFactory);
     }
 
     @Test
@@ -55,8 +55,8 @@ public final class ClassifyingDistanceServiceTest {
         when(mockedDistanceAccumulatorFactory.create(same(givenTrack), eq(givenUrbanSpeedThreshold)))
                 .thenReturn(givenAccumulator);
 
-        final var givenUnionPointIterator = createUnionPointIterator(firstGivenPoint, thirdGivenPoint);
-        when(mockedUnionPointIteratorFactory.create(same(givenTrack))).thenReturn(givenUnionPointIterator);
+        final ConnectingTrackPointIterator givenPointIterator = createPointIterator(firstGivenPoint, thirdGivenPoint);
+        when(mockedPointIteratorFactory.create(same(givenTrack))).thenReturn(givenPointIterator);
 
         final ClassifiedDistanceStorage givenStorage = mock(ClassifiedDistanceStorage.class);
         when(givenAccumulator.get()).thenReturn(givenStorage);
@@ -72,7 +72,7 @@ public final class ClassifyingDistanceServiceTest {
     }
 
     @SuppressWarnings("unchecked")
-    private ConnectingTrackPointIterator createUnionPointIterator(final TrackPoint first, final TrackPoint second) {
+    private ConnectingTrackPointIterator createPointIterator(final TrackPoint first, final TrackPoint second) {
         final ConnectingTrackPointIterator iterator = mock(ConnectingTrackPointIterator.class);
         doCallRealMethod().when(iterator).forEachRemaining(any(Consumer.class));
         when(iterator.hasNext()).thenReturn(true, true, false);
