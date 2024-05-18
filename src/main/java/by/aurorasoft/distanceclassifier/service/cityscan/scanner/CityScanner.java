@@ -8,7 +8,7 @@ import by.aurorasoft.distanceclassifier.service.cityscan.overpass.OverpassCityFa
 import by.aurorasoft.distanceclassifier.service.cityscan.overpass.OverpassClient;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Geometry;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
@@ -16,7 +16,7 @@ import java.util.Set;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class CityScanner {
     private final OverpassClient overpassClient;

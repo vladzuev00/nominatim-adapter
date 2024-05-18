@@ -2,7 +2,6 @@ package by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator;
 
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.connector.TrackPointConnector;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Iterator;
@@ -17,7 +16,7 @@ public final class ConnectingTrackPointIterator implements Iterator<TrackPoint> 
     private final TrackPointConnector pointConnector;
     private final List<TrackPoint> points;
     private final double pointMinGpsRelative;
-    private final PointSequenceCursor cursor = new PointSequenceCursor(0, 0);
+    private final PointSequenceCursor cursor = new PointSequenceCursor();
 
     @Override
     public boolean hasNext() {
@@ -39,7 +38,7 @@ public final class ConnectingTrackPointIterator implements Iterator<TrackPoint> 
     }
 
     private TrackPoint connectBoundarySequencePoints() {
-        if (cursor.end == cursor.start + 1) {
+        if (cursor.start == cursor.end || cursor.end == cursor.start + 1) {
             return points.get(cursor.end);
         }
         final TrackPoint first = points.get(cursor.start);
@@ -69,10 +68,11 @@ public final class ConnectingTrackPointIterator implements Iterator<TrackPoint> 
     }
 
     private void selectEndNextSequence() {
-        cursor.end = range(cursor.start, points.size())
+        final int newEnd = range(cursor.start, points.size())
                 .filter(i -> isSuitableGpsRelativeToBeSequence(cursor.start, i))
                 .findFirst()
                 .orElse(points.size() - 1);
+        cursor.end = newEnd == cursor.end ? newEnd + 1 : newEnd;
     }
 
     private boolean isSuitableGpsRelativeToBeSequence(final int fromIndex, final int toIndex) {
@@ -91,7 +91,6 @@ public final class ConnectingTrackPointIterator implements Iterator<TrackPoint> 
         cursor.end = points.size();
     }
 
-    @AllArgsConstructor
     private static final class PointSequenceCursor {
         private int start;
         private int end;
