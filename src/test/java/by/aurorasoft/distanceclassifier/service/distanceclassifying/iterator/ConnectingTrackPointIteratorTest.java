@@ -1,7 +1,7 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator;
 
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.pointconnector.TrackPointConnector;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.pointreplacer.TrackPointReplacer;
 import by.nhorushko.classifieddistance.Distance;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 public final class ConnectingTrackPointIteratorTest {
 
     @Mock
-    private TrackPointConnector mockedPointConnector;
+    private TrackPointReplacer mockedPointConnector;
 
     @Test
     public void pointsShouldBeIterated() {
@@ -130,6 +130,6 @@ public final class ConnectingTrackPointIteratorTest {
     }
 
     private void mockConnectionResult(final TrackPoint first, final TrackPoint second, final TrackPoint result) {
-        when(mockedPointConnector.connect(same(first), same(second))).thenReturn(result);
+        when(mockedPointConnector.replace(same(first), same(second))).thenReturn(result);
     }
 }

@@ -4,7 +4,7 @@ import by.aurorasoft.distanceclassifier.config.property.ClassifyingDistancePrope
 import by.aurorasoft.distanceclassifier.model.Track;
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.ConnectingTrackPointIterator;
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.pointconnector.TrackPointConnector;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.pointreplacer.TrackPointReplacer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +26,7 @@ public final class ConnectingTrackPointIteratorFactoryTest {
     private static final String FIELD_NAME_POINT_MIN_GPS_RELATIVE = "pointMinGpsRelative";
 
     @Mock
-    private TrackPointConnector mockedPointConnector;
+    private TrackPointReplacer mockedPointConnector;
 
     @Mock
     private ClassifyingDistanceProperty mockedProperty;
@@ -51,7 +51,7 @@ public final class ConnectingTrackPointIteratorFactoryTest {
 
         final ConnectingTrackPointIterator actual = factory.create(givenTrack);
 
-        final TrackPointConnector actualPointConnector = getPointConnector(actual);
+        final TrackPointReplacer actualPointConnector = getPointConnector(actual);
         assertSame(mockedPointConnector, actualPointConnector);
 
         final List<TrackPoint> actualPoints = getPoints(actual);
@@ -61,8 +61,8 @@ public final class ConnectingTrackPointIteratorFactoryTest {
         assertEquals(givenPointMinGpsRelative, actualPointMinGpsRelative, 0.);
     }
 
-    private TrackPointConnector getPointConnector(final ConnectingTrackPointIterator iterator) {
-        return getFieldValue(iterator, FIELD_NAME_POINT_CONNECTOR, TrackPointConnector.class);
+    private TrackPointReplacer getPointConnector(final ConnectingTrackPointIterator iterator) {
+        return getFieldValue(iterator, FIELD_NAME_POINT_CONNECTOR, TrackPointReplacer.class);
     }
 
     @SuppressWarnings("unchecked")
