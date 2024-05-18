@@ -68,11 +68,11 @@ public final class ConnectingTrackPointIterator implements Iterator<TrackPoint> 
     }
 
     private void selectEndNextSequence() {
-        final int newEnd = range(cursor.start, points.size())
-                .filter(i -> isSuitableGpsRelativeToBeSequence(cursor.start, i))
+        final int endNextSequence = range(cursor.end, points.size())
+                .filter(i -> isSuitableGpsRelativeToBeSequence(cursor.end, i))
                 .findFirst()
                 .orElse(points.size() - 1);
-        cursor.end = newEnd == cursor.end ? newEnd + 1 : newEnd;
+        cursor.end = endNextSequence == cursor.end ? endNextSequence + 1 : endNextSequence;
     }
 
     private boolean isSuitableGpsRelativeToBeSequence(final int fromIndex, final int toIndex) {

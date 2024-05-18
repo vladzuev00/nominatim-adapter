@@ -1,4 +1,4 @@
-package by.aurorasoft.distanceclassifier.it.citycrud;
+package by.aurorasoft.distanceclassifier.it.citycontroller;
 
 import by.aurorasoft.distanceclassifier.it.base.AbstractIT;
 import org.junit.Test;
