@@ -27,9 +27,9 @@ public final class SkippingTrackPointIterator implements Iterator<TrackPoint> {
     @Override
     public TrackPoint next() {
         checkNext();
-        final TrackPoint point = connectBoundarySequencePoints();
+        final TrackPoint sequenceLastPoint = replaceSequenceByLastPoint();
         trySelectNextSequence();
-        return point;
+        return sequenceLastPoint;
     }
 
     private void checkNext() {
@@ -38,25 +38,26 @@ public final class SkippingTrackPointIterator implements Iterator<TrackPoint> {
         }
     }
 
-    private TrackPoint connectBoundarySequencePoints() {
-        if (cursor.start == cursor.end || cursor.end == cursor.start + 1) {
-            return points.get(cursor.end);
-        }
+    private TrackPoint replaceSequenceByLastPoint() {
         final TrackPoint first = points.get(cursor.start);
-        final TrackPoint last = points.get(cursor.end);
-        return pointReplacer.replace(first, last);
+        final TrackPoint last = points.get(cursor.end - 1);
+        return !isSequenceContainOnePoint() ? pointReplacer.replace(first, last) : first;
+    }
+
+    private boolean isSequenceContainOnePoint() {
+        return cursor.start == cursor.end - 1;
     }
 
     private void trySelectNextSequence() {
-        if (!isNoMoreSequences()) {
+        if (hasNextSequence()) {
             selectNextSequence();
         } else {
             shiftCursorToEnd();
         }
     }
 
-    private boolean isNoMoreSequences() {
-        return cursor.end == points.size() - 1;
+    private boolean hasNextSequence() {
+        return cursor.end != points.size();
     }
 
     private void selectNextSequence() {
@@ -69,15 +70,14 @@ public final class SkippingTrackPointIterator implements Iterator<TrackPoint> {
     }
 
     private void selectEndNextSequence() {
-        final int endNextSequence = range(cursor.end, points.size())
+        cursor.end = range(cursor.end, points.size())
                 .filter(i -> isSuitableGpsRelativeToBeSequence(cursor.end, i))
                 .findFirst()
-                .orElse(points.size() - 1);
-        cursor.end = endNextSequence == cursor.end ? endNextSequence + 1 : endNextSequence;
+                .orElse(points.size() - 1) + 1;
     }
 
     private boolean isSuitableGpsRelativeToBeSequence(final int fromIndex, final int toIndex) {
-        final double gpsRelative = getPointGpsAbsolute(toIndex) - getPointGpsAbsolute(fromIndex);
+        final double gpsRelative = getPointGpsAbsolute(toIndex) - getPointGpsAbsolute(fromIndex - 1);
         return compare(gpsRelative, pointMinGpsRelative) >= 0;
     }
 

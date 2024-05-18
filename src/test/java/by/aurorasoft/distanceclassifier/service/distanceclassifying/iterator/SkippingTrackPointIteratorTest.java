@@ -17,10 +17,10 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public final class ConnectingTrackPointIteratorTest {
+public final class SkippingTrackPointIteratorTest {
 
     @Mock
-    private TrackPointReplacer mockedPointConnector;
+    private TrackPointReplacer mockedPointReplacer;
 
     @Test
     public void pointsShouldBeIterated() {
@@ -52,24 +52,24 @@ public final class ConnectingTrackPointIteratorTest {
                 twelfthGivenPoint
         );
 
-        final TrackPoint secondConnectionGivenResult = createPoint(new Distance(130, 130), new Distance(150, 150));
-        final TrackPoint thirdConnectionGivenResult = createPoint(new Distance(90, 220), new Distance(120, 270));
-        final TrackPoint fourthConnectionGivenResult = createPoint(new Distance(260, 480), new Distance(290, 560));
-        final TrackPoint fifthConnectionGivenResult = createPoint(new Distance(50, 730), new Distance(70, 840));
+        final TrackPoint firstGivenReplacement = createPoint(new Distance(130, 130), new Distance(150, 150));
+        final TrackPoint secondGivenReplacement = createPoint(new Distance(90, 220), new Distance(120, 270));
+        final TrackPoint thirdGivenReplacement = createPoint(new Distance(260, 480), new Distance(290, 560));
+        final TrackPoint fourthGivenReplacement = createPoint(new Distance(50, 730), new Distance(70, 840));
 
-        mockConnectionResult(firstGivenPoint, thirdGivenPoint, secondConnectionGivenResult);
-        mockConnectionResult(thirdGivenPoint, sixthGivenPoint, thirdConnectionGivenResult);
-        mockConnectionResult(sixthGivenPoint, ninthGivenPoint, fourthConnectionGivenResult);
-        mockConnectionResult(tenthGivenPoint, twelfthGivenPoint, fifthConnectionGivenResult);
+        mockReplacement(secondGivenPoint, thirdGivenPoint, firstGivenReplacement);
+        mockReplacement(fourthGivenPoint, sixthGivenPoint, secondGivenReplacement);
+        mockReplacement(seventhGivenPoint, ninthGivenPoint, thirdGivenReplacement);
+        mockReplacement(eleventhGivenPoint, twelfthGivenPoint, fourthGivenReplacement);
 
         final List<TrackPoint> actual = toList(givenIterator);
         final List<TrackPoint> expected = List.of(
                 firstGivenPoint,
-                secondConnectionGivenResult,
-                thirdConnectionGivenResult,
-                fourthConnectionGivenResult,
+                firstGivenReplacement,
+                secondGivenReplacement,
+                thirdGivenReplacement,
                 tenthGivenPoint,
-                fifthConnectionGivenResult
+                fourthGivenReplacement
         );
         assertEquals(expected, actual);
     }
@@ -92,7 +92,7 @@ public final class ConnectingTrackPointIteratorTest {
         final List<TrackPoint> expected = List.of(firstGivenPoint, secondGivenPoint, thirdGivenPoint, fourthGivenPoint);
         assertEquals(expected, actual);
 
-        verifyNoMoreInteractions(mockedPointConnector);
+        verifyNoMoreInteractions(mockedPointReplacer);
     }
 
     @Test
@@ -109,12 +109,12 @@ public final class ConnectingTrackPointIteratorTest {
                 fourthGivenPoint
         );
 
-        final TrackPoint secondConnectionGivenResult = createPoint(new Distance(170, 170), new Distance(200, 200));
+        final TrackPoint givenReplacement = createPoint(new Distance(170, 170), new Distance(200, 200));
 
-        mockConnectionResult(firstGivenPoint, fourthGivenPoint, secondConnectionGivenResult);
+        mockReplacement(secondGivenPoint, fourthGivenPoint, givenReplacement);
 
         final List<TrackPoint> actual = toList(givenIterator);
-        final List<TrackPoint> expected = List.of(firstGivenPoint, secondConnectionGivenResult);
+        final List<TrackPoint> expected = List.of(firstGivenPoint, givenReplacement);
         assertEquals(expected, actual);
     }
 
@@ -126,10 +126,10 @@ public final class ConnectingTrackPointIteratorTest {
     }
 
     private SkippingTrackPointIterator createIterator(final int pointMinGpsRelative, final TrackPoint... points) {
-        return new SkippingTrackPointIterator(mockedPointConnector, List.of(points), pointMinGpsRelative);
+        return new SkippingTrackPointIterator(mockedPointReplacer, List.of(points), pointMinGpsRelative);
     }
 
-    private void mockConnectionResult(final TrackPoint first, final TrackPoint second, final TrackPoint result) {
-        when(mockedPointConnector.replace(same(first), same(second))).thenReturn(result);
+    private void mockReplacement(final TrackPoint first, final TrackPoint second, final TrackPoint result) {
+        when(mockedPointReplacer.replace(same(first), same(second))).thenReturn(result);
     }
 }
