@@ -12,11 +12,9 @@ import org.locationtech.jts.geom.Polygon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static by.aurorasoft.distanceclassifier.testutil.IdUtil.mapToIds;
 import static java.util.stream.Collectors.toUnmodifiableSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -30,18 +28,21 @@ public final class CityServiceTest extends AbstractSpringBootTest {
     private GeometryFactory geometryFactory;
 
     @Test
-    public void allCitiesShouldBeFound() {
-        final List<City> actual = service.findAll();
-        final List<Long> actualIds = mapToIds(actual);
-        final List<Long> expectedIds = List.of(255L, 256L, 257L, 258L);
-        assertEquals(expectedIds, actualIds);
+    public void citiesShouldBeStreamedAll() {
+        try (final Stream<City> stream = service.streamAll()) {
+            final Set<Long> actualIds = stream.map(City::getId).collect(toUnmodifiableSet());
+            final Set<Long> expectedIds = Set.of(255L, 256L, 257L, 258L);
+            assertEquals(expectedIds, actualIds);
+        }
     }
 
     @Test
     @Sql(statements = "DELETE FROM city")
-    public void allCitiesShouldNotBeFound() {
-        final List<City> actual = service.findAll();
-        assertTrue(actual.isEmpty());
+    public void citiesShouldNotBeStreamedAll() {
+        try (final Stream<City> stream = service.streamAll()) {
+            final boolean empty = stream.findAny().isEmpty();
+            assertTrue(empty);
+        }
     }
 
     @Test

@@ -11,7 +11,6 @@ import org.locationtech.jts.geom.LineString;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -26,9 +25,8 @@ public class CityService extends AbsServiceCRUD<Long, CityEntity, City, CityRepo
     }
 
     @Transactional(readOnly = true)
-    public List<City> findAll() {
-        final List<CityEntity> entities = repository.findAll();
-        return mapper.toDtos(entities);
+    public Stream<City> streamAll() {
+        return repository.streamAll().map(mapper::toDto);
     }
 
     @Transactional(readOnly = true)
