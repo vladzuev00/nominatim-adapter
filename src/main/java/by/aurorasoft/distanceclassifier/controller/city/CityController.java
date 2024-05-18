@@ -16,7 +16,6 @@ import org.wololo.geojson.FeatureCollection;
 
 import javax.validation.constraints.Min;
 
-import static by.aurorasoft.distanceclassifier.util.PageRequestUtil.createRequestSortingById;
 import static org.springframework.http.ResponseEntity.ok;
 
 //TODO: remove pagination, return FeatureCollection

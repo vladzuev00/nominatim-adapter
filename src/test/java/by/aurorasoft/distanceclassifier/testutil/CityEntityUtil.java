@@ -23,6 +23,11 @@ public final class CityEntityUtil {
         checkEquals(expected.getGeometry(), actual.getGeometry());
     }
 
+    public static void checkEquals(final List<CityEntity> expected, final List<CityEntity> actual) {
+        assertEquals(expected.size(), actual.size());
+        range(0, expected.size()).forEach(i -> checkEquals(expected.get(i), actual.get(i)));
+    }
+
     public static void checkEqualsExceptId(final List<CityEntity> expected, final List<CityEntity> actual) {
         assertEquals(expected.size(), actual.size());
         range(0, expected.size()).forEach(i -> checkEqualsExceptId(expected.get(i), actual.get(i)));

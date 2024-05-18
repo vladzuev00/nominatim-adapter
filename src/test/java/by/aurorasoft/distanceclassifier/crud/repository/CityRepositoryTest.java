@@ -11,6 +11,7 @@ import org.locationtech.jts.geom.Polygon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -18,6 +19,7 @@ import java.util.stream.Stream;
 import static by.aurorasoft.distanceclassifier.model.CityType.CAPITAL;
 import static by.aurorasoft.distanceclassifier.model.CityType.CITY;
 import static by.aurorasoft.distanceclassifier.testutil.CityEntityUtil.checkEquals;
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toUnmodifiableSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -70,6 +72,50 @@ public final class CityRepositoryTest extends AbstractSpringBootTest {
         startQueryCount();
         repository.save(givenCity);
         checkQueryCount(2);
+    }
+
+    @Test
+    @Sql(statements = "DELETE FROM city WHERE id NOT IN (255, 256)")
+    public void citiesShouldBeStreamedAll() {
+        startQueryCount();
+        try (final Stream<CityEntity> stream = repository.streamAll()) {
+            checkQueryCount(1);
+
+            final List<CityEntity> actual = stream.sorted(comparing(CityEntity::getId)).toList();
+            final List<CityEntity> expected = List.of(
+                    new CityEntity(
+                            255L,
+                            "First",
+                            CAPITAL,
+                            new CityGeometry(
+                                    createPolygon("POLYGON((3 2, 2.5 5, 6 5, 5 3, 3 2))"),
+                                    createPolygon("POLYGON((2.5 2, 2.5 5, 6 5, 6 2, 2.5 2))")
+                            )
+                    ),
+                    new CityEntity(
+                            256L,
+                            "Second",
+                            CITY,
+                            new CityGeometry(
+                                    createPolygon("POLYGON((4 7.5, 4 8, 5 10.5, 7.5 11.5, 6.5 8.5, 4 7.5))"),
+                                    createPolygon("POLYGON((4 7.5, 4 11.5, 7.5 11.5, 7.5 7.5, 4 7.5))")
+                            )
+                    )
+            );
+            checkEquals(expected, actual);
+        }
+    }
+
+    @Test
+    @Sql(statements = "DELETE FROM city")
+    public void citiesShouldNotBeStreamedAll() {
+        startQueryCount();
+        try (final Stream<CityEntity> stream = repository.streamAll()) {
+            checkQueryCount(1);
+
+            final boolean empty = stream.findAny().isEmpty();
+            assertTrue(empty);
+        }
     }
 
     @Test

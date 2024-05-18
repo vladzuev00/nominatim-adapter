@@ -10,6 +10,9 @@ import java.util.stream.Stream;
 
 public interface CityRepository extends JpaRepository<CityEntity, Long> {
 
+    @Query("SELECT e FROM CityEntity e")
+    Stream<CityEntity> streamAll();
+
     @Query("SELECT e.geometry FROM CityEntity e")
     Stream<CityGeometry> findGeometries();
 
