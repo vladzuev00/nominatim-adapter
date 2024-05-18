@@ -10,10 +10,9 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.Polygon;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -32,16 +31,16 @@ public final class CityServiceTest extends AbstractSpringBootTest {
 
     @Test
     public void allCitiesShouldBeFound() {
-        final Page<City> actual = service.findAll(PageRequest.of(0, 3));
-        final Set<Long> actualIds = mapToIds(actual);
-        final Set<Long> expectedIds = Set.of(255L, 256L, 257L);
+        final List<City> actual = service.findAll();
+        final List<Long> actualIds = mapToIds(actual);
+        final List<Long> expectedIds = List.of(255L, 256L, 257L, 258L);
         assertEquals(expectedIds, actualIds);
     }
 
     @Test
     @Sql(statements = "DELETE FROM city")
     public void allCitiesShouldNotBeFound() {
-        final Page<City> actual = service.findAll(PageRequest.of(0, 3));
+        final List<City> actual = service.findAll();
         assertTrue(actual.isEmpty());
     }
 

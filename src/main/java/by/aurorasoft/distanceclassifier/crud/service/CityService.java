@@ -8,11 +8,10 @@ import by.aurorasoft.distanceclassifier.crud.repository.CityRepository;
 import by.nhorushko.crudgeneric.v2.service.AbsServiceCRUD;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.LineString;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -27,8 +26,9 @@ public class CityService extends AbsServiceCRUD<Long, CityEntity, City, CityRepo
     }
 
     @Transactional(readOnly = true)
-    public Page<City> findAll(final Pageable pageable) {
-        return repository.findAll(pageable).map(mapper::toDto);
+    public List<City> findAll() {
+        final List<CityEntity> entities = repository.findAll();
+        return mapper.toDtos(entities);
     }
 
     @Transactional(readOnly = true)

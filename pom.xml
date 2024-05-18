@@ -29,7 +29,6 @@
     <com.yannbriancon.version>2.0.0</com.yannbriancon.version>
     <liquibase.version>4.8.0</liquibase.version>
     <springdoc-openapi.version>1.6.4</springdoc-openapi.version>
-    <hibernate-spatial.version>6.4.7.Final</hibernate-spatial.version>
     <jmh.version>1.37</jmh.version>
     <imageLabel>DEV</imageLabel>
   </properties>
@@ -92,7 +91,6 @@
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-spatial</artifactId>
-<!--      <version>${hibernate-spatial.version}</version>-->
     </dependency>
 
     <dependency>

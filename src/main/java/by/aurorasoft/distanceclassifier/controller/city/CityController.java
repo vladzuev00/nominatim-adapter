@@ -12,12 +12,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.wololo.geojson.FeatureCollection;
 
 import javax.validation.constraints.Min;
 
 import static by.aurorasoft.distanceclassifier.util.PageRequestUtil.createRequestSortingById;
 import static org.springframework.http.ResponseEntity.ok;
 
+//TODO: remove pagination, return FeatureCollection
 @Validated
 @RestController
 @RequestMapping("/api/v1/city")
@@ -29,8 +31,9 @@ public class CityController {
     @GetMapping
     public ResponseEntity<Page<CityResponse>> findAll(@RequestParam(name = "pageNumber") @Min(0) final int pageNumber,
                                                       @RequestParam(name = "pageSize") @Min(1) final int pageSize) {
-        final PageRequest request = createRequestSortingById(pageNumber, pageSize);
-        final Page<CityResponse> page = cityService.findAll(request).map(responseFactory::create);
-        return ok(page);
+        return null;
+//        final PageRequest request = createRequestSortingById(pageNumber, pageSize);
+//        final Page<CityResponse> page = cityService.findAll(request).map(responseFactory::create);
+//        return ok(page);
     }
 }
