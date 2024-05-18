@@ -1,7 +1,7 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator;
 
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.connector.TrackPointConnector;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.pointconnector.TrackPointConnector;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Iterator;

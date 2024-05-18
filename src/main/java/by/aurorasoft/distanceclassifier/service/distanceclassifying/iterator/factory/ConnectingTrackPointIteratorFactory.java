@@ -3,7 +3,7 @@ package by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.fa
 import by.aurorasoft.distanceclassifier.config.property.ClassifyingDistanceProperty;
 import by.aurorasoft.distanceclassifier.model.Track;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.ConnectingTrackPointIterator;
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.connector.TrackPointConnector;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.pointconnector.TrackPointConnector;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,4 @@
-package by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.connector;
+package by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.pointconnector;
 
 import by.aurorasoft.distanceclassifier.model.Coordinate;
 import by.aurorasoft.distanceclassifier.model.TrackPoint;

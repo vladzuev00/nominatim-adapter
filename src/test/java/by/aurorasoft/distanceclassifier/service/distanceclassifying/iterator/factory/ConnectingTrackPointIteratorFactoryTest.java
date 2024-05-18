@@ -4,7 +4,7 @@ import by.aurorasoft.distanceclassifier.config.property.ClassifyingDistancePrope
 import by.aurorasoft.distanceclassifier.model.Track;
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.ConnectingTrackPointIterator;
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.connector.TrackPointConnector;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.pointconnector.TrackPointConnector;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
