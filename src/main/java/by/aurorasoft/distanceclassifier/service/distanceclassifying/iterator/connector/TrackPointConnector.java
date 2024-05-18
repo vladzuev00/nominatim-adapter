@@ -4,21 +4,12 @@ import by.aurorasoft.distanceclassifier.model.TrackPoint;
 import by.nhorushko.classifieddistance.Distance;
 import org.springframework.stereotype.Component;
 
-import java.util.Objects;
 import java.util.function.Function;
 
 @Component
 public final class TrackPointConnector {
 
     public TrackPoint connect(final TrackPoint first, final TrackPoint second) {
-        return !isSamePoint(first, second) ? connectDifferentPoints(first, second) : second;
-    }
-
-    private boolean isSamePoint(final TrackPoint first, final TrackPoint second) {
-        return first == second || Objects.equals(first.getCoordinate(), second.getCoordinate());
-    }
-
-    private TrackPoint connectDifferentPoints(final TrackPoint first, final TrackPoint second) {
         final Distance newGpsDistance = recalculateGpsDistance(first, second);
         final Distance newOdometerDistance = recalculateOdometerDistance(first, second);
         return new TrackPoint(second.getCoordinate(), second.getSpeed(), newGpsDistance, newOdometerDistance);
