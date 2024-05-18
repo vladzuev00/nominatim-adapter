@@ -17,7 +17,7 @@ public final class ConnectingTrackPointIterator implements Iterator<TrackPoint> 
     private final TrackPointConnector pointConnector;
     private final List<TrackPoint> points;
     private final double pointMinGpsRelative;
-    private final PointSequenceCursor cursor = new PointSequenceCursor(0, 1);
+    private final PointSequenceCursor cursor = new PointSequenceCursor(0, 0);
 
     @Override
     public boolean hasNext() {
@@ -39,6 +39,9 @@ public final class ConnectingTrackPointIterator implements Iterator<TrackPoint> 
     }
 
     private TrackPoint connectBoundarySequencePoints() {
+        if (cursor.end == cursor.start + 1) {
+            return points.get(cursor.end);
+        }
         final TrackPoint first = points.get(cursor.start);
         final TrackPoint last = points.get(cursor.end);
         return pointConnector.connect(first, last);

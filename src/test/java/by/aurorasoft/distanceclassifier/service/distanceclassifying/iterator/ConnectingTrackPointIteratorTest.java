@@ -54,15 +54,13 @@ public final class ConnectingTrackPointIteratorTest {
         final TrackPoint secondConnectionGivenResult = createPoint(new Distance(130, 130), new Distance(150, 150));
         final TrackPoint thirdConnectionGivenResult = createPoint(new Distance(90, 220), new Distance(120, 270));
         final TrackPoint fourthConnectionGivenResult = createPoint(new Distance(260, 480), new Distance(290, 560));
-        final TrackPoint fifthConnectionGivenResult = createPoint(new Distance(200, 680), new Distance(210, 770));
-        final TrackPoint sixthConnectionGivenResult = createPoint(new Distance(50, 730), new Distance(70, 840));
+        final TrackPoint fifthConnectionGivenResult = createPoint(new Distance(50, 730), new Distance(70, 840));
 
         mockConnectionResult(firstGivenPoint, firstGivenPoint, firstGivenPoint);
         mockConnectionResult(firstGivenPoint, thirdGivenPoint, secondConnectionGivenResult);
         mockConnectionResult(thirdGivenPoint, sixthGivenPoint, thirdConnectionGivenResult);
         mockConnectionResult(sixthGivenPoint, ninthGivenPoint, fourthConnectionGivenResult);
-        mockConnectionResult(ninthGivenPoint, tenthGivenPoint, fifthConnectionGivenResult);
-        mockConnectionResult(tenthGivenPoint, twelfthGivenPoint, sixthConnectionGivenResult);
+        mockConnectionResult(tenthGivenPoint, twelfthGivenPoint, fifthConnectionGivenResult);
 
         final List<TrackPoint> actual = toList(givenIterator);
         final List<TrackPoint> expected = List.of(
@@ -70,8 +68,8 @@ public final class ConnectingTrackPointIteratorTest {
                 secondConnectionGivenResult,
                 thirdConnectionGivenResult,
                 fourthConnectionGivenResult,
-                fifthConnectionGivenResult,
-                sixthConnectionGivenResult
+                tenthGivenPoint,
+                fifthConnectionGivenResult
         );
         assertEquals(expected, actual);
     }
