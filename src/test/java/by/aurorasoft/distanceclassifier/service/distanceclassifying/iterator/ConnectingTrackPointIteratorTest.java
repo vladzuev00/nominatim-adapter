@@ -36,7 +36,7 @@ public final class ConnectingTrackPointIteratorTest {
         final TrackPoint tenthGivenPoint = createPoint(new Distance(200, 680), new Distance(210, 770));
         final TrackPoint eleventhGivenPoint = createPoint(new Distance(20, 700), new Distance(30, 800));
         final TrackPoint twelfthGivenPoint = createPoint(new Distance(30, 730), new Distance(40, 840));
-        final ConnectingTrackPointIterator givenIterator = createIterator(
+        final SkippingTrackPointIterator givenIterator = createIterator(
                 75,
                 firstGivenPoint,
                 secondGivenPoint,
@@ -80,7 +80,7 @@ public final class ConnectingTrackPointIteratorTest {
         final TrackPoint secondGivenPoint = createPoint(new Distance(50, 50), new Distance(60, 60));
         final TrackPoint thirdGivenPoint = createPoint(new Distance(80, 130), new Distance(90, 150));
         final TrackPoint fourthGivenPoint = createPoint(new Distance(40, 170), new Distance(50, 200));
-        final ConnectingTrackPointIterator givenIterator = createIterator(
+        final SkippingTrackPointIterator givenIterator = createIterator(
                 0,
                 firstGivenPoint,
                 secondGivenPoint,
@@ -101,7 +101,7 @@ public final class ConnectingTrackPointIteratorTest {
         final TrackPoint secondGivenPoint = createPoint(new Distance(50, 50), new Distance(60, 60));
         final TrackPoint thirdGivenPoint = createPoint(new Distance(80, 130), new Distance(90, 150));
         final TrackPoint fourthGivenPoint = createPoint(new Distance(40, 170), new Distance(50, 200));
-        final ConnectingTrackPointIterator givenIterator = createIterator(
+        final SkippingTrackPointIterator givenIterator = createIterator(
                 180,
                 firstGivenPoint,
                 secondGivenPoint,
@@ -125,8 +125,8 @@ public final class ConnectingTrackPointIteratorTest {
                 .build();
     }
 
-    private ConnectingTrackPointIterator createIterator(final int pointMinGpsRelative, final TrackPoint... points) {
-        return new ConnectingTrackPointIterator(mockedPointConnector, List.of(points), pointMinGpsRelative);
+    private SkippingTrackPointIterator createIterator(final int pointMinGpsRelative, final TrackPoint... points) {
+        return new SkippingTrackPointIterator(mockedPointConnector, List.of(points), pointMinGpsRelative);
     }
 
     private void mockConnectionResult(final TrackPoint first, final TrackPoint second, final TrackPoint result) {

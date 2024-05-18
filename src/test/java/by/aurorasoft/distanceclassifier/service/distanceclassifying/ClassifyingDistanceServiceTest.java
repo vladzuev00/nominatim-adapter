@@ -4,8 +4,8 @@ import by.aurorasoft.distanceclassifier.model.Track;
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.accumulator.ClassifiedDistanceAccumulator;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.accumulator.ClassifiedDistanceAccumulatorFactory;
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.ConnectingTrackPointIterator;
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.factory.ConnectingTrackPointIteratorFactory;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.SkippingTrackPointIterator;
+import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.factory.SkippingTrackPointIteratorFactory;
 import by.nhorushko.classifieddistance.ClassifiedDistanceStorage;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +29,7 @@ public final class ClassifyingDistanceServiceTest {
     private ClassifiedDistanceAccumulatorFactory mockedDistanceAccumulatorFactory;
 
     @Mock
-    private ConnectingTrackPointIteratorFactory mockedPointIteratorFactory;
+    private SkippingTrackPointIteratorFactory mockedPointIteratorFactory;
 
     private ClassifyingDistanceService service;
 
@@ -55,7 +55,7 @@ public final class ClassifyingDistanceServiceTest {
         when(mockedDistanceAccumulatorFactory.create(same(givenTrack), eq(givenUrbanSpeedThreshold)))
                 .thenReturn(givenAccumulator);
 
-        final ConnectingTrackPointIterator givenPointIterator = createPointIterator(firstGivenPoint, thirdGivenPoint);
+        final SkippingTrackPointIterator givenPointIterator = createPointIterator(firstGivenPoint, thirdGivenPoint);
         when(mockedPointIteratorFactory.create(same(givenTrack))).thenReturn(givenPointIterator);
 
         final ClassifiedDistanceStorage givenStorage = mock(ClassifiedDistanceStorage.class);
@@ -72,8 +72,8 @@ public final class ClassifyingDistanceServiceTest {
     }
 
     @SuppressWarnings("unchecked")
-    private ConnectingTrackPointIterator createPointIterator(final TrackPoint first, final TrackPoint second) {
-        final ConnectingTrackPointIterator iterator = mock(ConnectingTrackPointIterator.class);
+    private SkippingTrackPointIterator createPointIterator(final TrackPoint first, final TrackPoint second) {
+        final SkippingTrackPointIterator iterator = mock(SkippingTrackPointIterator.class);
         doCallRealMethod().when(iterator).forEachRemaining(any(Consumer.class));
         when(iterator.hasNext()).thenReturn(true, true, false);
         when(iterator.next()).thenReturn(first, second);

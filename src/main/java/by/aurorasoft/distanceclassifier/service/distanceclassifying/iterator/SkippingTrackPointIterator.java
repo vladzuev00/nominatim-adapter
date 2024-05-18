@@ -13,8 +13,8 @@ import static java.lang.Double.compare;
 import static java.util.stream.IntStream.range;
 
 @RequiredArgsConstructor
-public final class ConnectingTrackPointIterator implements Iterator<TrackPoint> {
-    private final TrackPointReplacer pointConnector;
+public final class SkippingTrackPointIterator implements Iterator<TrackPoint> {
+    private final TrackPointReplacer pointReplacer;
     private final List<TrackPoint> points;
     private final double pointMinGpsRelative;
     private final PointSequenceCursor cursor = new PointSequenceCursor(0, 1);
@@ -44,7 +44,7 @@ public final class ConnectingTrackPointIterator implements Iterator<TrackPoint> 
         }
         final TrackPoint first = points.get(cursor.start);
         final TrackPoint last = points.get(cursor.end);
-        return pointConnector.replace(first, last);
+        return pointReplacer.replace(first, last);
     }
 
     private void trySelectNextSequence() {
