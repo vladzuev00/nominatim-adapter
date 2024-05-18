@@ -41,7 +41,7 @@ public final class SkippingTrackPointIterator implements Iterator<TrackPoint> {
     private TrackPoint replaceSequenceByLastPoint() {
         final TrackPoint first = points.get(cursor.start);
         final TrackPoint last = points.get(cursor.end - 1);
-        return !isSequenceContainOnePoint() ? pointReplacer.replace(first, last) : first;
+        return !isSequenceContainOnePoint() ? pointReplacer.replace(first, last) : last;
     }
 
     private boolean isSequenceContainOnePoint() {
