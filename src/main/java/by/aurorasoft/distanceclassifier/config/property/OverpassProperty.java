@@ -20,5 +20,5 @@ public final class OverpassProperty {
 
     @NotNull
     @Positive
-    private final int timeout;
+    private final Integer timeout;
 }
