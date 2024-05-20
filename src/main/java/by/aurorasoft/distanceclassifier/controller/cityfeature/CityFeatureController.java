@@ -1,4 +1,4 @@
-package by.aurorasoft.distanceclassifier.controller.city;
+package by.aurorasoft.distanceclassifier.controller.cityfeature;
 
 import by.aurorasoft.distanceclassifier.service.cityfeature.CityFeatureService;
 import lombok.RequiredArgsConstructor;
