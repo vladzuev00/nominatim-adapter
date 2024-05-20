@@ -29,6 +29,7 @@ public final class HttpUtil {
         return getExpectingStatus(restTemplate, url, responseType, OK);
     }
 
+    @SuppressWarnings("unused")
     public static <R> R getExpectingNotAcceptable(final TestRestTemplate restTemplate,
                                                   final String url,
                                                   final Class<R> responseType) {
