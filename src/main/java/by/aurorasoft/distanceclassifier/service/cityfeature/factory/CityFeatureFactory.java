@@ -1,4 +1,4 @@
-package by.aurorasoft.distanceclassifier.service.cityfeaturesupply.factory;
+package by.aurorasoft.distanceclassifier.service.cityfeature.factory;
 
 import by.aurorasoft.distanceclassifier.crud.model.dto.City;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +12,9 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 public final class CityFeatureFactory {
-    private static final String PROPERTY_KEY_ID = "id";
-    private static final String PROPERTY_KEY_NAME = "name";
-    private static final String PROPERTY_KEY_TYPE = "cityType";
+    static final String PROPERTY_KEY_ID = "id";
+    static final String PROPERTY_KEY_NAME = "name";
+    static final String PROPERTY_KEY_TYPE = "cityType";
 
     private final GeoJSONWriter geoJSONWriter;
 

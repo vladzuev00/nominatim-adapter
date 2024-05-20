@@ -1,4 +1,4 @@
-package by.aurorasoft.distanceclassifier.service.cityfeaturesupply;
+package by.aurorasoft.distanceclassifier.service.cityfeature;
 
 import by.aurorasoft.distanceclassifier.crud.service.CityService;
 import lombok.RequiredArgsConstructor;
@@ -7,10 +7,10 @@ import org.wololo.geojson.FeatureCollection;
 
 @Service
 @RequiredArgsConstructor
-public final class CityFeatureSupplyingService {
+public final class CityFeatureService {
     private final CityService cityService;
 
-    public FeatureCollection get() {
+    public FeatureCollection getAll() {
         final FeatureCollection collection = new FeatureCollection(null);
         cityService.streamAll();
         return null;
