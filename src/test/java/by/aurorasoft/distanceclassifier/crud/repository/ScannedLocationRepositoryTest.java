@@ -83,6 +83,6 @@ public final class ScannedLocationRepositoryTest extends AbstractSpringBootTest 
 
     @SuppressWarnings("SameParameterValue")
     private MultiPolygon createMultiPolygon(final String text) {
-        return GeometryUtil.createMultipolygon(text, geometryFactory);
+        return GeometryUtil.createMultiPolygon(text, geometryFactory);
     }
 }

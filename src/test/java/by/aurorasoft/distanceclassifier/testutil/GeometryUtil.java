@@ -31,7 +31,7 @@ public final class GeometryUtil {
         return createGeometry(text, factory, LineString.class);
     }
 
-    public static MultiPolygon createMultipolygon(final String text, final GeometryFactory factory) {
+    public static MultiPolygon createMultiPolygon(final String text, final GeometryFactory factory) {
         return createGeometry(text, factory, MultiPolygon.class);
     }
 
