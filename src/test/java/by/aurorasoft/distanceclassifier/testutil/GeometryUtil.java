@@ -19,6 +19,10 @@ public final class GeometryUtil {
         assertTrue(areEquals(expected, actual, geoJSONReader));
     }
 
+    public static Geometry createGeometry(final String text, final GeometryFactory factory) {
+        return createGeometry(text, factory, Geometry.class);
+    }
+
     public static Polygon createPolygon(final String text, final GeometryFactory factory) {
         return createGeometry(text, factory, Polygon.class);
     }

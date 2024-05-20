@@ -4,7 +4,6 @@ import by.aurorasoft.distanceclassifier.base.AbstractSpringBootTest;
 import by.aurorasoft.distanceclassifier.service.cityfeature.CityFeatureService;
 import org.junit.Test;
 import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.Polygon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -16,7 +15,7 @@ import org.wololo.jts2geojson.GeoJSONWriter;
 
 import java.util.Map;
 
-import static by.aurorasoft.distanceclassifier.testutil.GeometryUtil.createPolygon;
+import static by.aurorasoft.distanceclassifier.testutil.GeometryUtil.createGeometry;
 import static by.aurorasoft.distanceclassifier.testutil.HttpUtil.getExpectingOk;
 import static org.mockito.Mockito.when;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
@@ -118,9 +117,9 @@ public final class CityFeatureControllerTest extends AbstractSpringBootTest {
         assertEquals(expected, actual, true);
     }
 
-    private Feature createFeature(final String polygonText, final Map<String, Object> properties) {
-        final Polygon polygon = createPolygon(polygonText, geometryFactory);
-        final Geometry featurePolygon = geoJSONWriter.write(polygon);
-        return new Feature(featurePolygon, properties);
+    private Feature createFeature(final String geometryText, final Map<String, Object> properties) {
+        final var geometry = createGeometry(geometryText, geometryFactory);
+        final Geometry featureGeometry = geoJSONWriter.write(geometry);
+        return new Feature(featureGeometry, properties);
     }
 }
