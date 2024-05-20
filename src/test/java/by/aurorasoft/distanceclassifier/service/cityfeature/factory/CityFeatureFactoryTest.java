@@ -16,7 +16,8 @@ import java.util.Map;
 
 import static by.aurorasoft.distanceclassifier.model.CityType.CAPITAL;
 import static by.aurorasoft.distanceclassifier.service.cityfeature.factory.CityFeatureFactory.*;
-import static by.aurorasoft.distanceclassifier.testutil.FeatureUtil.checkEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -74,5 +75,11 @@ public final class CityFeatureFactoryTest {
                 PROPERTY_KEY_NAME, name,
                 PROPERTY_KEY_TYPE, type
         );
+    }
+
+    private void checkEquals(final Feature expected, final Feature actual) {
+        assertEquals(expected.getId(), actual.getId());
+        assertSame(expected.getGeometry(), actual.getGeometry());
+        assertEquals(expected.getProperties(), actual.getProperties());
     }
 }
