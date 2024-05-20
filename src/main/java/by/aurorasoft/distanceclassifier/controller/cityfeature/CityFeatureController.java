@@ -18,6 +18,7 @@ public class CityFeatureController {
 
     @GetMapping
     public ResponseEntity<FeatureCollection> getAll() {
-        return ok(service.getAll());
+        final FeatureCollection featureCollection = service.getAll();
+        return ok(featureCollection);
     }
 }

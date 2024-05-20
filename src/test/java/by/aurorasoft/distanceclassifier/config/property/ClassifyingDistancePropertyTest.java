@@ -22,7 +22,7 @@ public final class ClassifyingDistancePropertyTest extends AbstractSpringBootTes
 
     @Test
     public void propertyShouldBeCreated() {
-        final ClassifyingDistanceProperty expected = new ClassifyingDistanceProperty(false, 0.00015, 500.);
+        final ClassifyingDistanceProperty expected = new ClassifyingDistanceProperty(false, 0.00015, 50.);
         assertEquals(expected, property);
     }
 

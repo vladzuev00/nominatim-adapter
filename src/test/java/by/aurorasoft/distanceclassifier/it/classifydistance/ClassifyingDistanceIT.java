@@ -31,51 +31,51 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
         test(
                 new TestArgument(
                         "track-1.csv",
-                        new Response(
-                                new DistanceResponse(24.775799999999997, 17.2471, 42.02289999999999),
-                                new DistanceResponse(25.975800000000003, 18.2471, 44.2229)
+                        new ClassifyDistanceResponse(
+                                new DistanceResponse(550, 430, 980),
+                                new DistanceResponse(670, 540, 1210)
                         )
                 ),
                 new TestArgument(
                         "track-2.csv",
-                        new Response(
-                                new DistanceResponse(4.39473671128118, 5.708503981604896, 10.103240692886075),
-                                new DistanceResponse(4.834210382409298, 6.279354379765387, 11.113564762174684)
+                        new ClassifyDistanceResponse(
+                                new DistanceResponse(0, 10.103240692886082, 10.103240692886082),
+                                new DistanceResponse(0, 11.113564762174692, 11.113564762174692)
                         )
                 ),
                 new TestArgument(
                         "track-3.csv",
-                        new Response(
-                                new DistanceResponse(7.660139202484009, 0.5810205415816223, 8.241159744065632),
-                                new DistanceResponse(8.42615312273241, 0.6391225957397846, 9.065275718472195)
+                        new ClassifyDistanceResponse(
+                                new DistanceResponse(8.241159744065634, 0, 8.241159744065634),
+                                new DistanceResponse(9.065275718472197, 0, 9.065275718472197)
                         )
                 ),
                 new TestArgument(
                         "track-4.csv",
-                        new Response(
-                                new DistanceResponse(1517.6749524836482, 3159.213726069959, 4676.888678553607),
-                                new DistanceResponse(1669.4424477320315, 3475.135098676968, 5144.577546408999)
+                        new ClassifyDistanceResponse(
+                                new DistanceResponse(1351.9430469455722, 3324.9456316080723, 4676.888678553644),
+                                new DistanceResponse(1487.1373516401302, 3657.44019476888, 5144.57754640901)
                         )
                 ),
                 new TestArgument(
                         "track-5.csv",
-                        new Response(
-                                new DistanceResponse(2411.816607212017, 4438.952293840524, 6850.768901052541),
-                                new DistanceResponse(2652.9982679331615, 4882.847523224588, 7535.84579115775)
+                        new ClassifyDistanceResponse(
+                                new DistanceResponse(2372.085930733812, 4478.68297031878, 6850.768901052592),
+                                new DistanceResponse(2609.294523807194, 4926.551267350658, 7535.845791157852)
                         )
                 ),
                 new TestArgument(
                         "track-6.csv",
-                        new Response(
-                                new DistanceResponse(4757.130587495315, 9328.18395875217, 14085.314546247486),
-                                new DistanceResponse(5232.84364624481, 10261.002354627271, 15493.846000872081)
+                        new ClassifyDistanceResponse(
+                                new DistanceResponse(4570.045744948054, 9515.268801299402, 14085.314546247457),
+                                new DistanceResponse(5027.050319442857, 10466.795681429337, 15493.846000872194)
                         )
                 ),
                 new TestArgument(
                         "track-7.csv",
-                        new Response(
-                                new DistanceResponse(588.1970860851806, 1183.0119491405042, 1771.2090352256846),
-                                new DistanceResponse(647.0167946936974, 1301.3131440545535, 1948.329938748251)
+                        new ClassifyDistanceResponse(
+                                new DistanceResponse(562.1872620573471, 1209.0217731683263, 1771.2090352256732),
+                                new DistanceResponse(618.4059882630817, 1329.9239504851594, 1948.3299387482411)
                         )
                 )
         );
@@ -87,7 +87,12 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
 
     private void test(final TestArgument argument) {
         final ClassifyDistanceRequest givenRequest = readRequest(argument.fileName);
-        final Response actual = postExpectingOk(restTemplate, URL, givenRequest, Response.class);
+        final ClassifyDistanceResponse actual = postExpectingOk(
+                restTemplate,
+                URL,
+                givenRequest,
+                ClassifyDistanceResponse.class
+        );
         assertEquals(argument.expected, actual);
     }
 
@@ -105,22 +110,22 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
                 coordinate.getLatitude(),
                 coordinate.getLongitude(),
                 point.getSpeed(),
-                getGpsDistance(point),
-                getOdometerDistance(point)
+                getGpsDistanceRequest(point),
+                getOdometerDistanceRequest(point)
         );
     }
 
-    private DistanceRequest getGpsDistance(final TrackPoint point) {
-        return getDistance(point, TrackPoint::getGpsDistance);
+    private DistanceRequest getGpsDistanceRequest(final TrackPoint point) {
+        return getDistanceRequest(point, TrackPoint::getGpsDistance);
     }
 
-    private DistanceRequest getOdometerDistance(final TrackPoint point) {
-        return getDistance(point, TrackPoint::getOdometerDistance);
+    private DistanceRequest getOdometerDistanceRequest(final TrackPoint point) {
+        return getDistanceRequest(point, TrackPoint::getOdometerDistance);
     }
 
-    private DistanceRequest getDistance(final TrackPoint point, final Function<TrackPoint, Distance> getter) {
-        final Distance source = getter.apply(point);
-        return new DistanceRequest(source.getRelative(), source.getAbsolute());
+    private DistanceRequest getDistanceRequest(final TrackPoint point, final Function<TrackPoint, Distance> getter) {
+        final Distance distance = getter.apply(point);
+        return new DistanceRequest(distance.getRelative(), distance.getAbsolute());
     }
 
     private ClassifyDistanceRequest createRequest(final List<PointRequest> points) {
@@ -128,13 +133,13 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
     }
 
     @Value
-    private static class Response {
+    private static class ClassifyDistanceResponse {
         DistanceResponse gpsDistance;
         DistanceResponse odometerDistance;
 
         @JsonCreator
-        public Response(@JsonProperty("gpsDistance") final DistanceResponse gpsDistance,
-                        @JsonProperty("odoDistance") final DistanceResponse odometerDistance) {
+        public ClassifyDistanceResponse(@JsonProperty("gpsDistance") final DistanceResponse gpsDistance,
+                                        @JsonProperty("odoDistance") final DistanceResponse odometerDistance) {
             this.gpsDistance = gpsDistance;
             this.odometerDistance = odometerDistance;
         }
@@ -159,7 +164,7 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
     @Value
     private static class TestArgument {
         String fileName;
-        Response expected;
+        ClassifyDistanceResponse expected;
     }
 }
 
