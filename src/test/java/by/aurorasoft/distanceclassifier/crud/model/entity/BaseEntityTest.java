@@ -75,14 +75,14 @@ public final class BaseEntityTest extends AbstractSpringBootTest {
         assertEquals(expected, actual);
     }
 
-    private static BaseEntity<Long> createEntity(final Long id) {
+    private BaseEntity<Long> createEntity(final Long id) {
         final BaseEntity<Long> entity = new TestEntity();
         entity.setId(id);
         return entity;
     }
 
     @SuppressWarnings("SameParameterValue")
-    private static CityEntity createCity(final Long id) {
+    private CityEntity createCity(final Long id) {
         return CityEntity.builder()
                 .id(id)
                 .build();
