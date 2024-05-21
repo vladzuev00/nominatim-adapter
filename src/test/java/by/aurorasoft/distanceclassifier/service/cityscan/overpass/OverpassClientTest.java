@@ -52,7 +52,7 @@ public final class OverpassClientTest {
     }
 
     @SuppressWarnings("SameParameterValue")
-    private static OverpassSearchCityQuery createQuery(final String text) {
+    private OverpassSearchCityQuery createQuery(final String text) {
         final OverpassSearchCityQuery query = mock(OverpassSearchCityQuery.class);
         when(query.asText()).thenReturn(text);
         return query;
