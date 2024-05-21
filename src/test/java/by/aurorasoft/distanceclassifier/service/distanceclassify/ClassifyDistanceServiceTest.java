@@ -23,7 +23,7 @@ import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public final class ClassifyingDistanceServiceTest {
+public final class ClassifyDistanceServiceTest {
 
     @Mock
     private ClassifiedDistanceAccumulatorFactory mockedDistanceAccumulatorFactory;
@@ -31,14 +31,14 @@ public final class ClassifyingDistanceServiceTest {
     @Mock
     private SkipTrackPointIteratorFactory mockedPointIteratorFactory;
 
-    private ClassifyingDistanceService service;
+    private ClassifyDistanceService service;
 
     @Captor
     private ArgumentCaptor<TrackPoint> pointArgumentCaptor;
 
     @Before
     public void initializeService() {
-        service = new ClassifyingDistanceService(mockedDistanceAccumulatorFactory, mockedPointIteratorFactory);
+        service = new ClassifyDistanceService(mockedDistanceAccumulatorFactory, mockedPointIteratorFactory);
     }
 
     @Test

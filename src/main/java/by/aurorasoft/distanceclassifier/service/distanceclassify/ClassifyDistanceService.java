@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public final class ClassifyingDistanceService {
+public final class ClassifyDistanceService {
     private final ClassifiedDistanceAccumulatorFactory distanceAccumulatorFactory;
     private final SkipTrackPointIteratorFactory pointIteratorFactory;
 

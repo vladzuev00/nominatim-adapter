@@ -3,7 +3,7 @@ package by.aurorasoft.distanceclassifier.controller.classifydistance;
 import by.aurorasoft.distanceclassifier.controller.classifydistance.factory.TrackFactory;
 import by.aurorasoft.distanceclassifier.controller.classifydistance.model.ClassifyDistanceRequest;
 import by.aurorasoft.distanceclassifier.model.Track;
-import by.aurorasoft.distanceclassifier.service.distanceclassify.ClassifyingDistanceService;
+import by.aurorasoft.distanceclassifier.service.distanceclassify.ClassifyDistanceService;
 import by.nhorushko.classifieddistance.ClassifiedDistanceStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +23,7 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequiredArgsConstructor
 public class ClassifyDistanceController {
     private final TrackFactory trackFactory;
-    private final ClassifyingDistanceService service;
+    private final ClassifyDistanceService service;
 
     @PostMapping
     public ResponseEntity<ClassifiedDistanceStorage> classify(@Valid @RequestBody final ClassifyDistanceRequest request) {

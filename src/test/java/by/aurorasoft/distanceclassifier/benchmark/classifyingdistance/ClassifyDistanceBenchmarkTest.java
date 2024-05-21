@@ -2,7 +2,7 @@ package by.aurorasoft.distanceclassifier.benchmark.classifyingdistance;
 
 import by.aurorasoft.distanceclassifier.benchmark.base.BenchmarkTest;
 import by.aurorasoft.distanceclassifier.model.Track;
-import by.aurorasoft.distanceclassifier.service.distanceclassify.ClassifyingDistanceService;
+import by.aurorasoft.distanceclassifier.service.distanceclassify.ClassifyDistanceService;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.springframework.test.annotation.DirtiesContext;
 
@@ -16,6 +16,6 @@ public abstract class ClassifyDistanceBenchmarkTest extends BenchmarkTest {
 
     @Benchmark
     public final void classify() {
-        getBean(ClassifyingDistanceService.class).classify(GIVEN_TRACK, GIVEN_URBAN_SPEED_THRESHOLD);
+        getBean(ClassifyDistanceService.class).classify(GIVEN_TRACK, GIVEN_URBAN_SPEED_THRESHOLD);
     }
 }

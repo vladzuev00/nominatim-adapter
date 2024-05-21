@@ -6,7 +6,7 @@ import by.aurorasoft.distanceclassifier.controller.classifydistance.model.Classi
 import by.aurorasoft.distanceclassifier.controller.classifydistance.model.ClassifyDistanceRequest.DistanceRequest;
 import by.aurorasoft.distanceclassifier.controller.classifydistance.model.ClassifyDistanceRequest.PointRequest;
 import by.aurorasoft.distanceclassifier.model.Track;
-import by.aurorasoft.distanceclassifier.service.distanceclassify.ClassifyingDistanceService;
+import by.aurorasoft.distanceclassifier.service.distanceclassify.ClassifyDistanceService;
 import by.nhorushko.classifieddistance.ClassifiedDistance;
 import by.nhorushko.classifieddistance.ClassifiedDistanceStorage;
 import org.junit.Test;
@@ -30,7 +30,7 @@ public final class ClassifyDistanceControllerTest extends AbstractSpringBootTest
     private TrackFactory mockedTrackFactory;
 
     @MockBean
-    private ClassifyingDistanceService mockedService;
+    private ClassifyDistanceService mockedService;
 
     @Autowired
     private TestRestTemplate restTemplate;
