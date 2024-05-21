@@ -151,10 +151,11 @@ public final class CityRepositoryTest extends AbstractSpringBootTest {
     @Sql(statements = "DELETE FROM city")
     public void geometriesShouldNotBeFound() {
         startQueryCount();
-        try (final Stream<CityGeometry> actual = repository.findGeometries()) {
+        try (final Stream<CityGeometry> stream = repository.findGeometries()) {
             checkQueryCount(1);
 
-            assertTrue(actual.findAny().isEmpty());
+            final boolean empty = stream.findAny().isEmpty();
+            assertTrue(empty);
         }
     }
 
@@ -186,10 +187,11 @@ public final class CityRepositoryTest extends AbstractSpringBootTest {
         final LineString givenLine = createLine("LINESTRING(7 1, 7.5 5, 7.5 7, 9 8)");
 
         startQueryCount();
-        try (final Stream<CityGeometry> actual = repository.findIntersectedGeometries(givenLine)) {
+        try (final Stream<CityGeometry> stream = repository.findIntersectedGeometries(givenLine)) {
             checkQueryCount(1);
 
-            assertTrue(actual.findAny().isEmpty());
+            final boolean empty = stream.findAny().isEmpty();
+            assertTrue(empty);
         }
     }
 
