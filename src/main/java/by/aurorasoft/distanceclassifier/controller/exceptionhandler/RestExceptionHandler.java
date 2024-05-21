@@ -48,37 +48,39 @@ public final class RestExceptionHandler {
         return createNotAcceptableEntity(getMessage(exception));
     }
 
-    private static ResponseEntity<RestErrorResponse> createNotAcceptableEntity(final Exception exception) {
+    private ResponseEntity<RestErrorResponse> createNotAcceptableEntity(final Exception exception) {
         return createNotAcceptableEntity(exception.getMessage());
     }
 
-    private static ResponseEntity<RestErrorResponse> createNotAcceptableEntity(final String message) {
+    private ResponseEntity<RestErrorResponse> createNotAcceptableEntity(final String message) {
         final HttpStatus status = NOT_ACCEPTABLE;
         final RestErrorResponse response = new RestErrorResponse(status, message, now());
         return new ResponseEntity<>(response, status);
     }
 
-    private static String getMessage(final MethodArgumentNotValidException exception) {
+    private String getMessage(final MethodArgumentNotValidException exception) {
         return exception.getFieldErrors()
                 .stream()
-                .map(RestExceptionHandler::getMessage)
+                .map(this::getMessage)
                 .collect(joining(NOT_VALID_ARGUMENT_MESSAGE_DELIMITER));
     }
 
-    private static String getMessage(final FieldError error) {
+    private String getMessage(final FieldError error) {
         return error.getField() + FIELD_MESSAGE_DELIMITER + error.getDefaultMessage();
     }
 
-    private static String getMessage(final ConversionFailedException exception) {
+    private String getMessage(final ConversionFailedException exception) {
         return isEnumTarget(exception) ? findEnumConversionFailedMessage(exception) : exception.getMessage();
     }
 
-    private static boolean isEnumTarget(final ConversionFailedException exception) {
-        return exception.getTargetType().getType().isEnum();
+    private boolean isEnumTarget(final ConversionFailedException exception) {
+        return exception.getTargetType()
+                .getType()
+                .isEnum();
     }
 
     @SuppressWarnings("unchecked")
-    private static String findEnumConversionFailedMessage(final ConversionFailedException exception) {
+    private String findEnumConversionFailedMessage(final ConversionFailedException exception) {
         final Class<? extends Enum<?>> type = (Class<? extends Enum<?>>) exception.getTargetType().getType();
         return format(
                 MESSAGE_TEMPLATE_ENUM_CONVERSION_FAILED,
@@ -87,7 +89,7 @@ public final class RestExceptionHandler {
         );
     }
 
-    private static String findAllowableEnumValues(final Class<? extends Enum<?>> type) {
+    private String findAllowableEnumValues(final Class<? extends Enum<?>> type) {
         return stream(type.getEnumConstants())
                 .map(Enum::name)
                 .collect(joining(DELIMITER_ENUM_VALUES));

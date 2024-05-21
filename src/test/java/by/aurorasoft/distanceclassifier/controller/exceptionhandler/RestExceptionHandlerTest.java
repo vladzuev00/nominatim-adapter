@@ -39,7 +39,7 @@ public final class RestExceptionHandlerTest extends AbstractSpringBootTest {
         final String givenMessage = "exception-message";
         final ConstraintViolationException givenException = new ConstraintViolationException(givenMessage, emptySet());
 
-        final RestErrorResponse actual = doExpectingNotAcceptableEntity(() -> handler.handle(givenException));
+        final RestErrorResponse actual = doExpectingNotAcceptableStatus(() -> handler.handle(givenException));
         final RestErrorResponse expected = createNotAcceptableResponse(givenMessage);
         checkMatch(expected, actual);
     }
@@ -53,7 +53,7 @@ public final class RestExceptionHandlerTest extends AbstractSpringBootTest {
                 givenSecondFieldError
         );
 
-        final RestErrorResponse actual = doExpectingNotAcceptableEntity(() -> handler.handle(givenException));
+        final RestErrorResponse actual = doExpectingNotAcceptableStatus(() -> handler.handle(givenException));
         final RestErrorResponse expected = createNotAcceptableResponse(
                 "first-field : first-message; second-field : second-message"
         );
@@ -65,7 +65,7 @@ public final class RestExceptionHandlerTest extends AbstractSpringBootTest {
         final String givenMessage = "exception-message";
         final CustomValidationException givenException = new CustomValidationException(givenMessage);
 
-        final RestErrorResponse actual = doExpectingNotAcceptableEntity(() -> handler.handle(givenException));
+        final RestErrorResponse actual = doExpectingNotAcceptableStatus(() -> handler.handle(givenException));
         final RestErrorResponse expected = createNotAcceptableResponse(givenMessage);
         checkMatch(expected, actual);
     }
@@ -75,17 +75,21 @@ public final class RestExceptionHandlerTest extends AbstractSpringBootTest {
         final String givenMessage = "exception-message";
         final ConversionFailedException givenException = createConversionFailedExceptionWithObjectTargetType(givenMessage);
 
-        final RestErrorResponse actual = doExpectingNotAcceptableEntity(() -> handler.handle(givenException));
+        final RestErrorResponse actual = doExpectingNotAcceptableStatus(() -> handler.handle(givenException));
         final RestErrorResponse expected = createNotAcceptableResponse(givenMessage);
         checkMatch(expected, actual);
     }
 
     @Test
     public void conversionFailedExceptionWithEnumTargetTypeShouldBeHandled() {
-        final ConversionFailedException givenException = createConversionFailedExceptionWithEnumTargetType("exception-value");
+        final ConversionFailedException givenException = createConversionFailedExceptionWithEnumTargetType(
+                "exception-value"
+        );
 
-        final RestErrorResponse actual = doExpectingNotAcceptableEntity(() -> handler.handle(givenException));
-        final RestErrorResponse expected = createNotAcceptableResponse("exception-value should be replaced by one of: FIRST, SECOND, THIRD");
+        final RestErrorResponse actual = doExpectingNotAcceptableStatus(() -> handler.handle(givenException));
+        final RestErrorResponse expected = createNotAcceptableResponse(
+                "exception-value should be replaced by one of: FIRST, SECOND, THIRD"
+        );
         checkMatch(expected, actual);
     }
 
@@ -108,37 +112,37 @@ public final class RestExceptionHandlerTest extends AbstractSpringBootTest {
         assertEquals(expected, actual, true);
     }
 
-    private RestErrorResponse doExpectingNotAcceptableEntity(final Supplier<ResponseEntity<RestErrorResponse>> operation) {
-        final ResponseEntity<RestErrorResponse> entity = operation.get();
-        assertSame(NOT_ACCEPTABLE, entity.getStatusCode());
-        return entity.getBody();
+    private RestErrorResponse doExpectingNotAcceptableStatus(final Supplier<ResponseEntity<RestErrorResponse>> operation) {
+        final ResponseEntity<RestErrorResponse> responseEntity = operation.get();
+        assertSame(NOT_ACCEPTABLE, responseEntity.getStatusCode());
+        return responseEntity.getBody();
     }
 
-    private static RestErrorResponse createNotAcceptableResponse(final String message) {
+    private RestErrorResponse createNotAcceptableResponse(final String message) {
         return new RestErrorResponse(NOT_ACCEPTABLE, message, null);
     }
 
-    private static void checkMatch(final RestErrorResponse expected, final RestErrorResponse actual) {
+    private void checkMatch(final RestErrorResponse expected, final RestErrorResponse actual) {
         assertSame(expected.getStatus(), actual.getStatus());
         Assert.assertEquals(expected.getMessage(), actual.getMessage());
         assertNotNull(actual.getDateTime());
     }
 
-    private static FieldError createFieldError(final String fieldName, final String message) {
+    private FieldError createFieldError(final String fieldName, final String message) {
         final FieldError error = mock(FieldError.class);
         when(error.getField()).thenReturn(fieldName);
         when(error.getDefaultMessage()).thenReturn(message);
         return error;
     }
 
-    private static MethodArgumentNotValidException createMethodArgumentNotValidException(final FieldError... errors) {
+    private MethodArgumentNotValidException createMethodArgumentNotValidException(final FieldError... errors) {
         final MethodArgumentNotValidException exception = mock(MethodArgumentNotValidException.class);
         when(exception.getFieldErrors()).thenReturn(asList(errors));
         return exception;
     }
 
     @SuppressWarnings("SameParameterValue")
-    private static ConversionFailedException createConversionFailedExceptionWithObjectTargetType(final String message) {
+    private ConversionFailedException createConversionFailedExceptionWithObjectTargetType(final String message) {
         final ConversionFailedException exception = mock(ConversionFailedException.class);
         when(exception.getTargetType()).thenReturn(valueOf(TestObject.class));
         when(exception.getMessage()).thenReturn(message);
@@ -146,7 +150,7 @@ public final class RestExceptionHandlerTest extends AbstractSpringBootTest {
     }
 
     @SuppressWarnings("SameParameterValue")
-    private static ConversionFailedException createConversionFailedExceptionWithEnumTargetType(final String value) {
+    private ConversionFailedException createConversionFailedExceptionWithEnumTargetType(final String value) {
         final ConversionFailedException exception = mock(ConversionFailedException.class);
         when(exception.getTargetType()).thenReturn(valueOf(TestEnum.class));
         when(exception.getValue()).thenReturn(value);
