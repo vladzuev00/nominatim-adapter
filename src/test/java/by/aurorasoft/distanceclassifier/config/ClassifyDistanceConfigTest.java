@@ -10,8 +10,8 @@ import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public final class ClassifyingDistanceConfigTest {
-    private final ClassifyingDistanceConfig config = new ClassifyingDistanceConfig();
+public final class ClassifyDistanceConfigTest {
+    private final ClassifyDistanceConfig config = new ClassifyDistanceConfig();
 
     @Test
     public void trackFilterShouldBeCreated() {
