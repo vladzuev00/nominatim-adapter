@@ -36,7 +36,7 @@ public final class OverpassCityFactory {
                 );
     }
 
-    private static String getName(final Relation relation) {
+    private String getName(final Relation relation) {
         return relation.getTags().getName();
     }
 
