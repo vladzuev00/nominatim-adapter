@@ -49,8 +49,8 @@ public final class GeometryPreparerTest {
         }
     }
 
-    private static PreparedGeometry mockPreparedGeometryFor(final Geometry geometry,
-                                                            final MockedStatic<PreparedGeometryFactory> mockedFactory) {
+    private PreparedGeometry mockPreparedGeometryFor(final Geometry geometry,
+                                                     final MockedStatic<PreparedGeometryFactory> mockedFactory) {
         final PreparedGeometry preparedGeometry = mock(PreparedGeometry.class);
         mockedFactory.when(() -> prepare(same(geometry))).thenReturn(preparedGeometry);
         return preparedGeometry;
