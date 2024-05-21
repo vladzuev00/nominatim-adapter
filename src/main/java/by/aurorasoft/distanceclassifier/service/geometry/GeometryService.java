@@ -1,10 +1,10 @@
 package by.aurorasoft.distanceclassifier.service.geometry;
 
 import by.aurorasoft.distanceclassifier.model.AreaCoordinate;
-import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse;
-import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Bounds;
-import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Relation;
-import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Way;
+import by.aurorasoft.distanceclassifier.model.overpass.OverpassSearchCityResponse;
+import by.aurorasoft.distanceclassifier.model.overpass.OverpassSearchCityResponse.Bounds;
+import by.aurorasoft.distanceclassifier.model.overpass.OverpassSearchCityResponse.Relation;
+import by.aurorasoft.distanceclassifier.model.overpass.OverpassSearchCityResponse.Way;
 import by.aurorasoft.distanceclassifier.model.Track;
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
 import lombok.RequiredArgsConstructor;

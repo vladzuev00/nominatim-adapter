@@ -1,8 +1,8 @@
 package by.aurorasoft.distanceclassifier.service.cityscan.overpass;
 
 import by.aurorasoft.distanceclassifier.model.AreaCoordinate;
-import by.aurorasoft.distanceclassifier.model.OverpassSearchCityQuery;
-import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse;
+import by.aurorasoft.distanceclassifier.model.overpass.OverpassSearchCityQuery;
+import by.aurorasoft.distanceclassifier.model.overpass.OverpassSearchCityResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Component;

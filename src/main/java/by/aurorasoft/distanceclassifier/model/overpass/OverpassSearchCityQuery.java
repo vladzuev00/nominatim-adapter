@@ -1,5 +1,7 @@
-package by.aurorasoft.distanceclassifier.model;
+package by.aurorasoft.distanceclassifier.model.overpass;
 
+import by.aurorasoft.distanceclassifier.model.AreaCoordinate;
+import by.aurorasoft.distanceclassifier.model.Coordinate;
 import lombok.Value;
 
 @Value

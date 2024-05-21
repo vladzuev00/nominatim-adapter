@@ -3,7 +3,7 @@ package by.aurorasoft.distanceclassifier.service.cityscan.overpass;
 import by.aurorasoft.distanceclassifier.crud.model.dto.City;
 import by.aurorasoft.distanceclassifier.crud.model.dto.City.CityGeometry;
 import by.aurorasoft.distanceclassifier.model.CityType;
-import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Relation;
+import by.aurorasoft.distanceclassifier.model.overpass.OverpassSearchCityResponse.Relation;
 import by.aurorasoft.distanceclassifier.service.geometry.GeometryService;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.MultiPolygon;

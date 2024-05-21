@@ -1,4 +1,4 @@
-package by.aurorasoft.distanceclassifier.model;
+package by.aurorasoft.distanceclassifier.model.overpass;
 
 import by.aurorasoft.distanceclassifier.base.AbstractSpringBootTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import static by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Coordinate;
-import static by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.*;
+import static by.aurorasoft.distanceclassifier.model.overpass.OverpassSearchCityResponse.Coordinate;
+import static by.aurorasoft.distanceclassifier.model.overpass.OverpassSearchCityResponse.*;
 import static org.junit.Assert.assertEquals;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 

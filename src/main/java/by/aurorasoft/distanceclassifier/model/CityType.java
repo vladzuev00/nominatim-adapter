@@ -1,6 +1,6 @@
 package by.aurorasoft.distanceclassifier.model;
 
-import by.aurorasoft.distanceclassifier.model.OverpassSearchCityResponse.Tags;
+import by.aurorasoft.distanceclassifier.model.overpass.OverpassSearchCityResponse.Tags;
 
 import java.util.Objects;
 

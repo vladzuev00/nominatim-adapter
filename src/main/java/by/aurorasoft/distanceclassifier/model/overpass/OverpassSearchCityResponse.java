@@ -1,4 +1,4 @@
-package by.aurorasoft.distanceclassifier.model;
+package by.aurorasoft.distanceclassifier.model.overpass;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
