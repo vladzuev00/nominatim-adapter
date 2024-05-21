@@ -22,6 +22,7 @@ public class ScannedLocationService extends AbsServiceCRUD<Long, ScannedLocation
 
     @Transactional(readOnly = true)
     public ScannedLocation get() {
-        return mapper.toDto(repository.get());
+        final ScannedLocationEntity entity = repository.get();
+        return mapper.toDto(entity);
     }
 }
