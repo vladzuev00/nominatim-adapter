@@ -10,10 +10,7 @@ public final class OverpassSearchCityQueryTest {
     public void queryShouldBePresentedAsText() {
         final OverpassSearchCityQuery givenQuery = new OverpassSearchCityQuery(
                 50,
-                new AreaCoordinate(
-                        new Coordinate(5.5, 6.6),
-                        new Coordinate(7.7, 8.8)
-                )
+                new AreaCoordinate(new Coordinate(5.5, 6.6), new Coordinate(7.7, 8.8))
         );
 
         final String actual = givenQuery.asText();
