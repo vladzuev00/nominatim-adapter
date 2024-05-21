@@ -42,7 +42,7 @@ public final class CityScanningControllerTest extends AbstractSpringBootTest {
     }
 
     @Test
-    public void citiesShouldNotBeScannedBecauseOfRequestNotValid()
+    public void citiesShouldNotBeScannedBecauseOfRequestIsNotValid()
             throws Exception {
         final AreaCoordinateRequest givenRequest = new AreaCoordinateRequest(-90.1, 6.6, 7.7, 8.8);
 
