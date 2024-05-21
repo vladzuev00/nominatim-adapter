@@ -74,8 +74,9 @@ public final class CityServiceTest extends AbstractSpringBootTest {
     @Test
     @Sql(statements = "DELETE FROM city")
     public void cityGeometriesShouldNotBeFound() {
-        try (final Stream<CityGeometry> actual = service.findCityGeometries()) {
-            assertTrue(actual.findAny().isEmpty());
+        try (final Stream<CityGeometry> stream = service.findCityGeometries()) {
+            final boolean empty = stream.findAny().isEmpty();
+            assertTrue(empty);
         }
     }
 
@@ -104,7 +105,8 @@ public final class CityServiceTest extends AbstractSpringBootTest {
         final LineString givenLine = createLine("LINESTRING(7 1, 7.5 5, 7.5 7, 9 8)");
 
         try (final Stream<CityGeometry> stream = service.findIntersectedCityGeometries(givenLine)) {
-            assertTrue(stream.findAny().isEmpty());
+            final boolean empty = stream.findAny().isEmpty();
+            assertTrue(empty);
         }
     }
 
