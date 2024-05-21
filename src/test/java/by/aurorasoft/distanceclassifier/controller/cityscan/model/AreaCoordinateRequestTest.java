@@ -63,7 +63,7 @@ public final class AreaCoordinateRequestTest extends AbstractSpringBootTest {
     }
 
     @Test
-    public void requestShouldNotBeValidBecauseOfMinLatitudeNotDefined() {
+    public void requestShouldNotBeValidBecauseOfMinLatitudeIsNotDefined() {
         final AreaCoordinateRequest givenRequest = AreaCoordinateRequest.builder()
                 .minLongitude(46.)
                 .maxLatitude(47.)
@@ -94,7 +94,7 @@ public final class AreaCoordinateRequestTest extends AbstractSpringBootTest {
     }
 
     @Test
-    public void requestShouldNotBeValidBecauseOfMinLongitudeNotDefined() {
+    public void requestShouldNotBeValidBecauseOfMinLongitudeIsNotDefined() {
         final AreaCoordinateRequest givenRequest = AreaCoordinateRequest.builder()
                 .minLatitude(46.)
                 .maxLatitude(47.)
@@ -125,7 +125,7 @@ public final class AreaCoordinateRequestTest extends AbstractSpringBootTest {
     }
 
     @Test
-    public void requestShouldNotBeValidBecauseOfMaxLatitudeNotDefined() {
+    public void requestShouldNotBeValidBecauseOfMaxLatitudeIsNotDefined() {
         final AreaCoordinateRequest givenRequest = AreaCoordinateRequest.builder()
                 .minLatitude(45.)
                 .minLongitude(46.)
@@ -156,7 +156,7 @@ public final class AreaCoordinateRequestTest extends AbstractSpringBootTest {
     }
 
     @Test
-    public void requestShouldNotBeValidBecauseOfMaxLongitudeNotDefined() {
+    public void requestShouldNotBeValidBecauseOfMaxLongitudeIsNotDefined() {
         final AreaCoordinateRequest givenRequest = AreaCoordinateRequest.builder()
                 .minLatitude(45.)
                 .minLongitude(46.)
