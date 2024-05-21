@@ -29,12 +29,11 @@ public class RestTemplateConfig {
 
     @Bean
     public ObjectMapper objectMapper() {
-        final ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(jtsModule());
-        objectMapper.registerModule(javaTimeModule());
-        objectMapper.configure(WRITE_DATES_AS_TIMESTAMPS, false);
-        objectMapper.configure(FAIL_ON_UNKNOWN_PROPERTIES, false);
-        return objectMapper;
+        return new ObjectMapper()
+                .registerModule(jtsModule())
+                .registerModule(javaTimeModule())
+                .configure(WRITE_DATES_AS_TIMESTAMPS, false)
+                .configure(FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     @Bean
