@@ -16,13 +16,13 @@ public final class AreaCoordinateFactory {
         return new AreaCoordinate(getMin(request), getMax(request));
     }
 
-    private static void validate(final AreaCoordinateRequest request) {
+    private void validate(final AreaCoordinateRequest request) {
         if (!isValid(request)) {
             throw new CustomValidationException("Min coordinate of area should be less than max");
         }
     }
 
-    private static boolean isValid(final AreaCoordinateRequest request) {
+    private boolean isValid(final AreaCoordinateRequest request) {
         return compare(request.getMinLatitude(), request.getMaxLatitude()) <= 0
                 && compare(request.getMinLongitude(), request.getMaxLongitude()) <= 0;
     }
