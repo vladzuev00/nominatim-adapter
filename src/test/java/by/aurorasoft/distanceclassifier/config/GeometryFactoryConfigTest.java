@@ -24,7 +24,7 @@ public final class GeometryFactoryConfigTest {
         assertEquals(expected, actual);
     }
 
-    private static void checkEquals(final GeometryFactory expected, final GeometryFactory actual) {
+    private void checkEquals(final GeometryFactory expected, final GeometryFactory actual) {
         assertEquals(expected.getPrecisionModel(), actual.getPrecisionModel());
         assertEquals(expected.getSRID(), actual.getSRID());
     }
