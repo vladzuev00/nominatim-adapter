@@ -3,7 +3,7 @@ package by.aurorasoft.distanceclassifier.service.distanceclassify.iterator.facto
 import by.aurorasoft.distanceclassifier.config.property.ClassifyDistanceProperty;
 import by.aurorasoft.distanceclassifier.model.Track;
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
-import by.aurorasoft.distanceclassifier.service.distanceclassify.iterator.SkippingTrackPointIterator;
+import by.aurorasoft.distanceclassifier.service.distanceclassify.iterator.SkipTrackPointIterator;
 import by.aurorasoft.distanceclassifier.service.distanceclassify.iterator.pointreplacer.TrackPointReplacer;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public final class SkippingTrackPointIteratorFactoryTest {
+public final class SkipTrackPointIteratorFactoryTest {
     private static final String FIELD_NAME_POINT_REPLACER = "pointReplacer";
     private static final String FIELD_NAME_POINTS = "points";
     private static final String FIELD_NAME_POINT_MIN_GPS_RELATIVE = "pointMinGpsRelative";
@@ -31,11 +31,11 @@ public final class SkippingTrackPointIteratorFactoryTest {
     @Mock
     private ClassifyDistanceProperty mockedProperty;
 
-    private SkippingTrackPointIteratorFactory factory;
+    private SkipTrackPointIteratorFactory factory;
 
     @Before
     public void initializeFactory() {
-        factory = new SkippingTrackPointIteratorFactory(mockedPointReplacer, mockedProperty);
+        factory = new SkipTrackPointIteratorFactory(mockedPointReplacer, mockedProperty);
     }
 
     @Test
@@ -49,7 +49,7 @@ public final class SkippingTrackPointIteratorFactoryTest {
         final double givenPointMinGpsRelative = 500.;
         when(mockedProperty.getPointMinGpsRelative()).thenReturn(givenPointMinGpsRelative);
 
-        final SkippingTrackPointIterator actual = factory.create(givenTrack);
+        final SkipTrackPointIterator actual = factory.create(givenTrack);
 
         final TrackPointReplacer actualPointReplacer = getPointReplacer(actual);
         assertSame(mockedPointReplacer, actualPointReplacer);
@@ -61,16 +61,16 @@ public final class SkippingTrackPointIteratorFactoryTest {
         assertEquals(givenPointMinGpsRelative, actualPointMinGpsRelative, 0.);
     }
 
-    private TrackPointReplacer getPointReplacer(final SkippingTrackPointIterator iterator) {
+    private TrackPointReplacer getPointReplacer(final SkipTrackPointIterator iterator) {
         return getFieldValue(iterator, FIELD_NAME_POINT_REPLACER, TrackPointReplacer.class);
     }
 
     @SuppressWarnings("unchecked")
-    private List<TrackPoint> getPoints(final SkippingTrackPointIterator iterator) {
+    private List<TrackPoint> getPoints(final SkipTrackPointIterator iterator) {
         return getFieldValue(iterator, FIELD_NAME_POINTS, List.class);
     }
 
-    private double getPointMinGpsRelative(final SkippingTrackPointIterator iterator) {
+    private double getPointMinGpsRelative(final SkipTrackPointIterator iterator) {
         return getFieldValue(iterator, FIELD_NAME_POINT_MIN_GPS_RELATIVE, Double.class);
     }
 }

@@ -13,7 +13,7 @@ import static java.lang.Double.compare;
 import static java.util.stream.IntStream.range;
 
 @RequiredArgsConstructor
-public final class SkippingTrackPointIterator implements Iterator<TrackPoint> {
+public final class SkipTrackPointIterator implements Iterator<TrackPoint> {
     private final TrackPointReplacer pointReplacer;
     private final List<TrackPoint> points;
     private final double pointMinGpsRelative;
