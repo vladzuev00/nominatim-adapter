@@ -24,7 +24,7 @@ public final class ScannedLocationAppenderTest {
     private ScannedLocationAppender appender;
 
     @Before
-    public void initializeAppended() {
+    public void initializeAppender() {
         appender = new ScannedLocationAppender(mockedGeometryService, mockedLocationService);
     }
 
