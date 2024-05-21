@@ -17,7 +17,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public final class SkippingTrackPointIteratorTest {
+public final class SkipTrackPointIteratorTest {
 
     @Mock
     private TrackPointReplacer mockedPointReplacer;
