@@ -21,21 +21,20 @@ public final class TrackPointFactory {
         );
     }
 
-    private static Coordinate getCoordinate(final PointRequest request) {
+    private Coordinate getCoordinate(final PointRequest request) {
         return new Coordinate(request.getLatitude(), request.getLongitude());
     }
 
-    private static Distance getGpsDistance(final PointRequest request) {
+    private Distance getGpsDistance(final PointRequest request) {
         return getDistance(request, PointRequest::getGpsDistance);
     }
 
-    private static Distance getOdometerDistance(final PointRequest request) {
+    private Distance getOdometerDistance(final PointRequest request) {
         return getDistance(request, PointRequest::getOdometerDistance);
     }
 
-    private static Distance getDistance(final PointRequest request,
-                                        final Function<PointRequest, DistanceRequest> sourceGetter) {
-        final DistanceRequest source = sourceGetter.apply(request);
+    private Distance getDistance(final PointRequest request, final Function<PointRequest, DistanceRequest> getter) {
+        final DistanceRequest source = getter.apply(request);
         return new Distance(source.getRelative(), source.getAbsolute());
     }
 }
