@@ -42,8 +42,14 @@ public final class CityFeatureControllerTest extends AbstractSpringBootTest {
             throws Exception {
         final FeatureCollection givenCollection = new FeatureCollection(
                 new Feature[]{
-                        createFeature("POLYGON((1 1, 2 1, 2 2, 1 1))", Map.of("first-property", "first-value")),
-                        createFeature("POLYGON((1 1, 3 1, 3 2, 1 1))", Map.of("second-property", "second-value", "third-property", "third-value"))
+                        createFeature(
+                                "POLYGON((1 1, 2 1, 2 2, 1 1))",
+                                Map.of("first-property", "first-value")
+                        ),
+                        createFeature(
+                                "POLYGON((1 1, 3 1, 3 2, 1 1))",
+                                Map.of("second-property", "second-value", "third-property", "third-value")
+                        )
                 }
         );
         when(mockedService.getAll()).thenReturn(givenCollection);
