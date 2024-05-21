@@ -1,7 +1,7 @@
 package by.aurorasoft.distanceclassifier.config;
 
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.cache.GeometryCache;
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.cache.factory.GeometryCacheFactory;
+import by.aurorasoft.distanceclassifier.service.distanceclassify.maploader.cache.GeometryCache;
+import by.aurorasoft.distanceclassifier.service.distanceclassify.maploader.cache.factory.GeometryCacheFactory;
 import by.nhorushko.trackfilter.TrackFilterI;
 import org.junit.Test;
 

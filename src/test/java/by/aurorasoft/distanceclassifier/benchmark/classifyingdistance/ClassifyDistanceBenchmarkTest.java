@@ -2,7 +2,7 @@ package by.aurorasoft.distanceclassifier.benchmark.classifyingdistance;
 
 import by.aurorasoft.distanceclassifier.benchmark.base.BenchmarkTest;
 import by.aurorasoft.distanceclassifier.model.Track;
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.ClassifyingDistanceService;
+import by.aurorasoft.distanceclassifier.service.distanceclassify.ClassifyingDistanceService;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.springframework.test.annotation.DirtiesContext;
 

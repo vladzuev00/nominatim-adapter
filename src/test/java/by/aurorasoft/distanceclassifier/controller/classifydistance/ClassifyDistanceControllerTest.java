@@ -6,7 +6,7 @@ import by.aurorasoft.distanceclassifier.controller.classifydistance.model.Classi
 import by.aurorasoft.distanceclassifier.controller.classifydistance.model.ClassifyDistanceRequest.DistanceRequest;
 import by.aurorasoft.distanceclassifier.controller.classifydistance.model.ClassifyDistanceRequest.PointRequest;
 import by.aurorasoft.distanceclassifier.model.Track;
-import by.aurorasoft.distanceclassifier.service.distanceclassifying.ClassifyingDistanceService;
+import by.aurorasoft.distanceclassifier.service.distanceclassify.ClassifyingDistanceService;
 import by.nhorushko.classifieddistance.ClassifiedDistance;
 import by.nhorushko.classifieddistance.ClassifiedDistanceStorage;
 import org.junit.Test;
