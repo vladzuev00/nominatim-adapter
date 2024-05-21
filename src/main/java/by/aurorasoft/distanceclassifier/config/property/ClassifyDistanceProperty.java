@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 @Validated
 @ConstructorBinding
 @ConfigurationProperties("distance-classifying")
-public final class ClassifyingDistanceProperty {
+public final class ClassifyDistanceProperty {
 
     @NotNull
     private final Boolean cacheGeometries;

@@ -1,6 +1,6 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.simplifier;
 
-import by.aurorasoft.distanceclassifier.config.property.ClassifyingDistanceProperty;
+import by.aurorasoft.distanceclassifier.config.property.ClassifyDistanceProperty;
 import by.aurorasoft.distanceclassifier.model.Coordinate;
 import by.aurorasoft.distanceclassifier.model.Track;
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
@@ -25,7 +25,7 @@ public final class TrackSimplifierTest {
     private TrackFilterI mockedTrackFilter;
 
     @Mock
-    private ClassifyingDistanceProperty mockedProperty;
+    private ClassifyDistanceProperty mockedProperty;
 
     private TrackSimplifier simplifier;
 

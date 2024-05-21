@@ -12,78 +12,78 @@ import static by.aurorasoft.distanceclassifier.testutil.ConstraintViolationUtil.
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public final class ClassifyingDistancePropertyTest extends AbstractSpringBootTest {
+public final class ClassifyDistancePropertyTest extends AbstractSpringBootTest {
 
     @Autowired
-    private ClassifyingDistanceProperty property;
+    private ClassifyDistanceProperty property;
 
     @Autowired
     private Validator validator;
 
     @Test
     public void propertyShouldBeCreated() {
-        final ClassifyingDistanceProperty expected = new ClassifyingDistanceProperty(false, 0.00015, 50.);
+        final ClassifyDistanceProperty expected = new ClassifyDistanceProperty(false, 0.00015, 50.);
         assertEquals(expected, property);
     }
 
     @Test
     public void propertyShouldBeValid() {
-        final ClassifyingDistanceProperty givenProperty = new ClassifyingDistanceProperty(false, 0.00015, 500.);
+        final ClassifyDistanceProperty givenProperty = new ClassifyDistanceProperty(false, 0.00015, 500.);
 
-        final Set<ConstraintViolation<ClassifyingDistanceProperty>> violations = validator.validate(givenProperty);
+        final Set<ConstraintViolation<ClassifyDistanceProperty>> violations = validator.validate(givenProperty);
         assertTrue(violations.isEmpty());
     }
 
     @Test
     public void propertyShouldNotBeValidBecauseOfCacheGeometriesIsNull() {
-        final ClassifyingDistanceProperty givenProperty = ClassifyingDistanceProperty.builder()
+        final ClassifyDistanceProperty givenProperty = ClassifyDistanceProperty.builder()
                 .trackSimplifyEpsilon(0.00015)
                 .pointMinGpsRelative(500.)
                 .build();
 
-        final Set<ConstraintViolation<ClassifyingDistanceProperty>> violations = validator.validate(givenProperty);
+        final Set<ConstraintViolation<ClassifyDistanceProperty>> violations = validator.validate(givenProperty);
         assertEquals(1, violations.size());
         assertEquals("не должно равняться null", findFirstMessage(violations));
     }
 
     @Test
     public void propertyShouldNotBeValidBecauseOfTrackSimplifyEpsilonIsNull() {
-        final ClassifyingDistanceProperty givenProperty = ClassifyingDistanceProperty.builder()
+        final ClassifyDistanceProperty givenProperty = ClassifyDistanceProperty.builder()
                 .cacheGeometries(true)
                 .pointMinGpsRelative(500.)
                 .build();
 
-        final Set<ConstraintViolation<ClassifyingDistanceProperty>> violations = validator.validate(givenProperty);
+        final Set<ConstraintViolation<ClassifyDistanceProperty>> violations = validator.validate(givenProperty);
         assertEquals(1, violations.size());
         assertEquals("не должно равняться null", findFirstMessage(violations));
     }
 
     @Test
     public void propertyShouldNotBeValidBecauseOfTrackSimplifyEpsilonIsLessThanMinimalAllowable() {
-        final ClassifyingDistanceProperty givenProperty = new ClassifyingDistanceProperty(true, -0.001, 500.);
+        final ClassifyDistanceProperty givenProperty = new ClassifyDistanceProperty(true, -0.001, 500.);
 
-        final Set<ConstraintViolation<ClassifyingDistanceProperty>> violations = validator.validate(givenProperty);
+        final Set<ConstraintViolation<ClassifyDistanceProperty>> violations = validator.validate(givenProperty);
         assertEquals(1, violations.size());
         assertEquals("должно быть больше, чем или равно 0", findFirstMessage(violations));
     }
 
     @Test
     public void propertyShouldNotBeValidBecauseOfPointMinGpsRelativeIsNull() {
-        final ClassifyingDistanceProperty givenProperty = ClassifyingDistanceProperty.builder()
+        final ClassifyDistanceProperty givenProperty = ClassifyDistanceProperty.builder()
                 .cacheGeometries(true)
                 .trackSimplifyEpsilon(0.001)
                 .build();
 
-        final Set<ConstraintViolation<ClassifyingDistanceProperty>> violations = validator.validate(givenProperty);
+        final Set<ConstraintViolation<ClassifyDistanceProperty>> violations = validator.validate(givenProperty);
         assertEquals(1, violations.size());
         assertEquals("не должно равняться null", findFirstMessage(violations));
     }
 
     @Test
     public void propertyShouldNotBeValidBecauseOfPointMinGpsRelativeIsLessThanMinimalAllowable() {
-        final ClassifyingDistanceProperty givenProperty = new ClassifyingDistanceProperty(false, 0.00015, -0.001);
+        final ClassifyDistanceProperty givenProperty = new ClassifyDistanceProperty(false, 0.00015, -0.001);
 
-        final Set<ConstraintViolation<ClassifyingDistanceProperty>> violations = validator.validate(givenProperty);
+        final Set<ConstraintViolation<ClassifyDistanceProperty>> violations = validator.validate(givenProperty);
         assertEquals(1, violations.size());
         assertEquals("должно быть больше, чем или равно 0", findFirstMessage(violations));
     }

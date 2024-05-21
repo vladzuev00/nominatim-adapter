@@ -1,6 +1,6 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassifying.maploader.simplifier;
 
-import by.aurorasoft.distanceclassifier.config.property.ClassifyingDistanceProperty;
+import by.aurorasoft.distanceclassifier.config.property.ClassifyDistanceProperty;
 import by.aurorasoft.distanceclassifier.model.Track;
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
 import by.nhorushko.trackfilter.TrackFilterI;
@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public final class TrackSimplifier {
     private final TrackFilterI filter;
-    private final ClassifyingDistanceProperty property;
+    private final ClassifyDistanceProperty property;
 
     public Track simplify(final Track track) {
         final List<TrackPoint> filteredPoints = filterPoints(track);

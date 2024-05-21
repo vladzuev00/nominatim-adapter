@@ -1,6 +1,6 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.factory;
 
-import by.aurorasoft.distanceclassifier.config.property.ClassifyingDistanceProperty;
+import by.aurorasoft.distanceclassifier.config.property.ClassifyDistanceProperty;
 import by.aurorasoft.distanceclassifier.model.Track;
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
 import by.aurorasoft.distanceclassifier.service.distanceclassifying.iterator.SkippingTrackPointIterator;
@@ -29,7 +29,7 @@ public final class SkippingTrackPointIteratorFactoryTest {
     private TrackPointReplacer mockedPointReplacer;
 
     @Mock
-    private ClassifyingDistanceProperty mockedProperty;
+    private ClassifyDistanceProperty mockedProperty;
 
     private SkippingTrackPointIteratorFactory factory;
 
