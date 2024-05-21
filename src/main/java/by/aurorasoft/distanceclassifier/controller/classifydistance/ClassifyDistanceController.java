@@ -21,7 +21,7 @@ import static org.springframework.http.ResponseEntity.ok;
 @RestController
 @RequestMapping("/api/v1/classifyDistance")
 @RequiredArgsConstructor
-public class ClassifyingDistanceController {
+public class ClassifyDistanceController {
     private final TrackFactory trackFactory;
     private final ClassifyingDistanceService service;
 

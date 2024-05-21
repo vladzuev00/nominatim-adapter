@@ -23,7 +23,7 @@ import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-public final class ClassifyingDistanceControllerTest extends AbstractSpringBootTest {
+public final class ClassifyDistanceControllerTest extends AbstractSpringBootTest {
     private static final String URL = "/api/v1/classifyDistance";
 
     @MockBean
