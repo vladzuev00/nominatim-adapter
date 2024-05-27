@@ -22,7 +22,7 @@ spring:
 
 server:
   servlet:
-    context-path: /mileageClassifier
+    context-path: /mileage-classifier
   port: 8080
 
 distance-classifying:
@@ -32,3 +32,10 @@ distance-classifying:
 
 overpass:
   timeout: 50
+
+springdoc:
+  swagger-ui:
+    path: /api-docs.html
+    tagsSorter: alpha
+    docExpansion: none
+    displayOperationId: true
