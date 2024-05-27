@@ -1,6 +1,6 @@
 CREATE EXTENSION IF NOT EXISTS postgis;
 
-CREATE TYPE city_type AS ENUM ('CAPITAL', 'REGIONAL', 'NOT_DEFINED');
+CREATE TYPE city_type AS ENUM ('CAPITAL', 'CITY', 'TOWN');
 
 CREATE TABLE city
 (
@@ -13,35 +13,26 @@ CREATE TABLE city
 
 ALTER SEQUENCE city_id_seq INCREMENT 50;
 
-CREATE TYPE searching_cities_process_type AS ENUM('HANDLING', 'SUCCESS', 'ERROR');
+CREATE INDEX city_bounding_box_index ON city USING GIST(bounding_box);
 
-CREATE TABLE searching_cities_process
+CREATE TABLE scanned_location
 (
-    id             SERIAL PRIMARY KEY,
-    status         searching_cities_process_type NOT NULL,
-    search_step    DECIMAL                       NOT NULL,
-    total_points   BIGINT                        NOT NULL,
-    handled_points BIGINT                        NOT NULL,
-    bounds         GEOMETRY                      NOT NULL,
-    updated_time   TIMESTAMP                     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    created_time   TIMESTAMP                     NOT NULL DEFAULT CURRENT_TIMESTAMP
+    id INTEGER PRIMARY KEY,
+    geometry GEOMETRY NOT NULL
 );
 
-CREATE
-OR REPLACE FUNCTION on_update_searching_cities_process() RETURNS TRIGGER AS
-'
-    BEGIN
-        NEW.updated_time = CURRENT_TIMESTAMP;
-        RETURN NEW;
-    END;
-' LANGUAGE plpgsql;
+INSERT INTO scanned_location(id, geometry) VALUES(1, ST_GeomFromText('POLYGON EMPTY', 4326));
 
-CREATE TRIGGER tr_on_update_searching_cities_process
-    BEFORE UPDATE
-    ON searching_cities_process
-    FOR EACH ROW
-    EXECUTE PROCEDURE on_update_searching_cities_process();
+CREATE FUNCTION deny_insert_and_delete_scanned_location()
+  RETURNS TRIGGER
+AS
+$body$
+BEGIN
+  RAISE EXCEPTION 'Impossible to insert or delete scanned location';
+END;
+$body$
+LANGUAGE plpgsql;
 
-CREATE INDEX ON city using GIST(geometry);
-CREATE INDEX ON city using GIST(bounding_box);
-
+CREATE TRIGGER trigger_on_insert_and_delete_scanned_location
+BEFORE INSERT OR DELETE ON scanned_location
+FOR EACH STATEMENT EXECUTE PROCEDURE deny_insert_and_delete_scanned_location();

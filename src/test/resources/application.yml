@@ -21,17 +21,14 @@ spring:
   liquibase:
     changeLog: classpath:db/db.changelog-master.yaml
 
-search-cities:
-  amount-handled-points-to-save-state: 2
-
 server:
   servlet:
-    context-path: /nominatim
+    context-path: /cityMileage
 
-nominatim:
-  millis-between-requests: 1000
+overpass:
+  timeout: 50
 
-search-mileage:
-  load-city-geometries-on-start-application: false
-
-
+distance-classifying:
+  cache-geometries: false
+  track-simplify-epsilon: 0.00015
+  point-min-gps-relative: 50

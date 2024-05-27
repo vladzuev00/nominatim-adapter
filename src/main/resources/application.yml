@@ -2,7 +2,7 @@ spring:
   application:
     name: cities-searcher
   datasource:
-    url: jdbc:postgresql://localhost:5432/nominatim_adapter
+    url: jdbc:postgresql://localhost:5432/city_mileage
     username: postgres
     password: root
     driver-class-name: org.postgresql.Driver
@@ -20,15 +20,15 @@ spring:
   liquibase:
       changeLog: classpath:db/db.changelog-master.yaml
 
-search-cities:
-  amount-handled-points-to-save-state: 10
-
 server:
   servlet:
-    context-path: /nominatim
+    context-path: /cityMileage
+  port: 8081
 
-nominatim:
-  millis-between-requests: 10
+distance-classifying:
+  cache-geometries: true
+  track-simplify-epsilon: 0.00015
+  point-min-gps-relative: 500
 
-search-mileage:
-  load-city-geometries-on-start-application: false
+overpass:
+  timeout: 50
