@@ -30,7 +30,7 @@
     <org.testcontainers.version>1.17.6</org.testcontainers.version>
     <com.yannbriancon.version>2.0.0</com.yannbriancon.version>
     <liquibase.version>4.8.0</liquibase.version>
-    <springdoc-openapi-starter-webmvc-ui.version>2.3.0</springdoc-openapi-starter-webmvc-ui.version>
+    <springdoc-openapi.version>1.6.4</springdoc-openapi.version>
     <jmh.version>1.37</jmh.version>
     <imageLabel>DEV</imageLabel>
   </properties>
@@ -71,12 +71,6 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-hateoas</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springdoc</groupId>
-      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-      <version>${springdoc-openapi-starter-webmvc-ui.version}</version>
     </dependency>
 
     <dependency>
@@ -158,6 +152,12 @@
       <groupId>com.opencsv</groupId>
       <artifactId>opencsv</artifactId>
       <version>${opencsv.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-ui</artifactId>
+      <version>${springdoc-openapi.version}</version>
     </dependency>
 
     <dependency>
