@@ -1,8 +1,8 @@
 spring:
   application:
-    name: cities-searcher
+    name: mileage-classifier
   datasource:
-    url: jdbc:postgresql://localhost:5432/city_mileage
+    url: jdbc:postgresql://localhost:5432/mileage-classifier
     username: postgres
     password: root
     driver-class-name: org.postgresql.Driver
