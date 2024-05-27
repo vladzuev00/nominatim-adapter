@@ -23,7 +23,7 @@ spring:
 server:
   servlet:
     context-path: /cityMileage
-  port: 8081
+  port: 8080
 
 distance-classifying:
   cache-geometries: true
