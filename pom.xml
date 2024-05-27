@@ -12,6 +12,8 @@
   <url>http://maven.apache.org</url>
 
   <properties>
+    <maven.compiler.target>17</maven.compiler.target>
+    <maven.compiler.source>17</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <org.postgresql.version>42.7.2</org.postgresql.version>
     <org.n52.jackson.version>1.2.10</org.n52.jackson.version>
@@ -208,9 +210,9 @@
       </plugin>
 
       <plugin>
-        <groupId>com.spotify</groupId>
+        <groupId>io.fabric8</groupId>
         <artifactId>docker-maven-plugin</artifactId>
-        <version>1.2.0</version>
+        <version>0.44.0</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -221,26 +223,28 @@
           </execution>
         </executions>
         <configuration>
-          <imageName>cooll3r/mileagecalculator:${project.version}-${imageLabel}</imageName>
-          <baseImage>adoptopenjdk/openjdk11-openj9:alpine-slim</baseImage>
-          <entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
-          <!-- copy the service's jar file from target into the root directory of the image -->
-          <resources>
-            <resource>
-              <targetPath>/</targetPath>
-              <directory>${project.build.directory}</directory>
-              <include>${project.build.finalName}.jar</include>
-            </resource>
-          </resources>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>16</source>
-          <target>16</target>
+          <images>
+            <image>
+              <name>cooll3r/mileage-classifier:${version}-${imageLabel}</name>
+              <build>
+                <from>eclipse-temurin:17-jre-alpine</from>
+                <entryPoint>
+                  <shell>java -jar /${project.build.finalName}.jar </shell>
+                </entryPoint>
+                <assembly>
+                  <basedir>/</basedir>
+                  <inline>
+                    <files>
+                      <file>
+                        <source>${project.build.directory}/${project.build.finalName}.jar</source>
+                        <fileMode>777</fileMode>
+                      </file>
+                    </files>
+                  </inline>
+                </assembly>
+              </build>
+            </image>
+          </images>
         </configuration>
       </plugin>
 
