@@ -39,3 +39,9 @@ springdoc:
     tagsSorter: alpha
     docExpansion: none
     displayOperationId: true
+
+
+app:
+  version: @project.version@
+  api:
+    url: http://localhost:8080
