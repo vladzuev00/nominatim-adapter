@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import java.util.Locale;
+
 import static java.time.ZoneOffset.UTC;
 import static java.util.TimeZone.getTimeZone;
 import static java.util.TimeZone.setDefault;
@@ -36,6 +38,7 @@ public abstract class AbstractSpringBootTest {
     @BeforeClass
     public static void setDefaultTimeZone() {
         setDefault(getTimeZone(UTC));
+        Locale.setDefault(new Locale("ru", "RU"));
     }
 
     protected final void startQueryCount() {
