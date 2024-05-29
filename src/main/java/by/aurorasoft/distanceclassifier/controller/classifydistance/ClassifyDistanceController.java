@@ -26,18 +26,14 @@ import static org.springframework.http.ResponseEntity.ok;
 public class ClassifyDistanceController {
     private final TrackFactory trackFactory;
     private final ClassifyDistanceService service;
+    private final ClassifyDistanceLogAggregator logAggregator;
 
     @PostMapping
-    public ResponseEntity<ClassifiedDistanceStorage> classify(@Valid @RequestBody final ClassifyDistanceRequest request) {
+    public ResponseEntity<ClassifiedDistanceStorage> classify(@Valid @RequestBody ClassifyDistanceRequest request) {
         long start = System.currentTimeMillis();
-        final Track track = trackFactory.create(request);
-        final ClassifiedDistanceStorage storage = service.classify(track, request.getUrbanSpeedThreshold());
-        log.info("Classify distance: {} km, urban: {} km, country: {} km, time {} ms",
-                storage.getGpsDistance().getTotal(),
-                storage.getGpsDistance().getUrban(),
-                storage.getGpsDistance().getCountry(),
-                System.currentTimeMillis() - start
-        );
-        return ok(storage);
+        var track = trackFactory.create(request);
+        var classifiedDistanceStorage = service.classify(track, request.getUrbanSpeedThreshold());
+        logAggregator.addRequest(classifiedDistanceStorage, System.currentTimeMillis() - start);
+        return ok(classifiedDistanceStorage);
     }
 }
