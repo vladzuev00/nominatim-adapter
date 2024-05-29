@@ -1,4 +1,4 @@
-package by.aurorasoft.distanceclassifier.benchmark.classifyingdistance;
+package classifyingdistance;
 
 import org.springframework.boot.test.context.SpringBootTest;
 

@@ -1,4 +1,4 @@
-package by.aurorasoft.distanceclassifier.benchmark.base;
+package base;
 
 import by.aurorasoft.distanceclassifier.base.AbstractSpringBootTest;
 import org.junit.Test;

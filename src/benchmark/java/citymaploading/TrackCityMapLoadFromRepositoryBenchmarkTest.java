@@ -1,4 +1,4 @@
-package by.aurorasoft.distanceclassifier.benchmark.classifyingdistance;
+package citymaploading;
 
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -9,6 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
                 "spring.jpa.properties.hibernate.hbm2ddl.import_files=classpath:sql/insert-belarus-cities.sql"
         }
 )
-public class ClassifyDistanceWithNotCachedGeometriesBenchmarkTest extends ClassifyDistanceBenchmarkTest {
+public class TrackCityMapLoadFromRepositoryBenchmarkTest extends TrackCityMapLoadBenchmarkTest {
 
 }
