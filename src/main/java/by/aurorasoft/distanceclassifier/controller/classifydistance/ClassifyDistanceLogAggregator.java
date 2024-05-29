@@ -21,7 +21,7 @@ public class ClassifyDistanceLogAggregator {
         totalDistance.addAndGet((long) storage.getGpsDistance().getTotal());
 
         if (duration > 5) {
-            log.info("Classify distance: {} km, urban: {} km, country: {} km, time {} ms",
+            log.warn("Request took longer than usual - Classify distance: {} km, urban: {} km, country: {} km, time {} ms",
                     storage.getGpsDistance().getTotal(),
                     storage.getGpsDistance().getUrban(),
                     storage.getGpsDistance().getCountry(),
