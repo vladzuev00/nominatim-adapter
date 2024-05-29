@@ -37,7 +37,7 @@ public class ClassifyDistanceLogAggregator {
         long distanceSum = totalDistance.getAndSet(0);
 
         if (requestCount > 0) {
-            log.info("Classify distance - RPM {}, handled: {} km, average processing time of {} ms per request",
+            log.info("Classify distance - RPM {}, classify: {} km, average processing time of {} ms per request",
                     requestCount, distanceSum, durationSum / requestCount);
         } else {
             log.info("Classify distance - No request");
