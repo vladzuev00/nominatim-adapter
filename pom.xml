@@ -32,6 +32,7 @@
         <liquibase.version>4.8.0</liquibase.version>
         <springdoc-openapi.version>1.7.0</springdoc-openapi.version>
         <jmh.version>1.37</jmh.version>
+        <logcaptor.version>2.9.2</logcaptor.version>
         <imageLabel>DEV</imageLabel>
     </properties>
 
@@ -202,6 +203,13 @@
             <groupId>com.yannbriancon</groupId>
             <artifactId>spring-hibernate-query-utils</artifactId>
             <version>${com.yannbriancon.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.hakky54</groupId>
+            <artifactId>logcaptor</artifactId>
+            <version>${logcaptor.version}</version>
             <scope>test</scope>
         </dependency>
 
