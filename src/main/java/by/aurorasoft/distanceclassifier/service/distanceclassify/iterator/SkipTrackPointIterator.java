@@ -1,9 +1,11 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassify.iterator;
 
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
+import by.aurorasoft.distanceclassifier.service.distanceclassify.iterator.exception.TrackPointWrongOrderException;
 import by.aurorasoft.distanceclassifier.service.distanceclassify.iterator.pointreplacer.TrackPointReplacer;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Iterator;
 import java.util.List;
@@ -12,12 +14,13 @@ import java.util.NoSuchElementException;
 import static java.lang.Double.compare;
 import static java.util.stream.IntStream.range;
 
+@Slf4j
 @RequiredArgsConstructor
 public final class SkipTrackPointIterator implements Iterator<TrackPoint> {
     private final TrackPointReplacer pointReplacer;
     private final List<TrackPoint> points;
     private final double pointMinGpsRelative;
-    private final PointSequenceCursor cursor = new PointSequenceCursor(0, 1);
+    private final SequenceCursor cursor = new SequenceCursor(0, 1);
 
     @Override
     public boolean hasNext() {
@@ -39,9 +42,14 @@ public final class SkipTrackPointIterator implements Iterator<TrackPoint> {
     }
 
     private TrackPoint replaceSequenceByLastPoint() {
-        final TrackPoint first = points.get(cursor.start);
-        final TrackPoint last = points.get(cursor.end - 1);
-        return !isSequenceContainOnePoint() ? pointReplacer.replace(first, last) : last;
+        try {
+            final TrackPoint first = points.get(cursor.start);
+            final TrackPoint last = points.get(cursor.end - 1);
+            return !isSequenceContainOnePoint() ? pointReplacer.replace(first, last) : last;
+        } catch (final TrackPointWrongOrderException exception) {
+            logPointWrongOrderInSequence();
+            throw exception;
+        }
     }
 
     private boolean isSequenceContainOnePoint() {
@@ -92,8 +100,12 @@ public final class SkipTrackPointIterator implements Iterator<TrackPoint> {
         cursor.end = points.size();
     }
 
+    private void logPointWrongOrderInSequence() {
+        log.error("Sequence contain point with wrong order: {}", points.subList(cursor.start, cursor.end));
+    }
+
     @AllArgsConstructor
-    private static final class PointSequenceCursor {
+    private static final class SequenceCursor {
         private int start;
         private int end;
     }

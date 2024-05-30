@@ -1,7 +1,7 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassify.iterator.pointreplacer;
 
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
-import by.aurorasoft.distanceclassifier.service.distanceclassify.iterator.pointreplacer.exception.TrackPointWrongOrderException;
+import by.aurorasoft.distanceclassifier.service.distanceclassify.iterator.exception.TrackPointWrongOrderException;
 import by.nhorushko.classifieddistance.Distance;
 import org.springframework.stereotype.Component;
 

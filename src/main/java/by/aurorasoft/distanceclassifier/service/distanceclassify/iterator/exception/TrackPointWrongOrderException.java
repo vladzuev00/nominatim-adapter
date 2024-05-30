@@ -1,4 +1,4 @@
-package by.aurorasoft.distanceclassifier.service.distanceclassify.iterator.pointreplacer.exception;
+package by.aurorasoft.distanceclassifier.service.distanceclassify.iterator.exception;
 
 public final class TrackPointWrongOrderException extends RuntimeException {
 
