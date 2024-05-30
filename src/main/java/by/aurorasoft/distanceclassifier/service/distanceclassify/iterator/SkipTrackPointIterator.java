@@ -47,7 +47,7 @@ public final class SkipTrackPointIterator implements Iterator<TrackPoint> {
             final TrackPoint last = points.get(cursor.end - 1);
             return !isSequenceContainOnePoint() ? pointReplacer.replace(first, last) : last;
         } catch (final TrackPointWrongOrderException exception) {
-            logPointWrongOrderInSequence();
+            logPointWrongOrder();
             throw exception;
         }
     }
@@ -100,8 +100,8 @@ public final class SkipTrackPointIterator implements Iterator<TrackPoint> {
         cursor.end = points.size();
     }
 
-    private void logPointWrongOrderInSequence() {
-        log.error("Sequence contain point with wrong order: {}", points.subList(cursor.start, cursor.end));
+    private void logPointWrongOrder() {
+        log.error("The sequence contain points with wrong order: {}", points.subList(cursor.start, cursor.end));
     }
 
     @AllArgsConstructor
