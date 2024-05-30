@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Value;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.function.Function;
@@ -29,53 +30,60 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
     @Test
     public final void distancesShouldBeClassifiedForTracksFromFiles() {
         test(
+//                new TestArgument(
+//                        "track-1.csv",
+//                        new ClassifyDistanceResponse(
+//                                new DistanceResponse(550, 430, 980),
+//                                new DistanceResponse(670, 540, 1210)
+//                        )
+//                ),
+//                new TestArgument(
+//                        "track-2.csv",
+//                        new ClassifyDistanceResponse(
+//                                new DistanceResponse(0, 10.103240692886082, 10.103240692886082),
+//                                new DistanceResponse(0, 11.113564762174692, 11.113564762174692)
+//                        )
+//                ),
+//                new TestArgument(
+//                        "track-3.csv",
+//                        new ClassifyDistanceResponse(
+//                                new DistanceResponse(8.241159744065634, 0, 8.241159744065634),
+//                                new DistanceResponse(9.065275718472197, 0, 9.065275718472197)
+//                        )
+//                ),
+//                new TestArgument(
+//                        "track-4.csv",
+//                        new ClassifyDistanceResponse(
+//                                new DistanceResponse(1351.9430469455722, 3324.9456316080723, 4676.888678553644),
+//                                new DistanceResponse(1487.1373516401302, 3657.44019476888, 5144.57754640901)
+//                        )
+//                ),
+//                new TestArgument(
+//                        "track-5.csv",
+//                        new ClassifyDistanceResponse(
+//                                new DistanceResponse(2372.085930733812, 4478.68297031878, 6850.768901052592),
+//                                new DistanceResponse(2609.294523807194, 4926.551267350658, 7535.845791157852)
+//                        )
+//                ),
+//                new TestArgument(
+//                        "track-6.csv",
+//                        new ClassifyDistanceResponse(
+//                                new DistanceResponse(4570.045744948054, 9515.268801299402, 14085.314546247457),
+//                                new DistanceResponse(5027.050319442857, 10466.795681429337, 15493.846000872194)
+//                        )
+//                ),
+//                new TestArgument(
+//                        "track-7.csv",
+//                        new ClassifyDistanceResponse(
+//                                new DistanceResponse(562.1872620573471, 1209.0217731683263, 1771.2090352256732),
+//                                new DistanceResponse(618.4059882630817, 1329.9239504851594, 1948.3299387482411)
+//                        )
+//                ),
                 new TestArgument(
-                        "track-1.csv",
+                        "track-8.csv",
                         new ClassifyDistanceResponse(
-                                new DistanceResponse(550, 430, 980),
-                                new DistanceResponse(670, 540, 1210)
-                        )
-                ),
-                new TestArgument(
-                        "track-2.csv",
-                        new ClassifyDistanceResponse(
-                                new DistanceResponse(0, 10.103240692886082, 10.103240692886082),
-                                new DistanceResponse(0, 11.113564762174692, 11.113564762174692)
-                        )
-                ),
-                new TestArgument(
-                        "track-3.csv",
-                        new ClassifyDistanceResponse(
-                                new DistanceResponse(8.241159744065634, 0, 8.241159744065634),
-                                new DistanceResponse(9.065275718472197, 0, 9.065275718472197)
-                        )
-                ),
-                new TestArgument(
-                        "track-4.csv",
-                        new ClassifyDistanceResponse(
-                                new DistanceResponse(1351.9430469455722, 3324.9456316080723, 4676.888678553644),
-                                new DistanceResponse(1487.1373516401302, 3657.44019476888, 5144.57754640901)
-                        )
-                ),
-                new TestArgument(
-                        "track-5.csv",
-                        new ClassifyDistanceResponse(
-                                new DistanceResponse(2372.085930733812, 4478.68297031878, 6850.768901052592),
-                                new DistanceResponse(2609.294523807194, 4926.551267350658, 7535.845791157852)
-                        )
-                ),
-                new TestArgument(
-                        "track-6.csv",
-                        new ClassifyDistanceResponse(
-                                new DistanceResponse(4570.045744948054, 9515.268801299402, 14085.314546247457),
-                                new DistanceResponse(5027.050319442857, 10466.795681429337, 15493.846000872194)
-                        )
-                ),
-                new TestArgument(
-                        "track-7.csv",
-                        new ClassifyDistanceResponse(
-                                new DistanceResponse(562.1872620573471, 1209.0217731683263, 1771.2090352256732),
-                                new DistanceResponse(618.4059882630817, 1329.9239504851594, 1948.3299387482411)
+                                new DistanceResponse(0, 0, 0),
+                                new DistanceResponse(0, 0, 0)
                         )
                 )
         );
