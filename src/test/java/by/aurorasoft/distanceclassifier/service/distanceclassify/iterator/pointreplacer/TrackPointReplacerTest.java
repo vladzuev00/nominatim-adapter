@@ -2,6 +2,7 @@ package by.aurorasoft.distanceclassifier.service.distanceclassify.iterator.point
 
 import by.aurorasoft.distanceclassifier.model.Coordinate;
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
+import by.aurorasoft.distanceclassifier.service.distanceclassify.iterator.pointreplacer.exception.TrackPointWrongOrderException;
 import by.nhorushko.classifieddistance.Distance;
 import org.junit.Test;
 
@@ -40,7 +41,7 @@ public final class TrackPointReplacerTest {
         assertEquals(expected, actual);
     }
 
-    @Test(expected = TrackPointReplacingException.class)
+    @Test(expected = TrackPointWrongOrderException.class)
     public void pointShouldNotBeReplacedBecauseOfWrongOrderByGpsAbsolute() {
         final TrackPoint givenExisting = new TrackPoint(
                 new Coordinate(5.5, 6.6),
@@ -58,7 +59,7 @@ public final class TrackPointReplacerTest {
         replacer.replace(givenExisting, givenReplacement);
     }
 
-    @Test(expected = TrackPointReplacingException.class)
+    @Test(expected = TrackPointWrongOrderException.class)
     public void pointShouldNotBeReplacedBecauseOfWrongOrderByOdometerAbsolute() {
         final TrackPoint givenExisting = new TrackPoint(
                 new Coordinate(5.5, 6.6),
