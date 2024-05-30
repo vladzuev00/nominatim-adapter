@@ -2,7 +2,6 @@ package by.aurorasoft.distanceclassifier.service.distanceclassify.iterator.point
 
 import by.aurorasoft.distanceclassifier.model.Coordinate;
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
-import by.aurorasoft.distanceclassifier.service.distanceclassify.iterator.pointreplacer.TrackPointReplacer.TrackPointReplacingException;
 import by.nhorushko.classifieddistance.Distance;
 import org.junit.Test;
 
