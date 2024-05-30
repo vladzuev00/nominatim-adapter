@@ -20,7 +20,6 @@ public class ClassifyDistanceRequest {
     @Size(min = 2)
     List<@Valid PointRequest> trackPoints;
 
-    @NotNull
     @PositiveOrZero
     int urbanSpeedThreshold;
 

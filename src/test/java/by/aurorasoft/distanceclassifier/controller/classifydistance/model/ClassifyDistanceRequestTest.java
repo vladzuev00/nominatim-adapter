@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 import static by.aurorasoft.distanceclassifier.testutil.ConstraintViolationUtil.findFirstMessage;
+import static java.lang.Double.MIN_VALUE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
@@ -55,21 +56,10 @@ public final class ClassifyDistanceRequestTest extends AbstractSpringBootTest {
 
     @Test
     public void distanceShouldBeValid() {
-        final DistanceRequest givenDistance = new DistanceRequest(0., 6.6);
+        final DistanceRequest givenDistance = new DistanceRequest(0, 6.6);
 
         final Set<ConstraintViolation<DistanceRequest>> violations = validator.validate(givenDistance);
         assertTrue(violations.isEmpty());
-    }
-
-    @Test
-    public void distanceShouldNotBeValidBecauseOfRelativeIsNull() {
-        final DistanceRequest givenDistance = DistanceRequest.builder()
-                .absolute(6.6)
-                .build();
-
-        final Set<ConstraintViolation<DistanceRequest>> violations = validator.validate(givenDistance);
-        assertEquals(1, violations.size());
-        assertEquals("не должно равняться null", findFirstMessage(violations));
     }
 
     @Test
@@ -79,17 +69,6 @@ public final class ClassifyDistanceRequestTest extends AbstractSpringBootTest {
         final Set<ConstraintViolation<DistanceRequest>> violations = validator.validate(givenDistance);
         assertEquals(1, violations.size());
         assertEquals("должно быть больше или равно 0", findFirstMessage(violations));
-    }
-
-    @Test
-    public void distanceShouldNotBeValidBecauseOfAbsoluteIsNull() {
-        final DistanceRequest givenDistance = DistanceRequest.builder()
-                .relative(0.)
-                .build();
-
-        final Set<ConstraintViolation<DistanceRequest>> violations = validator.validate(givenDistance);
-        assertEquals(1, violations.size());
-        assertEquals("не должно равняться null", findFirstMessage(violations));
     }
 
     @Test
@@ -108,8 +87,8 @@ public final class ClassifyDistanceRequestTest extends AbstractSpringBootTest {
                 5.5,
                 6.6,
                 50,
-                new DistanceRequest(10., 11.),
-                new DistanceRequest(12., 13.)
+                new DistanceRequest(10, 11),
+                new DistanceRequest(12, 13)
         );
 
         final String actual = objectMapper.writeValueAsString(givenPoint);
@@ -153,8 +132,8 @@ public final class ClassifyDistanceRequestTest extends AbstractSpringBootTest {
                 5.5,
                 6.6,
                 50,
-                new DistanceRequest(10., 11.),
-                new DistanceRequest(12., 13.)
+                new DistanceRequest(10, 11),
+                new DistanceRequest(12, 13)
         );
         assertEquals(expected, actual);
     }
@@ -165,8 +144,8 @@ public final class ClassifyDistanceRequestTest extends AbstractSpringBootTest {
                 5.5,
                 6.6,
                 50,
-                new DistanceRequest(10., 11.),
-                new DistanceRequest(12., 13.)
+                new DistanceRequest(10, 11),
+                new DistanceRequest(12, 13)
         );
 
         final Set<ConstraintViolation<PointRequest>> violations = validator.validate(givenPoint);
@@ -176,10 +155,11 @@ public final class ClassifyDistanceRequestTest extends AbstractSpringBootTest {
     @Test
     public void pointShouldNotBeValidBecauseOfLatitudeIsNotValid() {
         final PointRequest givenPoint = PointRequest.builder()
+                .latitude(MIN_VALUE)
                 .longitude(6.6)
                 .speed(50)
-                .gpsDistance(new DistanceRequest(10., 11.))
-                .odometerDistance(new DistanceRequest(12., 13.))
+                .gpsDistance(new DistanceRequest(10, 11))
+                .odometerDistance(new DistanceRequest(12, 13))
                 .build();
 
         final Set<ConstraintViolation<PointRequest>> violations = validator.validate(givenPoint);
@@ -191,9 +171,10 @@ public final class ClassifyDistanceRequestTest extends AbstractSpringBootTest {
     public void pointShouldNotBeValidBecauseOfLongitudeIsNotValid() {
         final PointRequest givenPoint = PointRequest.builder()
                 .latitude(5.5)
+                .longitude(MIN_VALUE)
                 .speed(50)
-                .gpsDistance(new DistanceRequest(10., 11.))
-                .odometerDistance(new DistanceRequest(12., 13.))
+                .gpsDistance(new DistanceRequest(10, 11))
+                .odometerDistance(new DistanceRequest(12, 13))
                 .build();
 
         final Set<ConstraintViolation<PointRequest>> violations = validator.validate(givenPoint);
@@ -202,27 +183,13 @@ public final class ClassifyDistanceRequestTest extends AbstractSpringBootTest {
     }
 
     @Test
-    public void pointShouldNotBeValidBecauseOfSpeedIsNull() {
-        final PointRequest givenPoint = PointRequest.builder()
-                .latitude(5.5)
-                .longitude(6.6)
-                .gpsDistance(new DistanceRequest(10., 11.))
-                .odometerDistance(new DistanceRequest(12., 13.))
-                .build();
-
-        final Set<ConstraintViolation<PointRequest>> violations = validator.validate(givenPoint);
-        assertEquals(1, violations.size());
-        assertEquals("не должно равняться null", findFirstMessage(violations));
-    }
-
-    @Test
     public void pointShouldNotBeValidBecauseOfSpeedIsNegative() {
         final PointRequest givenPoint = new PointRequest(
                 5.5,
                 6.6,
                 -1,
-                new DistanceRequest(10., 11.),
-                new DistanceRequest(12., 13.)
+                new DistanceRequest(10, 11),
+                new DistanceRequest(12, 13)
         );
 
         final Set<ConstraintViolation<PointRequest>> violations = validator.validate(givenPoint);
@@ -236,7 +203,7 @@ public final class ClassifyDistanceRequestTest extends AbstractSpringBootTest {
                 .latitude(5.5)
                 .longitude(6.6)
                 .speed(50)
-                .odometerDistance(new DistanceRequest(12., 13.))
+                .odometerDistance(new DistanceRequest(12, 13))
                 .build();
 
         final Set<ConstraintViolation<PointRequest>> violations = validator.validate(givenPoint);
@@ -250,7 +217,7 @@ public final class ClassifyDistanceRequestTest extends AbstractSpringBootTest {
                 .latitude(5.5)
                 .longitude(6.6)
                 .speed(50)
-                .gpsDistance(new DistanceRequest(10., 11.))
+                .gpsDistance(new DistanceRequest(10, 11))
                 .build();
 
         final Set<ConstraintViolation<PointRequest>> violations = validator.validate(givenPoint);
@@ -267,15 +234,15 @@ public final class ClassifyDistanceRequestTest extends AbstractSpringBootTest {
                                 5.5,
                                 6.6,
                                 50,
-                                new DistanceRequest(10., 11.),
-                                new DistanceRequest(12., 13.)
+                                new DistanceRequest(10, 11),
+                                new DistanceRequest(12, 13)
                         ),
                         new PointRequest(
                                 8.8,
                                 9.9,
                                 85,
-                                new DistanceRequest(20., 21.),
-                                new DistanceRequest(22., 23.)
+                                new DistanceRequest(20, 21),
+                                new DistanceRequest(22, 23)
                         )
                 ),
                 60
@@ -360,15 +327,15 @@ public final class ClassifyDistanceRequestTest extends AbstractSpringBootTest {
                                 5.5,
                                 6.6,
                                 50,
-                                new DistanceRequest(10., 11.),
-                                new DistanceRequest(12., 13.)
+                                new DistanceRequest(10, 11),
+                                new DistanceRequest(12, 13)
                         ),
                         new PointRequest(
                                 8.8,
                                 9.9,
                                 85,
-                                new DistanceRequest(20., 21.),
-                                new DistanceRequest(22., 23.)
+                                new DistanceRequest(20, 21),
+                                new DistanceRequest(22, 23)
                         )
                 ),
                 60
@@ -384,15 +351,15 @@ public final class ClassifyDistanceRequestTest extends AbstractSpringBootTest {
                                 5.5,
                                 6.6,
                                 50,
-                                new DistanceRequest(10., 11.),
-                                new DistanceRequest(12., 13.)
+                                new DistanceRequest(10, 11),
+                                new DistanceRequest(12, 13)
                         ),
                         new PointRequest(
                                 8.8,
                                 9.9,
                                 85,
-                                new DistanceRequest(20., 21.),
-                                new DistanceRequest(22., 23.)
+                                new DistanceRequest(20, 21),
+                                new DistanceRequest(22, 23)
                         )
                 ),
                 60
@@ -421,8 +388,8 @@ public final class ClassifyDistanceRequestTest extends AbstractSpringBootTest {
                                 5.5,
                                 6.6,
                                 50,
-                                new DistanceRequest(10., 11.),
-                                new DistanceRequest(12., 13.)
+                                new DistanceRequest(10, 11),
+                                new DistanceRequest(12, 13)
                         )
                 ),
                 60
@@ -441,15 +408,15 @@ public final class ClassifyDistanceRequestTest extends AbstractSpringBootTest {
                                 90.0000000001,
                                 6.6,
                                 50,
-                                new DistanceRequest(10., 11.),
-                                new DistanceRequest(12., 13.)
+                                new DistanceRequest(10, 11),
+                                new DistanceRequest(12, 13)
                         ),
                         new PointRequest(
                                 8.8,
                                 9.9,
                                 85,
-                                new DistanceRequest(20., 21.),
-                                new DistanceRequest(22., 23.)
+                                new DistanceRequest(20, 21),
+                                new DistanceRequest(22, 23)
                         )
                 ),
                 60
@@ -461,34 +428,6 @@ public final class ClassifyDistanceRequestTest extends AbstractSpringBootTest {
     }
 
     @Test
-    public void requestShouldNotBeValidBecauseOfUrbanSpeedThresholdIsNull() {
-        final ClassifyDistanceRequest givenRequest = ClassifyDistanceRequest.builder()
-                .trackPoints(
-                        List.of(
-                                new PointRequest(
-                                        5.5,
-                                        6.6,
-                                        50,
-                                        new DistanceRequest(10., 11.),
-                                        new DistanceRequest(12., 13.)
-                                ),
-                                new PointRequest(
-                                        8.8,
-                                        9.9,
-                                        85,
-                                        new DistanceRequest(20., 21.),
-                                        new DistanceRequest(22., 23.)
-                                )
-                        )
-                )
-                .build();
-
-        final Set<ConstraintViolation<ClassifyDistanceRequest>> violations = validator.validate(givenRequest);
-        assertEquals(1, violations.size());
-        assertEquals("не должно равняться null", findFirstMessage(violations));
-    }
-
-    @Test
     public void requestShouldNotBeValidBecauseOfUrbanSpeedThresholdIsNegative() {
         final ClassifyDistanceRequest givenRequest = new ClassifyDistanceRequest(
                 List.of(
@@ -496,15 +435,15 @@ public final class ClassifyDistanceRequestTest extends AbstractSpringBootTest {
                                 5.5,
                                 6.6,
                                 50,
-                                new DistanceRequest(10., 11.),
-                                new DistanceRequest(12., 13.)
+                                new DistanceRequest(10, 11),
+                                new DistanceRequest(12, 13)
                         ),
                         new PointRequest(
                                 8.8,
                                 9.9,
                                 85,
-                                new DistanceRequest(20., 21.),
-                                new DistanceRequest(22., 23.)
+                                new DistanceRequest(20, 21),
+                                new DistanceRequest(22, 23)
                         )
                 ),
                 -1
