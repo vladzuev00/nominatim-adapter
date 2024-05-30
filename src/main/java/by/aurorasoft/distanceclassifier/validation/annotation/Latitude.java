@@ -1,5 +1,8 @@
 package by.aurorasoft.distanceclassifier.validation.annotation;
 
+import javax.validation.Constraint;
+import javax.validation.Payload;
+import javax.validation.ReportAsSingleViolation;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import java.lang.annotation.Retention;
@@ -13,6 +16,14 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({PARAMETER, FIELD})
 @DecimalMin("-90")
 @DecimalMax("90")
+@ReportAsSingleViolation
+@Constraint(validatedBy = {})
 public @interface Latitude {
+    String message() default "Invalid latitude";
 
+    @SuppressWarnings("unused")
+    Class<?>[] groups() default {};
+
+    @SuppressWarnings("unused")
+    Class<? extends Payload>[] payload() default {};
 }

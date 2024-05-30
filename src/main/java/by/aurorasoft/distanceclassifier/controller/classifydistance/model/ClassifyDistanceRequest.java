@@ -44,9 +44,11 @@ public class ClassifyDistanceRequest {
         int speed;
 
         @NotNull
+        @Valid
         DistanceRequest gpsDistance;
 
         @NotNull
+        @Valid
         DistanceRequest odometerDistance;
 
         @Builder
@@ -75,8 +77,7 @@ public class ClassifyDistanceRequest {
 
         @Builder
         @JsonCreator
-        public DistanceRequest(@JsonProperty("relative") double relative,
-                               @JsonProperty("absolute") double absolute) {
+        public DistanceRequest(@JsonProperty("relative") double relative, @JsonProperty("absolute") double absolute) {
             this.relative = relative;
             this.absolute = absolute;
         }
