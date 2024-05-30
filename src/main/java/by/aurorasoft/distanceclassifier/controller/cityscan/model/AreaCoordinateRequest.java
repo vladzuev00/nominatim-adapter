@@ -11,23 +11,23 @@ import lombok.Value;
 public class AreaCoordinateRequest {
 
     @Latitude
-    Double minLatitude;
+    double minLatitude;
 
     @Longitude
-    Double minLongitude;
+    double minLongitude;
 
     @Latitude
-    Double maxLatitude;
+    double maxLatitude;
 
     @Longitude
-    Double maxLongitude;
+    double maxLongitude;
 
     @Builder
     @JsonCreator
-    public AreaCoordinateRequest(@JsonProperty("minLatitude") final Double minLatitude,
-                                 @JsonProperty("minLongitude") final Double minLongitude,
-                                 @JsonProperty("maxLatitude") final Double maxLatitude,
-                                 @JsonProperty("maxLongitude") final Double maxLongitude) {
+    public AreaCoordinateRequest(@JsonProperty("minLatitude") final double minLatitude,
+                                 @JsonProperty("minLongitude") final double minLongitude,
+                                 @JsonProperty("maxLatitude") final double maxLatitude,
+                                 @JsonProperty("maxLongitude") final double maxLongitude) {
         this.minLatitude = minLatitude;
         this.minLongitude = minLongitude;
         this.maxLatitude = maxLatitude;
