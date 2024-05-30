@@ -15,10 +15,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import java.util.Locale;
+import java.util.TimeZone;
 
 import static java.time.ZoneOffset.UTC;
 import static java.util.TimeZone.getTimeZone;
-import static java.util.TimeZone.setDefault;
 import static org.junit.Assert.assertEquals;
 
 @Slf4j
@@ -37,7 +37,7 @@ public abstract class AbstractSpringBootTest {
 
     @BeforeClass
     public static void setDefaultTimeZone() {
-        setDefault(getTimeZone(UTC));
+        TimeZone.setDefault(getTimeZone(UTC));
         Locale.setDefault(new Locale("ru", "RU"));
     }
 
