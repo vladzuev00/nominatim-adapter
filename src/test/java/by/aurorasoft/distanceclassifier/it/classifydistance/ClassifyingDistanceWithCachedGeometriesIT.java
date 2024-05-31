@@ -9,7 +9,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
         webEnvironment = RANDOM_PORT,
         properties = {
                 "distance-classifying.cache-geometries=true",
-                "spring.jpa.properties.hibernate.hbm2ddl.import_files=data.sql,classpath:sql/insert-belarus-cities.sql"
+                "spring.sql.init.data-locations=classpath:data.sql,classpath:sql/insert-belarus-cities.sql"
         }
 )
 public final class ClassifyingDistanceWithCachedGeometriesIT extends ClassifyingDistanceIT {

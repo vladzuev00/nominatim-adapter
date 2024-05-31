@@ -46,7 +46,7 @@ public final class SkipTrackPointIteratorFactoryTest {
         final List<TrackPoint> givenPoints = mock(List.class);
         when(givenTrack.getPoints()).thenReturn(givenPoints);
 
-        final double givenPointMinGpsRelative = 500.;
+        final double givenPointMinGpsRelative = 500;
         when(mockedProperty.getPointMinGpsRelative()).thenReturn(givenPointMinGpsRelative);
 
         final SkipTrackPointIterator actual = factory.create(givenTrack);
@@ -58,7 +58,8 @@ public final class SkipTrackPointIteratorFactoryTest {
         assertSame(givenPoints, actualPoints);
 
         final double actualPointMinGpsRelative = getPointMinGpsRelative(actual);
-        assertEquals(givenPointMinGpsRelative, actualPointMinGpsRelative, 0.);
+        final double expectedPointMinGpsRelative = givenPointMinGpsRelative / 1000;
+        assertEquals(expectedPointMinGpsRelative, actualPointMinGpsRelative, 0.);
     }
 
     private TrackPointReplacer getPointReplacer(final SkipTrackPointIterator iterator) {

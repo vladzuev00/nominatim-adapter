@@ -14,6 +14,7 @@ public final class SkipTrackPointIteratorFactory {
     private final ClassifyDistanceProperty property;
 
     public SkipTrackPointIterator create(final Track track) {
-        return new SkipTrackPointIterator(pointReplacer, track.getPoints(), property.getPointMinGpsRelative());
+        final double pointMinGpsRelativeInMeters = property.getPointMinGpsRelative() / 1000;
+        return new SkipTrackPointIterator(pointReplacer, track.getPoints(), pointMinGpsRelativeInMeters);
     }
 }
