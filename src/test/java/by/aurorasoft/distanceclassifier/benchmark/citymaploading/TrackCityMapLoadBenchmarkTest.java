@@ -1,7 +1,7 @@
-package citymaploading;
+package by.aurorasoft.distanceclassifier.benchmark.citymaploading;
 
 
-import base.BenchmarkTest;
+import by.aurorasoft.distanceclassifier.benchmark.base.BenchmarkTest;
 import by.aurorasoft.distanceclassifier.model.Track;
 import by.aurorasoft.distanceclassifier.service.distanceclassify.maploader.TrackCityMapLoader;
 import by.aurorasoft.distanceclassifier.testutil.TrackCSVFileReadUtil;

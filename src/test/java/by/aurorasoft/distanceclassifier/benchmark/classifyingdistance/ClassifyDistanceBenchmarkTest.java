@@ -1,6 +1,6 @@
-package classifyingdistance;
+package by.aurorasoft.distanceclassifier.benchmark.classifyingdistance;
 
-import base.BenchmarkTest;
+import by.aurorasoft.distanceclassifier.benchmark.base.BenchmarkTest;
 import by.aurorasoft.distanceclassifier.model.Track;
 import by.aurorasoft.distanceclassifier.service.distanceclassify.ClassifyDistanceService;
 import by.aurorasoft.distanceclassifier.testutil.TrackCSVFileReadUtil;
