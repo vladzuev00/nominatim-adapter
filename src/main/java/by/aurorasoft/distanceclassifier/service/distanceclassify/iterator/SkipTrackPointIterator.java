@@ -1,9 +1,11 @@
 package by.aurorasoft.distanceclassifier.service.distanceclassify.iterator;
 
 import by.aurorasoft.distanceclassifier.model.TrackPoint;
+import by.aurorasoft.distanceclassifier.service.distanceclassify.iterator.exception.TrackPointWrongOrderException;
 import by.aurorasoft.distanceclassifier.service.distanceclassify.iterator.pointreplacer.TrackPointReplacer;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Iterator;
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.NoSuchElementException;
 import static java.lang.Double.compare;
 import static java.util.stream.IntStream.range;
 
+@Slf4j
 @RequiredArgsConstructor
 public final class SkipTrackPointIterator implements Iterator<TrackPoint> {
     private final TrackPointReplacer pointReplacer;
@@ -43,6 +46,9 @@ public final class SkipTrackPointIterator implements Iterator<TrackPoint> {
             final TrackPoint first = points.get(cursor.start);
             final TrackPoint last = points.get(cursor.end - 1);
             return !isSequenceContainOnePoint() ? pointReplacer.replace(first, last) : last;
+        } catch (final TrackPointWrongOrderException exception) {
+            logPointWrongOrder();
+            throw exception;
         }
     }
 
@@ -92,6 +98,10 @@ public final class SkipTrackPointIterator implements Iterator<TrackPoint> {
     private void shiftCursorToEnd() {
         cursor.start = points.size();
         cursor.end = points.size();
+    }
+
+    private void logPointWrongOrder() {
+        log.error("Points with wrong order was found in sequence: {}", getSelectedSequencePoints());
     }
 
     private List<TrackPoint> getSelectedSequencePoints() {
