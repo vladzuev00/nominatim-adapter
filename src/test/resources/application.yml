@@ -31,7 +31,7 @@ overpass:
 distance-classifying:
   cache-geometries: false
   track-simplify-epsilon: 0.00015
-  point-min-gps-relative: 0
+  point-min-gps-relative: 50
 
 app:
   version: 1.0

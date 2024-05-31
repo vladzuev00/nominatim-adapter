@@ -11,7 +11,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Value;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.function.Function;
@@ -30,59 +29,66 @@ public abstract class ClassifyingDistanceIT extends AbstractIT {
     @Test
     public final void distancesShouldBeClassifiedForTracksFromFiles() {
         test(
-//                new TestArgument(
-//                        "track-1.csv",
-//                        new ClassifyDistanceResponse(
-//                                new DistanceResponse(550, 430, 980),
-//                                new DistanceResponse(670, 540, 1210)
-//                        )
-//                ),
-//                new TestArgument(
-//                        "track-2.csv",
-//                        new ClassifyDistanceResponse(
-//                                new DistanceResponse(0, 10.103240692886082, 10.103240692886082),
-//                                new DistanceResponse(0, 11.113564762174692, 11.113564762174692)
-//                        )
-//                ),
-//                new TestArgument(
-//                        "track-3.csv",
-//                        new ClassifyDistanceResponse(
-//                                new DistanceResponse(8.241159744065634, 0, 8.241159744065634),
-//                                new DistanceResponse(9.065275718472197, 0, 9.065275718472197)
-//                        )
-//                ),
-//                new TestArgument(
-//                        "track-4.csv",
-//                        new ClassifyDistanceResponse(
-//                                new DistanceResponse(1351.9430469455722, 3324.9456316080723, 4676.888678553644),
-//                                new DistanceResponse(1487.1373516401302, 3657.44019476888, 5144.57754640901)
-//                        )
-//                ),
-//                new TestArgument(
-//                        "track-5.csv",
-//                        new ClassifyDistanceResponse(
-//                                new DistanceResponse(2372.085930733812, 4478.68297031878, 6850.768901052592),
-//                                new DistanceResponse(2609.294523807194, 4926.551267350658, 7535.845791157852)
-//                        )
-//                ),
-//                new TestArgument(
-//                        "track-6.csv",
-//                        new ClassifyDistanceResponse(
-//                                new DistanceResponse(4570.045744948054, 9515.268801299402, 14085.314546247457),
-//                                new DistanceResponse(5027.050319442857, 10466.795681429337, 15493.846000872194)
-//                        )
-//                ),
-//                new TestArgument(
-//                        "track-7.csv",
-//                        new ClassifyDistanceResponse(
-//                                new DistanceResponse(562.1872620573471, 1209.0217731683263, 1771.2090352256732),
-//                                new DistanceResponse(618.4059882630817, 1329.9239504851594, 1948.3299387482411)
-//                        )
-//                ),
+                new TestArgument(
+                        "track-1.csv",
+                        new ClassifyDistanceResponse(
+                                new DistanceResponse(565, 415, 980),
+                                new DistanceResponse(705, 505, 1210)
+                        )
+                ),
+                new TestArgument(
+                        "track-2.csv",
+                        new ClassifyDistanceResponse(
+                                new DistanceResponse(2.783698342039004, 7.3195423508470725, 10.103240692886077),
+                                new DistanceResponse(3.0620681762429056, 8.05149658593178, 11.113564762174686)
+                        )
+                ),
+                new TestArgument(
+                        "track-3.csv",
+                        new ClassifyDistanceResponse(
+                                new DistanceResponse(8.241159744065634, 0, 8.241159744065634),
+                                new DistanceResponse(9.065275718472195, 0, 9.065275718472195)
+                        )
+                ),
+                new TestArgument(
+                        "track-4.csv",
+                        new ClassifyDistanceResponse(
+                                new DistanceResponse(1248.0597596679424, 3428.8289188856943, 4676.888678553637),
+                                new DistanceResponse(1372.8657356347342, 3771.7118107742754, 5144.577546409009)
+                        )
+                ),
+                new TestArgument(
+                        "track-5.csv",
+                        new ClassifyDistanceResponse(
+                                new DistanceResponse(1980.8001914645922, 4869.968709588005, 6850.768901052597),
+                                new DistanceResponse(2178.8802106110293, 5356.965580546799, 7535.845791157828)
+                        )
+                ),
+                new TestArgument(
+                        "track-6.csv",
+                        new ClassifyDistanceResponse(
+                                new DistanceResponse(4211.402520209936, 9873.912026037542, 14085.314546247479),
+                                new DistanceResponse(4632.5427722308805, 10861.303228641149, 15493.846000872029)
+                        )
+                ),
+                new TestArgument(
+                        "track-7.csv",
+                        new ClassifyDistanceResponse(
+                                new DistanceResponse(439.0995446852349, 1332.1094905404427, 1771.2090352256776),
+                                new DistanceResponse(483.0094991537559, 1465.320439594486, 1948.329938748242)
+                        )
+                ),
                 new TestArgument(
                         "track-8.csv",
                         new ClassifyDistanceResponse(
-                                new DistanceResponse(0, 0, 0),
+                                new DistanceResponse(1.1168918504044996, 0.04492468966782326, 1.1618165400723228),
+                                new DistanceResponse(220257.14852674733, 22026.385452298575, 242283.5339790459)
+                        )
+                ),
+                new TestArgument(
+                        "track-9.csv",
+                        new ClassifyDistanceResponse(
+                                new DistanceResponse(1.1168918504044996, 0.7454408870435145, 1.862332737448014),
                                 new DistanceResponse(0, 0, 0)
                         )
                 )
